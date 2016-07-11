@@ -1,0 +1,88 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    var ninePatchImages = [];
+
+    if(selection.count() > 0) {
+        //
+        // Find "patch" & "#9patch" in selection
+        for(var i = 0; i < selection.count(); i ++) {
+            if(selection[i].className() == "MSLayerGroup") {
+                var imageName = selection[i].name();
+                var patchId = "";
+                var contentId = "";
+
+                for(var j = 0; j < selection[i].children().count(); j++) {
+                    var children = selection[i].children()[j];
+                    if(children.name() == "patch" && children.className() == "MSLayerGroup") {
+                        patchId = children.objectID();
+                    }
+                    if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
+                        contentId = children.objectID();
+                    }
+                    // log(children);
+                }
+
+                if(patchId != "" && contentId != "") {
+                    ninePatchImages.push({
+                        "name": imageName,
+                        "patchId": patchId,
+                        "contentId": contentId
+                    });
+                    // log("name:" + imageName + ", patchId:" + patchId + ", contentId:" + contentId);
+                }
+            }
+        }
+    } else {
+        //
+        // Find #9patch slicelayer in current page
+        for(var i = 0; i < page.children().count(); i++) {
+            var children = page.children()[i];
+
+            var imageName = "";
+            var patchId = "";
+            var contentId = "";
+
+            if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
+                contentId = children.objectID();
+
+                var parent = children.parentGroup().parentGroup();
+
+                for(var j = 0; j < parent.layers().array().count(); j++) {
+                    if(parent.layers().array()[j].name() == "patch") {
+                        patchId = parent.layers().array()[j].objectID();
+                    }
+                    if(parent.layers().array()[j].name() == "content") {
+                        imageName = parent.name();
+                    }
+                }
+                // log(">>>>>>" + parent);
+            }
+
+            if(imageName != "" && patchId != "" && contentId != "") {
+                ninePatchImages.push({
+                    "name": imageName,
+                    "patchId": patchId,
+                    "contentId": contentId
+                });
+            }
+
+        }
+    }
+
+    log(ninePatchImages);
+
+    log(save_path(context));
+
+
+
+}

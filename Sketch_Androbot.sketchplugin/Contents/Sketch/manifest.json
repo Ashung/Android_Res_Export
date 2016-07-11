@@ -1,0 +1,30 @@
+{
+    "name": "Sketch Androbot",
+    "description": "Sketch plugin for Android UI design.",
+    "author": "Ashung Hung",
+    "email": "Ashung.hung@gmail.com",
+    "homepage": "https://github.com/Ashung/Sketch-Androbot",
+    "version": 0.1,
+    "identifier": "com.github.ashung.sketchd-androbot",
+    "compatibleVersion": 3,
+    "bundleVersion": 1,
+    "commands": [
+        {
+            "name": "Export 9-Patch",
+            "identifier": "export_nine_patch",
+            "script": "export/export_nine_patch.cocoascript"
+        }
+
+    ],
+    "menu": {
+        "isRoot": false,
+        "items": [
+            {
+                "title": "Export",
+                "items": [
+                    "export_nine_patch"
+                ]
+            }
+        ]
+    }
+}
