@@ -10,6 +10,11 @@
     "bundleVersion": 1,
     "commands": [
         {
+            "name": "Export Assets",
+            "identifier": "export_assets",
+            "script": "export/export_assets.cocoascript"
+        },
+        {
             "name": "Export 9-Patch",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
@@ -22,6 +27,7 @@
             {
                 "title": "Export",
                 "items": [
+                    "export_assets",
                     "export_nine_patch"
                 ]
             }

@@ -65,7 +65,6 @@ var onRun = function(context) {
                         imageName = parent.name();
                     }
                 }
-                // log(">>>>>>" + parent);
             }
 
             if(imageName != "" && patchId != "" && contentId != "") {
@@ -79,10 +78,16 @@ var onRun = function(context) {
         }
     }
 
-    log(ninePatchImages);
+    // log(ninePatchImages);
 
-    log(save_path(context));
+    // log(selectFolderDialog(context, "Where do you want to export the assets?"));
+
+    // log(getFilePath(context));
+
+    log("......" + getFilePath(context));
+    log("......" + getPluginPath(context));
 
 
+    // runCommand("/bin/sh " + pluginPath + "/shell/test.sh")
 
 }

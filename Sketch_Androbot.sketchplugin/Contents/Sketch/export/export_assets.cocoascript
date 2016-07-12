@@ -1,0 +1,122 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    var assets = [];
+    var assetsIds = [];
+
+    if (selection.count() > 0) {
+        for (var i = 0; i < selection.count(); i ++) {
+            var childrens = selection[i].children();
+            for (var j = 0; j < childrens.count(); j++) {
+                var children = childrens[j];
+                // Slice and exportable layer but no #9patch
+                if (children.isLayerExportable() && children.name() != "#9patch") {
+                    assets.push({
+                        "id": children.objectID(),
+                        "name": convertToAndroidResName(children.name())
+                    });
+                    assetsIds.push(children.objectID());
+                    // log("id:" + children.objectID() + ", name:" + convertToAndroidResName(children.name()));
+                }
+            }
+        }
+    } else {
+        for(var i = 0; i < page.children().count(); i++) {
+            var children = page.children()[i];
+            if (children.isLayerExportable() && children.name() != "#9patch") {
+                assets.push({
+                    "id": children.objectID(),
+                    "name": convertToAndroidResName(children.name())
+                });
+                assetsIds.push(children.objectID());
+            }
+        }
+    }
+
+    // Export
+    if (assetsIds.length > 0) {
+
+        var exportFolder = selectFolderDialog(context, "Where do you want to export the assets?");
+
+        // Save document
+        doc.saveDocument(nil);
+
+        // Export
+        sketchtoolExport(
+            getFilePath(context),
+            exportFolder,
+            assetsIds.toString()
+        );
+
+        // Rename assets
+        for(var i = 0; i < assets.length; i++) {
+            var oldName = assets[i]["id"];
+            var newName = assets[i]["name"] + ".png";
+
+            mkResDir(exportFolder);
+
+            mv(exportFolder + "/" + oldName + ".png", exportFolder + "/res/drawable-mdpi/" + newName);
+            mv(exportFolder + "/" + oldName + "@1x.png", exportFolder + "/res/drawable-hdpi/" + newName);
+            mv(exportFolder + "/" + oldName + "@2x.png", exportFolder + "/res/drawable-xhdpi/" + newName);
+            mv(exportFolder + "/" + oldName + "@3x.png", exportFolder + "/res/drawable-xxhdpi/" + newName);
+            mv(exportFolder + "/" + oldName + "@4x.png", exportFolder + "/res/drawable-xxxhdpi/" + newName);
+        }
+
+
+
+
+        //
+        //
+        //
+        //
+        //     // mv();
+        //
+        //
+        //
+        //     //
+        //
+    }
+
+
+    // 12721865-7D7A-46E3-9DBA-ADF7E6A11715
+    // D00DA538-C411-4566-BAA2-0008E6511C52
+    // DC452ACF-0793-4591-AA0C-A3A80D3B7FE4
+
+
+
+
+
+
+
+
+
+    //
+    // Export all slice and exportable layer
+    // sketchtoolExport(
+    //     getFilePath(context),
+    //     "~/desktop/test",
+    //     undefined
+    // );
+
+
+    // runCommand('/usr/local/bin/sketchtool -v');
+    // log(ninePatchImages);
+
+    // log(selectFolderDialog(context, "Where do you want to export the assets?"));
+
+    // log(getFilePath(context));
+
+
+
+    // runCommand("/bin/sh " + pluginPath + "/shell/test.sh")
+
+}
