@@ -10,11 +10,24 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
+
+    // Export folder: <file name>-assets
+    if (!getFilePath(context)) {
+        return;
+    } else {
+        var currentFile = getFilePath(context);
+        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
+    }
+
+    // Reset exportDpis and qualifiers
+    resetExportConfig(page.name());
+
+    // Get all exportable
     var ninePatchImages = [];
+    var ninePatchPatchIds = [];
+    var ninePatchContentIds = [];
 
     if(selection.count() > 0) {
-        //
-        // Find "patch" & "#9patch" in selection
         for(var i = 0; i < selection.count(); i ++) {
             if(selection[i].className() == "MSLayerGroup") {
                 var imageName = selection[i].name();
@@ -29,7 +42,6 @@ var onRun = function(context) {
                     if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
                         contentId = children.objectID();
                     }
-                    // log(children);
                 }
 
                 if(patchId != "" && contentId != "") {
@@ -38,13 +50,13 @@ var onRun = function(context) {
                         "patchId": patchId,
                         "contentId": contentId
                     });
+                    ninePatchPatchIds.push(patchId);
+                    ninePatchContentIds.push(contentId);
                     // log("name:" + imageName + ", patchId:" + patchId + ", contentId:" + contentId);
                 }
             }
         }
     } else {
-        //
-        // Find #9patch slicelayer in current page
         for(var i = 0; i < page.children().count(); i++) {
             var children = page.children()[i];
 
@@ -56,7 +68,6 @@ var onRun = function(context) {
                 contentId = children.objectID();
 
                 var parent = children.parentGroup().parentGroup();
-
                 for(var j = 0; j < parent.layers().array().count(); j++) {
                     if(parent.layers().array()[j].name() == "patch") {
                         patchId = parent.layers().array()[j].objectID();
@@ -73,18 +84,59 @@ var onRun = function(context) {
                     "patchId": patchId,
                     "contentId": contentId
                 });
+                ninePatchPatchIds.push(patchId);
+                ninePatchContentIds.push(contentId);
             }
 
         }
+    }
+
+    if (ninePatchPatchIds.length > 0 && ninePatchContentIds.length > 0) {
+
+        // Save document
+        doc.saveDocument(nil);
+
+        // Export ninePatch Patch
+        sketchtoolExport(
+            "layers",
+            currentFile,
+            "1",
+            ninePatchPatchIds.toString(),
+            exportFolder
+        );
+
+        for (var i = 0; i < exportConfig.length; i++) {
+
+            var scale = exportConfig[i].scale;
+            var qualifier = exportConfig[i].qualifier;
+            mkdir(exportFolder, "drawable-" + qualifier);
+
+            // Export ninePatch Content
+            sketchtoolExport(
+                "slices",
+                currentFile,
+                exportConfig[i].scale,
+                ninePatchContentIds.toString(),
+                exportFolder
+            );
+
+
+
+            
+        }
+
+
+
+
     }
 
     // log(ninePatchImages);
 
     // log(selectFolderDialog(context, "Where do you want to export the assets?"));
 
-    // log(getFilePath(context));
+    // log(currentFile);
 
-    log("......" + getFilePath(context));
+    log("......" + currentFile);
     log("......" + getPluginPath(context));
 
 
