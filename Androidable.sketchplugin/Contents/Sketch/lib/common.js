@@ -8,7 +8,7 @@ const sketchmigrate = NSBundle.mainBundle().pathForResource_ofType_inDirectory("
 
 // imageMagick
 const composite = "/usr/local/bin/composite";
-const convert = "/usr/local/bin/composite";
+const convert = "/usr/local/bin/convert";
 
 
 
@@ -56,7 +56,7 @@ function resetExportConfig(pageName) {
         var configs = pageName.replace(/^@/, "").replace(/\s/g, "").split(",");
         for (var i = 0; i < configs.length; i ++) {
             var dpi = ""
-            if (/[no|l|m|h|xh|xxh|xxxh|any|tv|\d+]dpi/i.test(configs[i])) {
+            if (/(no|l|m|h|xh|xxh|xxxh|any|tv|\d+)dpi/i.test(configs[i])) {
                 dpi = configs[i].match(/[^-]+dpi/i)[0];
             }
             exportConfig.push({
@@ -157,8 +157,8 @@ function sketchtoolExport(exportType, sketchFile, scale, itemIds, outputFolder) 
     runCommand(command);
 }
 
-function mv(formPath, toPath) {
-    var command = 'mv ' + formPath + ' ' + toPath;
+function mv(cwd, formPath, toPath) {
+    var command = 'cd ' + cwd + ' && mv ' + formPath + ' ' + toPath;
     runCommand(command);
 }
 
@@ -178,10 +178,38 @@ function runCommand(command, context) {
         task.setArguments_(NSArray.arrayWithObjects_("-c", command, nil));
         task.launch();
         task.waitUntilExit();
-    // if (task.terminationStatus() != 0) {
-    //     log(task.terminationReason());
-    // }
 }
+
+function createMdpiPatchLines(cwd, width, height, mdpiPatchId) {
+    var command = 'cd ' + cwd + ' && '
+        + convert + ' -crop ' + Math.floor(width) + 'x1+1+0 ' + mdpiPatchId + '.png ' + mdpiPatchId + '_top.png && '
+        + convert + ' -crop 1x' + Math.floor(height) + '+' + (Math.floor(width)+1) + '+1 ' + mdpiPatchId + '.png ' + mdpiPatchId + '_right.png && '
+        + convert + ' -crop ' + Math.floor(width) + 'x1+1+' + (Math.floor(height)+1) + ' ' + mdpiPatchId + '.png ' + mdpiPatchId + '_bottom.png && '
+        + convert + ' -crop 1x' + Math.floor(height) + '+0+1 ' + mdpiPatchId + '.png ' + mdpiPatchId + '_left.png';
+    runCommand(command);
+}
+
+function createNinePath(cwd, scale, suffix, width, height, contentId, patchId) {
+    var newWidth = Math.floor(width * scale);
+    var newHeight = Math.floor(height * scale);
+    var temp = contentId + "_temp" + suffix + ".png";
+    var content = contentId + suffix + ".png";
+    var patchTop = patchId + "_top.png";
+    var patchRight = patchId + "_right.png";
+    var patchBottom = patchId + "_bottom.png";
+    var patchLeft = patchId + "_left.png";
+    var command = 'cd ' + cwd + ' && '
+        + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none ' + temp + ' && '
+        + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchTop + ' - | ' + composite + ' -gravity North - ' + temp + ' ' + temp + ' && '
+        + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchRight + ' - | ' + composite + ' -gravity East - ' + temp + ' ' + temp + ' && '
+        + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchBottom + ' - | ' + composite + ' -gravity South - ' + temp + ' ' + temp + ' && '
+        + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchLeft + ' - | ' + composite + ' -gravity West - ' + temp + ' ' + temp + ' && '
+        + composite + ' -gravity center ' + content + ' ' + temp + ' ' + temp;
+    runCommand(command);
+}
+
+
+
 
 ////////////
 
@@ -228,12 +256,6 @@ function selectFolderDialog(context, message) {
         toast(context, "Save document first.");
     }
 }
-
-// var createTask = [[NSTask alloc] init];
-// [createTask setLaunchPath:@"/bin/bash"];
-// [createTask setArguments:["-c", command]]
-// [createTask launch]
-// [createTask waitUntilExit]
 
 
 //     // var curPath = [doc fileURL] ? [[[doc fileURL] path] stringByDeletingLastPathComponent] : @"~";

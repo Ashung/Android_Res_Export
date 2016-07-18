@@ -1,5 +1,7 @@
-# Sketch Androbot
+# Androidable
 
-Sketch plugin for Android UI design.
+Sketch plugin that export Android drawable resources, like 9-patch, png.
+
+
 
 

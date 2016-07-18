@@ -81,14 +81,15 @@ var onRun = function(context) {
                 var oldName = assets[j]["id"];
                 var newName = assets[j]["name"] + ".png";
                 mv(
-                    exportFolder + "/" + oldName + scaleToSuffix(scale) + ".png",
-                    exportFolder + "/drawable-" + qualifier + "/" + newName
+                    exportFolder,
+                    oldName + scaleToSuffix(scale) + ".png",
+                    "drawable-" + qualifier + "/" + newName
                 );
             }
-
-            toast(context, "Export to \"" + exportFolder + "\". Done!");
-
         }
+
+        toast(context, "Export to \"" + exportFolder + "\". Done!");
+
     } else {
         toast(context, "No any exportable layer or select a unexportable layer.");
     }

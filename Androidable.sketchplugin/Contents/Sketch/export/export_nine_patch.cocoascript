@@ -33,6 +33,8 @@ var onRun = function(context) {
                 var imageName = selection[i].name();
                 var patchId = "";
                 var contentId = "";
+                var width = "";
+                var height = "";
 
                 for(var j = 0; j < selection[i].children().count(); j++) {
                     var children = selection[i].children()[j];
@@ -41,6 +43,8 @@ var onRun = function(context) {
                     }
                     if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
                         contentId = children.objectID();
+                        width = children.frame().width();
+                        height = children.frame().height();
                     }
                 }
 
@@ -48,7 +52,9 @@ var onRun = function(context) {
                     ninePatchImages.push({
                         "name": imageName,
                         "patchId": patchId,
-                        "contentId": contentId
+                        "contentId": contentId,
+                        "width": width,
+                        "height": height
                     });
                     ninePatchPatchIds.push(patchId);
                     ninePatchContentIds.push(contentId);
@@ -63,9 +69,13 @@ var onRun = function(context) {
             var imageName = "";
             var patchId = "";
             var contentId = "";
+            var width = "";
+            var height = "";
 
             if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
                 contentId = children.objectID();
+                width = children.frame().width();
+                height = children.frame().height();
 
                 var parent = children.parentGroup().parentGroup();
                 for(var j = 0; j < parent.layers().array().count(); j++) {
@@ -82,7 +92,9 @@ var onRun = function(context) {
                 ninePatchImages.push({
                     "name": imageName,
                     "patchId": patchId,
-                    "contentId": contentId
+                    "contentId": contentId,
+                    "width": width,
+                    "height": height
                 });
                 ninePatchPatchIds.push(patchId);
                 ninePatchContentIds.push(contentId);
@@ -91,12 +103,14 @@ var onRun = function(context) {
         }
     }
 
+    // log(ninePatchImages);
+
     if (ninePatchPatchIds.length > 0 && ninePatchContentIds.length > 0) {
 
         // Save document
         doc.saveDocument(nil);
 
-        // Export ninePatch Patch
+        // Export ninePatch Patch MDPI
         sketchtoolExport(
             "layers",
             currentFile,
@@ -120,26 +134,51 @@ var onRun = function(context) {
                 exportFolder
             );
 
+            for(var j = 0; j < ninePatchImages.length; j++) {
+                var contentId = ninePatchImages[j]["contentId"];
+                var content = contentId + scaleToSuffix(scale) + ".png";
+                var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
+                var patchId = ninePatchImages[j]["patchId"];
+                var patch = patchId + ".png";
+                var newName = ninePatchImages[j]["name"] + ".9.png";
+                var width = ninePatchImages[j]["width"];
+                var height = ninePatchImages[j]["height"];
 
+                createMdpiPatchLines(
+                    exportFolder,
+                    width,
+                    height,
+                    patchId
+                );
+                rm(exportFolder, patch);
 
-            
+                createNinePath(exportFolder, scale, scaleToSuffix(scale), width, height, contentId, patchId);
+                rm(exportFolder, content);
+
+                // Rename assets
+                mv(
+                    exportFolder,
+                    temp,
+                    "drawable-" + qualifier + "/" + newName
+                );
+
+            }
         }
 
+        // Remove patch lines
+        for(var i = 0; i < ninePatchPatchIds.length; i++) {
+            var patchId = ninePatchPatchIds[i];
+            var patchTop = patchId + "_top.png";
+            var patchRight = patchId + "_right.png";
+            var patchBottom = patchId + "_bottom.png";
+            var patchLeft = patchId + "_left.png";
+            rm(exportFolder, patchTop);
+            rm(exportFolder, patchRight);
+            rm(exportFolder, patchBottom);
+            rm(exportFolder, patchLeft);
+        }
 
-
+        toast(context, "Export to \"" + exportFolder + "\". Done!");
 
     }
-
-    // log(ninePatchImages);
-
-    // log(selectFolderDialog(context, "Where do you want to export the assets?"));
-
-    // log(currentFile);
-
-    log("......" + currentFile);
-    log("......" + getPluginPath(context));
-
-
-    // runCommand("/bin/sh " + pluginPath + "/shell/test.sh")
-
 }

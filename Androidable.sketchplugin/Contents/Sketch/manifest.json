@@ -1,17 +1,22 @@
 {
-    "name": "Sketch Androbot",
-    "description": "Sketch plugin for Android UI design.",
+    "name": "Androidable",
+    "description": "Sketch plugin that export Android drawable resources.",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
-    "homepage": "https://github.com/Ashung/Sketch-Androbot",
+    "homepage": "https://github.com/Ashung/Androidable",
     "version": 0.1,
-    "identifier": "com.github.ashung.sketchd-androbot",
+    "identifier": "com.github.ashung.androidable",
     "compatibleVersion": 3,
     "bundleVersion": 1,
     "commands": [
         {
-            "name": "Export Assets",
+            "name": "Export PNG",
             "identifier": "export_assets",
+            "script": "export/export_assets.cocoascript"
+        },
+        {
+            "name": "Export Vector Drawable",
+            "identifier": "export_vector_drawable",
             "script": "export/export_assets.cocoascript"
         },
         {
@@ -24,13 +29,8 @@
     "menu": {
         "isRoot": false,
         "items": [
-            {
-                "title": "Export",
-                "items": [
-                    "export_assets",
-                    "export_nine_patch"
-                ]
-            }
+            "export_assets",
+            "export_nine_patch"
         ]
     }
 }
