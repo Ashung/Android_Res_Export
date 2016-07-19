@@ -6,10 +6,17 @@
 
 var onRun = function(context) {
 
+    if (!fileExists(convert) && !fileExists(composite)) {
+        alert(
+            "You have not install ImageMagick.",
+            "Export Android nine-patch image feature depend on the ImageMagick library.\n\nInstall use MacPorts:\n$ sudo port install ImageMagick\nor use HomeBrew:\n$ brew install ImageMagick"
+        );
+        return;
+    }
+
     var doc = context.document;
     var page = doc.currentPage();
     var selection = context.selection;
-
 
     // Export folder: <file name>-assets
     if (!getFilePath(context)) {
@@ -111,11 +118,15 @@ var onRun = function(context) {
         doc.saveDocument(nil);
 
         // Export ninePatch Patch MDPI
+        var formats = "png";
+        var useIdForName = "yes";
         sketchtoolExport(
             "layers",
             currentFile,
             "1",
-            ninePatchPatchIds.toString(),
+            formats,
+            ninePatchPatchIds,
+            useIdForName,
             exportFolder
         );
 
@@ -130,9 +141,13 @@ var onRun = function(context) {
                 "slices",
                 currentFile,
                 exportConfig[i].scale,
-                ninePatchContentIds.toString(),
+                formats,
+                ninePatchContentIds,
+                useIdForName,
                 exportFolder
             );
+
+
 
             for(var j = 0; j < ninePatchImages.length; j++) {
                 var contentId = ninePatchImages[j]["contentId"];
@@ -144,13 +159,16 @@ var onRun = function(context) {
                 var width = ninePatchImages[j]["width"];
                 var height = ninePatchImages[j]["height"];
 
-                createMdpiPatchLines(
-                    exportFolder,
-                    width,
-                    height,
-                    patchId
-                );
-                rm(exportFolder, patch);
+                // Run only once
+                if (i == 0) {
+                    createMdpiPatchLines(
+                        exportFolder,
+                        width,
+                        height,
+                        patchId
+                    );
+                    rm(exportFolder, patch);
+                }
 
                 createNinePath(exportFolder, scale, scaleToSuffix(scale), width, height, contentId, patchId);
                 rm(exportFolder, content);

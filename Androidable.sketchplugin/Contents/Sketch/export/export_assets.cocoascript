@@ -66,11 +66,15 @@ var onRun = function(context) {
             mkdir(exportFolder, "drawable-" + qualifier);
 
             // Export
+            var formats = "png";
+            var useIdForName = "yes";
             sketchtoolExport(
                 "slices",
                 currentFile,
                 exportConfig[i].scale,
-                assetsIds.toString(),
+                formats,
+                assetsIds,
+                useIdForName,
                 exportFolder
             );
 

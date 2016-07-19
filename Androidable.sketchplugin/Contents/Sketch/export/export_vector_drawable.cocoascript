@@ -1,0 +1,25 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    // log(selection[0].objectID());
+    //
+    // log(">>>" + selection[0].objectID());
+
+    // doc.copySVG((selection[0].objectID()));
+
+    // alert("SVG", runCommandWithReturn("pbpaste"));
+
+    alert("WIP", "WIP.");
+
+    //
+
+}

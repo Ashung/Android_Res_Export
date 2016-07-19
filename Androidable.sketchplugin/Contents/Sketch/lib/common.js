@@ -3,16 +3,34 @@
 // Email: Ashung.hung@gmail.com
 
 // sketchtool
-const sketchtool = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchtool", nil,"sketchtool/bin");
-const sketchmigrate = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchmigrate", nil,"sketchtool/bin");
+var sketchtool = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchtool", nil,"sketchtool/bin");
+var sketchmigrate = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchmigrate", nil,"sketchtool/bin");
 
-// imageMagick
-const composite = "/usr/local/bin/composite";
-const convert = "/usr/local/bin/convert";
+// Install form package
+var convert = "$MAGICK_HOME/bin/convert";
+var composite = "$MAGICK_HOME/bin/composite";
 
+// ImageMagick intall by HomeBrew
+if (
+    (!fileExists(convert) && !fileExists(composite)) &&
+    (fileExists("/usr/local/bin/convert") && fileExists("/usr/local/bin/composite"))
+) {
+    convert = "/usr/local/bin/convert";
+    composite = "/usr/local/bin/composite";
+}
 
+// ImageMagick intall by MacPort
+if (
+    (!fileExists(convert) && !fileExists(composite)) &&
+    (fileExists("/opt/local/bin/convert") && fileExists("/opt/local/bin/composite"))
+) {
+    composite = "/opt/local/bin/composite";
+    convert = "/opt/local/bin/convert";
+}
 
-
+function fileExists(path) {
+    return NSFileManager.defaultManager().fileExistsAtPath_(path);
+}
 
 function toast(context, message) {
     var doc = context.document;
@@ -36,7 +54,21 @@ function getFilePath(context) {
     }
 }
 
+function writeFile(filePath, content) {
+    content = NSString.stringWithFormat('%@', content);
+    content.writeToFile_atomically_encoding_error_(filePath, true, NSUTF8StringEncoding, null);
+}
 
+function alert(title, content) {
+    var app = NSApplication.sharedApplication();
+    app.displayDialog_withTitle_(content, title);
+}
+
+function askForUserInput(context, title, initial) {
+    var doc = context.document;
+    var result = doc.askForUserInput_initialValue(title, initial);
+    return result;
+}
 
 
 // Android =================================================
@@ -130,30 +162,31 @@ function scaleToSuffix(size) {
 
 // Command line tools ======================================
 
-function sketchtoolExport(exportType, sketchFile, scale, itemIds, outputFolder) {
+function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useIdForName, outputFolder) {
     // sketcktool export
     //     slices|layers|pages|artboards
     //     <file.sketch>
-    //     --use-id-for-name="yes"
     //     --scales="1, 1.5, 2, 3, 4"
+    //     --items="<id>,<id>" --item=<string>
+    //     --formats="png"
+    //     --use-id-for-name="yes|no"
     //     --group-contents-only="yes"
     //     --overwritin="yes"
-    //     --items="<id>,<id>"
     //     --output="<dir>"
     var command = sketchtool
         + ' export ' + exportType
         + ' "' + sketchFile + '"'
-        + ' --scales="' + scale + '"'
-        + ' --formats="png"'
-        + ' --use-id-for-name="yes"'
+        + ' --scales="' + scales.toString() + '"'
+        + ' --formats="' + formats.toString() + '"'
+        + ' --use-id-for-name="' + useIdForName + '"'
         + ' --group-contents-only="yes"'
         + ' --overwritin="yes"';
-    if (itemIds) {
-        command = command
-        + ' --items="' + itemIds + '"';
+    if (itemIds.length > 1) {
+        command = command + ' --items="' + itemIds.toString() + '"';
+    } else {
+        command = command + ' --item="' + itemIds[0] + '"';
     }
-        command = command
-        + ' --output="' + outputFolder + '"';
+        command = command + ' --output="' + outputFolder + '"';
     runCommand(command);
 }
 
@@ -172,12 +205,13 @@ function mkdir(cwd, dir) {
     runCommand(command);
 }
 
-function runCommand(command, context) {
+function runCommand(command) {
     var task = NSTask.alloc().init();
         task.setLaunchPath_(@"/bin/bash");
         task.setArguments_(NSArray.arrayWithObjects_("-c", command, nil));
         task.launch();
         task.waitUntilExit();
+    // return (task.terminationStatus() == 0);
 }
 
 function createMdpiPatchLines(cwd, width, height, mdpiPatchId) {
@@ -209,14 +243,14 @@ function createNinePath(cwd, scale, suffix, width, height, contentId, patchId) {
 }
 
 
-
-
 ////////////
 
 function runCommandWithReturn(command) {
     var task = NSTask.alloc().init();
     var pipe = NSPipe.pipe();
     var errPipe = NSPipe.pipe();
+
+
 
     task.setLaunchPath_(@"/bin/bash");
     task.setArguments_(NSArray.arrayWithObjects_("-c", command, nil));
@@ -225,17 +259,14 @@ function runCommandWithReturn(command) {
     task.launch();
     task.waitUntilExit();
 
+
+
     var data = errPipe.fileHandleForReading().readDataToEndOfFile();
     if (data != nil && data.length()) {
       var message = NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding);
-
-      log("11111" + NSException.raise_format_("failed", message))
       return NSException.raise_format_("failed", message);
     }
     data = pipe.fileHandleForReading().readDataToEndOfFile();
-
-    log(NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding))
-
     return NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding);
 }
 
@@ -279,3 +310,8 @@ function selectFolderDialog(context, message) {
 //
 //     // return [[savePanel URL] path]
 // return [savePanel filename]
+
+// NSFileManager.defaultManager().fileExistsAtPath_(path);
+
+// var manager = NSFileManager.defaultManager();
+//     return manager.createDirectoryIfNecessary(path);

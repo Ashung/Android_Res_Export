@@ -1,0 +1,29 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    alert("WIP", "WIP.");
+
+    // alert("Select", selection[0].name() + ":\n" + selection[0].objectID());
+
+    // select a layer group
+
+    // @bounds layer
+
+
+    // add 5 slices + id
+
+    // export use sketchtool
+
+
+
+
+}
