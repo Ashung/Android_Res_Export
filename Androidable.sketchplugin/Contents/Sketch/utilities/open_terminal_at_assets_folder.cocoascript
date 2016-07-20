@@ -1,0 +1,26 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    // Export folder: <file name>-assets
+    if (!getFilePath(context)) {
+        return;
+    } else {
+        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
+    }
+
+    if (fileExists(exportFolder)) {
+        runCommand("open -a Terminal " + exportFolder);
+    } else {
+        toast(context, "Not assets folder finded.");
+    }
+
+}

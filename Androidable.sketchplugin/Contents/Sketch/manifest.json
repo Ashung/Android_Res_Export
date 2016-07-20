@@ -32,8 +32,14 @@
         {
             "name": "Show Asset in Finder",
             "identifier": "show_assets_in_finder",
-            "script": "export/show_assets_in_finder.cocoascript"
+            "script": "utilities/show_assets_in_finder.cocoascript"
+        },
+        {
+            "name": "Open Terminal at Asset Folder",
+            "identifier": "open_terminal_at_assets_folder",
+            "script": "utilities/open_terminal_at_assets_folder.cocoascript"
         }
+
     ],
     "menu": {
         "isRoot": false,
@@ -42,7 +48,8 @@
             "export_nine_patch",
             "export_vector_drawable",
             "export_app_icon",
-            "show_assets_in_finder"
+            "show_assets_in_finder",
+            "open_terminal_at_assets_folder"
         ]
     }
 }
