@@ -28,8 +28,12 @@
             "name": "Export App Icon",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
+        },
+        {
+            "name": "Show Asset in Finder",
+            "identifier": "show_assets_in_finder",
+            "script": "export/show_assets_in_finder.cocoascript"
         }
-
     ],
     "menu": {
         "isRoot": false,
@@ -37,7 +41,8 @@
             "export_assets",
             "export_nine_patch",
             "export_vector_drawable",
-            "export_app_icon"
+            "export_app_icon",
+            "show_assets_in_finder"
         ]
     }
 }

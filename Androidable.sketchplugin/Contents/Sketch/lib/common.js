@@ -6,25 +6,16 @@
 var sketchtool = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchtool", nil,"sketchtool/bin");
 var sketchmigrate = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchmigrate", nil,"sketchtool/bin");
 
-// Install form package
+// Install use tar.gz archive
 var convert = "$MAGICK_HOME/bin/convert";
-var composite = "$MAGICK_HOME/bin/composite";
 
-// ImageMagick intall by HomeBrew
-if (
-    (!fileExists(convert) && !fileExists(composite)) &&
-    (fileExists("/usr/local/bin/convert") && fileExists("/usr/local/bin/composite"))
-) {
+// ImageMagick intall use HomeBrew
+if (!fileExists(convert) && fileExists("/usr/local/bin/convert")) {
     convert = "/usr/local/bin/convert";
-    composite = "/usr/local/bin/composite";
 }
 
-// ImageMagick intall by MacPort
-if (
-    (!fileExists(convert) && !fileExists(composite)) &&
-    (fileExists("/opt/local/bin/convert") && fileExists("/opt/local/bin/composite"))
-) {
-    composite = "/opt/local/bin/composite";
+// ImageMagick intall use MacPort
+if (!fileExists(convert) && fileExists("/opt/local/bin/convert")) {
     convert = "/opt/local/bin/convert";
 }
 
@@ -70,6 +61,12 @@ function askForUserInput(context, title, initial) {
     return result;
 }
 
+function showInFinder(path) {
+    var finder = NSTask.alloc().init();
+        finder.setLaunchPath_(@"/usr/bin/open");
+        finder.setArguments_(NSArray.arrayWithObjects_("-R", path, nil));
+        finder.launch();
+}
 
 // Android =================================================
 
@@ -233,13 +230,20 @@ function createNinePath(cwd, scale, suffix, width, height, contentId, patchId) {
     var patchBottom = patchId + "_bottom.png";
     var patchLeft = patchId + "_left.png";
     var command = 'cd ' + cwd + ' && '
-        + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none ' + temp + ' && '
-        + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchTop + ' - | ' + composite + ' -gravity North - ' + temp + ' ' + temp + ' && '
-        + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchRight + ' - | ' + composite + ' -gravity East - ' + temp + ' ' + temp + ' && '
-        + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchBottom + ' - | ' + composite + ' -gravity South - ' + temp + ' ' + temp + ' && '
-        + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchLeft + ' - | ' + composite + ' -gravity West - ' + temp + ' ' + temp + ' && '
-        + composite + ' -gravity center ' + content + ' ' + temp + ' ' + temp;
+        + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none '
+        + content + ' -gravity Center -composite '
+        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchTop + ' \\) -gravity North -composite '
+        + '\\( -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchRight + ' \\) -gravity East -composite '
+        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchBottom + ' \\) -gravity South -composite '
+        + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest ' + patchLeft + ' \\) -gravity West -composite '
+        + temp;
     runCommand(command);
+        // + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none ' + temp + ' && '
+        // + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchTop + ' - | ' + composite + ' -gravity North - ' + temp + ' ' + temp + ' && '
+        // + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchRight + ' - | ' + composite + ' -gravity East - ' + temp + ' ' + temp + ' && '
+        // + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchBottom + ' - | ' + composite + ' -gravity South - ' + temp + ' ' + temp + ' && '
+        // + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchLeft + ' - | ' + composite + ' -gravity West - ' + temp + ' ' + temp + ' && '
+        // + composite + ' -gravity center ' + content + ' ' + temp + ' ' + temp;
 }
 
 

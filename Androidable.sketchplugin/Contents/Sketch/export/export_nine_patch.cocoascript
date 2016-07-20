@@ -6,7 +6,7 @@
 
 var onRun = function(context) {
 
-    if (!fileExists(convert) && !fileExists(composite)) {
+    if (!fileExists(convert)) {
         alert(
             "You have not install ImageMagick.",
             "Export Android nine-patch image feature depend on the ImageMagick library.\n\nInstall use MacPorts:\n$ sudo port install ImageMagick\nor use HomeBrew:\n$ brew install ImageMagick"
@@ -179,7 +179,6 @@ var onRun = function(context) {
                     temp,
                     "drawable-" + qualifier + "/" + newName
                 );
-
             }
         }
 

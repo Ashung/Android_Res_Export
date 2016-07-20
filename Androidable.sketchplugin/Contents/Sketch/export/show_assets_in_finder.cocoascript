@@ -10,27 +10,17 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-
     // Export folder: <file name>-assets
     if (!getFilePath(context)) {
         return;
     } else {
-        var currentFile = getFilePath(context);
         var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
     }
 
-    // log(selection[0].objectID());
-    //
-    // log(">>>" + selection[0].objectID());
-
-    // doc.copySVG((selection[0].objectID()));
-
-    // alert("SVG", runCommandWithReturn("pbpaste"));
-
-    alert("WIP", "WIP.");
-
-    // showInFinder(exportFolder)
-
-    //
+    if (fileExists(exportFolder)) {
+        showInFinder(exportFolder);
+    } else {
+        toast(context, "Not assets folder finded.");
+    }
 
 }
