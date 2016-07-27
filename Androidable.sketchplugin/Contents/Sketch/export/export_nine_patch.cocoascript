@@ -85,11 +85,11 @@ var onRun = function(context) {
                 height = children.frame().height();
 
                 var parent = children.parentGroup().parentGroup();
-                for(var j = 0; j < parent.layers().array().count(); j++) {
-                    if(parent.layers().array()[j].name() == "patch") {
-                        patchId = parent.layers().array()[j].objectID();
+                for(var j = 0; j < parent.layers().length; j++) {
+                    if(parent.layers()[j].name() == "patch") {
+                        patchId = parent.layers()[j].objectID();
                     }
-                    if(parent.layers().array()[j].name() == "content") {
+                    if(parent.layers()[j].name() == "content") {
                         imageName = parent.name();
                     }
                 }
@@ -146,8 +146,6 @@ var onRun = function(context) {
                 useIdForName,
                 exportFolder
             );
-
-
 
             for(var j = 0; j < ninePatchImages.length; j++) {
                 var contentId = ninePatchImages[j]["contentId"];
