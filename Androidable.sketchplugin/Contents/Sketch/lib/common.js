@@ -177,6 +177,7 @@ function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useI
         + ' --formats="' + formats.toString() + '"'
         + ' --use-id-for-name="' + useIdForName + '"'
         + ' --group-contents-only="yes"'
+        + ' --save-for-web="no"'
         + ' --overwritin="yes"';
     if (itemIds.length > 1) {
         command = command + ' --items="' + itemIds.toString() + '"';
