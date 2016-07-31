@@ -10,12 +10,13 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-    // Export folder: <file name>-assets
     if (!getFilePath(context)) {
         return;
     } else {
         var currentFile = getFilePath(context);
+        // Export folder: <file name>-assets
         var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
+        var tempFolder = getPluginPath(context);
     }
 
     // Reset exportDpis and qualifiers
@@ -27,31 +28,10 @@ var onRun = function(context) {
 
     if (selection.count() > 0) {
         for (var i = 0; i < selection.count(); i ++) {
-            var childrens = selection[i].children();
-            for (var j = 0; j < childrens.count(); j++) {
-                var children = childrens[j];
-                // Slice and exportable layer but no #9patch
-                if (children.isLayerExportable() && children.name() != "#9patch") {
-                    assets.push({
-                        "id": children.objectID(),
-                        "name": androidResName(children.name())
-                    });
-                    assetsIds.push(children.objectID());
-                    // log("id:" + children.objectID() + ", name:" + androidResName(children.name()));
-                }
-            }
+            addAssets(selection[i], assets, assetsIds);
         }
     } else {
-        for(var i = 0; i < page.children().count(); i++) {
-            var children = page.children()[i];
-            if (children.isLayerExportable() && children.name() != "#9patch") {
-                assets.push({
-                    "id": children.objectID(),
-                    "name": androidResName(children.name())
-                });
-                assetsIds.push(children.objectID());
-            }
-        }
+        addAssets(page, assets, assetsIds);
     }
 
     if (assetsIds.length > 0) {
@@ -59,13 +39,15 @@ var onRun = function(context) {
         // Save document
         doc.saveDocument(nil);
 
+        var exportSuccess = false;
+
         for (var i = 0; i < exportConfig.length; i++) {
 
             var scale = exportConfig[i].scale;
             var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder, "drawable-" + qualifier);
+            mkdir(exportFolder + "/drawable-" + qualifier);
 
-            // Export
+            // Export to tempFolder
             var formats = "png";
             var useIdForName = "yes";
             sketchtoolExport(
@@ -75,26 +57,41 @@ var onRun = function(context) {
                 formats,
                 assetsIds,
                 useIdForName,
-                exportFolder
+                tempFolder
             );
 
             // log(">>> Export slices " + currentFile + " -scales=" + exportConfig[i].scale + " -out=" + exportFolder);
 
-            // Rename assets
+            // Move to exportFolder and rename
             for(var j = 0; j < assets.length; j++) {
                 var oldName = assets[j]["id"];
                 var newName = assets[j]["name"] + ".png";
                 mv(
-                    exportFolder,
-                    oldName + scaleToSuffix(scale) + ".png",
-                    "drawable-" + qualifier + "/" + newName
+                    tempFolder + "/" + oldName + scaleToSuffix(scale) + ".png",
+                    exportFolder + "/drawable-" + qualifier + "/" + newName
                 );
             }
         }
-
+        // TODO
         toast(context, "Export to \"" + exportFolder + "\". Done!");
 
     } else {
         toast(context, "No any exportable layer or select a unexportable layer.");
+    }
+}
+
+function addAssets(parent, assets, assetsIds) {
+    var childrens = parent.children();
+    for (var j = 0; j < childrens.count(); j++) {
+        var children = childrens[j];
+        // Slice and exportable layer but no #9patch
+        if (children.isLayerExportable() && children.name() != "#9patch") {
+            assets.push({
+                "id": children.objectID(),
+                "name": androidResName(children.name())
+            });
+            assetsIds.push(children.objectID());
+            // log("id:" + children.objectID() + ", name:" + androidResName(children.name()));
+        }
     }
 }

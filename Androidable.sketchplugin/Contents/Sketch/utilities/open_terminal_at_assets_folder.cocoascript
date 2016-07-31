@@ -10,17 +10,17 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-    // Export folder: <file name>-assets
     if (!getFilePath(context)) {
         return;
     } else {
+        // Export folder: <file name>-assets
+        var sketchDocPath = getFilePath(context);
         var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
+        if (fileExists(exportFolder)) {
+            runCommand("open -a Terminal " + exportFolder);
+        } else {
+            runCommand("open -a Terminal " + sketchDocPath);
+            toast(context, "Not assets folder finded.");
+        }
     }
-
-    if (fileExists(exportFolder)) {
-        runCommand("open -a Terminal " + exportFolder);
-    } else {
-        toast(context, "Not assets folder finded.");
-    }
-
 }

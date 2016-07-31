@@ -3,17 +3,19 @@
 // Email: Ashung.hung@gmail.com
 
 // sketchtool
-var sketchtool = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchtool", nil,"sketchtool/bin");
-var sketchmigrate = NSBundle.mainBundle().pathForResource_ofType_inDirectory("sketchmigrate", nil,"sketchtool/bin");
+var sketchtool = NSBundle
+    .mainBundle()
+    .pathForResource_ofType_inDirectory("sketchtool", nil, "sketchtool/bin");
+var sketchmigrate = NSBundle
+    .mainBundle()
+    .pathForResource_ofType_inDirectory("sketchmigrate", nil, "sketchtool/bin");
 
 // Install use tar.gz archive
 var convert = "$MAGICK_HOME/bin/convert";
-
 // ImageMagick intall use HomeBrew
 if (!fileExists(convert) && fileExists("/usr/local/bin/convert")) {
     convert = "/usr/local/bin/convert";
 }
-
 // ImageMagick intall use MacPort
 if (!fileExists(convert) && fileExists("/opt/local/bin/convert")) {
     convert = "/opt/local/bin/convert";
@@ -40,14 +42,16 @@ function getFilePath(context) {
     if (doc.fileURL()) {
         return decodeURI(doc.fileURL()).replace("file://", ""))
     } else {
-        toast(context, "Save your document first.");
+        alert(context.plugin.name(), "Save your document first.");
         return null;
     }
 }
 
 function writeFile(filePath, content) {
     content = NSString.stringWithFormat('%@', content);
-    content.writeToFile_atomically_encoding_error_(filePath, true, NSUTF8StringEncoding, null);
+    content.writeToFile_atomically_encoding_error_(
+        filePath, true, NSUTF8StringEncoding, null
+    );
 }
 
 function alert(title, content) {
@@ -66,6 +70,7 @@ function showInFinder(path) {
         finder.setLaunchPath_(@"/usr/bin/open");
         finder.setArguments_(NSArray.arrayWithObjects_("-R", path, nil));
         finder.launch();
+        finder.waitUntilExit();
 }
 
 // Android =================================================
@@ -188,8 +193,8 @@ function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useI
     runCommand(command);
 }
 
-function mv(cwd, formPath, toPath) {
-    var command = 'cd ' + cwd + ' && mv ' + formPath + ' ' + toPath;
+function mv(formPath, toPath) {
+    var command = 'mv ' + formPath + ' ' + toPath;
     runCommand(command);
 }
 
@@ -198,26 +203,21 @@ function rm(cwd, file) {
     runCommand(command);
 }
 
-function mkdir(cwd, dir) {
-    var command = 'cd ' + cwd + ' && mkdir ' + dir;
+function mkdir(dirPath) {
+    var command = 'mkdir -p' + dirPath;
     runCommand(command);
-}
-
-function runCommand(command) {
-    var task = NSTask.alloc().init();
-        task.setLaunchPath_(@"/bin/bash");
-        task.setArguments_(NSArray.arrayWithObjects_("-c", command, nil));
-        task.launch();
-        task.waitUntilExit();
-    // return (task.terminationStatus() == 0);
 }
 
 function createMdpiPatchLines(cwd, width, height, mdpiPatchId) {
     var command = 'cd ' + cwd + ' && '
-        + convert + ' -crop ' + Math.floor(width) + 'x1+1+0 ' + mdpiPatchId + '.png ' + mdpiPatchId + '_top.png && '
-        + convert + ' -crop 1x' + Math.floor(height) + '+' + (Math.floor(width)+1) + '+1 ' + mdpiPatchId + '.png ' + mdpiPatchId + '_right.png && '
-        + convert + ' -crop ' + Math.floor(width) + 'x1+1+' + (Math.floor(height)+1) + ' ' + mdpiPatchId + '.png ' + mdpiPatchId + '_bottom.png && '
-        + convert + ' -crop 1x' + Math.floor(height) + '+0+1 ' + mdpiPatchId + '.png ' + mdpiPatchId + '_left.png';
+        + convert + ' -crop ' + Math.floor(width) + 'x1+1+0 '
+            + mdpiPatchId + '.png ' + mdpiPatchId + '_top.png && '
+        + convert + ' -crop 1x' + Math.floor(height) + '+' + (Math.floor(width)+1) + '+1 '
+            + mdpiPatchId + '.png ' + mdpiPatchId + '_right.png && '
+        + convert + ' -crop ' + Math.floor(width) + 'x1+1+' + (Math.floor(height)+1) + ' '
+            + mdpiPatchId + '.png ' + mdpiPatchId + '_bottom.png && '
+        + convert + ' -crop 1x' + Math.floor(height) + '+0+1 '
+            + mdpiPatchId + '.png ' + mdpiPatchId + '_left.png';
     runCommand(command);
 }
 
@@ -233,20 +233,42 @@ function createNinePath(cwd, scale, suffix, width, height, contentId, patchId) {
     var command = 'cd ' + cwd + ' && '
         + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none '
         + content + ' -gravity Center -composite '
-        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchTop + ' \\) -gravity North -composite '
-        + '\\( -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchRight + ' \\) -gravity East -composite '
-        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchBottom + ' \\) -gravity South -composite '
-        + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest ' + patchLeft + ' \\) -gravity West -composite '
+        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
+            + patchTop + ' \\) -gravity North -composite '
+        + '\\( -resize 1x' + newHeight + '! -filter point -interpolate Nearest '
+            + patchRight + ' \\) -gravity East -composite '
+        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
+            + patchBottom + ' \\) -gravity South -composite '
+        + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest '
+            + patchLeft + ' \\) -gravity West -composite '
         + temp;
     runCommand(command);
-        // + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none ' + temp + ' && '
-        // + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchTop + ' - | ' + composite + ' -gravity North - ' + temp + ' ' + temp + ' && '
-        // + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchRight + ' - | ' + composite + ' -gravity East - ' + temp + ' ' + temp + ' && '
-        // + convert + ' -resize ' + newWidth + 'x1! -filter point -interpolate Nearest ' + patchBottom + ' - | ' + composite + ' -gravity South - ' + temp + ' ' + temp + ' && '
-        // + convert + ' -resize 1x' + newHeight + '! -filter point -interpolate Nearest ' + patchLeft + ' - | ' + composite + ' -gravity West - ' + temp + ' ' + temp + ' && '
-        // + composite + ' -gravity center ' + content + ' ' + temp + ' ' + temp;
 }
 
+function runCommand(command, callback) {
+    var task = NSTask.alloc().init();
+    var pipe = NSPipe.pipe();
+    var errPipe = NSPipe.pipe();
+        task.setLaunchPath_(@"/bin/bash");
+        task.setArguments_(NSArray.arrayWithObjects_("-c", command, nil));
+        task.setStandardOutput_(pipe);
+        task.setStandardError_(errPipe);
+        task.launch();
+        task.waitUntilExit();
+    var errorData = errPipe.fileHandleForReading().readDataToEndOfFile();
+    if (errorData != nil && errorData.length()) {
+        callback(
+            task.terminationStatus() == 0,
+            NSString.alloc().initWithData_encoding_(errorData, NSUTF8StringEncoding)
+        );
+        return;
+    }
+    var data = pipe.fileHandleForReading().readDataToEndOfFile();
+    callback(
+        task.terminationStatus() == 0,
+        NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding)
+    );
+}
 
 ////////////
 

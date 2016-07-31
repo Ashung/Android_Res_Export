@@ -10,7 +10,17 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-    alert("WIP", "WIP.");
+    // alert("WIP", "WIP.");
+
+    runCommand("/usr/local/bin/convertxxx -versionxxxx", function(status, msg) {
+        alert(status, msg);
+    });
+// alert(
+//     "aaa",
+//     runCommandWithReturn("xxxx")
+// )
+
+// /usr/local/bin/convert -version
 
     // alert("Select", selection[0].name() + ":\n" + selection[0].objectID());
 
