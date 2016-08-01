@@ -6,18 +6,18 @@
 
 var onRun = function(context) {
 
+    if (!getFilePath(context)) {
+        return;
+    }
+
     var doc = context.document;
     var page = doc.currentPage();
     var selection = context.selection;
 
-    if (!getFilePath(context)) {
-        return;
-    } else {
-        var currentFile = getFilePath(context);
-        // Export folder: <file name>-assets
-        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-        var tempFolder = getPluginPath(context) + ".temp/";
-    }
+    var currentFile = getFilePath(context);
+    // Export folder: <file name>-assets
+    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+    var tempFolder = getPluginPath(context) + ".temp/";
 
     // Reset exportDpis and qualifiers
     resetExportConfig(page.name());
@@ -43,8 +43,10 @@ var onRun = function(context) {
 
             var scale = exportConfig[i].scale;
             var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder + "drawable-" + qualifier);
-            mkdir(tempFolder);
+
+            if (!fileExists(exportFolder + "drawable-" + qualifier)) {
+                mkdir(exportFolder + "drawable-" + qualifier);
+            }
 
             // Export to tempFolder
             var formats = "png";
@@ -70,7 +72,7 @@ var onRun = function(context) {
                             );
                         }
 
-                        toast(context, "Export to \"" + exportFolder + "\". Done!");
+                        toast(context, "Export asset to \"" + exportFolder + "\". Done!");
                     }
                 }
             );

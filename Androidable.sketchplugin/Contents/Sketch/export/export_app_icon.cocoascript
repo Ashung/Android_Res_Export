@@ -6,17 +6,36 @@
 
 var onRun = function(context) {
 
+    if (!getFilePath(context)) {
+        return;
+    }
+
     var doc = context.document;
     var page = doc.currentPage();
     var selection = context.selection;
 
-    if (!getFilePath(context)) {
-        return;
-    } else {
-        var currentFile = getFilePath(context);
-        // Export folder: <file name>-assets
-        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-        var tempFolder = getPluginPath(context) + ".temp/";
+    var currentFile = getFilePath(context);
+    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+    var tempFolder = getPluginPath(context) + ".temp/";
+
+    // Android icon size
+    // mdpi: 48
+    // hdpi: 72
+    // xhdpi: 96
+    // xxhdpi: 144
+    // xxxhdpi: 192
+    // ic_launcher-web: 512
+    exportConfig = [
+        { scale : 0.25,   qualifier : "mdpi" },
+        { scale : 0.375,  qualifier : "hdpi" },
+        { scale : 0.5,    qualifier : "xhdpi" },
+        { scale : 0.75,   qualifier : "xxhdpi" },
+        { scale : 1,      qualifier : "xxxhdpi" },
+        { scale : 2.667 }
+    ];
+    var scales = [];
+    for (index in exportConfig) {
+        scales.push(exportConfig[index].scale);
     }
 
     if (selection.count() > 0) {
@@ -26,102 +45,84 @@ var onRun = function(context) {
             && icon.frame().height() == 192
         ) {
 
-            mkdir(exportFolder + "drawable-" + "xxxhdpi");
-            mkdir(tempFolder);
-
-
-            // Save document
             doc.saveDocument(nil);
 
-            // Export ninePatch Patch MDPI
+            var doExportAppIcon = false;
+            var failureMoveFileCounts = 0;
+
+            // Export
+            var iconName = androidResName(icon.name()) + ".png";
+            var iconId = icon.objectID();
             var formats = "png";
             var useIdForName = "yes";
             sketchtoolExport(
                 "layers",
                 currentFile,
-                "1",
+                scales,
                 formats,
-                [icon.objectID()],
+                [iconId],
                 useIdForName,
                 tempFolder,
                 function(success, message) {
-                    alert(success, message);
+                    if (success == true) {
+                        doExportAppIcon = true;
+                    }
                 }
             );
 
+            if (doExportAppIcon) {
+                for (var i = 0; i < exportConfig.length; i++) {
+                    var scale = exportConfig[i].scale;
+                    var qualifier = exportConfig[i].qualifier;
+                    var tempFile = tempFolder + iconId + scaleToSuffix(scale) + ".png";
+
+                    log(tempFile);
+
+                    if (qualifier) {
+                        var folder = exportFolder + "mipmap-" + qualifier;
+                        if (!fileExists(folder)) {
+                            mkdir(folder);
+                        }
+                        if (fileExists(tempFile)) {
+                            mv(
+                                tempFile,
+                                exportFolder + "mipmap-" + qualifier + "/" + iconName,
+                                function(success, message) {
+                                    if (!success) {
+                                        toast(context, message);
+                                        failureMoveFileCounts ++;
+                                    }
+                                }
+                            );
+                        }
+                    } else {
+                        if (!fileExists(exportFolder)) {
+                            mkdir(exportFolder);
+                        }
+                        mv(
+                            tempFile,
+                            exportFolder + "ic_launcher-web.png",
+                            function(success, message) {
+                                if (!success) {
+                                    toast(context, message);
+                                    failureMoveFileCounts ++;
+                                }
+                            }
+                        );
+                    }
+                }
+
+                if (failureMoveFileCounts == 0) {
+                    toast(context, "Export App icons to \"" + exportFolder + "\". Done!");
+                } else {
+                    toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length);
+                }
+
+            }
         } else {
             toast(context, "Your icon must in an Artboard, and the size must 192x192px.");
         }
-
-        // log(
-        //     androidResName(icon.name())
-        //     + ">>>"
-        //     + icon.objectID() + icon.className()
-        //     + icon.frame().width()
-        //
-        // );
-
-
-
-
-
-
-
-
     } else {
         toast(context, "Selected the app icon Layer or Artboard.");
     }
-
-
-
-
-
-
-
-    // alert("WIP", getPluginPath(context));
-
-    // runCommand("/opt/local/bin/convert -version", function(status, msg) {
-    //     alert(status, msg);
-    // });
-
-    // runCommand("/usr/local/bin/node /usr/local/bin/svgo --version", function(status, msg) {
-    //     alert(status, msg);
-    // });
-
-    // exec("/opt/local/bin/convert", ["-version"], function(status, msg) {
-    //     alert(status, msg);
-    // });
-
-    // exec("/bin/bash", ["-c", "/usr/local/bin/node /usr/local/bin/svgo --version"], function(status, msg) {
-    //     alert(status, msg);
-    // });
-    // var sketchDocPath = getFilePath(context);
-    // var exportFolder = sketchDocPath.replace(/\.sketch$/, "-assets");
-
-    // runCommand("/usr/bin/open", ["-R", exportFolder]);
-
-    // runCommand("/usr/bin/open", ["-a", "Terminal", exportFolder]);
-
-
-// alert(
-//     "aaa",
-//     runCommandWithReturn("/usr/local/bin/node /usr/local/bin/svgo --version")
-// )
-
-// /usr/local/bin/convert -version
-
-    // alert("Select", selection[0].name() + ":\n" + selection[0].objectID());
-
-    // select a layer group
-
-    // @bounds layer
-
-
-    // add 5 slices + id
-
-    // export use sketchtool
-
-
-
-
 }

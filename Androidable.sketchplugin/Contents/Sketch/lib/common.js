@@ -25,54 +25,6 @@ if (!fileExists(convert) && fileExists("/opt/local/bin/convert")) {
 var svgo = "/usr/local/bin/svgo";
 
 /* =========================================================
-    Utilities
-========================================================= */
-
-function fileExists(path) {
-    return NSFileManager.defaultManager().fileExistsAtPath_(path);
-}
-
-function toast(context, message) {
-    var doc = context.document;
-    if (message) {
-        doc.showMessage(message + "");
-    }
-}
-
-function getPluginPath(context) {
-    var path = decodeURI(context.plugin.url()).replace("file://", ""));
-    return path;
-}
-
-function getFilePath(context) {
-    var doc = context.document;
-    if (doc.fileURL()) {
-        return decodeURI(doc.fileURL()).replace("file://", ""))
-    } else {
-        alert(context.plugin.name(), "Save your document first.");
-        return null;
-    }
-}
-
-function writeFile(filePath, content) {
-    content = NSString.stringWithFormat('%@', content);
-    content.writeToFile_atomically_encoding_error_(
-        filePath, true, NSUTF8StringEncoding, null
-    );
-}
-
-function alert(title, content) {
-    var app = NSApplication.sharedApplication();
-    app.displayDialog_withTitle_(content, title);
-}
-
-function askForUserInput(context, title, initial) {
-    var doc = context.document;
-    var result = doc.askForUserInput_initialValue(title, initial);
-    return result;
-}
-
-/* =========================================================
     Android
 ========================================================= */
 
@@ -151,15 +103,81 @@ function dpiToScale(dpi) {
 }
 
 function scaleToSuffix(size) {
-    if (size > 1) {
-        return "@" + Math.floor(size) + "x";
+    var r = "";
+    if (size > 0 && size < 0.05) {
+        r = "@0.0x";
+    } else if (size >= 0.05 && size <= 0.15) {
+        r = "@0.1x";
+    } else if (size > 0.15 && size <= 0.25) {
+        r = "@0.2x";
+    } else if (size > 0.25 && size <= 0.35) {
+        r = "@0.3x";
+    } else if (size > 0.35 && size < 0.45) {
+        r = "@0.4x";
+    } else if (size >= 0.45 && size < 0.65) {
+        r = "@0.5x";
+    } else if (size >= 0.55 && size < 0.65) {
+        r = "@0.6x";
+    } else if (size >= 0.65 && size < 0.75) {
+        r = "@0.7x";
+    } else if (size >= 0.75 && size <= 0.85) {
+        r = "@0.8x";
+    } else if (size > 0.85 && size <= 0.95) {
+        r = "@0.9x";
+    } else if (size > 0.95 && size < 1) {
+        r = "@1.0x";
+    } else if (size > 1) {
+        r = "@" + Math.floor(size) + "x";
     }
-    if (size < 1) {
-        return "@" + size.toFixed(1) + "x";
+    return r;
+}
+
+/* =========================================================
+    Utilities
+========================================================= */
+
+function fileExists(path) {
+    return NSFileManager.defaultManager().fileExistsAtPath_(path);
+}
+
+function toast(context, message) {
+    var doc = context.document;
+    if (message) {
+        doc.showMessage(message + "");
     }
-    if (size == 1) {
-        return "";
+}
+
+function getPluginPath(context) {
+    var path = decodeURI(context.plugin.url()).replace("file://", ""));
+    return path;
+}
+
+function getFilePath(context) {
+    var doc = context.document;
+    if (doc.fileURL()) {
+        return decodeURI(doc.fileURL()).replace("file://", ""))
+    } else {
+        alert(context.plugin.name(), "Save your document first.");
+        return null;
     }
+}
+
+function writeFile(filePath, content) {
+    content = NSString.stringWithFormat('%@', content);
+    content.writeToFile_atomically_encoding_error_(
+        filePath, true, NSUTF8StringEncoding, null
+    );
+}
+
+function alert(title, content) {
+    var app = NSApplication.sharedApplication();
+    app.displayDialog_withTitle_(content, title);
+}
+
+function askForUserInput(context, title, initial) {
+    var doc = context.document;
+    var result = doc.askForUserInput_initialValue(title, initial);
+    return result;
 }
 
 /* =========================================================

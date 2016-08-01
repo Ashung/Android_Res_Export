@@ -1,0 +1,81 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+
+    // Export folder: <file name>-assets
+    if (!getFilePath(context)) {
+        return;
+    } else {
+        var currentFile = getFilePath(context);
+        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
+    }
+
+
+
+    // log(selection[0].objectID());
+    //
+    // log(">>>" + selection[0].objectID());
+
+    // doc.copySVG((selection[0].objectID()));
+
+    // alert("SVG", runCommandWithReturn("pbpaste"));
+
+    alert(context.plugin.name(), scaleToSuffix(0.25));
+
+    // showInFinder(exportFolder)
+
+    //
+    // alert("WIP", getPluginPath(context));
+
+    // runCommand("/opt/local/bin/convert -version", function(status, msg) {
+    //     alert(status, msg);
+    // });
+
+    // runCommand("/usr/local/bin/node /usr/local/bin/svgo --version", function(status, msg) {
+    //     alert(status, msg);
+    // });
+
+    // exec("/opt/local/bin/convert", ["-version"], function(status, msg) {
+    //     alert(status, msg);
+    // });
+
+    // exec("/bin/bash", ["-c", "/usr/local/bin/node /usr/local/bin/svgo --version"], function(status, msg) {
+    //     alert(status, msg);
+    // });
+    // var sketchDocPath = getFilePath(context);
+    // var exportFolder = sketchDocPath.replace(/\.sketch$/, "-assets");
+
+    // runCommand("/usr/bin/open", ["-R", exportFolder]);
+
+    // runCommand("/usr/bin/open", ["-a", "Terminal", exportFolder]);
+
+
+// alert(
+//     "aaa",
+//     runCommandWithReturn("/usr/local/bin/node /usr/local/bin/svgo --version")
+// )
+
+// /usr/local/bin/convert -version
+
+    // alert("Select", selection[0].name() + ":\n" + selection[0].objectID());
+
+    // select a layer group
+
+    // @bounds layer
+
+
+    // add 5 slices + id
+
+    // export use sketchtool
+
+
+}

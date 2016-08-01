@@ -10,6 +10,11 @@
     "bundleVersion": 1,
     "commands": [
         {
+            "name": "Test",
+            "identifier": "test",
+            "script": "utilities/test.cocoascript"
+        },
+        {
             "name": "Export PNG",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
@@ -44,6 +49,7 @@
     "menu": {
         "isRoot": false,
         "items": [
+            "test",
             "export_assets",
             "export_nine_patch",
             "export_vector_drawable",
