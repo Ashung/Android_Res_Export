@@ -21,6 +21,13 @@ if (!fileExists(convert) && fileExists("/opt/local/bin/convert")) {
     convert = "/opt/local/bin/convert";
 }
 
+// SVGO
+var svgo = "/usr/local/bin/svgo";
+
+/* =========================================================
+    Utilities
+========================================================= */
+
 function fileExists(path) {
     return NSFileManager.defaultManager().fileExistsAtPath_(path);
 }
@@ -65,17 +72,10 @@ function askForUserInput(context, title, initial) {
     return result;
 }
 
-function showInFinder(path) {
-    var finder = NSTask.alloc().init();
-        finder.setLaunchPath_(@"/usr/bin/open");
-        finder.setArguments_(NSArray.arrayWithObjects_("-R", path, nil));
-        finder.launch();
-        finder.waitUntilExit();
-}
+/* =========================================================
+    Android
+========================================================= */
 
-// Android =================================================
-
-// defalut export
 var exportConfig = [
     { scale : 1,   qualifier : "mdpi" },
     { scale : 1.5, qualifier : "hdpi" },
@@ -162,66 +162,87 @@ function scaleToSuffix(size) {
     }
 }
 
-// Command line tools ======================================
+/* =========================================================
+    Command line tools
+========================================================= */
 
-function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useIdForName, outputFolder) {
+function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useIdForName, outputFolder, callback) {
     // sketcktool export
     //     slices|layers|pages|artboards
     //     <file.sketch>
     //     --scales="1, 1.5, 2, 3, 4"
-    //     --items="<id>,<id>" --item=<string>
+    //     --items="<id>,<id>"
     //     --formats="png"
     //     --use-id-for-name="yes|no"
     //     --group-contents-only="yes"
     //     --overwritin="yes"
     //     --output="<dir>"
-    var command = sketchtool
-        + ' export ' + exportType
-        + ' "' + sketchFile + '"'
-        + ' --scales="' + scales.toString() + '"'
-        + ' --formats="' + formats.toString() + '"'
-        + ' --use-id-for-name="' + useIdForName + '"'
-        + ' --group-contents-only="yes"'
-        + ' --save-for-web="no"'
-        + ' --overwritin="yes"';
+    var command = "/bin/bash";
+    var args = [
+        "-c",
+        sketchtool + ' export ' + exportType
+            + ' "' + sketchFile + '"'
+            + ' --scales="' + scales.toString() + '"'
+            + ' --formats="' + formats.toString() + '"'
+            + ' --use-id-for-name="' + useIdForName + '"'
+            + ' --group-contents-only="yes"'
+            + ' --save-for-web="no"'
+            + ' --overwritin="yes"'
+    ];
     if (itemIds.length > 1) {
-        command = command + ' --items="' + itemIds.toString() + '"';
+        args[1] += ' --items="' + itemIds.toString() + '"';
     } else {
-        command = command + ' --item="' + itemIds[0] + '"';
+        args[1] += ' --item="' + itemIds[0] + '"';
     }
-        command = command + ' --output="' + outputFolder + '"';
-    runCommand(command);
+        args[1] += ' --output="' + outputFolder + '"';
+    runCommand(command, args, callback);
 }
 
-function mv(formPath, toPath) {
-    var command = 'mv ' + formPath + ' ' + toPath;
-    runCommand(command);
+function mv(formPath, toPath, callback) {
+    var command = "/bin/bash";
+    var args = [
+        "-c",
+        'mv "' + formPath + '" "' + toPath + '"'
+    ];
+    runCommand(command, args, callback);
 }
 
-function rm(cwd, file) {
-    var command = 'cd ' + cwd + ' && rm ' + file;
-    runCommand(command);
+function rm(file, callback) {
+    var command = "/bin/bash";
+    var args = [
+        "-c",
+        'rm "' + file + '"'
+    ];
+    runCommand(command, args, callback);
 }
 
-function mkdir(dirPath) {
-    var command = 'mkdir -p' + dirPath;
-    runCommand(command);
+function mkdir(dirPath, callback) {
+    var command = "/bin/bash";
+    var args = [
+        "-c",
+        'mkdir -p "' + dirPath + '"'
+    ];
+    runCommand(command, args, callback);
 }
 
-function createMdpiPatchLines(cwd, width, height, mdpiPatchId) {
-    var command = 'cd ' + cwd + ' && '
-        + convert + ' -crop ' + Math.floor(width) + 'x1+1+0 '
-            + mdpiPatchId + '.png ' + mdpiPatchId + '_top.png && '
-        + convert + ' -crop 1x' + Math.floor(height) + '+' + (Math.floor(width)+1) + '+1 '
-            + mdpiPatchId + '.png ' + mdpiPatchId + '_right.png && '
-        + convert + ' -crop ' + Math.floor(width) + 'x1+1+' + (Math.floor(height)+1) + ' '
-            + mdpiPatchId + '.png ' + mdpiPatchId + '_bottom.png && '
-        + convert + ' -crop 1x' + Math.floor(height) + '+0+1 '
-            + mdpiPatchId + '.png ' + mdpiPatchId + '_left.png';
-    runCommand(command);
+function createMdpiPatchLines(cwd, width, height, mdpiPatchId, callback) {
+    var command = "/bin/bash";
+    var args = [
+        "-c",
+        'cd "' + cwd + '" && '
+            + convert + ' -crop ' + Math.floor(width) + 'x1+1+0 '
+                + mdpiPatchId + '.png ' + mdpiPatchId + '_top.png && '
+            + convert + ' -crop 1x' + Math.floor(height) + '+' + (Math.floor(width)+1) + '+1 '
+                + mdpiPatchId + '.png ' + mdpiPatchId + '_right.png && '
+            + convert + ' -crop ' + Math.floor(width) + 'x1+1+' + (Math.floor(height)+1) + ' '
+                + mdpiPatchId + '.png ' + mdpiPatchId + '_bottom.png && '
+            + convert + ' -crop 1x' + Math.floor(height) + '+0+1 '
+                + mdpiPatchId + '.png ' + mdpiPatchId + '_left.png'
+    ];
+    runCommand(command, args, callback);
 }
 
-function createNinePath(cwd, scale, suffix, width, height, contentId, patchId) {
+function createNinePath(cwd, scale, suffix, width, height, contentId, patchId, callback) {
     var newWidth = Math.floor(width * scale);
     var newHeight = Math.floor(height * scale);
     var temp = contentId + "_temp" + suffix + ".png";
@@ -230,72 +251,63 @@ function createNinePath(cwd, scale, suffix, width, height, contentId, patchId) {
     var patchRight = patchId + "_right.png";
     var patchBottom = patchId + "_bottom.png";
     var patchLeft = patchId + "_left.png";
-    var command = 'cd ' + cwd + ' && '
-        + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none '
-        + content + ' -gravity Center -composite '
-        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
-            + patchTop + ' \\) -gravity North -composite '
-        + '\\( -resize 1x' + newHeight + '! -filter point -interpolate Nearest '
-            + patchRight + ' \\) -gravity East -composite '
-        + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
-            + patchBottom + ' \\) -gravity South -composite '
-        + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest '
-            + patchLeft + ' \\) -gravity West -composite '
-        + temp;
-    runCommand(command);
+    var command = "/bin/bash";
+    var args = [
+        "-c",
+        'cd "' + cwd + '" && '
+            + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none '
+            + content + ' -gravity Center -composite '
+            + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
+                + patchTop + ' \\) -gravity North -composite '
+            + '\\( -resize 1x' + newHeight + '! -filter point -interpolate Nearest '
+                + patchRight + ' \\) -gravity East -composite '
+            + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
+                + patchBottom + ' \\) -gravity South -composite '
+            + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest '
+                + patchLeft + ' \\) -gravity West -composite '
+            + temp
+    ];
+    runCommand(command, args, callback);
 }
 
-function runCommand(command, callback) {
+
+// "/opt/local/bin/convert", ["-version"]
+// "/bin/bash", ["-c", "/usr/local/bin/node /usr/local/bin/svgo --version"]
+
+function runCommand(command, args, callback) {
     var task = NSTask.alloc().init();
     var pipe = NSPipe.pipe();
     var errPipe = NSPipe.pipe();
-        task.setLaunchPath_(@"/bin/bash");
-        task.setArguments_(NSArray.arrayWithObjects_("-c", command, nil));
-        task.setStandardOutput_(pipe);
-        task.setStandardError_(errPipe);
+        task.launchPath = command;
+        task.arguments = args;
+        task.standardOutput = pipe;
+        task.standardError = errPipe;
         task.launch();
         task.waitUntilExit();
     var errorData = errPipe.fileHandleForReading().readDataToEndOfFile();
     if (errorData != nil && errorData.length()) {
-        callback(
-            task.terminationStatus() == 0,
-            NSString.alloc().initWithData_encoding_(errorData, NSUTF8StringEncoding)
-        );
-        return;
+        var message = NSString.alloc().initWithData_encoding_(errorData, NSUTF8StringEncoding);
+        if (callback && typeof(callback) == "function") {
+            callback(
+                task.terminationStatus() == 0,
+                message
+            );
+            return;
+        } else {
+            return NSException.raise_format_("failed", message);
+        }
     }
     var data = pipe.fileHandleForReading().readDataToEndOfFile();
-    callback(
-        task.terminationStatus() == 0,
-        NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding)
-    );
-}
-
-////////////
-
-function runCommandWithReturn(command) {
-    var task = NSTask.alloc().init();
-    var pipe = NSPipe.pipe();
-    var errPipe = NSPipe.pipe();
-
-
-
-    task.setLaunchPath_(@"/bin/bash");
-    task.setArguments_(NSArray.arrayWithObjects_("-c", command, nil));
-    task.setStandardOutput_(pipe);
-    task.setStandardError_(errPipe);
-    task.launch();
-    task.waitUntilExit();
-
-
-
-    var data = errPipe.fileHandleForReading().readDataToEndOfFile();
-    if (data != nil && data.length()) {
-      var message = NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding);
-      return NSException.raise_format_("failed", message);
+    if (callback && typeof(callback) == "function") {
+        callback(
+            task.terminationStatus() == 0,
+            NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding)
+        );
     }
-    data = pipe.fileHandleForReading().readDataToEndOfFile();
-    return NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding);
 }
+
+
+
 
 function selectFolderDialog(context, message) {
     var doc = context.document;

@@ -20,7 +20,7 @@
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "Export 9-Patch",
+            "name": "Export 9-Patch PNG",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },

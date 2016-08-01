@@ -17,9 +17,9 @@ var onRun = function(context) {
         var sketchDocPath = getFilePath(context);
         var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
         if (fileExists(exportFolder)) {
-            runCommand("open -a Terminal " + exportFolder);
+            runCommand("/usr/bin/open", ["-a", "Terminal", exportFolder]);
         } else {
-            runCommand("open -a Terminal " + sketchDocPath);
+            runCommand("/usr/bin/open", ["-a", "Terminal", sketchDocPath]);
             toast(context, "Not assets folder finded.");
         }
     }

@@ -10,14 +10,102 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-    // alert("WIP", "WIP.");
+    if (!getFilePath(context)) {
+        return;
+    } else {
+        var currentFile = getFilePath(context);
+        // Export folder: <file name>-assets
+        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+        var tempFolder = getPluginPath(context) + ".temp/";
+    }
 
-    runCommand("/usr/local/bin/convertxxx -versionxxxx", function(status, msg) {
-        alert(status, msg);
-    });
+    if (selection.count() > 0) {
+        var icon = selection.objectAtIndex(0);
+        if (icon.className() == "MSArtboardGroup"
+            && icon.frame().width() == 192
+            && icon.frame().height() == 192
+        ) {
+
+            mkdir(exportFolder + "drawable-" + "xxxhdpi");
+            mkdir(tempFolder);
+
+
+            // Save document
+            doc.saveDocument(nil);
+
+            // Export ninePatch Patch MDPI
+            var formats = "png";
+            var useIdForName = "yes";
+            sketchtoolExport(
+                "layers",
+                currentFile,
+                "1",
+                formats,
+                [icon.objectID()],
+                useIdForName,
+                tempFolder,
+                function(success, message) {
+                    alert(success, message);
+                }
+            );
+
+        } else {
+            toast(context, "Your icon must in an Artboard, and the size must 192x192px.");
+        }
+
+        // log(
+        //     androidResName(icon.name())
+        //     + ">>>"
+        //     + icon.objectID() + icon.className()
+        //     + icon.frame().width()
+        //
+        // );
+
+
+
+
+
+
+
+
+    } else {
+        toast(context, "Selected the app icon Layer or Artboard.");
+    }
+
+
+
+
+
+
+
+    // alert("WIP", getPluginPath(context));
+
+    // runCommand("/opt/local/bin/convert -version", function(status, msg) {
+    //     alert(status, msg);
+    // });
+
+    // runCommand("/usr/local/bin/node /usr/local/bin/svgo --version", function(status, msg) {
+    //     alert(status, msg);
+    // });
+
+    // exec("/opt/local/bin/convert", ["-version"], function(status, msg) {
+    //     alert(status, msg);
+    // });
+
+    // exec("/bin/bash", ["-c", "/usr/local/bin/node /usr/local/bin/svgo --version"], function(status, msg) {
+    //     alert(status, msg);
+    // });
+    // var sketchDocPath = getFilePath(context);
+    // var exportFolder = sketchDocPath.replace(/\.sketch$/, "-assets");
+
+    // runCommand("/usr/bin/open", ["-R", exportFolder]);
+
+    // runCommand("/usr/bin/open", ["-a", "Terminal", exportFolder]);
+
+
 // alert(
 //     "aaa",
-//     runCommandWithReturn("xxxx")
+//     runCommandWithReturn("/usr/local/bin/node /usr/local/bin/svgo --version")
 // )
 
 // /usr/local/bin/convert -version

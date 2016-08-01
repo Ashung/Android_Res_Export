@@ -15,8 +15,8 @@ var onRun = function(context) {
     } else {
         var currentFile = getFilePath(context);
         // Export folder: <file name>-assets
-        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
-        var tempFolder = getPluginPath(context);
+        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+        var tempFolder = getPluginPath(context) + ".temp/";
     }
 
     // Reset exportDpis and qualifiers
@@ -39,13 +39,12 @@ var onRun = function(context) {
         // Save document
         doc.saveDocument(nil);
 
-        var exportSuccess = false;
-
         for (var i = 0; i < exportConfig.length; i++) {
 
             var scale = exportConfig[i].scale;
             var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder + "/drawable-" + qualifier);
+            mkdir(exportFolder + "drawable-" + qualifier);
+            mkdir(tempFolder);
 
             // Export to tempFolder
             var formats = "png";
@@ -57,24 +56,28 @@ var onRun = function(context) {
                 formats,
                 assetsIds,
                 useIdForName,
-                tempFolder
+                tempFolder,
+                function(success, message) {
+                    if (success == true) {
+
+                        // Move to exportFolder and rename
+                        for(var j = 0; j < assets.length; j++) {
+                            var oldName = assets[j]["id"];
+                            var newName = assets[j]["name"] + ".png";
+                            mv(
+                                tempFolder + oldName + scaleToSuffix(scale) + ".png",
+                                exportFolder + "drawable-" + qualifier + "/" + newName
+                            );
+                        }
+
+                        toast(context, "Export to \"" + exportFolder + "\". Done!");
+                    }
+                }
             );
 
-            // log(">>> Export slices " + currentFile + " -scales=" + exportConfig[i].scale + " -out=" + exportFolder);
+            // log(">>> Export slices " + currentFile + " -scales=" + exportConfig[i].scale + " -out=" + tempFolder);
 
-            // Move to exportFolder and rename
-            for(var j = 0; j < assets.length; j++) {
-                var oldName = assets[j]["id"];
-                var newName = assets[j]["name"] + ".png";
-                mv(
-                    tempFolder + "/" + oldName + scaleToSuffix(scale) + ".png",
-                    exportFolder + "/drawable-" + qualifier + "/" + newName
-                );
-            }
         }
-        // TODO
-        toast(context, "Export to \"" + exportFolder + "\". Done!");
-
     } else {
         toast(context, "No any exportable layer or select a unexportable layer.");
     }
@@ -91,6 +94,7 @@ function addAssets(parent, assets, assetsIds) {
                 "name": androidResName(children.name())
             });
             assetsIds.push(children.objectID());
+
             // log("id:" + children.objectID() + ", name:" + androidResName(children.name()));
         }
     }

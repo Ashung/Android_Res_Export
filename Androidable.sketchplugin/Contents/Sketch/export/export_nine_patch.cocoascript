@@ -8,8 +8,13 @@ var onRun = function(context) {
 
     if (!fileExists(convert)) {
         alert(
-            "You have not install ImageMagick.",
-            "Export Android nine-patch image feature depend on the ImageMagick library.\n\nInstall use MacPorts:\n$ sudo port install ImageMagick\nor use HomeBrew:\n$ brew install ImageMagick"
+            context.plugin.name(),
+            "You have not install ImageMagick.\n\
+            Export Android nine-patch image feature depend on the ImageMagick library.\n\n\
+            Install use MacPorts:\n\
+            $ sudo port install ImageMagick\n\
+            or use HomeBrew:\n\
+            $ brew install ImageMagick"
         );
         return;
     }
@@ -18,12 +23,13 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-    // Export folder: <file name>-assets
     if (!getFilePath(context)) {
         return;
     } else {
         var currentFile = getFilePath(context);
-        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
+        // Export folder: <file name>-assets
+        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+        var tempFolder = getPluginPath(context) + ".temp/";
     }
 
     // Reset exportDpis and qualifiers
@@ -37,7 +43,7 @@ var onRun = function(context) {
     if(selection.count() > 0) {
         for(var i = 0; i < selection.count(); i ++) {
             if(selection[i].className() == "MSLayerGroup") {
-                var imageName = selection[i].name();
+                var imageName = androidResName(selection[i].name());
                 var patchId = "";
                 var contentId = "";
                 var width = "";
@@ -90,7 +96,7 @@ var onRun = function(context) {
                         patchId = parent.layers()[j].objectID();
                     }
                     if(parent.layers()[j].name() == "content") {
-                        imageName = parent.name();
+                        imageName = androidResName(parent.name());
                     }
                 }
             }
@@ -117,6 +123,10 @@ var onRun = function(context) {
         // Save document
         doc.saveDocument(nil);
 
+        var doExportedMdpiPatch = false;
+        var doCreateMdpiPatchLines = false;
+        var doCreateNinePath = false;
+
         // Export ninePatch Patch MDPI
         var formats = "png";
         var useIdForName = "yes";
@@ -127,73 +137,105 @@ var onRun = function(context) {
             formats,
             ninePatchPatchIds,
             useIdForName,
-            exportFolder
+            tempFolder,
+            function(success1, message1) {
+                if (success1 == true) {
+                    exportedMdpiPatch = true;
+                }
+            }
         );
 
-        for (var i = 0; i < exportConfig.length; i++) {
+        if (exportedMdpiPatch) {
+            for (var i = 0; i < exportConfig.length; i++) {
 
-            var scale = exportConfig[i].scale;
-            var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder, "drawable-" + qualifier);
+                var scale = exportConfig[i].scale;
+                var qualifier = exportConfig[i].qualifier;
+                mkdir(exportFolder + "drawable-" + qualifier);
+                mkdir(tempFolder);
 
-            // Export ninePatch Content
-            sketchtoolExport(
-                "slices",
-                currentFile,
-                exportConfig[i].scale,
-                formats,
-                ninePatchContentIds,
-                useIdForName,
-                exportFolder
-            );
+                // Export ninePatch Content
+                sketchtoolExport(
+                    "slices",
+                    currentFile,
+                    exportConfig[i].scale,
+                    formats,
+                    ninePatchContentIds,
+                    useIdForName,
+                    tempFolder,
+                    function(success, message) {
+                        if (success == true) {
 
-            for(var j = 0; j < ninePatchImages.length; j++) {
-                var contentId = ninePatchImages[j]["contentId"];
-                var content = contentId + scaleToSuffix(scale) + ".png";
-                var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
-                var patchId = ninePatchImages[j]["patchId"];
-                var patch = patchId + ".png";
-                var newName = ninePatchImages[j]["name"] + ".9.png";
-                var width = ninePatchImages[j]["width"];
-                var height = ninePatchImages[j]["height"];
+                            for(var j = 0; j < ninePatchImages.length; j++) {
+                                var contentId = ninePatchImages[j]["contentId"];
+                                var content = contentId + scaleToSuffix(scale) + ".png";
+                                var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
+                                var patchId = ninePatchImages[j]["patchId"];
+                                var patch = patchId + ".png";
+                                var newName = ninePatchImages[j]["name"] + ".9.png";
+                                var width = ninePatchImages[j]["width"];
+                                var height = ninePatchImages[j]["height"];
 
-                // Run only once
-                if (i == 0) {
-                    createMdpiPatchLines(
-                        exportFolder,
-                        width,
-                        height,
-                        patchId
-                    );
-                    rm(exportFolder, patch);
-                }
+                                // Create MDPI 9-patch lines, run only once
+                                if (i == 0) {
+                                    createMdpiPatchLines(
+                                        tempFolder,
+                                        width,
+                                        height,
+                                        patchId,
+                                        function(success2, message2) {
+                                            if (success2 == true) {
+                                                rm(tempFolder + patch);
+                                                doCreateMdpiPatchLines = true;
+                                            }
+                                        }
+                                    );
+                                }
 
-                createNinePath(exportFolder, scale, scaleToSuffix(scale), width, height, contentId, patchId);
-                rm(exportFolder, content);
-
-                // Rename assets
-                mv(
-                    exportFolder,
-                    temp,
-                    "drawable-" + qualifier + "/" + newName
+                                createNinePath(
+                                    tempFolder,
+                                    scale,
+                                    scaleToSuffix(scale),
+                                    width,
+                                    height,
+                                    contentId,
+                                    patchId,
+                                    function(success3, message3) {
+                                        if (success3 == true) {
+                                            rm(tempFolder + content);
+                                            // Rename assets
+                                            mv(
+                                                tempFolder + temp,
+                                                exportFolder + "drawable-" + qualifier + "/" + newName
+                                            );
+                                            doCreateNinePath = true;
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    }
                 );
             }
+
+            // Remove patch lines
+            if (doCreateMdpiPatchLines) {
+                for(var i = 0; i < ninePatchPatchIds.length; i++) {
+                    var patchId = ninePatchPatchIds[i];
+                    var patchTop = patchId + "_top.png";
+                    var patchRight = patchId + "_right.png";
+                    var patchBottom = patchId + "_bottom.png";
+                    var patchLeft = patchId + "_left.png";
+                    rm(tempFolder + patchTop);
+                    rm(tempFolder + patchRight);
+                    rm(tempFolder + patchBottom);
+                    rm(tempFolder + patchLeft);
+                }
+            }
+
+            if (doExportedMdpiPatch && doCreateMdpiPatchLines && doCreateNinePath) {
+                toast(context, "Export to \"" + exportFolder + "\". Done!");
+            }
+
         }
-
-        // Remove patch lines
-        for(var i = 0; i < ninePatchPatchIds.length; i++) {
-            var patchId = ninePatchPatchIds[i];
-            var patchTop = patchId + "_top.png";
-            var patchRight = patchId + "_right.png";
-            var patchBottom = patchId + "_bottom.png";
-            var patchLeft = patchId + "_left.png";
-            rm(exportFolder, patchTop);
-            rm(exportFolder, patchRight);
-            rm(exportFolder, patchBottom);
-            rm(exportFolder, patchLeft);
-        }
-
-        toast(context, "Export to \"" + exportFolder + "\". Done!");
-
     }
 }
