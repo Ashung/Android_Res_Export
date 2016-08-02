@@ -10,14 +10,106 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
+    // if (!getFilePath(context)) {
+    //     return;
+    // } else {
+    //     var currentFile = getFilePath(context);
+    //     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
+    // }
 
-    // Export folder: <file name>-assets
-    if (!getFilePath(context)) {
-        return;
-    } else {
-        var currentFile = getFilePath(context);
-        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets");
-    }
+
+// var f = [NSFileManager defaultManager]
+// var c = runCommandWithReturn("which convert");
+// //NSString.stringWithFormat('%@', "/usr/local/bin/convert");
+// //NSString.alloc().initWithString("/usr/local/bin/convert"); //"/usr/local/bin/convert"//
+// var f1 = [f attributesOfItemAtPath:c error:nil]
+//
+// log(c)
+// log(f1)
+
+//  Work
+// runCommand("/bin/bash", ["-l", "-c", "which convert"], function(status, msg) {
+//     if (status && msg != "") {
+//         var f = [NSFileManager defaultManager]
+//         var tt = msg.replace(/\s*$/g, "");//NSString.alloc().initWithString(msg.replace(/\s*$/g, ""));
+//         var f1 = [f attributesOfItemAtPath:tt error:nil]
+//         alert(status, f1)
+//     }
+// });
+
+
+
+// var ttt = which("convert");
+// // ttt += "";
+// log(
+//     NSFileManager.defaultManager().fileExistsAtPath(ttt)
+// )
+
+
+var ttt = which("convert");
+alert(
+    context.plugin.name(),
+    NSFileManager.defaultManager().attributesOfItemAtPath_error_(
+        ttt,
+        nil
+    )
+);
+
+// log (
+//     NSFileManager.defaultManager().attributesOfItemAtPath_error_(
+//         ttt,
+//         nil
+//     )
+// )
+// log (
+//     NSFileManager.defaultManager().attributesOfItemAtPath_error_(
+//         ttt,
+//         nil
+//     ).fileType()
+// )
+
+// var ttt = @"" + NSString.alloc().initWithString(which("convert")); //"/usr/local/bin/convert";
+// log(typeof(ttt));
+//
+//
+// // log(NSString.stringWithFormat('%@', ttt));
+//
+// log(NSString.alloc().initWithString(ttt));
+//
+// // log([NSString stringWithFormat:@"%s", ttt]);
+//
+// log (
+//     [[NSFileManager defaultManager] attributesOfItemAtPath:@"/usr/local/bin/convert" error:nil]
+// )
+//
+// log (
+//     NSFileManager.defaultManager().attributesOfItemAtPath_error_(
+//         @"/usr/local/bin/convert",
+//         nil
+//     ).fileType()
+// )
+
+// NSString.stringWithFormat('%@', ttt)
+// "/usr/local/bin/convert"
+// NSFileManager.defaultManager().fileExistsAtPath_(which("convert"))
+    // alert(
+    //     context.plugin.name(),
+    //     which("convertxxx")
+    // )
+
+
+    // runCommand("/bin/bash", ["-l", "-c", "which convert"], function(status, msg) {
+    //
+    //     if (status == true && msg != "") {
+    //         // alert(status, msg);
+    //         alert(
+    //             context.plugin.name(),
+    //             msg
+    //         )
+    //     }
+    // });
+
+
 
 
 
@@ -29,30 +121,30 @@ var onRun = function(context) {
 
     // alert("SVG", runCommandWithReturn("pbpaste"));
 
-    alert(context.plugin.name(), scaleToSuffix(0.25));
+    // alert(context.plugin.name(), scaleToSuffix(0.25));
 
     // showInFinder(exportFolder)
 
     //
     // alert("WIP", getPluginPath(context));
 
-    // runCommand("/opt/local/bin/convert -version", function(status, msg) {
+    // runCommand("/usr/local/bin/convert", ["-version"], function(status, msg) {
     //     alert(status, msg);
     // });
+
+    // runCommand("/bin/bash", ["-l", "-c", "svgo -v"], function(status, msg) {
+    //     alert(status, msg);
+    // });
+
+
 
     // runCommand("/usr/local/bin/node /usr/local/bin/svgo --version", function(status, msg) {
     //     alert(status, msg);
     // });
 
-    // exec("/opt/local/bin/convert", ["-version"], function(status, msg) {
-    //     alert(status, msg);
-    // });
+    // "/opt/local/bin/convert", ["-version"]
+    // "/bin/bash", ["-c", "/usr/local/bin/node /usr/local/bin/svgo --version"]
 
-    // exec("/bin/bash", ["-c", "/usr/local/bin/node /usr/local/bin/svgo --version"], function(status, msg) {
-    //     alert(status, msg);
-    // });
-    // var sketchDocPath = getFilePath(context);
-    // var exportFolder = sketchDocPath.replace(/\.sketch$/, "-assets");
 
     // runCommand("/usr/bin/open", ["-R", exportFolder]);
 

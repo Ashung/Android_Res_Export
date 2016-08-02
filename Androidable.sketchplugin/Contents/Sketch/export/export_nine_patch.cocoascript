@@ -6,15 +6,14 @@
 
 var onRun = function(context) {
 
-    if (!fileExists(convert)) {
+    if (!convert) {
         alert(
-            context.plugin.name(),
-            "You have not install ImageMagick.\n\
-            Export Android nine-patch image feature depend on the ImageMagick library.\n\n\
-            Install use MacPorts:\n\
-            $ sudo port install ImageMagick\n\
-            or use HomeBrew:\n\
-            $ brew install ImageMagick"
+            "You have not install ImageMagick.",
+            "Export Android nine-patch image feature depend on the ImageMagick library.\n\n" +
+            "Install use HomeBrew:\n" +
+            "$ brew install ImageMagick\n\n" +
+            "or use MacPorts:\n" +
+            "$ sudo port install ImageMagick"
         );
         return;
     }
@@ -28,7 +27,6 @@ var onRun = function(context) {
     var selection = context.selection;
 
     var currentFile = getFilePath(context);
-    // Export folder: <file name>-assets
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
     var tempFolder = getPluginPath(context) + ".temp/";
 
@@ -112,13 +110,13 @@ var onRun = function(context) {
                 ninePatchPatchIds.push(patchId);
                 ninePatchContentIds.push(contentId);
             }
-
         }
     }
 
     // log(ninePatchImages);
 
     if (ninePatchPatchIds.length == 0 && ninePatchContentIds.length == 0) {
+        toast(context, "No nine-patch found.")
         return;
     }
 
@@ -127,7 +125,9 @@ var onRun = function(context) {
 
     var doExportedMdpiPatch = false;
     var doCreateMdpiPatchLines = false;
+    var doExportedNinePathContent = false;
     var doCreateNinePath = false;
+    var failureMoveFileCounts = 0;
 
     // Export ninePatch Patch MDPI
     var formats = "png";
@@ -168,6 +168,7 @@ var onRun = function(context) {
                 tempFolder,
                 function(success, message) {
                     if (success == true) {
+                        doExportedNinePathContent = true;
 
                         for(var j = 0; j < ninePatchImages.length; j++) {
                             var contentId = ninePatchImages[j]["contentId"];
@@ -209,7 +210,13 @@ var onRun = function(context) {
                                         // Rename assets
                                         mv(
                                             tempFolder + temp,
-                                            exportFolder + "drawable-" + qualifier + "/" + newName
+                                            exportFolder + "drawable-" + qualifier + "/" + newName,
+                                            function(success, message) {
+                                                if (!success) {
+                                                    toast(context, message);
+                                                    failureMoveFileCounts ++;
+                                                }
+                                            }
                                         );
                                         doCreateNinePath = true;
                                     }
@@ -236,8 +243,10 @@ var onRun = function(context) {
             }
         }
 
-        if (doExportedMdpiPatch && doCreateMdpiPatchLines && doCreateNinePath) {
+        if (failureMoveFileCounts == 0 && doExportedMdpiPatch && doCreateMdpiPatchLines && doExportedNinePathContent && doCreateNinePath) {
             toast(context, "Export 9-patch to \"" + exportFolder + "\". Done!");
+        } else {
+            toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length);
         }
 
     }

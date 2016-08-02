@@ -10,19 +10,13 @@ var sketchmigrate = NSBundle
     .mainBundle()
     .pathForResource_ofType_inDirectory("sketchmigrate", nil, "sketchtool/bin");
 
-// Install use tar.gz archive
-var convert = "$MAGICK_HOME/bin/convert";
-// ImageMagick intall use HomeBrew
-if (!fileExists(convert) && fileExists("/usr/local/bin/convert")) {
-    convert = "/usr/local/bin/convert";
-}
-// ImageMagick intall use MacPort
-if (!fileExists(convert) && fileExists("/opt/local/bin/convert")) {
-    convert = "/opt/local/bin/convert";
-}
+// ImageMagick
+var convert = which("convert");
 
 // SVGO
-var svgo = "/usr/local/bin/svgo";
+var svgo = which("svgo");
+
+// TODO: Webp
 
 /* =========================================================
     Android
@@ -184,6 +178,47 @@ function askForUserInput(context, title, initial) {
     Command line tools
 ========================================================= */
 
+function which(command) {
+    var path = "";
+    runCommand("/bin/bash", ["-l", "-c", "which " + command], function(status, msg) {
+        if (status && msg != "") {
+            path += msg;
+            path = path.replace(/\s*$/g, "");
+        }
+    });
+    return path;
+}
+
+function mv(formPath, toPath, callback) {
+    var command = "/bin/bash";
+    var args = [
+        "-l",
+        "-c",
+        'mv "' + formPath + '" "' + toPath + '"'
+    ];
+    runCommand(command, args, callback);
+}
+
+function rm(file, callback) {
+    var command = "/bin/bash";
+    var args = [
+        "-l",
+        "-c",
+        'rm "' + file + '"'
+    ];
+    runCommand(command, args, callback);
+}
+
+function mkdir(dirPath, callback) {
+    var command = "/bin/bash";
+    var args = [
+        "-l",
+        "-c",
+        'mkdir -p "' + dirPath + '"'
+    ];
+    runCommand(command, args, callback);
+}
+
 function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useIdForName, outputFolder, callback) {
     // sketcktool export
     //     slices|layers|pages|artboards
@@ -216,36 +251,10 @@ function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useI
     runCommand(command, args, callback);
 }
 
-function mv(formPath, toPath, callback) {
-    var command = "/bin/bash";
-    var args = [
-        "-c",
-        'mv "' + formPath + '" "' + toPath + '"'
-    ];
-    runCommand(command, args, callback);
-}
-
-function rm(file, callback) {
-    var command = "/bin/bash";
-    var args = [
-        "-c",
-        'rm "' + file + '"'
-    ];
-    runCommand(command, args, callback);
-}
-
-function mkdir(dirPath, callback) {
-    var command = "/bin/bash";
-    var args = [
-        "-c",
-        'mkdir -p "' + dirPath + '"'
-    ];
-    runCommand(command, args, callback);
-}
-
 function createMdpiPatchLines(cwd, width, height, mdpiPatchId, callback) {
     var command = "/bin/bash";
     var args = [
+        "-l",
         "-c",
         'cd "' + cwd + '" && '
             + convert + ' -crop ' + Math.floor(width) + 'x1+1+0 '
@@ -271,6 +280,7 @@ function createNinePath(cwd, scale, suffix, width, height, contentId, patchId, c
     var patchLeft = patchId + "_left.png";
     var command = "/bin/bash";
     var args = [
+        "-l",
         "-c",
         'cd "' + cwd + '" && '
             + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none '
@@ -287,10 +297,6 @@ function createNinePath(cwd, scale, suffix, width, height, contentId, patchId, c
     ];
     runCommand(command, args, callback);
 }
-
-
-// "/opt/local/bin/convert", ["-version"]
-// "/bin/bash", ["-c", "/usr/local/bin/node /usr/local/bin/svgo --version"]
 
 function runCommand(command, args, callback) {
     var task = NSTask.alloc().init();
@@ -323,52 +329,3 @@ function runCommand(command, args, callback) {
         );
     }
 }
-
-
-
-
-function selectFolderDialog(context, message) {
-    var doc = context.document;
-    if(doc.fileURL()) {
-        var defaultDir = [[doc fileURL] URLByDeletingLastPathComponent];
-        var panel = [NSOpenPanel openPanel];
-            [panel setMessage: message];
-            [panel setCanChooseDirectories: true];
-            [panel setCanChooseFiles: false];
-            [panel setCanCreateDirectories: true];
-            [panel setDirectoryURL: defaultDir];
-        if ([panel runModal] == NSOKButton) {
-            return [panel filename];
-        }
-    } else {
-        toast(context, "Save document first.");
-    }
-}
-
-
-//     // var curPath = [doc fileURL] ? [[[doc fileURL] path] stringByDeletingLastPathComponent] : @"~";
-//     // var curName = [[doc displayName] stringByDeletingPathExtension];
-//     var savePanel = [NSSavePanel savePanel];
-//
-//     [savePanel setTitle:@"Export"];
-//     // [savePanel setNameFieldLabel:@"Export To:"];
-//     [savePanel setPrompt:@"Export"];
-//     // [savePanel setAllowedFileTypes: [NSArray arrayWithObject:@"icns"]];
-//     // [savePanel setAllowsOtherFileTypes:false]
-//     // ----[savePanel canChooseFiles:false]
-//     [savePanel setCanCreateDirectories:true]
-//     // [savePanel setDirectoryURL:[NSURL fileURLWithPath:curPath]]
-//     [savePanel setDirectoryURL:[[doc fileURL] URLByDeletingLastPathComponent]]
-//     // [savePanel setNameFieldStringValue:curName]
-//
-//     if ([savePanel runModal] != NSOKButton) {
-//     	exit
-//     }
-//
-//     // return [[savePanel URL] path]
-// return [savePanel filename]
-
-// NSFileManager.defaultManager().fileExistsAtPath_(path);
-
-// var manager = NSFileManager.defaultManager();
-//     return manager.createDirectoryIfNecessary(path);

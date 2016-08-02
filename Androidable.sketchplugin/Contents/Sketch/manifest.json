@@ -49,7 +49,6 @@
     "menu": {
         "isRoot": false,
         "items": [
-            "test",
             "export_assets",
             "export_nine_patch",
             "export_vector_drawable",

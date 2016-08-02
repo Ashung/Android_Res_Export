@@ -15,7 +15,6 @@ var onRun = function(context) {
     var selection = context.selection;
 
     var currentFile = getFilePath(context);
-    // Export folder: <file name>-assets
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
     var tempFolder = getPluginPath(context) + ".temp/";
 
@@ -34,54 +33,69 @@ var onRun = function(context) {
         addAssets(page, assets, assetsIds);
     }
 
-    if (assetsIds.length > 0) {
-
-        // Save document
-        doc.saveDocument(nil);
-
-        for (var i = 0; i < exportConfig.length; i++) {
-
-            var scale = exportConfig[i].scale;
-            var qualifier = exportConfig[i].qualifier;
-
-            if (!fileExists(exportFolder + "drawable-" + qualifier)) {
-                mkdir(exportFolder + "drawable-" + qualifier);
-            }
-
-            // Export to tempFolder
-            var formats = "png";
-            var useIdForName = "yes";
-            sketchtoolExport(
-                "slices",
-                currentFile,
-                exportConfig[i].scale,
-                formats,
-                assetsIds,
-                useIdForName,
-                tempFolder,
-                function(success, message) {
-                    if (success == true) {
-
-                        // Move to exportFolder and rename
-                        for(var j = 0; j < assets.length; j++) {
-                            var oldName = assets[j]["id"];
-                            var newName = assets[j]["name"] + ".png";
-                            mv(
-                                tempFolder + oldName + scaleToSuffix(scale) + ".png",
-                                exportFolder + "drawable-" + qualifier + "/" + newName
-                            );
-                        }
-
-                        toast(context, "Export asset to \"" + exportFolder + "\". Done!");
-                    }
-                }
-            );
-
-            // log(">>> Export slices " + currentFile + " -scales=" + exportConfig[i].scale + " -out=" + tempFolder);
-
-        }
-    } else {
+    if (assetsIds.length == 0) {
         toast(context, "No any exportable layer or select a unexportable layer.");
+        return;
+    }
+
+    doc.saveDocument(nil);
+
+    log(tempFolder);
+
+    for (var i = 0; i < exportConfig.length; i++) {
+
+        var scale = exportConfig[i].scale;
+        var qualifier = exportConfig[i].qualifier;
+
+        if (!fileExists(exportFolder + "drawable-" + qualifier)) {
+            mkdir(exportFolder + "drawable-" + qualifier);
+        }
+
+        var doExportAssets = false;
+        var failureMoveFileCounts = 0;
+
+        // Export to tempFolder
+        var formats = "png";
+        var useIdForName = "yes";
+        sketchtoolExport(
+            "slices",
+            currentFile,
+            exportConfig[i].scale,
+            formats,
+            assetsIds,
+            useIdForName,
+            tempFolder,
+            function(success, message) {
+                if (success == true) {
+                    doExportAssets = true;
+                }
+            }
+        );
+
+        if (doExportAssets) {
+            // Move to exportFolder and rename
+            for(var j = 0; j < assets.length; j++) {
+                var oldName = assets[j]["id"];
+                var newName = assets[j]["name"] + ".png";
+                mv(
+                    tempFolder + oldName + scaleToSuffix(scale) + ".png",
+                    exportFolder + "drawable-" + qualifier + "/" + newName,
+                    function(success, message) {
+                        if (!success) {
+                            toast(context, message);
+                            failureMoveFileCounts ++;
+                        }
+                    }
+                );
+            }
+        }
+
+        if (failureMoveFileCounts == 0) {
+            toast(context, "Export asset to \"" + exportFolder + "\". Done!");
+        } else {
+            toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length * assets.length);
+        }
+
     }
 }
 
@@ -96,7 +110,6 @@ function addAssets(parent, assets, assetsIds) {
                 "name": androidResName(children.name())
             });
             assetsIds.push(children.objectID());
-
             // log("id:" + children.objectID() + ", name:" + androidResName(children.name()));
         }
     }

@@ -38,70 +38,56 @@ var onRun = function(context) {
         scales.push(exportConfig[index].scale);
     }
 
-    if (selection.count() > 0) {
-        var icon = selection.objectAtIndex(0);
-        if (icon.className() == "MSArtboardGroup"
-            && icon.frame().width() == 192
-            && icon.frame().height() == 192
-        ) {
+    if (selection.count() == 0) {
+        toast(context, "Selected the app icon Artboard.");
+        return;
+    }
 
-            doc.saveDocument(nil);
+    var icon = selection.objectAtIndex(0);
+    if (icon.className() == "MSArtboardGroup" && icon.frame().width() == 192 && icon.frame().height() == 192) {
 
-            var doExportAppIcon = false;
-            var failureMoveFileCounts = 0;
+        doc.saveDocument(nil);
 
-            // Export
-            var iconName = androidResName(icon.name()) + ".png";
-            var iconId = icon.objectID();
-            var formats = "png";
-            var useIdForName = "yes";
-            sketchtoolExport(
-                "layers",
-                currentFile,
-                scales,
-                formats,
-                [iconId],
-                useIdForName,
-                tempFolder,
-                function(success, message) {
-                    if (success == true) {
-                        doExportAppIcon = true;
-                    }
+        var doExportAppIcon = false;
+        var failureMoveFileCounts = 0;
+
+        // Export
+        var iconName = androidResName(icon.name()) + ".png";
+        var iconId = icon.objectID();
+        var formats = "png";
+        var useIdForName = "yes";
+        sketchtoolExport(
+            "layers",
+            currentFile,
+            scales,
+            formats,
+            [iconId],
+            useIdForName,
+            tempFolder,
+            function(success, message) {
+                if (success == true) {
+                    doExportAppIcon = true;
                 }
-            );
+            }
+        );
 
-            if (doExportAppIcon) {
-                for (var i = 0; i < exportConfig.length; i++) {
-                    var scale = exportConfig[i].scale;
-                    var qualifier = exportConfig[i].qualifier;
-                    var tempFile = tempFolder + iconId + scaleToSuffix(scale) + ".png";
+        if (doExportAppIcon) {
+            for (var i = 0; i < exportConfig.length; i++) {
+                var scale = exportConfig[i].scale;
+                var qualifier = exportConfig[i].qualifier;
+                var tempFile = tempFolder + iconId + scaleToSuffix(scale) + ".png";
 
-                    log(tempFile);
+                // log(tempFile);
 
-                    if (qualifier) {
-                        var folder = exportFolder + "mipmap-" + qualifier;
-                        if (!fileExists(folder)) {
-                            mkdir(folder);
-                        }
-                        if (fileExists(tempFile)) {
-                            mv(
-                                tempFile,
-                                exportFolder + "mipmap-" + qualifier + "/" + iconName,
-                                function(success, message) {
-                                    if (!success) {
-                                        toast(context, message);
-                                        failureMoveFileCounts ++;
-                                    }
-                                }
-                            );
-                        }
-                    } else {
-                        if (!fileExists(exportFolder)) {
-                            mkdir(exportFolder);
-                        }
+                if (qualifier) {
+                    var folder = exportFolder + "mipmap-" + qualifier;
+                    if (!fileExists(folder)) {
+                        mkdir(folder);
+                    }
+                    if (fileExists(tempFile)) {
                         mv(
                             tempFile,
-                            exportFolder + "ic_launcher-web.png",
+                            exportFolder + "mipmap-" + qualifier + "/" + iconName,
                             function(success, message) {
                                 if (!success) {
                                     toast(context, message);
@@ -110,19 +96,31 @@ var onRun = function(context) {
                             }
                         );
                     }
-                }
-
-                if (failureMoveFileCounts == 0) {
-                    toast(context, "Export App icons to \"" + exportFolder + "\". Done!");
                 } else {
-                    toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length);
+                    if (!fileExists(exportFolder)) {
+                        mkdir(exportFolder);
+                    }
+                    mv(
+                        tempFile,
+                        exportFolder + "ic_launcher-web.png",
+                        function(success, message) {
+                            if (!success) {
+                                toast(context, message);
+                                failureMoveFileCounts ++;
+                            }
+                        }
+                    );
                 }
-
             }
-        } else {
-            toast(context, "Your icon must in an Artboard, and the size must 192x192px.");
+
+            if (failureMoveFileCounts == 0) {
+                toast(context, "Export App icons to \"" + exportFolder + "\". Done!");
+            } else {
+                toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length);
+            }
+
         }
     } else {
-        toast(context, "Selected the app icon Layer or Artboard.");
+        toast(context, "Your icon must in an Artboard, and the size must 192x192px.");
     }
 }
