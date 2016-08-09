@@ -29,6 +29,7 @@ var onRun = function(context) {
     var currentFile = getFilePath(context);
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
     var tempFolder = getPluginPath(context) + ".temp/";
+    var reportFile = exportFolder + "/report.txt";
 
     // Reset exportDpis and qualifiers
     resetExportConfig(page.name());
@@ -37,6 +38,8 @@ var onRun = function(context) {
     var ninePatchImages = [];
     var ninePatchPatchIds = [];
     var ninePatchContentIds = [];
+    var ninePatchNames = [];
+    var reportInfo = [];
 
     if(selection.count() > 0) {
         for(var i = 0; i < selection.count(); i ++) {
@@ -69,7 +72,14 @@ var onRun = function(context) {
                     });
                     ninePatchPatchIds.push(patchId);
                     ninePatchContentIds.push(contentId);
-                    // log("name:" + imageName + ", patchId:" + patchId + ", contentId:" + contentId);
+                    // Check name duplicate
+                    if (imageName != selection[i].name()) {
+                        reportInfo.push('Changed layer name: ' + selection[i].name() + ' -> ' + imageName);
+                    }
+                    if (ninePatchNames.indexOf(imageName) >= 0) {
+                        reportInfo.push('Duplicate layer name: ' + selection[i].name());
+                    }
+                    ninePatchNames.push(imageName);
                 }
             }
         }
@@ -109,11 +119,17 @@ var onRun = function(context) {
                 });
                 ninePatchPatchIds.push(patchId);
                 ninePatchContentIds.push(contentId);
+                // Check name duplicate
+                if (imageName != parent.name()) {
+                    reportInfo.push('Changed layer name: ' + parent.name() + ' -> ' + imageName);
+                }
+                if (ninePatchNames.indexOf(imageName) >= 0) {
+                    reportInfo.push('Duplicate layer name: ' + parent.name());
+                }
+                ninePatchNames.push(imageName);
             }
         }
     }
-
-    // log(ninePatchImages);
 
     if (ninePatchPatchIds.length == 0 && ninePatchContentIds.length == 0) {
         toast(context, "No nine-patch found.")
@@ -123,10 +139,10 @@ var onRun = function(context) {
     // Save document
     doc.saveDocument(nil);
 
-    var doExportedMdpiPatch = false;
-    var doCreateMdpiPatchLines = false;
-    var doExportedNinePathContent = false;
-    var doCreateNinePath = false;
+    var doneExportedMdpiPatch = false;
+    var doneCreateMdpiPatchLines = false;
+    var doneExportedNinePathContent = false;
+    var doneCreateNinePath = false;
     var failureMoveFileCounts = 0;
 
     // Export ninePatch Patch MDPI
@@ -142,12 +158,12 @@ var onRun = function(context) {
         tempFolder,
         function(success1, message1) {
             if (success1 == true) {
-                doExportedMdpiPatch = true;
+                doneExportedMdpiPatch = true;
             }
         }
     );
 
-    if (doExportedMdpiPatch) {
+    if (doneExportedMdpiPatch) {
         for (var i = 0; i < exportConfig.length; i++) {
 
             var scale = exportConfig[i].scale;
@@ -168,7 +184,7 @@ var onRun = function(context) {
                 tempFolder,
                 function(success, message) {
                     if (success == true) {
-                        doExportedNinePathContent = true;
+                        doneExportedNinePathContent = true;
 
                         for(var j = 0; j < ninePatchImages.length; j++) {
                             var contentId = ninePatchImages[j]["contentId"];
@@ -190,7 +206,7 @@ var onRun = function(context) {
                                     function(success2, message2) {
                                         if (success2 == true) {
                                             rm(tempFolder + patch);
-                                            doCreateMdpiPatchLines = true;
+                                            doneCreateMdpiPatchLines = true;
                                         }
                                     }
                                 );
@@ -218,7 +234,7 @@ var onRun = function(context) {
                                                 }
                                             }
                                         );
-                                        doCreateNinePath = true;
+                                        doneCreateNinePath = true;
                                     }
                                 }
                             );
@@ -229,7 +245,7 @@ var onRun = function(context) {
         }
 
         // Remove patch lines
-        if (doCreateMdpiPatchLines) {
+        if (doneCreateMdpiPatchLines) {
             for(var i = 0; i < ninePatchPatchIds.length; i++) {
                 var patchId = ninePatchPatchIds[i];
                 var patchTop = patchId + "_top.png";
@@ -243,7 +259,17 @@ var onRun = function(context) {
             }
         }
 
-        if (failureMoveFileCounts == 0 && doExportedMdpiPatch && doCreateMdpiPatchLines && doExportedNinePathContent && doCreateNinePath) {
+        // Report file
+        if (reportInfo.length > 0) {
+            writeFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
+        } else {
+            if (fileExists(reportFile)) {
+                rm(reportFile);
+            }
+        }
+
+        // Message
+        if (failureMoveFileCounts == 0 && doneExportedMdpiPatch && doneCreateMdpiPatchLines && doneExportedNinePathContent && doneCreateNinePath) {
             toast(context, "Export 9-patch to \"" + exportFolder + "\". Done!");
         } else {
             toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length);

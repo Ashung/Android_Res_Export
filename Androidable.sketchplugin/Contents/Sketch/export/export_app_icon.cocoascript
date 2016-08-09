@@ -48,7 +48,7 @@ var onRun = function(context) {
 
         doc.saveDocument(nil);
 
-        var doExportAppIcon = false;
+        var doneExportAppIcon = false;
         var failureMoveFileCounts = 0;
 
         // Export
@@ -66,12 +66,12 @@ var onRun = function(context) {
             tempFolder,
             function(success, message) {
                 if (success == true) {
-                    doExportAppIcon = true;
+                    doneExportAppIcon = true;
                 }
             }
         );
 
-        if (doExportAppIcon) {
+        if (doneExportAppIcon) {
             for (var i = 0; i < exportConfig.length; i++) {
                 var scale = exportConfig[i].scale;
                 var qualifier = exportConfig[i].qualifier;
@@ -80,6 +80,7 @@ var onRun = function(context) {
                 // log(tempFile);
 
                 if (qualifier) {
+                    // <N>dpi icon
                     var folder = exportFolder + "mipmap-" + qualifier;
                     if (!fileExists(folder)) {
                         mkdir(folder);
@@ -97,6 +98,7 @@ var onRun = function(context) {
                         );
                     }
                 } else {
+                    // 512px icon
                     if (!fileExists(exportFolder)) {
                         mkdir(exportFolder);
                     }

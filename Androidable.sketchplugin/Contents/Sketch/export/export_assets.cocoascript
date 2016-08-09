@@ -17,6 +17,7 @@ var onRun = function(context) {
     var currentFile = getFilePath(context);
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
     var tempFolder = getPluginPath(context) + ".temp/";
+    var reportFile = exportFolder + "/report.txt";
 
     // Reset exportDpis and qualifiers
     resetExportConfig(page.name());
@@ -24,13 +25,15 @@ var onRun = function(context) {
     // Get all exportable
     var assets = [];
     var assetsIds = [];
+    var assetsNames = [];
+    var reportInfo = [];
 
     if (selection.count() > 0) {
         for (var i = 0; i < selection.count(); i ++) {
-            addAssets(selection[i], assets, assetsIds);
+            addAssets(selection[i], assets, assetsIds, assetsNames, reportInfo);
         }
     } else {
-        addAssets(page, assets, assetsIds);
+        addAssets(page, assets, assetsIds, assetsNames, reportInfo);
     }
 
     if (assetsIds.length == 0) {
@@ -38,10 +41,10 @@ var onRun = function(context) {
         return;
     }
 
+    // Save
     doc.saveDocument(nil);
 
-    log(tempFolder);
-
+    // Export assets
     for (var i = 0; i < exportConfig.length; i++) {
 
         var scale = exportConfig[i].scale;
@@ -51,7 +54,7 @@ var onRun = function(context) {
             mkdir(exportFolder + "drawable-" + qualifier);
         }
 
-        var doExportAssets = false;
+        var doneExportAssets = false;
         var failureMoveFileCounts = 0;
 
         // Export to tempFolder
@@ -67,12 +70,12 @@ var onRun = function(context) {
             tempFolder,
             function(success, message) {
                 if (success == true) {
-                    doExportAssets = true;
+                    doneExportAssets = true;
                 }
             }
         );
 
-        if (doExportAssets) {
+        if (doneExportAssets) {
             // Move to exportFolder and rename
             for(var j = 0; j < assets.length; j++) {
                 var oldName = assets[j]["id"];
@@ -89,28 +92,46 @@ var onRun = function(context) {
                 );
             }
         }
-
-        if (failureMoveFileCounts == 0) {
-            toast(context, "Export asset to \"" + exportFolder + "\". Done!");
-        } else {
-            toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length * assets.length);
-        }
-
     }
+
+    // Report file
+    if (reportInfo.length > 0) {
+        writeFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
+    } else {
+        if (fileExists(reportFile)) {
+            rm(reportFile);
+        }
+    }
+
+    // Message
+    if (failureMoveFileCounts == 0) {
+        toast(context, "Export asset to \"" + exportFolder + "\". Done!");
+    } else {
+        toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length * assets.length);
+    }
+
 }
 
-function addAssets(parent, assets, assetsIds) {
+function addAssets(parent, assets, assetsIds, assetsNames, reportInfo) {
     var childrens = parent.children();
     for (var j = 0; j < childrens.count(); j++) {
         var children = childrens[j];
         // Slice and exportable layer but no #9patch
         if (children.isLayerExportable() && children.name() != "#9patch") {
+            var finalName = androidResName(children.name());
             assets.push({
                 "id": children.objectID(),
-                "name": androidResName(children.name())
+                "name": finalName
             });
             assetsIds.push(children.objectID());
-            // log("id:" + children.objectID() + ", name:" + androidResName(children.name()));
+            // Check name duplicate
+            if (finalName != children.name()) {
+                reportInfo.push('Changed layer name: ' + children.name() + ' -> ' + finalName);
+            }
+            if (assetsNames.indexOf(finalName) >= 0) {
+                reportInfo.push('Duplicate layer name: ' + children.name());
+            }
+            assetsNames.push(finalName);
         }
     }
 }
