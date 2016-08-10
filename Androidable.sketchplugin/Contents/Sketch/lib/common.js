@@ -174,6 +174,23 @@ function askForUserInput(context, title, initial) {
     return result;
 }
 
+// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSFileManager_Class/index.html#//apple_ref/doc/uid/20000305-SW28
+function _mkdir(path) {
+    NSFileManager.defaultManager().createDirectoryIfNecessary(path);
+}
+
+function _rm(path) {
+    NSFileManager.defaultManager().removeItemAtPath_error_(
+        path, nil
+    );
+}
+
+function _mv(srcPath, dstPath) {
+    NSFileManager.defaultManager().moveItemAtPath_srcPath_dstPath_error_(
+        srcPath, dstPath, nil
+    )
+}
+
 /* =========================================================
     Command line tools
 ========================================================= */
