@@ -15,13 +15,13 @@ var onRun = function(context) {
     var selection = context.selection;
 
     if (selection.count() == 0) {
-        toast(context, "Selected the app icon Artboard.");
+        toast(context, "Selected the app icon artboard.");
         return;
     }
 
     var currentFile = getFilePath(context);
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var tempFolder = getPluginPath(context) + ".temp/";
+    var tempFolder = exportFolder + ".temp/";
 
     // Android icon size
     // mdpi: 48
@@ -45,13 +45,11 @@ var onRun = function(context) {
 
     var icon = selection.objectAtIndex(0);
     if (icon.className() == "MSArtboardGroup" && icon.frame().width() == 192 && icon.frame().height() == 192) {
-
+        // Save
         doc.saveDocument(nil);
 
-        var doneExportAppIcon = false;
-        var failureMoveFileCounts = 0;
-
         // Export
+        var doneExportAppIcon = false;
         var iconName = androidResName(icon.name()) + ".png";
         var iconId = icon.objectID();
         var formats = "png";
@@ -71,58 +69,30 @@ var onRun = function(context) {
             }
         );
 
+        // Rename
         if (doneExportAppIcon) {
             for (var i = 0; i < exportConfig.length; i++) {
                 var scale = exportConfig[i].scale;
                 var qualifier = exportConfig[i].qualifier;
                 var tempFile = tempFolder + iconId + scaleToSuffix(scale) + ".png";
-
-                // log(tempFile);
-
                 if (qualifier) {
-                    // <N>dpi icon
+                    // Apk launch icon
                     var folder = exportFolder + "mipmap-" + qualifier;
-                    if (!fileExists(folder)) {
-                        mkdir(folder);
-                    }
-                    if (fileExists(tempFile)) {
-                        mv(
-                            tempFile,
-                            exportFolder + "mipmap-" + qualifier + "/" + iconName,
-                            function(success, message) {
-                                if (!success) {
-                                    toast(context, message);
-                                    failureMoveFileCounts ++;
-                                }
-                            }
-                        );
-                    }
+                    mkdir(folder);
+                    mv(tempFile, exportFolder + "mipmap-" + qualifier + "/" + iconName);
                 } else {
-                    // 512px icon
-                    if (!fileExists(exportFolder)) {
-                        mkdir(exportFolder);
-                    }
-                    mv(
-                        tempFile,
-                        exportFolder + "ic_launcher-web.png",
-                        function(success, message) {
-                            if (!success) {
-                                toast(context, message);
-                                failureMoveFileCounts ++;
-                            }
-                        }
-                    );
+                    // 512px Google Play icon
+                    mkdir(exportFolder);
+                    mv(tempFile, exportFolder + "ic_launcher-web.png");
                 }
             }
 
-            if (failureMoveFileCounts == 0) {
-                toast(context, "Export App icons to \"" + exportFolder + "\". Done!");
-            } else {
-                toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length);
-            }
+            rm(tempFolder);
+
+            toast(context, "Export App icons to \"" + exportFolder + "\". Done!");
 
         }
     } else {
-        toast(context, "Your icon must in an Artboard, and the size must 192x192px.");
+        toast(context, "Your icon must in an artboard, and the size must be 192x192px.");
     }
 }

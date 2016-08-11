@@ -28,17 +28,21 @@ var onRun = function(context) {
 
     var currentFile = getFilePath(context);
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var tempFolder = getPluginPath(context) + ".temp/";
-    var reportFile = exportFolder + "/report.txt";
+    var tempFolder = exportFolder + ".temp/";
+    var reportFile = exportFolder + "report.txt";
 
     // Reset exportDpis and qualifiers
     resetExportConfig(page.name());
+    var scales = [];
+    for (index in exportConfig) {
+        scales.push(exportConfig[index].scale);
+    }
 
     // Get all exportable
-    var ninePatchImages = [];
+    var ninePatchs = [];
+    var ninePatchNames = [];
     var ninePatchPatchIds = [];
     var ninePatchContentIds = [];
-    var ninePatchNames = [];
     var reportInfo = [];
 
     if(selection.count() > 0) {
@@ -63,7 +67,7 @@ var onRun = function(context) {
                 }
 
                 if(patchId != "" && contentId != "") {
-                    ninePatchImages.push({
+                    ninePatchs.push({
                         "name": imageName,
                         "patchId": patchId,
                         "contentId": contentId,
@@ -110,7 +114,7 @@ var onRun = function(context) {
             }
 
             if(imageName != "" && patchId != "" && contentId != "") {
-                ninePatchImages.push({
+                ninePatchs.push({
                     "name": imageName,
                     "patchId": patchId,
                     "contentId": contentId,
@@ -131,7 +135,7 @@ var onRun = function(context) {
         }
     }
 
-    if (ninePatchPatchIds.length == 0 && ninePatchContentIds.length == 0) {
+    if (ninePatchs.length == 0) {
         toast(context, "No nine-patch found.")
         return;
     }
@@ -156,92 +160,79 @@ var onRun = function(context) {
         ninePatchPatchIds,
         useIdForName,
         tempFolder,
-        function(success1, message1) {
-            if (success1 == true) {
+        function(success, message) {
+            if (success == true) {
                 doneExportedMdpiPatch = true;
             }
         }
     );
 
-    if (doneExportedMdpiPatch) {
-        for (var i = 0; i < exportConfig.length; i++) {
+    // Export ninePatch Content
+    sketchtoolExport(
+        "slices",
+        currentFile,
+        scales,
+        formats,
+        ninePatchContentIds,
+        useIdForName,
+        tempFolder,
+        function(success, message) {
+            if (success == true) {
+                doneExportedNinePathContent = true;
+            }
+        }
+    );
 
+    if (doneExportedMdpiPatch && doneExportedNinePathContent) {
+        for (var i = 0; i < exportConfig.length; i++) {
             var scale = exportConfig[i].scale;
             var qualifier = exportConfig[i].qualifier;
+            mkdir(exportFolder + "drawable-" + qualifier);
 
-            if (!fileExists(exportFolder + "drawable-" + qualifier)) {
-                mkdir(exportFolder + "drawable-" + qualifier);
-            }
+            for(var j = 0; j < ninePatchs.length; j++) {
+                var contentId = ninePatchs[j]["contentId"];
+                var content = contentId + scaleToSuffix(scale) + ".png";
+                var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
+                var patchId = ninePatchs[j]["patchId"];
+                var patch = patchId + ".png";
+                var newName = ninePatchs[j]["name"] + ".9.png";
+                var width = ninePatchs[j]["width"];
+                var height = ninePatchs[j]["height"];
 
-            // Export ninePatch Content
-            sketchtoolExport(
-                "slices",
-                currentFile,
-                exportConfig[i].scale,
-                formats,
-                ninePatchContentIds,
-                useIdForName,
-                tempFolder,
-                function(success, message) {
-                    if (success == true) {
-                        doneExportedNinePathContent = true;
-
-                        for(var j = 0; j < ninePatchImages.length; j++) {
-                            var contentId = ninePatchImages[j]["contentId"];
-                            var content = contentId + scaleToSuffix(scale) + ".png";
-                            var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
-                            var patchId = ninePatchImages[j]["patchId"];
-                            var patch = patchId + ".png";
-                            var newName = ninePatchImages[j]["name"] + ".9.png";
-                            var width = ninePatchImages[j]["width"];
-                            var height = ninePatchImages[j]["height"];
-
-                            // Create MDPI 9-patch lines, run only once
-                            if (i == 0) {
-                                createMdpiPatchLines(
-                                    tempFolder,
-                                    width,
-                                    height,
-                                    patchId,
-                                    function(success2, message2) {
-                                        if (success2 == true) {
-                                            rm(tempFolder + patch);
-                                            doneCreateMdpiPatchLines = true;
-                                        }
-                                    }
-                                );
+                // Create MDPI 9-patch lines, run only once
+                if (i == 0) {
+                    createMdpiPatchLines(
+                        tempFolder,
+                        width,
+                        height,
+                        patchId,
+                        function(success2, message2) {
+                            if (success2 == true) {
+                                rm(tempFolder + patch);
+                                doneCreateMdpiPatchLines = true;
                             }
+                        }
+                    );
+                }
 
-                            createNinePath(
-                                tempFolder,
-                                scale,
-                                scaleToSuffix(scale),
-                                width,
-                                height,
-                                contentId,
-                                patchId,
-                                function(success3, message3) {
-                                    if (success3 == true) {
-                                        rm(tempFolder + content);
-                                        // Rename assets
-                                        mv(
-                                            tempFolder + temp,
-                                            exportFolder + "drawable-" + qualifier + "/" + newName,
-                                            function(success, message) {
-                                                if (!success) {
-                                                    toast(context, message);
-                                                    failureMoveFileCounts ++;
-                                                }
-                                            }
-                                        );
-                                        doneCreateNinePath = true;
-                                    }
-                                }
-                            );
+                createNinePath(
+                    tempFolder,
+                    scale,
+                    scaleToSuffix(scale),
+                    width,
+                    height,
+                    contentId,
+                    patchId,
+                    function(success3, message3) {
+                        if (success3 == true) {
+                            rm(tempFolder + content);
+                            // Rename assets
+                            mv(tempFolder + temp, exportFolder + "drawable-" + qualifier + "/" + newName);
+                            doneCreateNinePath = true;
                         }
                     }
-                }
-            );
+                );
+            }
         }
 
         // Remove patch lines
@@ -261,7 +252,7 @@ var onRun = function(context) {
 
         // Report file
         if (reportInfo.length > 0) {
-            writeFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
+            writeContentToFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
         } else {
             if (fileExists(reportFile)) {
                 rm(reportFile);

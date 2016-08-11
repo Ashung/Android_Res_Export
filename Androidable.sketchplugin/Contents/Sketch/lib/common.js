@@ -172,7 +172,7 @@ function getContentFromFile(filePath) {
     return content;
 }
 
-function writeFile(filePath, content) {
+function writeContentToFile(filePath, content) {
     content = NSString.stringWithFormat('%@', content);
     content.writeToFile_atomically_encoding_error_(
         filePath, true, NSUTF8StringEncoding, null
@@ -180,22 +180,27 @@ function writeFile(filePath, content) {
 }
 
 function mkdir(path) {
-    // NSFileManager.defaultManager().createDirectoryIfNecessary(path);
-    NSFileManager.defaultManager().createDirectoryAtPath_withIntermediateDirectories_attributes_error_(
-        path, true, nil, nil
-    );
+    if (!fileExists(path)) {
+        NSFileManager.defaultManager().createDirectoryAtPath_withIntermediateDirectories_attributes_error_(
+            path, true, nil, nil
+        );
+    }
 }
 
 function rm(path) {
-    NSFileManager.defaultManager().removeItemAtPath_error_(
-        path, nil
-    );
+    if (fileExists(path)) {
+        NSFileManager.defaultManager().removeItemAtPath_error_(
+            path, nil
+        );
+    }
 }
 
-function _mv(srcPath, dstPath) {
-    NSFileManager.defaultManager().moveItemAtPath_srcPath_dstPath_error_(
-        srcPath, dstPath, nil
-    )
+function mv(srcPath, dstPath) {
+    if (fileExists(srcPath)) {
+        NSFileManager.defaultManager().moveItemAtPath_toPath_error_(
+            srcPath, dstPath, nil
+        )
+    }
 }
 
 /* =========================================================
@@ -223,7 +228,7 @@ function which(command) {
     return path;
 }
 
-function mv(formPath, toPath, callback) {
+function mvUseShell(formPath, toPath, callback) {
     var command = "/bin/bash";
     var args = [
         "-l",

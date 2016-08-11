@@ -31,8 +31,8 @@ var onRun = function(context) {
     var currentFile = getFilePath(context);
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
     var vectorDrawableFolder = exportFolder + "drawable-anydpi-v21/"
-    var tempFolder = getPluginPath(context) + ".temp/";
-    var reportFile = exportFolder + "/report.txt";
+    var tempFolder = exportFolder + ".temp/";
+    var reportFile = exportFolder + "report.txt";
 
     // Get all exportable
     var vectorDrawable = [];
@@ -84,7 +84,6 @@ var onRun = function(context) {
 
     for (var i = 0; i < vectorDrawable.length; i ++) {
         var svgFile = tempFolder + vectorDrawable[i]["id"] + ".svg"
-
         var svg = getContentFromFile(svgFile);
 
         // Clean SVG code
@@ -108,9 +107,6 @@ var onRun = function(context) {
         svg = svg.replace(/<defs>.*?<\/defs>/, "");
         // bounds layer
         svg = svg.replace(/<\w+[^<]*id="#"[^<]*><\/\w+>/, "");
-        // viewBox
-        // svg = svg.replace(/viewBox="-?\d+ -?\d+ (\d+) (\d+)"/, 'viewBox="0 0 $1 $2"');
-
         // Ellipse to path
         svg = svg.replace(/(<ellipse)([^<]*?)(><\/ellipse>)/g, function(match, p1, p2, p3, offset, string) {
             var cx = /\scx="(.*?)"/.exec(p2)[1];
@@ -125,7 +121,6 @@ var onRun = function(context) {
             var code = '<path ' + attributes + ' d="' + pathData + '"></path>';
             return code;
         });
-
         // Circle to path
         svg = svg.replace(/(<circle)([^<]*?)(><\/circle>)/g, function(match, p1, p2, p3, offset, string) {
             var cx = /\scx="(.*?)"/.exec(p2)[1];
@@ -138,38 +133,31 @@ var onRun = function(context) {
             var code = '<path ' + attributes + ' d="' + pathData + '"></path>';
             return code;
         });
-
         // SVGO
         // rect, line, polyline, polygon can convert to path by SVGO
         svg = optimizeSVG(svg);
-
         // svg to vector drawable
         var xml = svgToVectorDrawable(svg);
 
         log(svg);
         log(xml);
 
-        // alert("SVG code:", svg);
-
         // Create "drawable-anydpi-v21" folder
-        if (!fileExists(vectorDrawableFolder)) {
-            mkdir(vectorDrawableFolder);
-        }
+        mkdir(vectorDrawableFolder);
 
         // Create XML
-        writeFile(
+        writeContentToFile(
             vectorDrawableFolder + vectorDrawable[i]["name"] + ".xml",
             xml
         );
 
         // remove temp SVG
         rm(svgFile);
-
     }
 
     // Report file
     if (reportInfo.length > 0) {
-        writeFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
+        writeContentToFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
     } else {
         if (fileExists(reportFile)) {
             rm(reportFile);
