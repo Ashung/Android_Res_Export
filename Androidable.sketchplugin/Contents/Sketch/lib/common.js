@@ -16,8 +16,6 @@ var convert = which("convert");
 // SVGO
 var svgo = which("svgo");
 
-// TODO: Webp
-
 /* =========================================================
     Android
 ========================================================= */
@@ -130,10 +128,6 @@ function scaleToSuffix(size) {
     Utilities
 ========================================================= */
 
-function fileExists(path) {
-    return NSFileManager.defaultManager().fileExistsAtPath_(path);
-}
-
 function toast(context, message) {
     var doc = context.document;
     if (message) {
@@ -156,13 +150,6 @@ function getFilePath(context) {
     }
 }
 
-function writeFile(filePath, content) {
-    content = NSString.stringWithFormat('%@', content);
-    content.writeToFile_atomically_encoding_error_(
-        filePath, true, NSUTF8StringEncoding, null
-    );
-}
-
 function alert(title, content) {
     var app = NSApplication.sharedApplication();
     app.displayDialog_withTitle_(content, title);
@@ -174,12 +161,32 @@ function askForUserInput(context, title, initial) {
     return result;
 }
 
-// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSFileManager_Class/index.html#//apple_ref/doc/uid/20000305-SW28
-function _mkdir(path) {
-    NSFileManager.defaultManager().createDirectoryIfNecessary(path);
+function fileExists(path) {
+    return NSFileManager.defaultManager().fileExistsAtPath_(path);
 }
 
-function _rm(path) {
+function getContentFromFile(filePath) {
+    var content = NSString.stringWithContentsOfFile_encoding_error_(
+        filePath, NSUTF8StringEncoding, nil
+    );
+    return content;
+}
+
+function writeFile(filePath, content) {
+    content = NSString.stringWithFormat('%@', content);
+    content.writeToFile_atomically_encoding_error_(
+        filePath, true, NSUTF8StringEncoding, null
+    );
+}
+
+function mkdir(path) {
+    // NSFileManager.defaultManager().createDirectoryIfNecessary(path);
+    NSFileManager.defaultManager().createDirectoryAtPath_withIntermediateDirectories_attributes_error_(
+        path, true, nil, nil
+    );
+}
+
+function rm(path) {
     NSFileManager.defaultManager().removeItemAtPath_error_(
         path, nil
     );
@@ -194,6 +201,16 @@ function _mv(srcPath, dstPath) {
 /* =========================================================
     Command line tools
 ========================================================= */
+
+function clipboard() {
+    var content = "";
+    runCommand("/bin/bash", ["-l", "-c", "pbpaste"], function(status, msg) {
+        if (status && msg != "") {
+            content = msg.replace(/\n/, "");
+        }
+    });
+    return content;
+}
 
 function which(command) {
     var path = "";
@@ -216,7 +233,7 @@ function mv(formPath, toPath, callback) {
     runCommand(command, args, callback);
 }
 
-function rm(file, callback) {
+function rmUseShell(file, callback) {
     var command = "/bin/bash";
     var args = [
         "-l",
@@ -226,7 +243,7 @@ function rm(file, callback) {
     runCommand(command, args, callback);
 }
 
-function mkdir(dirPath, callback) {
+function mkdirUseShell(dirPath, callback) {
     var command = "/bin/bash";
     var args = [
         "-l",
@@ -234,6 +251,16 @@ function mkdir(dirPath, callback) {
         'mkdir -p "' + dirPath + '"'
     ];
     runCommand(command, args, callback);
+}
+
+function optimizeSVG(svg) {
+    var code = "";
+    runCommand("/bin/bash", ["-l", "-c", svgo + " -s '" + svg + "' -p 2 -o -"], function(status, msg) {
+        if (status && msg != "") {
+            code = msg;
+        }
+    });
+    return code;
 }
 
 function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useIdForName, outputFolder, callback) {

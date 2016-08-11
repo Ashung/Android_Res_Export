@@ -14,6 +14,11 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
+    if (selection.count() == 0) {
+        toast(context, "Selected the app icon Artboard.");
+        return;
+    }
+
     var currentFile = getFilePath(context);
     var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
     var tempFolder = getPluginPath(context) + ".temp/";
@@ -36,11 +41,6 @@ var onRun = function(context) {
     var scales = [];
     for (index in exportConfig) {
         scales.push(exportConfig[index].scale);
-    }
-
-    if (selection.count() == 0) {
-        toast(context, "Selected the app icon Artboard.");
-        return;
     }
 
     var icon = selection.objectAtIndex(0);
