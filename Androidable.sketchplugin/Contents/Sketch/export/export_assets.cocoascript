@@ -14,18 +14,6 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var tempFolder = exportFolder + ".temp/";
-    var reportFile = exportFolder + "report.txt";
-
-    // Reset exportDpis and qualifiers
-    resetExportConfig(page.name());
-    var scales = [];
-    for (index in exportConfig) {
-        scales.push(exportConfig[index].scale);
-    }
-
     // Get all exportable
     var assets = [];
     var assetsIds = [];
@@ -45,11 +33,24 @@ var onRun = function(context) {
         return;
     }
 
+    // Ready to export
+    var currentFile = getFilePath(context);
+    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+    var tempFolder = exportFolder + ".temp/";
+    var reportFile = exportFolder + "report.txt";
+    var doneExportAssets = false;
+
+    // Reset exportDpis and qualifiers
+    resetExportConfig(page.name());
+    var scales = [];
+    for (index in exportConfig) {
+        scales.push(exportConfig[index].scale);
+    }
+
     // Save
     doc.saveDocument(nil);
 
     // Export assets to tempFolder
-    var doneExportAssets = false;
     var formats = "png";
     var useIdForName = "yes";
     sketchtoolExport(

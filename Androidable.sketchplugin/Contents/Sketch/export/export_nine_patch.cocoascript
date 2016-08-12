@@ -26,18 +26,6 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var tempFolder = exportFolder + ".temp/";
-    var reportFile = exportFolder + "report.txt";
-
-    // Reset exportDpis and qualifiers
-    resetExportConfig(page.name());
-    var scales = [];
-    for (index in exportConfig) {
-        scales.push(exportConfig[index].scale);
-    }
-
     // Get all exportable
     var ninePatchs = [];
     var ninePatchNames = [];
@@ -140,14 +128,23 @@ var onRun = function(context) {
         return;
     }
 
+    // Ready to export
+    var currentFile = getFilePath(context);
+    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+    var tempFolder = exportFolder + ".temp/";
+    var reportFile = exportFolder + "report.txt";
+    var doneExportedMdpiPatch = false;
+    var doneExportedNinePathContent = false;
+
+    // Reset exportDpis and qualifiers
+    resetExportConfig(page.name());
+    var scales = [];
+    for (index in exportConfig) {
+        scales.push(exportConfig[index].scale);
+    }
+
     // Save document
     doc.saveDocument(nil);
-
-    var doneExportedMdpiPatch = false;
-    var doneCreateMdpiPatchLines = false;
-    var doneExportedNinePathContent = false;
-    var doneCreateNinePath = false;
-    var failureMoveFileCounts = 0;
 
     // Export ninePatch Patch MDPI
     var formats = "png";
@@ -189,7 +186,7 @@ var onRun = function(context) {
             var qualifier = exportConfig[i].qualifier;
             mkdir(exportFolder + "drawable-" + qualifier);
 
-            for(var j = 0; j < ninePatchs.length; j++) {
+            for (var j = 0; j < ninePatchs.length; j++) {
                 var contentId = ninePatchs[j]["contentId"];
                 var content = contentId + scaleToSuffix(scale) + ".png";
                 var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
@@ -206,10 +203,9 @@ var onRun = function(context) {
                         width,
                         height,
                         patchId,
-                        function(success2, message2) {
-                            if (success2 == true) {
+                        function(success, message) {
+                            if (success == true) {
                                 rm(tempFolder + patch);
-                                doneCreateMdpiPatchLines = true;
                             }
                         }
                     );
@@ -223,12 +219,11 @@ var onRun = function(context) {
                     height,
                     contentId,
                     patchId,
-                    function(success3, message3) {
-                        if (success3 == true) {
+                    function(success, message) {
+                        if (success == true) {
                             rm(tempFolder + content);
                             // Rename assets
                             mv(tempFolder + temp, exportFolder + "drawable-" + qualifier + "/" + newName);
-                            doneCreateNinePath = true;
                         }
                     }
                 );
@@ -236,18 +231,16 @@ var onRun = function(context) {
         }
 
         // Remove patch lines
-        if (doneCreateMdpiPatchLines) {
-            for(var i = 0; i < ninePatchPatchIds.length; i++) {
-                var patchId = ninePatchPatchIds[i];
-                var patchTop = patchId + "_top.png";
-                var patchRight = patchId + "_right.png";
-                var patchBottom = patchId + "_bottom.png";
-                var patchLeft = patchId + "_left.png";
-                rm(tempFolder + patchTop);
-                rm(tempFolder + patchRight);
-                rm(tempFolder + patchBottom);
-                rm(tempFolder + patchLeft);
-            }
+        for (var i = 0; i < ninePatchPatchIds.length; i++) {
+            var patchId = ninePatchPatchIds[i];
+            var patchTop = patchId + "_top.png";
+            var patchRight = patchId + "_right.png";
+            var patchBottom = patchId + "_bottom.png";
+            var patchLeft = patchId + "_left.png";
+            rm(tempFolder + patchTop);
+            rm(tempFolder + patchRight);
+            rm(tempFolder + patchBottom);
+            rm(tempFolder + patchLeft);
         }
 
         // Report file
@@ -259,12 +252,10 @@ var onRun = function(context) {
             }
         }
 
+        rm(tempFolder);
+
         // Message
-        if (failureMoveFileCounts == 0 && doneExportedMdpiPatch && doneCreateMdpiPatchLines && doneExportedNinePathContent && doneCreateNinePath) {
-            toast(context, "Export 9-patch to \"" + exportFolder + "\". Done!");
-        } else {
-            toast(context, "Some file export failure. " + failureMoveFileCounts + "/" + exportConfig.length);
-        }
+        toast(context, "Export 9-patch to \"" + exportFolder + "\". Done!");
 
     }
 }

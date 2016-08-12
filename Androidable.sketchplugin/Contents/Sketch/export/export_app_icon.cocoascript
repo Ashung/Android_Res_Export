@@ -19,37 +19,39 @@ var onRun = function(context) {
         return;
     }
 
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var tempFolder = exportFolder + ".temp/";
-
-    // Android icon size
-    // mdpi: 48
-    // hdpi: 72
-    // xhdpi: 96
-    // xxhdpi: 144
-    // xxxhdpi: 192
-    // ic_launcher-web: 512
-    exportConfig = [
-        { scale : 0.25,   qualifier : "mdpi" },
-        { scale : 0.375,  qualifier : "hdpi" },
-        { scale : 0.5,    qualifier : "xhdpi" },
-        { scale : 0.75,   qualifier : "xxhdpi" },
-        { scale : 1,      qualifier : "xxxhdpi" },
-        { scale : 2.667 }
-    ];
-    var scales = [];
-    for (index in exportConfig) {
-        scales.push(exportConfig[index].scale);
-    }
-
     var icon = selection.objectAtIndex(0);
     if (icon.className() == "MSArtboardGroup" && icon.frame().width() == 192 && icon.frame().height() == 192) {
+
+        // Ready to export
+        var currentFile = getFilePath(context);
+        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+        var tempFolder = exportFolder + ".temp/";
+        var doneExportAppIcon = false;
+
+        // Android icon size
+        // mdpi: 48
+        // hdpi: 72
+        // xhdpi: 96
+        // xxhdpi: 144
+        // xxxhdpi: 192
+        // ic_launcher-web: 512
+        exportConfig = [
+            { scale : 0.25,   qualifier : "mdpi" },
+            { scale : 0.375,  qualifier : "hdpi" },
+            { scale : 0.5,    qualifier : "xhdpi" },
+            { scale : 0.75,   qualifier : "xxhdpi" },
+            { scale : 1,      qualifier : "xxxhdpi" },
+            { scale : 2.667 }
+        ];
+        var scales = [];
+        for (index in exportConfig) {
+            scales.push(exportConfig[index].scale);
+        }
+
         // Save
         doc.saveDocument(nil);
 
         // Export
-        var doneExportAppIcon = false;
         var iconName = androidResName(icon.name()) + ".png";
         var iconId = icon.objectID();
         var formats = "png";
@@ -90,8 +92,8 @@ var onRun = function(context) {
             rm(tempFolder);
 
             toast(context, "Export App icons to \"" + exportFolder + "\". Done!");
-
         }
+
     } else {
         toast(context, "Your icon must in an artboard, and the size must be 192x192px.");
     }

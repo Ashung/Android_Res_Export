@@ -28,12 +28,6 @@ var onRun = function(context) {
         return;
     }
 
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var vectorDrawableFolder = exportFolder + "drawable-anydpi-v21/"
-    var tempFolder = exportFolder + ".temp/";
-    var reportFile = exportFolder + "report.txt";
-
     // Get all exportable
     var vectorDrawable = [];
     var vectorDrawableIds = [];
@@ -59,10 +53,15 @@ var onRun = function(context) {
         vectorDrawableNames.push(finalName);
     }
 
-    doc.saveDocument(nil);
-
+    // Ready to export
+    var currentFile = getFilePath(context);
+    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
+    var vectorDrawableFolder = exportFolder + "drawable-anydpi-v21/"
+    var tempFolder = exportFolder + ".temp/";
+    var reportFile = exportFolder + "report.txt";
     var doneExportSVG = false;
-    var failureMoveFileCounts = 0;
+
+    doc.saveDocument(nil);
 
     // Export to tempFolder
     var formats = "svg";
@@ -151,8 +150,6 @@ var onRun = function(context) {
             xml
         );
 
-        // remove temp SVG
-        rm(svgFile);
     }
 
     // Report file
@@ -163,6 +160,8 @@ var onRun = function(context) {
             rm(reportFile);
         }
     }
+
+    rm(tempFolder);
 
     toast(context, "Export vector drawable to \"" + vectorDrawableFolder + "\". Done!");
 
