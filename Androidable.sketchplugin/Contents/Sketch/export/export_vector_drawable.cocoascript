@@ -55,10 +55,10 @@ var onRun = function(context) {
 
     // Ready to export
     var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var vectorDrawableFolder = exportFolder + "drawable-anydpi-v21/"
-    var tempFolder = exportFolder + ".temp/";
-    var reportFile = exportFolder + "report.txt";
+    var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
+    var vectorDrawableFolder = exportFolder + "/drawable-anydpi-v21"
+    var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
+    var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
     var doneExportSVG = false;
 
     doc.saveDocument(nil);
@@ -82,7 +82,7 @@ var onRun = function(context) {
     );
 
     for (var i = 0; i < vectorDrawable.length; i ++) {
-        var svgFile = tempFolder + vectorDrawable[i]["id"] + ".svg"
+        var svgFile = tempFolder + "/" + vectorDrawable[i]["id"] + ".svg"
         var svg = getContentFromFile(svgFile);
 
         // Clean SVG code
@@ -146,7 +146,7 @@ var onRun = function(context) {
 
         // Create XML
         writeContentToFile(
-            vectorDrawableFolder + vectorDrawable[i]["name"] + ".xml",
+            vectorDrawableFolder + "/" +vectorDrawable[i]["name"] + ".xml",
             xml
         );
 

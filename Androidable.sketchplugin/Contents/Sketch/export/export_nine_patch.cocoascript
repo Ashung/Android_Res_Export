@@ -130,9 +130,9 @@ var onRun = function(context) {
 
     // Ready to export
     var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var tempFolder = exportFolder + ".temp/";
-    var reportFile = exportFolder + "report.txt";
+    var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
+    var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
+    var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
     var doneExportedMdpiPatch = false;
     var doneExportedNinePathContent = false;
 
@@ -184,7 +184,7 @@ var onRun = function(context) {
         for (var i = 0; i < exportConfig.length; i++) {
             var scale = exportConfig[i].scale;
             var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder + "drawable-" + qualifier);
+            mkdir(exportFolder + "/drawable-" + qualifier);
 
             for (var j = 0; j < ninePatchs.length; j++) {
                 var contentId = ninePatchs[j]["contentId"];
@@ -205,7 +205,7 @@ var onRun = function(context) {
                         patchId,
                         function(success, message) {
                             if (success == true) {
-                                rm(tempFolder + patch);
+                                rm(tempFolder + "/" + patch);
                             }
                         }
                     );
@@ -221,9 +221,9 @@ var onRun = function(context) {
                     patchId,
                     function(success, message) {
                         if (success == true) {
-                            rm(tempFolder + content);
+                            rm(tempFolder + "/" + content);
                             // Rename assets
-                            mv(tempFolder + temp, exportFolder + "drawable-" + qualifier + "/" + newName);
+                            mv(tempFolder + "/" + temp, exportFolder + "/drawable-" + qualifier + "/" + newName);
                         }
                     }
                 );
@@ -237,10 +237,10 @@ var onRun = function(context) {
             var patchRight = patchId + "_right.png";
             var patchBottom = patchId + "_bottom.png";
             var patchLeft = patchId + "_left.png";
-            rm(tempFolder + patchTop);
-            rm(tempFolder + patchRight);
-            rm(tempFolder + patchBottom);
-            rm(tempFolder + patchLeft);
+            rm(tempFolder + "/" + patchTop);
+            rm(tempFolder + "/" + patchRight);
+            rm(tempFolder + "/" + patchBottom);
+            rm(tempFolder + "/" + patchLeft);
         }
 
         // Report file

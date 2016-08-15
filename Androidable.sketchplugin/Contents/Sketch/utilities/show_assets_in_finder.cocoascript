@@ -15,7 +15,7 @@ var onRun = function(context) {
     } else {
         // Export folder: <file name>-assets
         var sketchDocPath = getFilePath(context);
-        var exportFolder = sketchDocPath.replace(/\.sketch$/, "-assets");
+        var exportFolder = getFilePath(context).stringByDeletingPathExtension();
         if (fileExists(exportFolder)) {
             runCommand("/usr/bin/open", ["-R", exportFolder]);
         } else {

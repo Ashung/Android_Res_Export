@@ -136,14 +136,14 @@ function toast(context, message) {
 }
 
 function getPluginPath(context) {
-    var path = decodeURI(context.plugin.url()).replace("file://", ""));
+    var path = context.plugin.url().path();
     return path;
 }
 
 function getFilePath(context) {
     var doc = context.document;
     if (doc.fileURL()) {
-        return decodeURI(doc.fileURL()).replace("file://", ""))
+        return doc.fileURL().path();
     } else {
         alert(context.plugin.name(), "Save your document first.");
         return null;

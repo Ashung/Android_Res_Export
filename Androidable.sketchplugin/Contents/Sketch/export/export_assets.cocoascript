@@ -35,9 +35,9 @@ var onRun = function(context) {
 
     // Ready to export
     var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-    var tempFolder = exportFolder + ".temp/";
-    var reportFile = exportFolder + "report.txt";
+    var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
+    var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
+    var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
     var doneExportAssets = false;
 
     // Reset exportDpis and qualifiers
@@ -72,11 +72,11 @@ var onRun = function(context) {
         for (var i = 0; i < exportConfig.length; i++) {
             var scale = exportConfig[i].scale;
             var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder + "drawable-" + qualifier);
+            mkdir(exportFolder + "/drawable-" + qualifier);
             // Move to exportFolder and rename
             for(var j = 0; j < assets.length; j++) {
-                var srcPath = tempFolder + assets[j]["id"] + scaleToSuffix(scale) + ".png";
-                var dstPath = exportFolder + "drawable-" + qualifier + "/" + assets[j]["name"] + ".png";
+                var srcPath = tempFolder + "/" + assets[j]["id"] + scaleToSuffix(scale) + ".png";
+                var dstPath = exportFolder + "/drawable-" + qualifier + "/" + assets[j]["name"] + ".png";
                 mv(srcPath, dstPath);
             }
         }

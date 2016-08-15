@@ -24,8 +24,8 @@ var onRun = function(context) {
 
         // Ready to export
         var currentFile = getFilePath(context);
-        var exportFolder = getFilePath(context).replace(/\.sketch$/, "-assets/");
-        var tempFolder = exportFolder + ".temp/";
+        var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
+        var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
         var doneExportAppIcon = false;
 
         // Android icon size
@@ -76,16 +76,16 @@ var onRun = function(context) {
             for (var i = 0; i < exportConfig.length; i++) {
                 var scale = exportConfig[i].scale;
                 var qualifier = exportConfig[i].qualifier;
-                var tempFile = tempFolder + iconId + scaleToSuffix(scale) + ".png";
+                var tempFile = tempFolder + "/" + iconId + scaleToSuffix(scale) + ".png";
                 if (qualifier) {
                     // Apk launch icon
-                    var folder = exportFolder + "mipmap-" + qualifier;
+                    var folder = exportFolder + "/mipmap-" + qualifier;
                     mkdir(folder);
-                    mv(tempFile, exportFolder + "mipmap-" + qualifier + "/" + iconName);
+                    mv(tempFile, exportFolder + "/mipmap-" + qualifier + "/" + iconName);
                 } else {
                     // 512px Google Play icon
                     mkdir(exportFolder);
-                    mv(tempFile, exportFolder + "ic_launcher-web.png");
+                    mv(tempFile, getFilePath(context).stringByDeletingPathExtension() + "/ic_launcher-web.png");
                 }
             }
 

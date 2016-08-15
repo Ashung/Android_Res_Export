@@ -1,19 +1,14 @@
 {
-    "name": "Androidable",
-    "description": "Sketch plugin that export Android drawable resources.",
+    "name": "Android Res Export",
+    "description": "Sketch plugin that export Android resources.",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
-    "homepage": "https://github.com/Ashung/Androidable",
+    "homepage": "https://github.com/Ashung/Android_Res_Export",
     "version": 0.1,
-    "identifier": "com.github.ashung.androidable",
+    "identifier": "com.github.ashung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
     "commands": [
-        {
-            "name": "Test",
-            "identifier": "test",
-            "script": "utilities/test.cocoascript"
-        },
         {
             "name": "Export PNG",
             "identifier": "export_assets",
@@ -44,10 +39,10 @@
             "identifier": "open_terminal_at_assets_folder",
             "script": "utilities/open_terminal_at_assets_folder.cocoascript"
         }
-
     ],
     "menu": {
         "isRoot": false,
+        "title": "Android Res Export",
         "items": [
             "export_assets",
             "export_nine_patch",
