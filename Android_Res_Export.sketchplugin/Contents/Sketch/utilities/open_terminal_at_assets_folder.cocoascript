@@ -6,10 +6,6 @@
 
 var onRun = function(context) {
 
-    var doc = context.document;
-    var page = doc.currentPage();
-    var selection = context.selection;
-
     if (!getFilePath(context)) {
         return;
     } else {

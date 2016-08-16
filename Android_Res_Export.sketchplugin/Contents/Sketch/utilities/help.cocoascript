@@ -1,0 +1,9 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+    runCommand("/usr/bin/open", ["https://github.com/Ashung/Android_Res_Export"]);
+}

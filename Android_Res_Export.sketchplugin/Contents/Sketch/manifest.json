@@ -1,31 +1,31 @@
 {
     "name": "Android Res Export",
-    "description": "Sketch plugin that export Android resources.",
+    "description": "Export Android resources, like pngs, 9-patch, app icon and vector drawable.",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
-    "version": 0.1,
+    "version": 1.0,
     "identifier": "com.github.ashung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
     "commands": [
         {
-            "name": "Export PNG",
+            "name": "PNG Assets",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
         },
         {
-            "name": "Export Vector Drawable",
+            "name": "Vector Drawable",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "Export 9-Patch PNG",
+            "name": "9-Patch Image",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
         {
-            "name": "Export App Icon",
+            "name": "App Icon",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
@@ -38,18 +38,34 @@
             "name": "Open Terminal at Asset Folder",
             "identifier": "open_terminal_at_assets_folder",
             "script": "utilities/open_terminal_at_assets_folder.cocoascript"
-        }
+        },
+        {
+            "name": "Help",
+            "identifier": "help",
+            "script": "utilities/help.cocoascript"
+        },
     ],
     "menu": {
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
-            "export_assets",
-            "export_nine_patch",
-            "export_vector_drawable",
-            "export_app_icon",
-            "show_assets_in_finder",
-            "open_terminal_at_assets_folder"
+            {
+                "title": "Export",
+                "items": [
+                    "export_assets",
+                    "export_nine_patch",
+                    "export_vector_drawable",
+                    "export_app_icon"
+                ]
+            },
+            {
+                "title": "Utilities",
+                "items": [
+                    "show_assets_in_finder",
+                    "open_terminal_at_assets_folder"
+                ]
+            },
+            "help"
         ]
     }
 }

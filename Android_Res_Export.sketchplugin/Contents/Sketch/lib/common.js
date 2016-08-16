@@ -33,7 +33,7 @@ function resetExportConfig(pageName) {
         exportConfig = [];
         var configs = pageName.replace(/^@/, "").replace(/\s/g, "").split(",");
         for (var i = 0; i < configs.length; i ++) {
-            var dpi = ""
+            var dpi = "";
             if (/(no|l|m|h|xh|xxh|xxxh|any|tv|\d+)dpi/i.test(configs[i])) {
                 dpi = configs[i].match(/[^-]+dpi/i)[0];
             }
