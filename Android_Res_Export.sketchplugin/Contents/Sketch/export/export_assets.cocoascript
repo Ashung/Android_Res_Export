@@ -14,14 +14,6 @@ var onRun = function(context) {
     var page = doc.currentPage();
     var selection = context.selection;
 
-
-    resetExportConfig(page.name());
-
-    log(exportConfig);
-
-
-    return;
-
     // Get all exportable
     var assets = [];
     var assetsIds = [];
