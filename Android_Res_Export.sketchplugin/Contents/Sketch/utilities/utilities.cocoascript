@@ -1,0 +1,40 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var showAssetsInFinder = function(context) {
+    if (!getFilePath(context)) {
+        return;
+    } else {
+        var sketchDocPath = getFilePath(context);
+        var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
+        if (fileExists(exportFolder)) {
+            NSWorkspace.sharedWorkspace().openFile_withApplication(exportFolder, "Finder");
+        } else {
+            NSWorkspace.sharedWorkspace().openFile_withApplication(sketchDocPath, "Finder");
+            toast(context, "Not assets folder finded.");
+        }
+    }
+}
+
+var openTerminalAtResFolder = function(context) {
+    if (!getFilePath(context)) {
+        return;
+    } else {
+        var sketchDocFolder = getFilePath(context).stringByDeletingPathExtension();
+        var exportFolder = sketchDocFolder + "/res";
+        if (fileExists(exportFolder)) {
+            NSWorkspace.sharedWorkspace().openFile_withApplication(exportFolder, "Terminal");
+        } else {
+            NSWorkspace.sharedWorkspace().openFile_withApplication(sketchDocFolder, "Terminal");
+            toast(context, "Not assets folder finded.");
+        }
+    }
+}
+
+var helpOrReportIssues = function(context) {
+    var site = NSURL.URLWithString("https://github.com/Ashung/Android_Res_Export")
+    NSWorkspace.sharedWorkspace().openURL(site);
+}

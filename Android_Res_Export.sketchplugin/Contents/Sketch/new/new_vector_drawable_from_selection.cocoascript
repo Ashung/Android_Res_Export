@@ -1,0 +1,19 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    // TODO: vectordrawable
+// [group]
+//     # [shape]
+
+
+
+}

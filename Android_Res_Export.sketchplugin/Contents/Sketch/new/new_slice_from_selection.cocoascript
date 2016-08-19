@@ -1,0 +1,27 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    var groupAction = context.document.actionsController().actionWithID("MSGroupAction");
+
+
+    if(groupAction.validate()) groupAction.group(nil)
+
+    log(context.selection)
+
+
+    var g = selection.firstObject().parentGroup();
+
+    g.setName("xxxxx");
+
+    // TODO: slice
+
+}

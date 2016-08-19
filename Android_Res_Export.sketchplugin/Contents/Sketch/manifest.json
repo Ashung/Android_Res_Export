@@ -10,6 +10,11 @@
     "bundleVersion": 1,
     "commands": [
         {
+            "name": "new_slice_from_selection",
+            "identifier": "new_slice_from_selection",
+            "script": "new/new_slice_from_selection.cocoascript"
+        },
+        {
             "name": "PNG Assets",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
@@ -29,26 +34,39 @@
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
+
         {
             "name": "Show Asset in Finder",
             "identifier": "show_assets_in_finder",
-            "script": "utilities/show_assets_in_finder.cocoascript"
+            "handler": "showAssetsInFinder",
+            "script": "utilities/utilities.cocoascript"
         },
         {
             "name": "Open Terminal at Asset Folder",
             "identifier": "open_terminal_at_assets_folder",
-            "script": "utilities/open_terminal_at_assets_folder.cocoascript"
+            "handler": "openTerminalAtResFolder",
+            "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Help",
+            "name": "Help or Report Issues",
             "identifier": "help",
-            "script": "utilities/help.cocoascript"
+            "handler": "helpOrReportIssues",
+            "script": "utilities/utilities.cocoascript"
         },
     ],
     "menu": {
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
+            {
+                "title": "New",
+                "items": [
+                    "new_slice_from_selection",
+                    "new_nine_patch_from_selection",
+                    "new_vector_drawable_from_selection",
+                    "new_app_icon_artboard"
+                ]
+            },
             {
                 "title": "Export",
                 "items": [
