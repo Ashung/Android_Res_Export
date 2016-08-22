@@ -4,28 +4,44 @@
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
-    "version": 1.0,
+    "version": 1.1,
     "identifier": "com.github.ashung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
     "commands": [
         {
-            "name": "new_slice_from_selection",
-            "identifier": "new_slice_from_selection",
-            "script": "new/new_slice_from_selection.cocoascript"
+            "name": "PNG Asset",
+            "identifier": "new_png_asset",
+            "script": "new/new_png_asset.cocoascript"
         },
+        {
+            "name": "9-Patch Asset",
+            "identifier": "new_nine_patch_asset",
+            "script": "new/new_nine_patch_asset.cocoascript"
+        },
+        {
+            "name": "Vector Drawable Asset",
+            "identifier": "new_vector_drawable_asset",
+            "script": "new/new_vector_drawable_asset.cocoascript"
+        },
+        {
+            "name": "Change Fill-rule to Non-Zero",
+            "identifier": "change_fill_rule_to_nonzero",
+            "script": "new/change_fill_rule_to_nonzero.cocoascript"
+        },
+
         {
             "name": "PNG Assets",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
         },
         {
-            "name": "Vector Drawable",
+            "name": "Vector Drawables",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "9-Patch Image",
+            "name": "9-Patch Assets",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
@@ -61,10 +77,10 @@
             {
                 "title": "New",
                 "items": [
-                    "new_slice_from_selection",
-                    "new_nine_patch_from_selection",
-                    "new_vector_drawable_from_selection",
-                    "new_app_icon_artboard"
+                    "new_png_asset",
+                    "new_nine_patch_asset",
+                    "new_vector_drawable_asset",
+                    "change_fill_rule_to_nonzero"
                 ]
             },
             {

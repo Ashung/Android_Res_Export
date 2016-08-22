@@ -125,6 +125,46 @@ function scaleToSuffix(size) {
 }
 
 /* =========================================================
+    Sketch
+========================================================= */
+
+function group(context) {
+    var doc = context.document;
+    var selection = context.selection;
+    var groupAction = doc.actionsController().actionWithID("MSGroupAction");
+    if (groupAction.validate()) {
+        groupAction.group(nil);
+    }
+}
+
+function addSliceFromGroup(context, layerGroup, name) {
+    var doc = context.document;
+    var slice = MSSliceLayer.new();
+    slice.frame().setX(0);
+    slice.frame().setY(0);
+    slice.frame().setWidth(layerGroup.frame().width());
+    slice.frame().setHeight(layerGroup.frame().height());
+    slice.setName(name);
+    layerGroup.addLayers([slice]);
+    // Send slice to back
+    slice.select_byExpandingSelection(true, false);
+    NSApp.sendAction_to_from_("moveToBack:", nil, doc);
+    // Select layerGroup
+    layerGroup.select_byExpandingSelection(true, false);
+}
+
+function addRectShape(parent, posX, posY, width, height, color, name) {
+    var rectangle = MSRectangleShape.alloc().init();
+    rectangle.frame = MSRect.rectWithRect(NSMakeRect(posX, posY, width, height));
+    var shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
+    shapeGroup.setName(name);
+    shapeGroup.style().addStylePartOfType(0);
+    shapeGroup.style().fill().setColor(MSColor.colorWithSVGString(color));
+    parent.addLayers([shapeGroup]);
+    return shapeGroup;
+}
+
+/* =========================================================
     Utilities
 ========================================================= */
 
