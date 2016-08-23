@@ -30,19 +30,17 @@ Design at MDPI (1x) size, NOT support other sizes.
 
 Use "Make Exportable" or "Slice" to create PNG assets.
 
-![](img/export_png_assets.png)
+![](img/android_res_export_for_sketch_1.gif)
 
 Use menu "Plugin" - "Android Res Export" - "New" - "9-Patch Asset" to create a 9-Patch asset.
 
-![](img/export_nine_patch.png)
+![](img/android_res_export_for_sketch_2.gif)
 
 Use menu "Plugin" - "Android Res Export" - "New" - "Vector drawable Asset" to create a vector drawable asset. Select the chape layers in vector drawable group,  click to settings icon in fill property panel, and choose "Non-Zero", then apply "Layer" - "Paths" - "Reverse Order" command from the main menu to reverse the path order.
 
-![](img/export_vector_drawable.png)
+![](img/android_res_export_for_sketch_3.gif)
 
 Use page name to export asset in deferent folder.
-
-![](img/export_to_qualifier_folder.png)
 
 ## License
 
