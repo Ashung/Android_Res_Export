@@ -5,7 +5,7 @@
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "version": 1.1,
-    "identifier": "com.github.ashung.android_res_export",
+    "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
     "commands": [
@@ -68,7 +68,7 @@
             "identifier": "help",
             "handler": "helpOrReportIssues",
             "script": "utilities/utilities.cocoascript"
-        },
+        }
     ],
     "menu": {
         "isRoot": false,
