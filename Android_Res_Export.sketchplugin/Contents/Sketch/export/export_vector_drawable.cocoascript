@@ -189,6 +189,8 @@ function svgToVectorDrawable(svg) {
         if (fillRegex.test(tags[i])) {
             var color = fillRegex.exec(tags[i])[1];
             path += ' android:fillColor="' + color + '"';
+        } else {
+            path += ' android:fillColor="#000000"';
         }
 
         var opacityRegex = /\sopacity="([0-9\.]+)"/;
