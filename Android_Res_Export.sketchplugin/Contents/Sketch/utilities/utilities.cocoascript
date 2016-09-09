@@ -11,9 +11,9 @@ var showAssetsInFinder = function(context) {
         var sketchDocPath = getFilePath(context);
         var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
         if (fileExists(exportFolder)) {
-            NSWorkspace.sharedWorkspace().openFile_withApplication(exportFolder, "Finder");
+            NSWorkspace.sharedWorkspace().openFile_withApplication_(exportFolder, "Finder");
         } else {
-            NSWorkspace.sharedWorkspace().openFile_withApplication(sketchDocPath, "Finder");
+            NSWorkspace.sharedWorkspace().openFile_withApplication_(sketchDocPath, "Finder");
             toast(context, "Not assets folder finded.");
         }
     }
@@ -26,9 +26,9 @@ var openTerminalAtResFolder = function(context) {
         var sketchDocFolder = getFilePath(context).stringByDeletingPathExtension();
         var exportFolder = sketchDocFolder + "/res";
         if (fileExists(exportFolder)) {
-            NSWorkspace.sharedWorkspace().openFile_withApplication(exportFolder, "Terminal");
+            NSWorkspace.sharedWorkspace().openFile_withApplication_(exportFolder, "Terminal");
         } else {
-            NSWorkspace.sharedWorkspace().openFile_withApplication(sketchDocFolder, "Terminal");
+            NSWorkspace.sharedWorkspace().openFile_withApplication_(sketchDocFolder, "Terminal");
             toast(context, "Not assets folder finded.");
         }
     }
