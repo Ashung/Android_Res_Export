@@ -1,0 +1,53 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+    var selectionCount = selection.count();
+
+    if (selectionCount == 0) {
+        toast(context, "No any selection layer.");
+        return;
+    }
+
+    // Group content
+    if (selectionCount == 1 && selection.firstObject().className == "MSLayerGroup") {
+        var groupContent = selection.firstObject();
+    } else {
+        group(context);
+        var groupContent = selection.firstObject().parentGroup();
+    }
+    groupContent.setName("content");
+    addSliceFromGroup(context, groupContent, "#9patch");
+
+    // Group nine patch
+    group(context);
+    var groupNinePatch = groupContent.parentGroup();
+    groupNinePatch.setName("new_nine_patch");
+
+    // Add patch lines
+    var width = groupContent.frame().width();
+    var height = groupContent.frame().height();
+    var color = "#000000";
+    var patchLeft = addRectShape(groupNinePatch, -1, 0, 1, height, color, "left");
+    patchLeft.select_byExpandingSelection(true, false);
+    var patchBottom = addRectShape(groupNinePatch, 0, height, width, 1, color, "bottom");
+    patchBottom.select_byExpandingSelection(true, true);
+    var patchRight = addRectShape(groupNinePatch, width, 0, 1, height, color, "right");
+    patchRight.select_byExpandingSelection(true, true);
+    var patchTop = addRectShape(groupNinePatch, 0, -1, width, 1, color, "top");
+    patchTop.select_byExpandingSelection(true, true);
+    group(context);
+    var groupPatch = patchLeft.parentGroup();
+    groupPatch.setName("patch");
+
+    // Select layerGroup
+    groupNinePatch.select_byExpandingSelection(true, false);
+
+}

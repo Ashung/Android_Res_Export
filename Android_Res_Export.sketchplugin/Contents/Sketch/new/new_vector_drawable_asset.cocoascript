@@ -1,0 +1,38 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+    var selectionCount = selection.count();
+
+    if (selectionCount == 0) {
+        toast(context, "No any selection layer.");
+        return;
+    }
+
+    // Group vector
+    if (selectionCount == 1 && selection.firstObject().className == "MSLayerGroup") {
+        var groupVector = selection.firstObject();
+    } else {
+        group(context);
+        var groupVector = selection.firstObject().parentGroup();
+    }
+    groupVector.setName("new_vector_drawable");
+
+    // add boundLayer
+    var width = groupVector.frame().width();
+    var height = groupVector.frame().height();
+    var color = "#FFFFFF";
+    var boundLayer = addRectShape(groupVector, 0, 0, width, height, color, "#");
+    boundLayer.select_byExpandingSelection(true, false);
+    NSApp.sendAction_to_from_("moveToBack:", nil, doc);
+
+    groupVector.select_byExpandingSelection(true, false);
+
+}
