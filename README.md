@@ -1,5 +1,7 @@
 # Android Res Export
 
+![](img/android_res_export.png)
+
 [中文说明](https://github.com/Ashung/Android_Res_Export/blob/master/README_zh.md)
 
 Export Android resouces in Sketch, include PNG assets, app icon, nine-patch image and vector drawable.
