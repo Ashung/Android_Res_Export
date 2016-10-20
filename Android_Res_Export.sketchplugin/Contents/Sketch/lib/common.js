@@ -195,11 +195,11 @@ function alert(title, content) {
     app.displayDialog_withTitle_(content, title);
 }
 
-function askForUserInput(context, title, initial) {
-    var doc = context.document;
-    var result = doc.askForUserInput_initialValue(title, initial);
-    return result;
-}
+// function askForUserInput(context, title, initial) {
+//     var doc = context.document;
+//     var result = doc.askForUserInput_initialValue(title, initial);
+//     return result;
+// }
 
 function fileExists(path) {
     return NSFileManager.defaultManager().fileExistsAtPath_(path);
@@ -247,15 +247,15 @@ function mv(srcPath, dstPath) {
     Command line tools
 ========================================================= */
 
-function clipboard() {
-    var content = "";
-    runCommand("/bin/bash", ["-l", "-c", "pbpaste"], function(status, msg) {
-        if (status && msg != "") {
-            content = msg.replace(/\n/, "");
-        }
-    });
-    return content;
-}
+// function clipboard() {
+//     var content = "";
+//     runCommand("/bin/bash", ["-l", "-c", "pbpaste"], function(status, msg) {
+//         if (status && msg != "") {
+//             content = msg.replace(/\n/, "");
+//         }
+//     });
+//     return content;
+// }
 
 function which(command) {
     var path = "";
@@ -268,35 +268,35 @@ function which(command) {
     return path;
 }
 
-function mvUseShell(formPath, toPath, callback) {
-    var command = "/bin/bash";
-    var args = [
-        "-l",
-        "-c",
-        'mv "' + formPath + '" "' + toPath + '"'
-    ];
-    runCommand(command, args, callback);
-}
-
-function rmUseShell(file, callback) {
-    var command = "/bin/bash";
-    var args = [
-        "-l",
-        "-c",
-        'rm "' + file + '"'
-    ];
-    runCommand(command, args, callback);
-}
-
-function mkdirUseShell(dirPath, callback) {
-    var command = "/bin/bash";
-    var args = [
-        "-l",
-        "-c",
-        'mkdir -p "' + dirPath + '"'
-    ];
-    runCommand(command, args, callback);
-}
+// function mvUseShell(formPath, toPath, callback) {
+//     var command = "/bin/bash";
+//     var args = [
+//         "-l",
+//         "-c",
+//         'mv "' + formPath + '" "' + toPath + '"'
+//     ];
+//     runCommand(command, args, callback);
+// }
+//
+// function rmUseShell(file, callback) {
+//     var command = "/bin/bash";
+//     var args = [
+//         "-l",
+//         "-c",
+//         'rm "' + file + '"'
+//     ];
+//     runCommand(command, args, callback);
+// }
+//
+// function mkdirUseShell(dirPath, callback) {
+//     var command = "/bin/bash";
+//     var args = [
+//         "-l",
+//         "-c",
+//         'mkdir -p "' + dirPath + '"'
+//     ];
+//     runCommand(command, args, callback);
+// }
 
 function optimizeSVG(svg) {
     var code = "";

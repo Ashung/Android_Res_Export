@@ -51,6 +51,7 @@ var onRun = function(context) {
         // Save
         doc.saveDocument(nil);
 
+        // TODO: Do not use sketchtool
         // Export
         var iconName = androidResName(icon.name()) + ".png";
         var iconId = icon.objectID();
