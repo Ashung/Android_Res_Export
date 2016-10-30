@@ -21,7 +21,7 @@ brew install imagemagick
 4, Install [Node.js](https://nodejs.org/en/) and [SVGO](https://github.com/svg/svgo).
 
 ```bash
-sudo npm install svgo -g
+npm install svgo -g
 ```
 
 ## How it Works
