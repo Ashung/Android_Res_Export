@@ -24,13 +24,13 @@ var onRun = function(context) {
             if (selection.firstObject().className() == "MSLayerGroup" || selection.firstObject().className() == "MSArtboard") {
                 var layerGroup = selection.firstObject();
                 var name = androidResName(layerGroup.name());
-                addSliceFromGroup(context, layerGroup, name);
+                addSliceInToGroup(context, layerGroup, name);
             } else {
                 group(context);
                 var layerGroup = selection.firstObject().parentGroup();
                 layerGroup.setName(selection.firstObject().name());
                 var name = androidResName(layerGroup.name());
-                addSliceFromGroup(context, layerGroup, name);
+                addSliceInToGroup(context, layerGroup, name);
             }
         }
         return;
@@ -41,7 +41,7 @@ var onRun = function(context) {
         var layerGroup = selection.firstObject().parentGroup();
         layerGroup.setName(selection.lastObject().name());
         var name = androidResName(layerGroup.name());
-        addSliceFromGroup(context, layerGroup, name);
+        addSliceInToGroup(context, layerGroup, name);
         return;
     }
 }

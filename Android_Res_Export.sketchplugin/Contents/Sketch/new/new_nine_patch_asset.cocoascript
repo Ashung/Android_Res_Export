@@ -24,7 +24,7 @@ var onRun = function(context) {
         var groupContent = selection.firstObject().parentGroup();
     }
     groupContent.setName("content");
-    addSliceFromGroup(context, groupContent, "#9patch");
+    addSliceInToGroup(context, groupContent, "#9patch");
 
     // Group nine patch
     group(context);
@@ -35,13 +35,13 @@ var onRun = function(context) {
     var width = groupContent.frame().width();
     var height = groupContent.frame().height();
     var color = "#000000";
-    var patchLeft = addRectShape(groupNinePatch, -1, 0, 1, height, color, "left");
+    var patchLeft = addRectShape(groupNinePatch, null, -1, 0, 1, height, color, "left");
     patchLeft.select_byExpandingSelection(true, false);
-    var patchBottom = addRectShape(groupNinePatch, 0, height, width, 1, color, "bottom");
+    var patchBottom = addRectShape(groupNinePatch, null, 0, height, width, 1, color, "bottom");
     patchBottom.select_byExpandingSelection(true, true);
-    var patchRight = addRectShape(groupNinePatch, width, 0, 1, height, color, "right");
+    var patchRight = addRectShape(groupNinePatch, null, width, 0, 1, height, color, "right");
     patchRight.select_byExpandingSelection(true, true);
-    var patchTop = addRectShape(groupNinePatch, 0, -1, width, 1, color, "top");
+    var patchTop = addRectShape(groupNinePatch, null, 0, -1, width, 1, color, "top");
     patchTop.select_byExpandingSelection(true, true);
     group(context);
     var groupPatch = patchLeft.parentGroup();

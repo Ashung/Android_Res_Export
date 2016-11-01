@@ -29,9 +29,7 @@ var onRun = function(context) {
     var width = groupVector.frame().width();
     var height = groupVector.frame().height();
     var color = "#FFFFFF";
-    var boundLayer = addRectShape(groupVector, 0, 0, width, height, color, "#");
-    boundLayer.select_byExpandingSelection(true, false);
-    NSApp.sendAction_to_from_("moveToBack:", nil, doc);
+    var boundLayer = addRectShape(groupVector, groupVector.layers().firstObject(), 0, 0, width, height, color, "#");
 
     groupVector.select_byExpandingSelection(true, false);
 
