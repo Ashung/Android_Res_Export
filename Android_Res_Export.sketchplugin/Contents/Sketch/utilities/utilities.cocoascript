@@ -11,9 +11,9 @@ var showAssetsInFinder = function(context) {
         var sketchDocPath = getFilePath(context);
         var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
         if (fileExists(exportFolder)) {
-            NSWorkspace.sharedWorkspace().openFile_withApplication_(exportFolder, "Finder");
+            NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(exportFolder, nil);
         } else {
-            NSWorkspace.sharedWorkspace().openFile_withApplication_(sketchDocPath, "Finder");
+            NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(sketchDocPath, nil);
             toast(context, "Not assets folder finded.");
         }
     }
@@ -34,7 +34,26 @@ var openTerminalAtResFolder = function(context) {
     }
 }
 
-var helpOrReportIssues = function(context) {
-    var site = NSURL.URLWithString("https://github.com/Ashung/Android_Res_Export")
-    NSWorkspace.sharedWorkspace().openURL(site);
+var website = function(context) {
+    openUrlInBrowser("https://github.com/Ashung/Android_Res_Export");
+}
+
+var reportIssues = function(context) {
+    openUrlInBrowser("https://github.com/Ashung/Android_Res_Export/issues/");
+}
+
+var donateViaPaypal = function() {
+    openUrlInBrowser("https://www.paypal.me/ashung/2/");
+};
+
+var donateViaWechat = function() {
+    openUrlInBrowser("http://ashung.github.io/Automate-Sketch/css/donate_wechat_rmb_10.png");
+};
+
+var donateViaAlipay = function() {
+    openUrlInBrowser("http://ashung.github.io/Automate-Sketch/css/donate_alipay_rmb_10.png");
+};
+
+function openUrlInBrowser(url) {
+    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString(url));
 }

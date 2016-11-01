@@ -137,30 +137,28 @@ function group(context) {
     }
 }
 
-function addSliceFromGroup(context, layerGroup, name) {
+function addSliceInToGroup(context, layerGroup, name) {
     var doc = context.document;
     var slice = MSSliceLayer.new();
-    slice.frame().setX(0);
-    slice.frame().setY(0);
-    slice.frame().setWidth(layerGroup.frame().width());
-    slice.frame().setHeight(layerGroup.frame().height());
+    slice.setRect(CGRectMake(0, 0, layerGroup.frame().width(), layerGroup.frame().height()));
     slice.setName(name);
-    layerGroup.addLayers([slice]);
-    // Send slice to back
-    slice.select_byExpandingSelection(true, false);
-    NSApp.sendAction_to_from_("moveToBack:", nil, doc);
-    // Select layerGroup
+    slice.exportOptions().setLayerOptions(2);
+    layerGroup.insertLayers_beforeLayer([slice], layerGroup.layers().firstObject());
     layerGroup.select_byExpandingSelection(true, false);
 }
 
-function addRectShape(parent, posX, posY, width, height, color, name) {
+function addRectShape(parent, beforeLayer, posX, posY, width, height, color, name) {
     var rectangle = MSRectangleShape.alloc().init();
-    rectangle.frame = MSRect.rectWithRect(NSMakeRect(posX, posY, width, height));
+    rectangle.setRect(CGRectMake(posX, posY, width, height));
     var shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
     shapeGroup.setName(name);
     shapeGroup.style().addStylePartOfType(0);
     shapeGroup.style().fill().setColor(MSColor.colorWithSVGString(color));
-    parent.addLayers([shapeGroup]);
+    if (beforeLayer) {
+        parent.insertLayers_beforeLayer([shapeGroup], beforeLayer);
+    } else {
+        parent.addLayers([shapeGroup]);
+    }
     return shapeGroup;
 }
 
@@ -194,12 +192,6 @@ function alert(title, content) {
     var app = NSApplication.sharedApplication();
     app.displayDialog_withTitle_(content, title);
 }
-
-// function askForUserInput(context, title, initial) {
-//     var doc = context.document;
-//     var result = doc.askForUserInput_initialValue(title, initial);
-//     return result;
-// }
 
 function fileExists(path) {
     return NSFileManager.defaultManager().fileExistsAtPath_(path);
@@ -247,16 +239,6 @@ function mv(srcPath, dstPath) {
     Command line tools
 ========================================================= */
 
-// function clipboard() {
-//     var content = "";
-//     runCommand("/bin/bash", ["-l", "-c", "pbpaste"], function(status, msg) {
-//         if (status && msg != "") {
-//             content = msg.replace(/\n/, "");
-//         }
-//     });
-//     return content;
-// }
-
 function which(command) {
     var path = "";
     runCommand("/bin/bash", ["-l", "-c", "which " + command], function(status, msg) {
@@ -267,36 +249,6 @@ function which(command) {
     });
     return path;
 }
-
-// function mvUseShell(formPath, toPath, callback) {
-//     var command = "/bin/bash";
-//     var args = [
-//         "-l",
-//         "-c",
-//         'mv "' + formPath + '" "' + toPath + '"'
-//     ];
-//     runCommand(command, args, callback);
-// }
-//
-// function rmUseShell(file, callback) {
-//     var command = "/bin/bash";
-//     var args = [
-//         "-l",
-//         "-c",
-//         'rm "' + file + '"'
-//     ];
-//     runCommand(command, args, callback);
-// }
-//
-// function mkdirUseShell(dirPath, callback) {
-//     var command = "/bin/bash";
-//     var args = [
-//         "-l",
-//         "-c",
-//         'mkdir -p "' + dirPath + '"'
-//     ];
-//     runCommand(command, args, callback);
-// }
 
 function optimizeSVG(svg) {
     var code = "";

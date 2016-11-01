@@ -4,7 +4,7 @@
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
-    "version": 1.1,
+    "version": 1.20161101,
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
@@ -64,10 +64,34 @@
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Help or Report Issues",
-            "identifier": "help",
-            "handler": "helpOrReportIssues",
+            "name": "Web Site",
+            "identifier": "web_site",
+            "handler": "website",
+            "script": "Utilities/utilities.cocoascript"
+        },
+        {
+            "name": "Report Issues",
+            "identifier": "report_issues",
+            "handler": "reportIssues",
             "script": "utilities/utilities.cocoascript"
+        },
+        {
+            "name": "Donate via PayPal",
+            "identifier": "donate_via_paypal",
+            "handler": "donateViaPaypal",
+            "script": "Utilities/utilities.cocoascript"
+        },
+        {
+            "name": "Donate via WeChat",
+            "identifier": "donate_via_wechat",
+            "handler": "donateViaWechat",
+            "script": "Utilities/utilities.cocoascript"
+        },
+        {
+            "name": "Donate via Alipay",
+            "identifier": "donate_via_alipay",
+            "handler": "donateViaAlipay",
+            "script": "Utilities/utilities.cocoascript"
         }
     ],
     "menu": {
@@ -80,6 +104,7 @@
                     "new_png_asset",
                     "new_nine_patch_asset",
                     "new_vector_drawable_asset",
+                    "-",
                     "change_fill_rule_to_nonzero"
                 ]
             },
@@ -99,7 +124,17 @@
                     "open_terminal_at_assets_folder"
                 ]
             },
-            "help"
+            {
+                "title": "Help",
+                "items": [
+                    "web_site",
+                    "report_issues",
+                    "-",
+                    "donate_via_paypal",
+                    "donate_via_wechat",
+                    "donate_via_alipay"
+                ]
+            }
         ]
     }
 }
