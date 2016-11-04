@@ -8,7 +8,7 @@ Export Android resources in Sketch – PNG assets, app icon, nine-patch image an
 
 ## Installation
 
-1, [Download](https://github.com/Ashung/Android_Res_Export/releases) and unzip.
+1, [Download ZIP](https://github.com/Ashung/Android_Res_Export/archive/master.zip) and unzip.
 
 2, Double-click "Android_Res_Export.sketchplugin" to install.
 
