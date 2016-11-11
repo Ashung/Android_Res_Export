@@ -2,6 +2,8 @@
 
 ![](img/android_res_export.png)
 
+**Sketch 41 Support**
+
 [中文说明 (README in Chinese)](https://github.com/Ashung/Android_Res_Export/blob/master/README_zh.md)
 
 Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.

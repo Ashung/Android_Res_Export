@@ -2,6 +2,8 @@
 
 ![](img/android_res_export.png)
 
+**支持 Sketch 41**
+
 用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、App 图标、点九图和 vector drawable XML 文件。
 
 ## 安装步骤
