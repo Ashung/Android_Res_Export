@@ -2,7 +2,7 @@
 
 ![](img/android_res_export.png)
 
-**支持 Sketch 41**
+**支持 Sketch 41.x**
 
 用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、App 图标、点九图和 vector drawable XML 文件。
 
@@ -10,23 +10,29 @@
 
 ### 安装插件
 
+> 本插件支持使用 Sketch Toolbox 安装，请搜索 “Android Res Export”。
+
 1,  [下载 zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) 并解压。
 
 2, 双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
-
-> 本插件支持使用 Sketch Toolbox 安装，请搜索 “Android Res Export”。
 
 ### 配置
 
 插件安装完成后只支持导出普通资源和应用图标资源，需要安装以下工具才可以使用点九和 Vector Drawable 导出。
 
-1, 使用 [Homebrew](http://brew.sh/index_zh-cn.html) 安装 [ImageMagick](http://www.imagemagick.org/script/index.php)。打开终端，粘贴 [Homebrew](http://brew.sh/index_zh-cn.html) 主页上的代码后，按下回车。安装完毕之后，在终端输入以下命令安装 ImageMagick。
+#### 点九图片导出支持配置
+
+使用 [Homebrew](http://brew.sh/index_zh-cn.html) 安装 [ImageMagick](http://www.imagemagick.org/script/index.php)。打开终端，粘贴 [Homebrew](http://brew.sh/index_zh-cn.html) 主页上的代码后，按下回车。安装完毕之后，在终端输入以下命令安装 ImageMagick。
 
 ```bash
 brew install imagemagick
 ```
 
-2, 首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。安装完成后，打开终端输入以下命令安装 [SVGO](https://github.com/svg/svgo)。
+#### Vector Drawable 导出支持配置
+
+首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。如果速度太慢可以从[国内镜像下载](https://npm.taobao.org/)。
+
+安装完成后，打开终端输入以下命令安装 [SVGO](https://github.com/svg/svgo)。
 
 ```bash
 sudo npm install svgo -g
@@ -66,7 +72,7 @@ sudo npm install svgo -g
 
 选择图层，执行 "Plugins" - "Android Res Export" - "New" - "Vector drawable Asset"，来创建一个 Vector Drawable 资源。
 
-选择 Vector Drawable 资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"，如果图像有问题，可以执行 "Layer" - "Paths" - "Reverse Order" 反转路径顺序。
+如果形状包含复杂的布尔运算，需要选择 Vector Drawable 资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"，如果图像有问题，可以执行 "Layer" - "Paths" - "Reverse Order" 反转路径顺序。
 
 组内的白色 “#” 图层表示切图区域，最终导出的代码中不会包含此图层。
 
@@ -92,7 +98,6 @@ App 图标必须在 192x192px 的画板内。App 图标则命名在画板上。
 @zh-rCN-xxhdpi
 @sw600dp-xxhdpi
 ```
-
 
 ## 声明
 

@@ -2,7 +2,7 @@
 
 ![](img/android_res_export.png)
 
-**Sketch 41 Support**
+**Sketch 41.x Support**
 
 [中文说明 (README in Chinese)](https://github.com/Ashung/Android_Res_Export/blob/master/README_zh.md)
 

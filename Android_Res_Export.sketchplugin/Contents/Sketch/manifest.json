@@ -10,17 +10,17 @@
     "bundleVersion": 1,
     "commands": [
         {
-            "name": "PNG Asset",
+            "name": "New PNG Asset",
             "identifier": "new_png_asset",
             "script": "new/new_png_asset.cocoascript"
         },
         {
-            "name": "9-Patch Asset",
+            "name": "New 9-Patch Asset",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
         {
-            "name": "Vector Drawable Asset",
+            "name": "New Vector Drawable Asset",
             "identifier": "new_vector_drawable_asset",
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
@@ -31,22 +31,22 @@
         },
 
         {
-            "name": "PNG Assets",
+            "name": "Export PNG Assets",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
         },
         {
-            "name": "Vector Drawables",
+            "name": "Export Vector Drawables",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "9-Patch Assets",
+            "name": "Export 9-Patch Assets",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
         {
-            "name": "App Icon",
+            "name": "Export App Icon",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
@@ -98,32 +98,18 @@
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
-            {
-                "title": "New",
-                "items": [
-                    "new_png_asset",
-                    "new_nine_patch_asset",
-                    "new_vector_drawable_asset",
-                    "-",
-                    "change_fill_rule_to_nonzero"
-                ]
-            },
-            {
-                "title": "Export",
-                "items": [
-                    "export_assets",
-                    "export_nine_patch",
-                    "export_vector_drawable",
-                    "export_app_icon"
-                ]
-            },
-            {
-                "title": "Utilities",
-                "items": [
-                    "show_assets_in_finder",
-                    "open_terminal_at_assets_folder"
-                ]
-            },
+            "new_png_asset",
+            "new_nine_patch_asset",
+            "new_vector_drawable_asset",
+            "-",
+            "export_assets",
+            "export_nine_patch",
+            "export_vector_drawable",
+            "export_app_icon",
+            "-",
+            "show_assets_in_finder",
+            "open_terminal_at_assets_folder",
+            "-",
             {
                 "title": "Help",
                 "items": [
