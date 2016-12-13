@@ -16,6 +16,17 @@ var onRun = function(context) {
         return;
     }
 
+    // Checking if layers containt not supported effect
+    var supported = 1;
+    for (var i = 0; i < selection.count(); i++) {
+        checkLayerType(context, selection.objectAtIndex(i), function(sup) {
+            supported = sup;
+        });
+        if (supported == 0) {
+            return;
+        }
+    }
+
     // Group vector
     if (selectionCount == 1 && selection.firstObject().className == "MSLayerGroup") {
         var groupVector = selection.firstObject();
@@ -23,7 +34,8 @@ var onRun = function(context) {
         group(context);
         var groupVector = selection.firstObject().parentGroup();
     }
-    groupVector.setName("new_vector_drawable");
+    var name = ask(context, "Asset name for new vector drawable.", "new_vector_drawable");
+    groupVector.setName(androidResName(name));
 
     // add boundLayer
     var width = groupVector.frame().width();
@@ -33,4 +45,71 @@ var onRun = function(context) {
 
     groupVector.select_byExpandingSelection(true, false);
 
+}
+
+function checkLayerType(context, layer, callback) {
+    if (layer.class() == "MSLayerGroup") {
+        var loop = layer.layers().objectEnumerator();
+        var item;
+        while (item = loop.nextObject()) {
+            checkLayerType(context, item, supported);
+        }
+    } else {
+
+        if (layer.class() == "MSTextLayer") {
+            toast(context, "Text layer can't covert to vector drawable, you can convert to outlines first.");
+            callback(0);
+        }
+
+        if (layer.class() == "MSArtboardGroup") {
+            toast(context, "Artboard can't covert to vector drawable, you can ungroup it.");
+            callback(0);
+        }
+
+        if (layer.class() == "MSBitmapLayer") {
+            toast(context, "Bitmap layer can't covert to vector drawable.");
+            callback(0);
+        }
+
+        if (layer.class() == "MSSymbolInstance" || layer.class() == "MSSymbolMaster") {
+            toast(context, "Symbol can't covert to vector drawable.");
+            callback(0);
+        }
+
+        // Not suppot styles in vector drawable
+        if (layer.class() == "MSShapeGroup") {
+            var style = layer.style();
+            if (style.enabledFills().count() > 0) {
+                for (var i = 0; i < style.enabledFills().count(); i++) {
+                    var fill =  style.enabledFills().objectAtIndex(i);
+                    if (fill.fillType() != 0) {
+                        toast(context, "Only solid fill is supported by vector drawable.");
+                        callback(0);
+                    }
+                }
+            }
+            if (style.enabledBorders().count() > 0) {
+                for (var i = 0; i < style.enabledBorders().count(); i++) {
+                    var border =  style.enabledBorders().objectAtIndex(i);
+                    if (border.fillType() != 0) {
+                        toast(context, "Only solid border is supported by vector drawable.");
+                        callback(0);
+                    }
+                }
+            }
+            if (style.enabledShadows().count() > 0) {
+                toast(context, "Shape layer with shadow is not supported by vector drawable.");
+                callback(0);
+            }
+            if (style.enabledInnerShadows().count() > 0) {
+                toast(context, "Shape layer with inner shadow is not supported by vector drawable.");
+                callback(0);
+            }
+            if (style.blur().isEnabled()) {
+                toast(context, "Shape layer with blur is not supported by vector drawable.");
+                callback(0);
+            }
+        }
+
+    }
 }

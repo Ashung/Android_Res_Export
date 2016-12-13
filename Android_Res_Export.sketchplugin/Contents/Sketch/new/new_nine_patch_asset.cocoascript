@@ -24,12 +24,13 @@ var onRun = function(context) {
         var groupContent = selection.firstObject().parentGroup();
     }
     groupContent.setName("content");
-    addSliceInToGroup(context, groupContent, "#9patch");
+    addSliceInToGroup(groupContent, "#9patch");
 
     // Group nine patch
     group(context);
     var groupNinePatch = groupContent.parentGroup();
-    groupNinePatch.setName("new_nine_patch");
+    var name = ask(context, "Asset name for new nine-path.", "new_nine_patch");
+    groupNinePatch.setName(androidResName(name));
 
     // Add patch lines
     var width = groupContent.frame().width();

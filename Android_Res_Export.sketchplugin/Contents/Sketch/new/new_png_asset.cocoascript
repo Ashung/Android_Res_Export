@@ -18,30 +18,32 @@ var onRun = function(context) {
 
     if (selectionCount == 1) {
         if (selection.firstObject().isLayerExportable()) {
-            var name = androidResName(selection.firstObject().name());
-            selection.firstObject().setName(name);
+            var name = ask(context, "Asset name for \"" + selection.firstObject().name() + "\"", androidResName(selection.firstObject().name()));
+            selection.firstObject().setName(androidResName(name));
         } else {
-            if (selection.firstObject().className() == "MSLayerGroup" || selection.firstObject().className() == "MSArtboard") {
+            if (selection.firstObject().class() == "MSLayerGroup" || selection.firstObject().class() == "MSArtboard") {
                 var layerGroup = selection.firstObject();
-                var name = androidResName(layerGroup.name());
-                addSliceInToGroup(context, layerGroup, name);
+                var name = ask(context, "Asset name for \"" + layerGroup.name() + "\"", androidResName(layerGroup.name()));
+                if (layerGroup.class() == "MSLayerGroup") {
+                    layerGroup.setName(name);
+                }
+                removeSliceInGroup(layerGroup);
+                addSliceInToGroup(layerGroup, androidResName(name));
             } else {
-                group(context);
-                var layerGroup = selection.firstObject().parentGroup();
-                layerGroup.setName(selection.firstObject().name());
-                var name = androidResName(layerGroup.name());
-                addSliceInToGroup(context, layerGroup, name);
+                _addPNGAsset();
             }
         }
-        return;
     }
 
     if (selectionCount > 1) {
+        _addPNGAsset();
+    }
+
+    function _addPNGAsset() {
         group(context);
         var layerGroup = selection.firstObject().parentGroup();
-        layerGroup.setName(selection.lastObject().name());
-        var name = androidResName(layerGroup.name());
-        addSliceInToGroup(context, layerGroup, name);
-        return;
+        var name = ask(context, "Asset name for \"" + selection.firstObject().name() + "\"", androidResName(selection.firstObject().name()));
+        layerGroup.setName(name);
+        addSliceInToGroup(layerGroup, androidResName(name));
     }
 }

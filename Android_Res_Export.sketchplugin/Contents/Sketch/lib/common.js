@@ -137,14 +137,23 @@ function group(context) {
     }
 }
 
-function addSliceInToGroup(context, layerGroup, name) {
-    var doc = context.document;
+function addSliceInToGroup(layerGroup, name) {
     var slice = MSSliceLayer.new();
     slice.setRect(CGRectMake(0, 0, layerGroup.frame().width(), layerGroup.frame().height()));
     slice.setName(name);
     slice.exportOptions().setLayerOptions(2);
     layerGroup.insertLayers_beforeLayer([slice], layerGroup.layers().firstObject());
     layerGroup.select_byExpandingSelection(true, false);
+}
+
+function removeSliceInGroup(layerGroup) {
+    var loop = layerGroup.children().objectEnumerator();
+    var layer;
+    while (layer = loop.nextObject()) {
+        if (layer.class() == "MSSliceLayer") {
+            layer.removeFromParent();
+        }
+    }
 }
 
 function addRectShape(parent, beforeLayer, posX, posY, width, height, color, name) {
@@ -173,6 +182,11 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
 /* =========================================================
     Utilities
 ========================================================= */
+
+function ask(context, tip, defaultValue) {
+    var doc = context.document;
+    return doc.askForUserInput_initialValue(tip, defaultValue + "");
+}
 
 function toast(context, message) {
     var doc = context.document;
