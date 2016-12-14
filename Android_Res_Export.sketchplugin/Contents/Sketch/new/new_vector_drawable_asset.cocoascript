@@ -78,6 +78,19 @@ function checkLayerType(context, layer, callback) {
 
         // Not suppot styles in vector drawable
         if (layer.class() == "MSShapeGroup") {
+            if (layer.rotation() != 0) {
+                toast(context, "Rotation is supported by vector drawable, please flatten first.");
+                callback(0);
+            }
+            if (layer.isFlippedVertical() != 0 || layer.isFlippedHorizontal() != 0) {
+                toast(context, "Flipped is supported by vector drawable, please flatten first.");
+                callback(0);
+            }
+            if (layer.hasClippingMask() == 1) {
+                toast(context, "Mask is supported by vector drawable.");
+                callback(0);
+            }
+
             var style = layer.style();
             if (style.enabledFills().count() > 0) {
                 for (var i = 0; i < style.enabledFills().count(); i++) {

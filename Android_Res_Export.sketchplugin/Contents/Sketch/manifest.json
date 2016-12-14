@@ -4,10 +4,10 @@
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
-    "version": 1.20161213,
+    "version": "1.20161214",
     "identifier": "com.ashung.hung.android_res_export",
-    "compatibleVersion": 3,
-    "bundleVersion": 1,
+    "compatibleVersion": "3",
+    "bundleVersion": "1",
     "commands": [
         {
             "name": "New PNG Asset",
