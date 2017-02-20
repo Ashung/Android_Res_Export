@@ -1,0 +1,34 @@
+name: Android Res Export
+description: Export Android resources, like pngs, 9-patch, app icon and vector drawable.
+author: Ashung Hung
+email: Ashung.hung@gmail.com
+new_png_asset: New PNG Asset
+new_nine_patch_asset: New 9-Patch Asset
+new_app_icon_asset: New App Icon Asset
+new_system_icon_asset: New System Icon Asset
+new_vector_drawable_asset: New Vector Drawable Asset
+export_assets: Export PNG Assets
+export_vector_drawable: Export Vector Drawables
+export_nine_patch: Export 9-Patch Assets
+export_app_icon: Export App Icon
+show_assets_in_finder: Show Asset in Finder
+open_terminal_at_assets_folder: Open Terminal at Asset Folder
+help: Help
+web_site: Web Site
+report_issues: Report Issues
+donate_via_paypal: Donate via PayPal
+donate_via_wechat: Donate via WeChat
+donate_via_alipay: Donate via Alipay
+change_language: Change Menu Language
+
+no_selection: Please select at least one layer.
+input_asset_name: Input asset name for "%1".
+
+app_icon: App Icon
+
+# change language
+change_menu_language: Change Menu Language
+language_file_not_found: Language file not found.
+language_file_not_found_desc: Language file "%1" does not existed.
+ok: OK
+cancel: Cancel

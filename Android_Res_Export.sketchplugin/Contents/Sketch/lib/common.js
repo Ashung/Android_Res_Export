@@ -137,13 +137,27 @@ function group(context) {
     }
 }
 
+function groupFromSelection(context) {
+    var selection = context.selection;
+    var group = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers(selection));
+    return group;
+}
+
 function addSliceInToGroup(layerGroup, name) {
-    var slice = MSSliceLayer.new();
+
+    removeSliceInGroup(layerGroup);
+
+    var slice = MSSliceLayer.alloc().init();
     slice.setRect(CGRectMake(0, 0, layerGroup.frame().width(), layerGroup.frame().height()));
     slice.setName(name);
     slice.exportOptions().setLayerOptions(2);
-    layerGroup.insertLayers_beforeLayer([slice], layerGroup.layers().firstObject());
-    layerGroup.select_byExpandingSelection(true, false);
+
+    var exportOption = slice.exportOptions().addExportFormat();
+    exportOption.setFileFormat("png");
+    exportOption.setName("@android_res_export");
+    exportOption.setScale(1);
+
+    layerGroup.insertLayers_beforeLayer([slice], layerGroup.firstLayer());
 }
 
 function removeSliceInGroup(layerGroup) {
@@ -177,6 +191,19 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
         parent.addLayers([shapeGroup]);
     }
     return shapeGroup;
+}
+
+function insertImageLayer_fromResource(context, layerParent, rect, resName) {
+    var imagePath = context.plugin.urlForResourceNamed(resName).path();
+    var image = NSImage.alloc().initWithContentsOfFile(imagePath);
+    var imageData = MSImageData.alloc().initWithImage_convertColorSpace(image, false);
+    var imageLayer = MSBitmapLayer.alloc().initWithFrame_image(rect, imageData);
+    imageLayer.setName(resName.replace(/\.png$/i, ""));
+    if (layerParent.containsLayers()) {
+        layerParent.insertLayers_afterLayer([imageLayer], layerParent.firstlayer());
+    } else {
+        layerParent.insertLayers_afterLayer([imageLayer], nil);
+    }
 }
 
 /* =========================================================
@@ -255,6 +282,28 @@ function mv(srcPath, dstPath) {
             srcPath, dstPath, nil
         )
     }
+}
+
+function getJSONFromPath(path) {
+    var data = NSData.dataWithContentsOfFile(path);
+    return NSJSONSerialization.JSONObjectWithData_options_error(data, NSJSONReadingMutableContainers, nil);
+}
+
+function localString(context, langKey) {
+    var currentLanguageSetting = NSUserDefaults.standardUserDefaults().stringForKey("ARE_PREFERENCES_LANGUAGE") || "en";
+    var languageFilePath = context.plugin.urlForResourceNamed("language_" + currentLanguageSetting + ".json").path();
+    var langString = getJSONFromPath(languageFilePath)[langKey];
+    for (var i = 2; i < arguments.length; i++) {
+        var regExp = new RegExp("\%" + (i-1), "g");
+        langString = langString.replace(regExp, arguments[i]);
+    }
+    return langString;
+}
+
+function getLastRootPath() {
+    var lastNavPath = NSUserDefaults.standardUserDefaults().stringForKey("NSNavLastRootDirectory");
+    var desktopPath = NSHomeDirectory().stringByAppendingPathComponent("Desktop");
+    return lastNavPath || desktopPath;
 }
 
 /* =========================================================

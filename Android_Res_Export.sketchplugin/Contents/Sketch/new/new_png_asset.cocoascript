@@ -1,6 +1,9 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 @import "../lib/common.js";
 
@@ -11,39 +14,54 @@ var onRun = function(context) {
     var selection = context.selection;
     var selectionCount = selection.count();
 
-    if (selectionCount == 0) {
-        toast(context, "No any selection layer.");
-        return;
-    }
-
     if (selectionCount == 1) {
-        if (selection.firstObject().isLayerExportable()) {
-            var name = ask(context, "Asset name for \"" + selection.firstObject().name() + "\"", androidResName(selection.firstObject().name()));
-            selection.firstObject().setName(androidResName(name));
-        } else {
-            if (selection.firstObject().class() == "MSLayerGroup" || selection.firstObject().class() == "MSArtboard") {
-                var layerGroup = selection.firstObject();
-                var name = ask(context, "Asset name for \"" + layerGroup.name() + "\"", androidResName(layerGroup.name()));
-                if (layerGroup.class() == "MSLayerGroup") {
-                    layerGroup.setName(name);
-                }
-                removeSliceInGroup(layerGroup);
-                addSliceInToGroup(layerGroup, androidResName(name));
-            } else {
-                _addPNGAsset();
-            }
+
+        var layer = selection.firstObject();
+        addPNGAssetFromLayer_askForName(layer, true);
+
+    } else if (selectionCount > 1) {
+
+        var loopSelection = selection.objectEnumerator();
+        var layer;
+        while (layer = loopSelection.nextObject()) {
+            addPNGAssetFromLayer_askForName(layer, false);
         }
+
+    } else {
+        toast(context, localString(context, "no_selection"));
     }
 
-    if (selectionCount > 1) {
-        _addPNGAsset();
+    function addPNGAssetFromLayer_askForName(layer, askForName) {
+
+        if (askForName) {
+
+            var name = ask(
+                context,
+                localString(context, "input_asset_name", layer.name()),
+                androidResName(layer.name())
+            );
+
+            if (name) {
+
+                addPNGAssetFromLayer_name(layer, androidResName(name));
+
+            }
+        } else {
+
+            addPNGAssetFromLayer_name(layer, androidResName(layer.name()));
+
+        }
+
     }
 
-    function _addPNGAsset() {
-        group(context);
-        var layerGroup = selection.firstObject().parentGroup();
-        var name = ask(context, "Asset name for \"" + selection.firstObject().name() + "\"", androidResName(selection.firstObject().name()));
+    function addPNGAssetFromLayer_name(layer, name) {
+        if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboard") {
+            var layerGroup = layer;
+        } else {
+            var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
+        }
         layerGroup.setName(name);
-        addSliceInToGroup(layerGroup, androidResName(name));
+        addSliceInToGroup(layerGroup, name);
     }
+
 }

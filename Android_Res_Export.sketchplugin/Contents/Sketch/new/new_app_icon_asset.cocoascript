@@ -1,0 +1,25 @@
+//
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
+
+@import "../lib/common.js";
+
+var onRun = function (context) {
+
+    var document = context.document;
+    var page = document.currentPage();
+
+    // New Artboard
+    var artboard = MSArtboardGroup.alloc().init();
+    artboard.setRect(CGRectMake(page.originForNewArtboard().x, page.originForNewArtboard().y, 192, 192));
+    artboard.frame().setConstrainProportions(false);
+    artboard.setName(localString(context, "app_icon"));
+
+    page.addLayers([artboard]);
+
+    insertImageLayer_fromResource(context, artboard, CGRectMake(0, 0, 192, 192), "app_icon_grid.png");
+
+}

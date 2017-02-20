@@ -1,6 +1,6 @@
 {
     "name": "Android Res Export",
-    "description": "Export Android resources, like pngs, 9-patch, app icon and vector drawable.",
+    "description": "导出 Android 资源, 包括 PNG, 点九图, 图标和 Vector Drawable.",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
@@ -10,43 +10,43 @@
     "bundleVersion": "1",
     "commands": [
         {
-            "name": "New PNG Asset",
+            "name": "新建 PNG 资源",
             "identifier": "new_png_asset",
             "script": "new/new_png_asset.cocoascript"
         },
         {
-            "name": "New 9-Patch Asset",
+            "name": "新建点九图资源",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
         {
-            "name": "New Vector Drawable Asset",
+            "name": "新建 Vector Drawable 资源",
             "identifier": "new_vector_drawable_asset",
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "New App Icon Asset",
+            "name": "新建应用图标资源",
             "identifier": "new_app_icon_asset",
             "script": "new/new_app_icon_asset.cocoascript"
         },
 
         {
-            "name": "Export PNG Assets",
+            "name": "导出资源",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
         },
         {
-            "name": "Export Vector Drawables",
+            "name": "导出 Vector Drawables",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "Export 9-Patch Assets",
+            "name": "导出点九图",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
         {
-            "name": "Export App Icon",
+            "name": "导出应用图标",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
@@ -64,36 +64,36 @@
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Web Site",
+            "name": "网站",
             "identifier": "web_site",
             "handler": "website",
             "script": "Utilities/utilities.cocoascript"
         },
         {
-            "name": "Report Issues",
+            "name": "问题反馈",
             "identifier": "report_issues",
             "handler": "reportIssues",
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Change Language",
+            "name": "更改语言",
             "identifier": "change_language",
             "script": "utilities/change_language.cocoascript"
         },
         {
-            "name": "Donate via PayPal",
+            "name": "通过 PayPal 打赏",
             "identifier": "donate_via_paypal",
             "handler": "donateViaPaypal",
             "script": "Utilities/utilities.cocoascript"
         },
         {
-            "name": "Donate via WeChat",
+            "name": "通过微信打赏",
             "identifier": "donate_via_wechat",
             "handler": "donateViaWechat",
             "script": "Utilities/utilities.cocoascript"
         },
         {
-            "name": "Donate via Alipay",
+            "name": "通过支付宝打赏",
             "identifier": "donate_via_alipay",
             "handler": "donateViaAlipay",
             "script": "Utilities/utilities.cocoascript"
@@ -117,7 +117,7 @@
             "open_terminal_at_assets_folder",
             "-",
             {
-                "title": "Help",
+                "title": "帮助",
                 "items": [
                     "web_site",
                     "report_issues",
