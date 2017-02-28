@@ -143,6 +143,11 @@ function groupFromSelection(context) {
     return group;
 }
 
+function groupFromLayers(layers) {
+    var group = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers(layers));
+    return group;
+}
+
 function addSliceInToGroup(layerGroup, name) {
 
     removeSliceInGroup(layerGroup);
@@ -171,25 +176,30 @@ function removeSliceInGroup(layerGroup) {
 }
 
 function addRectShape(parent, beforeLayer, posX, posY, width, height, color, name) {
-    // color #rrggbb
-    var colorObject = MSColor.colorWithRed_green_blue_alpha(
-        parseInt(color.substr(1, 2), 16) / 255,
-        parseInt(color.substr(3, 2), 16) / 255,
-        parseInt(color.substr(4, 2), 16) / 255,
-        1.0
-    );
+
     var rectangle = MSRectangleShape.alloc().init();
     rectangle.setRect(CGRectMake(posX, posY, width, height));
     var shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
     shapeGroup.setName(name);
-    shapeGroup.style().addStylePartOfType(0);
-    shapeGroup.style().fill().setColor(colorObject);
+
+    if (color) {
+        // color #rrggbb
+        var colorObject = MSColor.colorWithRed_green_blue_alpha(
+            parseInt(color.substr(1, 2), 16) / 255,
+            parseInt(color.substr(3, 2), 16) / 255,
+            parseInt(color.substr(4, 2), 16) / 255,
+            1.0
+        );
+        shapeGroup.style().addStylePartOfType(0);
+        shapeGroup.style().fill().setColor(colorObject);
+    }
 
     if (beforeLayer) {
         parent.insertLayers_beforeLayer([shapeGroup], beforeLayer);
     } else {
         parent.addLayers([shapeGroup]);
     }
+    
     return shapeGroup;
 }
 

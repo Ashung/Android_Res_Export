@@ -1,54 +1,57 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
     var doc = context.document;
-    var page = doc.currentPage();
     var selection = context.selection;
     var selectionCount = selection.count();
 
     if (selectionCount == 0) {
-        toast(context, "No any selection layer.");
+        toast(context, localString(context, "no_selection"));
         return;
     }
 
-    // Group content
-    if (selectionCount == 1 && selection.firstObject().className == "MSLayerGroup") {
-        var groupContent = selection.firstObject();
-    } else {
-        group(context);
-        var groupContent = selection.firstObject().parentGroup();
+    // Asset name
+    var name = ask(context, localString(context, "asset_name_for_nine_path"), "new_nine_patch");
+
+    if (name) {
+
+        // Group content
+        if (selectionCount == 1 && selection.firstObject().className == "MSLayerGroup") {
+            var groupContent = selection.firstObject();
+        } else {
+            var groupContent = groupFromSelection(context);
+        }
+        groupContent.setName("content");
+        addSliceInToGroup(groupContent, "#9patch");
+
+        // Group nine patch
+        var groupNinePatch = groupFromLayers([groupContent]);
+        groupNinePatch.setName(androidResName(name));
+
+        // Add patch lines
+        var width = groupContent.frame().width();
+        var height = groupContent.frame().height();
+        var color = "#000000";
+        var patchLeft = addRectShape(groupNinePatch, null, -1, 0, 1, height, color, "left");
+        var patchBottom = addRectShape(groupNinePatch, null, 0, height, width, 1, color, "bottom");
+        var patchRight = addRectShape(groupNinePatch, null, width, 0, 1, height, color, "right");
+        var patchTop = addRectShape(groupNinePatch, null, 0, -1, width, 1, color, "top");
+
+        // Group patch line
+        var groupPatch = groupFromLayers([patchLeft, patchBottom, patchRight, patchTop]);
+        groupPatch.setName("patch");
+
+        // Select layerGroup
+        groupNinePatch.select_byExpandingSelection(true, false);
+
     }
-    groupContent.setName("content");
-    addSliceInToGroup(groupContent, "#9patch");
-
-    // Group nine patch
-    group(context);
-    var groupNinePatch = groupContent.parentGroup();
-    var name = ask(context, "Asset name for new nine-path.", "new_nine_patch");
-    groupNinePatch.setName(androidResName(name));
-
-    // Add patch lines
-    var width = groupContent.frame().width();
-    var height = groupContent.frame().height();
-    var color = "#000000";
-    var patchLeft = addRectShape(groupNinePatch, null, -1, 0, 1, height, color, "left");
-    patchLeft.select_byExpandingSelection(true, false);
-    var patchBottom = addRectShape(groupNinePatch, null, 0, height, width, 1, color, "bottom");
-    patchBottom.select_byExpandingSelection(true, true);
-    var patchRight = addRectShape(groupNinePatch, null, width, 0, 1, height, color, "right");
-    patchRight.select_byExpandingSelection(true, true);
-    var patchTop = addRectShape(groupNinePatch, null, 0, -1, width, 1, color, "top");
-    patchTop.select_byExpandingSelection(true, true);
-    group(context);
-    var groupPatch = patchLeft.parentGroup();
-    groupPatch.setName("patch");
-
-    // Select layerGroup
-    groupNinePatch.select_byExpandingSelection(true, false);
 
 }

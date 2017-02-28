@@ -76,7 +76,7 @@
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Change Language",
+            "name": "Change Menu Language",
             "identifier": "change_language",
             "script": "utilities/change_language.cocoascript"
         },

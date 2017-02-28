@@ -76,7 +76,7 @@
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "更改语言",
+            "name": "更改菜单语言",
             "identifier": "change_language",
             "script": "utilities/change_language.cocoascript"
         },

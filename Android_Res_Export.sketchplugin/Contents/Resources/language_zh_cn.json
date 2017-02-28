@@ -20,13 +20,13 @@
     "donate_via_paypal": "通过 PayPal 打赏",
     "donate_via_wechat": "通过微信打赏",
     "donate_via_alipay": "通过支付宝打赏",
-    "change_language": "更改语言",
+    "change_language": "更改菜单语言",
     "no_selection": "请至少选中一个图层.",
     "input_asset_name": "输入 \"%1\" 的资源名.",
-    "app_icon": "应用图标",
     "change_menu_language": "更改插件菜单语言",
     "language_file_not_found": "语言文件未找到.",
     "language_file_not_found_desc": "语言文件 \"%1\" 不存在.",
     "ok": "确定",
-    "cancel": "取消"
+    "cancel": "取消",
+    "asset_name_for_nine_path": "点击资源命名"
 }

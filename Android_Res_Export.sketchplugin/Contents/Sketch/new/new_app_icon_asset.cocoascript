@@ -16,10 +16,14 @@ var onRun = function (context) {
     var artboard = MSArtboardGroup.alloc().init();
     artboard.setRect(CGRectMake(page.originForNewArtboard().x, page.originForNewArtboard().y, 192, 192));
     artboard.frame().setConstrainProportions(false);
-    artboard.setName(localString(context, "app_icon"));
+    artboard.setName("ic_launcher");
 
     page.addLayers([artboard]);
 
     insertImageLayer_fromResource(context, artboard, CGRectMake(0, 0, 192, 192), "app_icon_grid.png");
+
+    artboard.select_byExpandingSelection(true, false);
+
+    document.currentView().centerSelectionInVisibleArea();
 
 }
