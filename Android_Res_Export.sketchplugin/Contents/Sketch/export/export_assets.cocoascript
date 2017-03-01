@@ -1,120 +1,77 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
-    if (!getFilePath(context)) {
-        return;
-    }
-
     var doc = context.document;
-    var page = doc.currentPage();
     var selection = context.selection;
 
-    // Get all exportable
-    var assets = [];
-    var assetsIds = [];
-    var assetsNames = [];
-    var reportInfo = [];
+    var exportAssets = NSMutableArray.alloc().init();
 
     if (selection.count() > 0) {
-        for (var i = 0; i < selection.count(); i ++) {
-            addAssets(selection[i], assets, assetsIds, assetsNames, reportInfo);
+        var loopSelection = selection.objectEnumerator();
+        var layer;
+        while (layer = loopSelection.nextObject()) {
+            if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch") {
+                exportAssets.addObject(layer);
+            }
         }
     } else {
-        addAssets(page, assets, assetsIds, assetsNames, reportInfo);
-    }
-
-    if (assetsIds.length == 0) {
-        toast(context, "No any exportable layer or select a unexportable layer.");
-        return;
-    }
-
-    // Ready to export
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
-    var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
-    var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
-    var doneExportAssets = false;
-
-    // Reset exportDpis and qualifiers
-    resetExportConfig(page.name());
-    var scales = [];
-    for (index in exportConfig) {
-        scales.push(exportConfig[index].scale);
-    }
-
-    // Save
-    doc.saveDocument(nil);
-
-    // Export assets to tempFolder
-    var formats = "png";
-    var useIdForName = "yes";
-    sketchtoolExport(
-        "slices",
-        currentFile,
-        scales,
-        formats,
-        assetsIds,
-        useIdForName,
-        tempFolder,
-        function(success, message) {
-            if (success == true) {
-                doneExportAssets = true;
+        var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
+        var layer;
+        while (layer = loopAllExportableLayers.nextObject()) {
+            if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch") {
+                exportAssets.addObject(layer);
             }
         }
-    );
-
-    if (doneExportAssets) {
-        for (var i = 0; i < exportConfig.length; i++) {
-            var scale = exportConfig[i].scale;
-            var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder + "/drawable-" + qualifier);
-            // Move to exportFolder and rename
-            for(var j = 0; j < assets.length; j++) {
-                var srcPath = tempFolder + "/" + assets[j]["id"] + scaleToSuffix(scale) + ".png";
-                var dstPath = exportFolder + "/drawable-" + qualifier + "/" + assets[j]["name"] + ".png";
-                mv(srcPath, dstPath);
-            }
-        }
-
-        // Report file
-        if (reportInfo.length > 0) {
-            writeContentToFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
-        } else {
-            rm(reportFile);
-        }
-
-        rm(tempFolder);
-        // Message
-        toast(context, "Export asset to \"" + exportFolder + "\". Done!");
-
     }
-}
 
-function addAssets(parent, assets, assetsIds, assetsNames, reportInfo) {
-    var childrens = parent.children();
-    for (var j = 0; j < childrens.count(); j++) {
-        var children = childrens[j];
-        // Slice and exportable layer but no #9patch
-        if (children.isLayerExportable() && children.name() != "#9patch") {
-            var finalName = androidResName(children.name());
-            assets.push({
-                "id": children.objectID(),
-                "name": finalName
-            });
-            assetsIds.push(children.objectID());
-            // Check name duplicate
-            if (finalName != children.name()) {
-                reportInfo.push('Changed layer name: ' + children.name() + ' -> ' + finalName);
+    if (exportAssets.count() > 0) {
+
+        var exportFolder = chooseFolder();
+
+        if (exportFolder) {
+
+            var loopExportAssets = exportAssets.objectEnumerator();
+            var slice;
+            while (slice = loopExportAssets.nextObject()) {
+
+                var exportConfig = getExportConfigFromPageName(slice.parentPage().name());
+
+                var tempSlice = slice.duplicate();
+                tempSlice.exportOptions().removeAllExportFormats();
+
+                for (var i = 0; i < exportConfig.length; i++) {
+                    var exportOption = tempSlice.exportOptions().addExportFormat();
+                    exportOption.setFileFormat("png");
+                    exportOption.setScale(exportConfig[i]["scale"]);
+                    exportOption.setNamingScheme(1);
+                    exportOption.setName("res/drawable-" + exportConfig[i]["qualifier"] + "/");
+                }
+
+                var exportRequests = MSExportRequest.exportRequestsFromExportableLayer(tempSlice);
+                var loopExportRequests = exportRequests.objectEnumerator();
+                var exportRequest;
+                while (exportRequest = loopExportRequests.nextObject()) {
+                    doc.saveArtboardOrSlice_toFile(exportRequest, exportFolder + "/" + exportRequest.name() + ".png");
+                }
+
+                tempSlice.removeFromParent();
+
             }
-            if (assetsNames.indexOf(finalName) >= 0) {
-                reportInfo.push('Duplicate layer name: ' + children.name());
-            }
-            assetsNames.push(finalName);
+
+            NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(exportFolder, nil);
+
         }
+
+    } else {
+        toast(context, localString(context, "no_png_asset"));
     }
+
 }

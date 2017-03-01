@@ -1,59 +1,26 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
-
-@import "../lib/common.js";
-
-var showAssetsInFinder = function(context) {
-    if (!getFilePath(context)) {
-        return;
-    } else {
-        var sketchDocPath = getFilePath(context);
-        var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
-        if (fileExists(exportFolder)) {
-            NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(exportFolder, nil);
-        } else {
-            NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(sketchDocPath, nil);
-            toast(context, "Not assets folder finded.");
-        }
-    }
-}
-
-var openTerminalAtResFolder = function(context) {
-    if (!getFilePath(context)) {
-        return;
-    } else {
-        var sketchDocFolder = getFilePath(context).stringByDeletingPathExtension();
-        var exportFolder = sketchDocFolder + "/res";
-        if (fileExists(exportFolder)) {
-            NSWorkspace.sharedWorkspace().openFile_withApplication_(exportFolder, "Terminal");
-        } else {
-            NSWorkspace.sharedWorkspace().openFile_withApplication_(sketchDocFolder, "Terminal");
-            toast(context, "Not assets folder finded.");
-        }
-    }
-}
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 var website = function(context) {
-    openUrlInBrowser("https://github.com/Ashung/Android_Res_Export");
+    NSWorkspace.sharedWorkspace().openURL(context.plugin.homepageURL());
 }
 
 var reportIssues = function(context) {
-    openUrlInBrowser("https://github.com/Ashung/Android_Res_Export/issues/");
+    NSWorkspace.sharedWorkspace().openURL(context.plugin.homepageURL().URLByAppendingPathComponent("issues"));
 }
 
 var donateViaPaypal = function() {
-    openUrlInBrowser("https://www.paypal.me/ashung/2/");
+    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("https://www.paypal.me/ashung/2/"));
 };
 
 var donateViaWechat = function() {
-    openUrlInBrowser("http://ashung.github.io/Automate-Sketch/css/donate_wechat_rmb_10.png");
+    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("http://ashung.github.io/Automate-Sketch/css/donate_wechat_rmb_10.png"));
 };
 
 var donateViaAlipay = function() {
-    openUrlInBrowser("http://ashung.github.io/Automate-Sketch/css/donate_alipay_rmb_10.png");
+    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("http://ashung.github.io/Automate-Sketch/css/donate_alipay_rmb_10.png"));
 };
-
-function openUrlInBrowser(url) {
-    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString(url));
-}

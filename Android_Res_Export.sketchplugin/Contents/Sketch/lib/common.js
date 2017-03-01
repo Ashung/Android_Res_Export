@@ -1,6 +1,9 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 // sketchtool
 var sketchtool = NSBundle
@@ -20,15 +23,15 @@ var svgo = which("svgo");
     Android
 ========================================================= */
 
-var exportConfig = [
-    { scale : 1,   qualifier : "mdpi" },
-    { scale : 1.5, qualifier : "hdpi" },
-    { scale : 2,   qualifier : "xhdpi" },
-    { scale : 3,   qualifier : "xxhdpi" },
-    { scale : 4,   qualifier : "xxxhdpi" }
-];
+function getExportConfigFromPageName(pageName) {
+    var exportConfig = [
+        { scale : 1,   qualifier : "mdpi" },
+        { scale : 1.5, qualifier : "hdpi" },
+        { scale : 2,   qualifier : "xhdpi" },
+        { scale : 3,   qualifier : "xxhdpi" },
+        { scale : 4,   qualifier : "xxxhdpi" }
+    ];
 
-function resetExportConfig(pageName) {
     if (/^@/.test(pageName)) {
         exportConfig = [];
         var configs = pageName.replace(/^@/, "").replace(/\s/g, "").split(",");
@@ -43,6 +46,8 @@ function resetExportConfig(pageName) {
             });
         }
     }
+
+    return exportConfig;
 }
 
 function androidResName(name) {
@@ -128,15 +133,6 @@ function scaleToSuffix(size) {
     Sketch
 ========================================================= */
 
-function group(context) {
-    var doc = context.document;
-    var selection = context.selection;
-    var groupAction = doc.actionsController().actionWithID("MSGroupAction");
-    if (groupAction.validate()) {
-        groupAction.group(nil);
-    }
-}
-
 function groupFromSelection(context) {
     var selection = context.selection;
     var group = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers(selection));
@@ -199,7 +195,7 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
     } else {
         parent.addLayers([shapeGroup]);
     }
-    
+
     return shapeGroup;
 }
 
@@ -310,10 +306,18 @@ function localString(context, langKey) {
     return langString;
 }
 
-function getLastRootPath() {
-    var lastNavPath = NSUserDefaults.standardUserDefaults().stringForKey("NSNavLastRootDirectory");
-    var desktopPath = NSHomeDirectory().stringByAppendingPathComponent("Desktop");
-    return lastNavPath || desktopPath;
+function chooseFolder() {
+    var defaultPath = NSUserDefaults.standardUserDefaults().stringForKey("NSNavLastRootDirectory") || NSHomeDirectory().stringByAppendingPathComponent("Desktop");
+
+    var panel = NSOpenPanel.openPanel();
+    panel.setCanChooseDirectories(true);
+    panel.setCanChooseFiles(false);
+    panel.setCanCreateDirectories(true);
+    panel.setDirectoryURL(NSURL.fileURLWithPath(defaultPath));
+
+    if (panel.runModal() == NSOKButton) {
+        return panel.URL().path();
+    }
 }
 
 /* =========================================================

@@ -1,7 +1,4 @@
-name: Android Res Export
 description: Export Android resources, like pngs, 9-patch, app icon and vector drawable.
-author: Ashung Hung
-email: Ashung.hung@gmail.com
 new_png_asset: New PNG Asset
 new_nine_patch_asset: New 9-Patch Asset
 new_app_icon_asset: New App Icon Asset
@@ -19,16 +16,27 @@ report_issues: Report Issues
 donate_via_paypal: Donate via PayPal
 donate_via_wechat: Donate via WeChat
 donate_via_alipay: Donate via Alipay
-change_language: Change Menu Language
+change_language: Change Language
+update: Check for Update
 
 no_selection: Please select at least one layer.
 input_asset_name: Input asset name for "%1".
 
-change_menu_language: Change Menu Language
 language_file_not_found: Language file not found.
 language_file_not_found_desc: Language file "%1" does not existed.
 ok: OK
 cancel: Cancel
+
+least_version_desc: Android Res Export %1 is currently the newest version available.
+least_version_title: You are up-to-date.
+older_version_desc: |-
+    You are use the old verion of Automate Sketch. (%1)
+    Click "OK" to download newest version.
+older_version_title: New version available. (%1).
+failure_update_title: Can not check for updates.
+failure_update_desc: |-
+    Please visite the web site and download newest version.
+    %1.
 
 asset_name_for_nine_path: Asset name for new nine-path.
 asset_name_for_vector_drawable: Asset name for new vector drawable.
@@ -44,3 +52,5 @@ vector_drawable_no_support_border: Only solid border is supported by vector draw
 vector_drawable_no_support_shadow: Shape layer with shadow is not supported by vector drawable.
 vector_drawable_no_support_inner_shadow: Shape layer with inner shadow is not supported by vector drawable.
 vector_drawable_no_support_blur: Shape layer with blur is not supported by vector drawable.
+
+no_png_asset: No any PNG asset.

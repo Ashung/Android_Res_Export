@@ -1,7 +1,4 @@
-name: Android Res Export
 description: 导出 Android 资源, 包括 PNG, 点九图, 图标和 Vector Drawable.
-author: Ashung Hung
-email: Ashung.hung@gmail.com
 new_png_asset: 新建 PNG 资源
 new_nine_patch_asset: 新建点九图资源
 new_app_icon_asset: 新建应用图标资源
@@ -20,15 +17,26 @@ donate_via_paypal: 通过 PayPal 打赏
 donate_via_wechat: 通过微信打赏
 donate_via_alipay: 通过支付宝打赏
 change_language: 更改菜单语言
+update: 检测更新
 
 no_selection: 请至少选中一个图层。
 input_asset_name: 输入 "%1" 的资源名。
 
-change_menu_language: 更改插件菜单语言
 language_file_not_found: 语言文件未找到。
 language_file_not_found_desc: 语言文件 "%1" 不存在。
 ok: 确定
 cancel: 取消
+
+least_version_desc: 您所安装的 Android Res Export %1 是最新版本。
+least_version_title: 您已经是最新版本
+older_version_desc: |-
+    您正在使用旧版的 Android Res Export。(版本号 %1)
+    点击 "确认" 下载最新版本。
+older_version_title: 新版本可供下载。(版本号 %1)
+failure_update_title: 更新失败
+failure_update_desc: |-
+    请访问网站并手动下载最新版本。
+    %1。
 
 asset_name_for_nine_path: 点九资源命名。
 asset_name_for_vector_drawable: Vector Drawable 资源命名。

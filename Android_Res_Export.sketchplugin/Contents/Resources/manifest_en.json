@@ -4,6 +4,8 @@
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
+    "manifestURL": "https://github.com/Ashung/Android_Res_Export/raw/master/Android_Res_Export.sketchplugin/Contents/Sketch/manifest.json",
+    "downloadURL": "https://github.com/Ashung/Android_Res_Export/archive/master.zip",
     "version": "2.0.0",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
@@ -76,27 +78,32 @@
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Change Menu Language",
+            "name": "Change Language",
             "identifier": "change_language",
             "script": "utilities/change_language.cocoascript"
+        },
+        {
+            "name": "Check for Update",
+            "identifier": "update",
+            "script": "utilities/update.cocoascript"
         },
         {
             "name": "Donate via PayPal",
             "identifier": "donate_via_paypal",
             "handler": "donateViaPaypal",
-            "script": "Utilities/utilities.cocoascript"
+            "script": "utilities/utilities.cocoascript"
         },
         {
             "name": "Donate via WeChat",
             "identifier": "donate_via_wechat",
             "handler": "donateViaWechat",
-            "script": "Utilities/utilities.cocoascript"
+            "script": "utilities/utilities.cocoascript"
         },
         {
             "name": "Donate via Alipay",
             "identifier": "donate_via_alipay",
             "handler": "donateViaAlipay",
-            "script": "Utilities/utilities.cocoascript"
+            "script": "utilities/utilities.cocoascript"
         }
     ],
     "menu": {
@@ -113,14 +120,13 @@
             "export_vector_drawable",
             "export_app_icon",
             "-",
-            "show_assets_in_finder",
-            "open_terminal_at_assets_folder",
-            "-",
             {
                 "title": "Help",
                 "items": [
                     "web_site",
                     "report_issues",
+                    "-",
+                    "update",
                     "-",
                     "change_language",
                     "-",

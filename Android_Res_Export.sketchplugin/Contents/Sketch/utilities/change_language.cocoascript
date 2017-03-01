@@ -26,7 +26,7 @@ var onRun = function(context) {
     accessory.addItemsWithObjectValues(supportLanguagesValues);
     accessory.selectItemAtIndex(0);
     var alert = NSAlert.alloc().init();
-    alert.setMessageText(localString(context, "change_menu_language"));
+    alert.setMessageText(localString(context, "change_language"));
     alert.addButtonWithTitle(localString(context, "ok"));
     alert.addButtonWithTitle(localString(context, "cancel"));
     alert.setAccessoryView(accessory);
