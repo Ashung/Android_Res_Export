@@ -54,7 +54,7 @@ function androidResName(name) {
     // .replace(/[\u0000-\u0031\/\\\|\?\"\*\:\<\>\.]/g, "_")
     // .replace(/[^A-Za-z0-9\$\_]/g, "_")
     return name.replace(/[\u0020-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007F]/g, "_")
-        .replace(/^\d+/, "_")
+        .replace(/^\d+/, "")
         .toLowerCase()
         .substring(0, 255);
 }
@@ -148,9 +148,14 @@ function addSliceInToGroup(layerGroup, name) {
 
     removeSliceInGroup(layerGroup);
 
-    var slice = MSSliceLayer.alloc().init();
-    slice.setRect(CGRectMake(0, 0, layerGroup.frame().width(), layerGroup.frame().height()));
+    var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
+    var msRect = MSRect.rectWithUnionOfRects([
+        MSRect.alloc().initWithRect(slice.absoluteRect().rect()),
+        MSRect.alloc().initWithRect(layerGroup.absoluteRect().rect())
+    ]);
+    slice.absoluteRect().setRect(msRect.rect());
     slice.setName(name);
+    slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);
 
     var exportOption = slice.exportOptions().addExportFormat();
@@ -158,7 +163,7 @@ function addSliceInToGroup(layerGroup, name) {
     exportOption.setName("@android_res_export");
     exportOption.setScale(1);
 
-    layerGroup.insertLayers_beforeLayer([slice], layerGroup.firstLayer());
+    return slice;
 }
 
 function removeSliceInGroup(layerGroup) {
@@ -318,6 +323,10 @@ function chooseFolder() {
     if (panel.runModal() == NSOKButton) {
         return panel.URL().path();
     }
+}
+
+function openInFinder(path) {
+    NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(path, nil);
 }
 
 /* =========================================================

@@ -1,30 +1,26 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
-    if (!convert) {
+    if (!which("convert")) {
         alert(
-            "You have not install ImageMagick.",
-            "Export Android nine-patch image feature depend on the ImageMagick library.\n\n" +
-            "Install use HomeBrew:\n" +
-            "$ brew install ImageMagick\n\n" +
-            "or use MacPorts:\n" +
-            "$ sudo port install ImageMagick"
+            localString(context, "install_imagemagick_title"),
+            localString(context, "install_imagemagick_message")
         );
         return;
     }
 
-    if (!getFilePath(context)) {
-        return;
-    }
-
     var doc = context.document;
-    var page = doc.currentPage();
     var selection = context.selection;
+
+    var exportNinePaths = NSMutableArray.alloc().init();
 
     // Get all exportable
     var ninePatchs = [];

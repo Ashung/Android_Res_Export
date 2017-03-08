@@ -21,6 +21,15 @@ var onRun = function(context) {
             if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch") {
                 exportAssets.addObject(layer);
             }
+            if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") {
+                var loopChildren = layer.children().objectEnumerator();
+                var child;
+                while (child = loopChildren.nextObject()) {
+                    if (child.class() == "MSSliceLayer" && layer.name() != "#9patch") {
+                        exportAssets.addObject(child);
+                    }
+                }
+            }
         }
     } else {
         var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
@@ -66,7 +75,7 @@ var onRun = function(context) {
 
             }
 
-            NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(exportFolder, nil);
+            openInFinder(exportFolder);
 
         }
 

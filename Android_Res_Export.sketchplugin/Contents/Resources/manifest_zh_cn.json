@@ -52,18 +52,10 @@
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
-
         {
-            "name": "Show Asset in Finder",
-            "identifier": "show_assets_in_finder",
-            "handler": "showAssetsInFinder",
-            "script": "utilities/utilities.cocoascript"
-        },
-        {
-            "name": "Open Terminal at Asset Folder",
-            "identifier": "open_terminal_at_assets_folder",
-            "handler": "openTerminalAtResFolder",
-            "script": "utilities/utilities.cocoascript"
+            "name": "资源命名校验",
+            "identifier": "asset_name_validator",
+            "script": "export/asset_name_validator.cocoascript"
         },
         {
             "name": "网站",
@@ -119,6 +111,8 @@
             "export_nine_patch",
             "export_vector_drawable",
             "export_app_icon",
+            "-",
+            "asset_name_validator",
             "-",
             {
                 "title": "帮助",

@@ -33,7 +33,6 @@ var onRun = function(context) {
     function addPNGAssetFromLayer_askForName(layer, askForName) {
 
         if (askForName) {
-
             var name = ask(
                 context,
                 localString(context, "input_asset_name", layer.name()),
@@ -41,14 +40,10 @@ var onRun = function(context) {
             );
 
             if (name) {
-
                 addPNGAssetFromLayer_name(layer, androidResName(name));
-
             }
         } else {
-
             addPNGAssetFromLayer_name(layer, androidResName(layer.name()));
-
         }
 
     }

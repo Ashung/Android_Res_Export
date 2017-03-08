@@ -1,8 +1,5 @@
 {
-    "name": "Android Res Export",
     "description": "Export Android resources, like pngs, 9-patch, app icon and vector drawable.",
-    "author": "Ashung Hung",
-    "email": "Ashung.hung@gmail.com",
     "new_png_asset": "New PNG Asset",
     "new_nine_patch_asset": "New 9-Patch Asset",
     "new_app_icon_asset": "New App Icon Asset",
@@ -12,8 +9,7 @@
     "export_vector_drawable": "Export Vector Drawables",
     "export_nine_patch": "Export 9-Patch Assets",
     "export_app_icon": "Export App Icon",
-    "show_assets_in_finder": "Show Asset in Finder",
-    "open_terminal_at_assets_folder": "Open Terminal at Asset Folder",
+    "asset_name_validator": "Asset Name Validator",
     "help": "Help",
     "web_site": "Web Site",
     "report_issues": "Report Issues",
@@ -47,5 +43,13 @@
     "vector_drawable_no_support_border": "Only solid border is supported by vector drawable.",
     "vector_drawable_no_support_shadow": "Shape layer with shadow is not supported by vector drawable.",
     "vector_drawable_no_support_inner_shadow": "Shape layer with inner shadow is not supported by vector drawable.",
-    "vector_drawable_no_support_blur": "Shape layer with blur is not supported by vector drawable."
+    "vector_drawable_no_support_blur": "Shape layer with blur is not supported by vector drawable.",
+    "no_png_asset": "No any PNG asset.",
+    "report_layer_rename": "Changed layer name: %1 -> %2",
+    "report_layer_name_duplicate": "Duplicate layer name: %1",
+    "no_duplicate_and_invaild_asset_name": "No duplicate and invaild asset name.",
+    "select_app_icon_artboard": "Please selected the app icon artboard or symbol master.",
+    "app_icon_artboard_tips": "Your icon must in an artboard or symbol master, and the size must be 192x192px.",
+    "install_imagemagick_title": "You have not install ImageMagick.",
+    "install_imagemagick_message": "Export Android nine-patch image feature depend on the ImageMagick library.\nInstall use HomeBrew:\n$ brew install ImageMagick"
 }

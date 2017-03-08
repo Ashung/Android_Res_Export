@@ -8,8 +8,7 @@ export_assets: 导出资源
 export_vector_drawable: 导出 Vector Drawables
 export_nine_patch: 导出点九图
 export_app_icon: 导出应用图标
-show_assets_in_finder: Show Asset in Finder
-open_terminal_at_assets_folder: Open Terminal at Asset Folder
+asset_name_validator: 资源命名校验
 help: 帮助
 web_site: 网站
 report_issues: 问题反馈
@@ -52,3 +51,17 @@ vector_drawable_no_support_border: Vector drawable 仅支持单色描边。
 vector_drawable_no_support_shadow: Vector drawable 不支持投影。
 vector_drawable_no_support_inner_shadow: Vector drawable 不支持内投影。
 vector_drawable_no_support_blur: Vector drawable 不支持模糊。
+
+no_png_asset: 无任何 PNG 资源。
+report_layer_rename: '图层命名格式不合法: %1 -> %2'
+report_layer_name_duplicate: '图层命名重复: %1'
+no_duplicate_and_invaild_asset_name: 无重复和不合法资源命名。
+
+select_app_icon_artboard: 请选中应用图标的画板或组件模版。
+app_icon_artboard_tips: 图标必须在画板或组件模版内，并且画板或组件模版的尺寸为 192x192 像素。
+
+install_imagemagick_title: 没有安装 ImageMagick。
+install_imagemagick_message: |-
+    导出 Android 点九资源功能依赖于 ImageMagick 库。
+    通过 HomeBrew 安装:
+    brew install ImageMagick
