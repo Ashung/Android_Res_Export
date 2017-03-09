@@ -149,11 +149,12 @@ function addSliceInToGroup(layerGroup, name) {
     removeSliceInGroup(layerGroup);
 
     var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
-    var msRect = MSRect.rectWithUnionOfRects([
-        MSRect.alloc().initWithRect(slice.absoluteRect().rect()),
-        MSRect.alloc().initWithRect(layerGroup.absoluteRect().rect())
-    ]);
-    slice.absoluteRect().setRect(msRect.rect());
+    // var msRect = MSRect.rectWithUnionOfRects([
+    //     MSRect.alloc().initWithRect(slice.absoluteRect().rect()),
+    //     MSRect.alloc().initWithRect(layerGroup.absoluteRect().rect())
+    // ]);
+    // slice.absoluteRect().setRect(msRect.rect());
+    slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
     slice.setName(name);
     slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);

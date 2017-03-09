@@ -22,236 +22,240 @@ var onRun = function(context) {
 
     var exportNinePaths = NSMutableArray.alloc().init();
 
-    // Get all exportable
-    var ninePatchs = [];
-    var ninePatchNames = [];
-    var ninePatchPatchIds = [];
-    var ninePatchContentIds = [];
-    var reportInfo = [];
 
-    if(selection.count() > 0) {
-        for(var i = 0; i < selection.count(); i ++) {
-            if(selection[i].className() == "MSLayerGroup") {
-                var imageName = androidResName(selection[i].name());
-                var patchId = "";
-                var contentId = "";
-                var width = "";
-                var height = "";
 
-                for(var j = 0; j < selection[i].children().count(); j++) {
-                    var children = selection[i].children()[j];
-                    if(children.name() == "patch" && children.className() == "MSLayerGroup") {
-                        patchId = children.objectID();
-                    }
-                    if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
-                        contentId = children.objectID();
-                        width = children.frame().width();
-                        height = children.frame().height();
-                    }
-                }
+    
 
-                if(patchId != "" && contentId != "") {
-                    ninePatchs.push({
-                        "name": imageName,
-                        "patchId": patchId,
-                        "contentId": contentId,
-                        "width": width,
-                        "height": height
-                    });
-                    ninePatchPatchIds.push(patchId);
-                    ninePatchContentIds.push(contentId);
-                    // Check name duplicate
-                    if (imageName != selection[i].name()) {
-                        reportInfo.push('Changed layer name: ' + selection[i].name() + ' -> ' + imageName);
-                    }
-                    if (ninePatchNames.indexOf(imageName) >= 0) {
-                        reportInfo.push('Duplicate layer name: ' + selection[i].name());
-                    }
-                    ninePatchNames.push(imageName);
-                }
-            }
-        }
-    } else {
-        for(var i = 0; i < page.children().count(); i++) {
-            var children = page.children()[i];
-
-            var imageName = "";
-            var patchId = "";
-            var contentId = "";
-            var width = "";
-            var height = "";
-
-            if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
-                contentId = children.objectID();
-                width = children.frame().width();
-                height = children.frame().height();
-
-                var parent = children.parentGroup().parentGroup();
-                for(var j = 0; j < parent.layers().length; j++) {
-                    if(parent.layers()[j].name() == "patch") {
-                        patchId = parent.layers()[j].objectID();
-                    }
-                    if(parent.layers()[j].name() == "content") {
-                        imageName = androidResName(parent.name());
-                    }
-                }
-            }
-
-            if(imageName != "" && patchId != "" && contentId != "") {
-                ninePatchs.push({
-                    "name": imageName,
-                    "patchId": patchId,
-                    "contentId": contentId,
-                    "width": width,
-                    "height": height
-                });
-                ninePatchPatchIds.push(patchId);
-                ninePatchContentIds.push(contentId);
-                // Check name duplicate
-                if (imageName != parent.name()) {
-                    reportInfo.push('Changed layer name: ' + parent.name() + ' -> ' + imageName);
-                }
-                if (ninePatchNames.indexOf(imageName) >= 0) {
-                    reportInfo.push('Duplicate layer name: ' + parent.name());
-                }
-                ninePatchNames.push(imageName);
-            }
-        }
-    }
-
-    if (ninePatchs.length == 0) {
-        toast(context, "No nine-patch found.")
-        return;
-    }
-
-    // Ready to export
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
-    var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
-    var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
-    var doneExportedMdpiPatch = false;
-    var doneExportedNinePathContent = false;
-
-    // Reset exportDpis and qualifiers
-    resetExportConfig(page.name());
-    var scales = [];
-    for (index in exportConfig) {
-        scales.push(exportConfig[index].scale);
-    }
-
-    // Save document
-    doc.saveDocument(nil);
-
-    // Export ninePatch Patch MDPI
-    var formats = "png";
-    var useIdForName = "yes";
-    sketchtoolExport(
-        "layers",
-        currentFile,
-        "1",
-        formats,
-        ninePatchPatchIds,
-        useIdForName,
-        tempFolder,
-        function(success, message) {
-            if (success == true) {
-                doneExportedMdpiPatch = true;
-            }
-        }
-    );
-
-    // Export ninePatch Content
-    sketchtoolExport(
-        "slices",
-        currentFile,
-        scales,
-        formats,
-        ninePatchContentIds,
-        useIdForName,
-        tempFolder,
-        function(success, message) {
-            if (success == true) {
-                doneExportedNinePathContent = true;
-            }
-        }
-    );
-
-    if (doneExportedMdpiPatch && doneExportedNinePathContent) {
-        for (var i = 0; i < exportConfig.length; i++) {
-            var scale = exportConfig[i].scale;
-            var qualifier = exportConfig[i].qualifier;
-            mkdir(exportFolder + "/drawable-" + qualifier);
-
-            for (var j = 0; j < ninePatchs.length; j++) {
-                var contentId = ninePatchs[j]["contentId"];
-                var content = contentId + scaleToSuffix(scale) + ".png";
-                var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
-                var patchId = ninePatchs[j]["patchId"];
-                var patch = patchId + ".png";
-                var newName = ninePatchs[j]["name"] + ".9.png";
-                var width = ninePatchs[j]["width"];
-                var height = ninePatchs[j]["height"];
-
-                // Create MDPI 9-patch lines, run only once
-                if (i == 0) {
-                    createMdpiPatchLines(
-                        tempFolder,
-                        width,
-                        height,
-                        patchId,
-                        function(success, message) {
-                            if (success == true) {
-                                rm(tempFolder + "/" + patch);
-                            }
-                        }
-                    );
-                }
-
-                createNinePath(
-                    tempFolder,
-                    scale,
-                    scaleToSuffix(scale),
-                    width,
-                    height,
-                    contentId,
-                    patchId,
-                    function(success, message) {
-                        if (success == true) {
-                            rm(tempFolder + "/" + content);
-                            // Rename assets
-                            mv(tempFolder + "/" + temp, exportFolder + "/drawable-" + qualifier + "/" + newName);
-                        }
-                    }
-                );
-            }
-        }
-
-        // Remove patch lines
-        for (var i = 0; i < ninePatchPatchIds.length; i++) {
-            var patchId = ninePatchPatchIds[i];
-            var patchTop = patchId + "_top.png";
-            var patchRight = patchId + "_right.png";
-            var patchBottom = patchId + "_bottom.png";
-            var patchLeft = patchId + "_left.png";
-            rm(tempFolder + "/" + patchTop);
-            rm(tempFolder + "/" + patchRight);
-            rm(tempFolder + "/" + patchBottom);
-            rm(tempFolder + "/" + patchLeft);
-        }
-
-        // Report file
-        if (reportInfo.length > 0) {
-            writeContentToFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
-        } else {
-            if (fileExists(reportFile)) {
-                rm(reportFile);
-            }
-        }
-
-        rm(tempFolder);
-
-        // Message
-        toast(context, "Export 9-patch to \"" + exportFolder + "\". Done!");
-
-    }
+    // // Get all exportable
+    // var ninePatchs = [];
+    // var ninePatchNames = [];
+    // var ninePatchPatchIds = [];
+    // var ninePatchContentIds = [];
+    // var reportInfo = [];
+    //
+    // if(selection.count() > 0) {
+    //     for(var i = 0; i < selection.count(); i ++) {
+    //         if(selection[i].className() == "MSLayerGroup") {
+    //             var imageName = androidResName(selection[i].name());
+    //             var patchId = "";
+    //             var contentId = "";
+    //             var width = "";
+    //             var height = "";
+    //
+    //             for(var j = 0; j < selection[i].children().count(); j++) {
+    //                 var children = selection[i].children()[j];
+    //                 if(children.name() == "patch" && children.className() == "MSLayerGroup") {
+    //                     patchId = children.objectID();
+    //                 }
+    //                 if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
+    //                     contentId = children.objectID();
+    //                     width = children.frame().width();
+    //                     height = children.frame().height();
+    //                 }
+    //             }
+    //
+    //             if(patchId != "" && contentId != "") {
+    //                 ninePatchs.push({
+    //                     "name": imageName,
+    //                     "patchId": patchId,
+    //                     "contentId": contentId,
+    //                     "width": width,
+    //                     "height": height
+    //                 });
+    //                 ninePatchPatchIds.push(patchId);
+    //                 ninePatchContentIds.push(contentId);
+    //                 // Check name duplicate
+    //                 if (imageName != selection[i].name()) {
+    //                     reportInfo.push('Changed layer name: ' + selection[i].name() + ' -> ' + imageName);
+    //                 }
+    //                 if (ninePatchNames.indexOf(imageName) >= 0) {
+    //                     reportInfo.push('Duplicate layer name: ' + selection[i].name());
+    //                 }
+    //                 ninePatchNames.push(imageName);
+    //             }
+    //         }
+    //     }
+    // } else {
+    //     for(var i = 0; i < page.children().count(); i++) {
+    //         var children = page.children()[i];
+    //
+    //         var imageName = "";
+    //         var patchId = "";
+    //         var contentId = "";
+    //         var width = "";
+    //         var height = "";
+    //
+    //         if(children.name() == "#9patch" && children.className() == "MSSliceLayer") {
+    //             contentId = children.objectID();
+    //             width = children.frame().width();
+    //             height = children.frame().height();
+    //
+    //             var parent = children.parentGroup().parentGroup();
+    //             for(var j = 0; j < parent.layers().length; j++) {
+    //                 if(parent.layers()[j].name() == "patch") {
+    //                     patchId = parent.layers()[j].objectID();
+    //                 }
+    //                 if(parent.layers()[j].name() == "content") {
+    //                     imageName = androidResName(parent.name());
+    //                 }
+    //             }
+    //         }
+    //
+    //         if(imageName != "" && patchId != "" && contentId != "") {
+    //             ninePatchs.push({
+    //                 "name": imageName,
+    //                 "patchId": patchId,
+    //                 "contentId": contentId,
+    //                 "width": width,
+    //                 "height": height
+    //             });
+    //             ninePatchPatchIds.push(patchId);
+    //             ninePatchContentIds.push(contentId);
+    //             // Check name duplicate
+    //             if (imageName != parent.name()) {
+    //                 reportInfo.push('Changed layer name: ' + parent.name() + ' -> ' + imageName);
+    //             }
+    //             if (ninePatchNames.indexOf(imageName) >= 0) {
+    //                 reportInfo.push('Duplicate layer name: ' + parent.name());
+    //             }
+    //             ninePatchNames.push(imageName);
+    //         }
+    //     }
+    // }
+    //
+    // if (ninePatchs.length == 0) {
+    //     toast(context, "No nine-patch found.")
+    //     return;
+    // }
+    //
+    // // Ready to export
+    // var currentFile = getFilePath(context);
+    // var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
+    // var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
+    // var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
+    // var doneExportedMdpiPatch = false;
+    // var doneExportedNinePathContent = false;
+    //
+    // // Reset exportDpis and qualifiers
+    // resetExportConfig(page.name());
+    // var scales = [];
+    // for (index in exportConfig) {
+    //     scales.push(exportConfig[index].scale);
+    // }
+    //
+    // // Save document
+    // doc.saveDocument(nil);
+    //
+    // // Export ninePatch Patch MDPI
+    // var formats = "png";
+    // var useIdForName = "yes";
+    // sketchtoolExport(
+    //     "layers",
+    //     currentFile,
+    //     "1",
+    //     formats,
+    //     ninePatchPatchIds,
+    //     useIdForName,
+    //     tempFolder,
+    //     function(success, message) {
+    //         if (success == true) {
+    //             doneExportedMdpiPatch = true;
+    //         }
+    //     }
+    // );
+    //
+    // // Export ninePatch Content
+    // sketchtoolExport(
+    //     "slices",
+    //     currentFile,
+    //     scales,
+    //     formats,
+    //     ninePatchContentIds,
+    //     useIdForName,
+    //     tempFolder,
+    //     function(success, message) {
+    //         if (success == true) {
+    //             doneExportedNinePathContent = true;
+    //         }
+    //     }
+    // );
+    //
+    // if (doneExportedMdpiPatch && doneExportedNinePathContent) {
+    //     for (var i = 0; i < exportConfig.length; i++) {
+    //         var scale = exportConfig[i].scale;
+    //         var qualifier = exportConfig[i].qualifier;
+    //         mkdir(exportFolder + "/drawable-" + qualifier);
+    //
+    //         for (var j = 0; j < ninePatchs.length; j++) {
+    //             var contentId = ninePatchs[j]["contentId"];
+    //             var content = contentId + scaleToSuffix(scale) + ".png";
+    //             var temp = contentId + "_temp" + scaleToSuffix(scale) + ".png";
+    //             var patchId = ninePatchs[j]["patchId"];
+    //             var patch = patchId + ".png";
+    //             var newName = ninePatchs[j]["name"] + ".9.png";
+    //             var width = ninePatchs[j]["width"];
+    //             var height = ninePatchs[j]["height"];
+    //
+    //             // Create MDPI 9-patch lines, run only once
+    //             if (i == 0) {
+    //                 createMdpiPatchLines(
+    //                     tempFolder,
+    //                     width,
+    //                     height,
+    //                     patchId,
+    //                     function(success, message) {
+    //                         if (success == true) {
+    //                             rm(tempFolder + "/" + patch);
+    //                         }
+    //                     }
+    //                 );
+    //             }
+    //
+    //             createNinePath(
+    //                 tempFolder,
+    //                 scale,
+    //                 scaleToSuffix(scale),
+    //                 width,
+    //                 height,
+    //                 contentId,
+    //                 patchId,
+    //                 function(success, message) {
+    //                     if (success == true) {
+    //                         rm(tempFolder + "/" + content);
+    //                         // Rename assets
+    //                         mv(tempFolder + "/" + temp, exportFolder + "/drawable-" + qualifier + "/" + newName);
+    //                     }
+    //                 }
+    //             );
+    //         }
+    //     }
+    //
+    //     // Remove patch lines
+    //     for (var i = 0; i < ninePatchPatchIds.length; i++) {
+    //         var patchId = ninePatchPatchIds[i];
+    //         var patchTop = patchId + "_top.png";
+    //         var patchRight = patchId + "_right.png";
+    //         var patchBottom = patchId + "_bottom.png";
+    //         var patchLeft = patchId + "_left.png";
+    //         rm(tempFolder + "/" + patchTop);
+    //         rm(tempFolder + "/" + patchRight);
+    //         rm(tempFolder + "/" + patchBottom);
+    //         rm(tempFolder + "/" + patchLeft);
+    //     }
+    //
+    //     // Report file
+    //     if (reportInfo.length > 0) {
+    //         writeContentToFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
+    //     } else {
+    //         if (fileExists(reportFile)) {
+    //             rm(reportFile);
+    //         }
+    //     }
+    //
+    //     rm(tempFolder);
+    //
+    //     // Message
+    //     toast(context, "Export 9-patch to \"" + exportFolder + "\". Done!");
+    //
+    // }
 }
