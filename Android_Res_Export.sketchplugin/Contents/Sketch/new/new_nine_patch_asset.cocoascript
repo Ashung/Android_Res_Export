@@ -14,12 +14,12 @@ var onRun = function(context) {
     var selectionCount = selection.count();
 
     if (selectionCount == 0) {
-        toast(context, localString(context, "no_selection"));
+        toast(context, localizedString(context, "no_selection"));
         return;
     }
 
     // Asset name
-    var name = ask(context, localString(context, "asset_name_for_nine_path"), selection.firstObject().name());
+    var name = ask(context, localizedString(context, "asset_name_for_nine_path"), selection.firstObject().name());
 
     if (name) {
 

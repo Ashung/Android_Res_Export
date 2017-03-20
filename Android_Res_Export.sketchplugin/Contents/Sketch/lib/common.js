@@ -149,11 +149,6 @@ function addSliceInToGroup(layerGroup, name) {
     removeSliceInGroup(layerGroup);
 
     var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
-    // var msRect = MSRect.rectWithUnionOfRects([
-    //     MSRect.alloc().initWithRect(slice.absoluteRect().rect()),
-    //     MSRect.alloc().initWithRect(layerGroup.absoluteRect().rect())
-    // ]);
-    // slice.absoluteRect().setRect(msRect.rect());
     slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
     slice.setName(name);
     slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
@@ -301,7 +296,7 @@ function getJSONFromPath(path) {
     return NSJSONSerialization.JSONObjectWithData_options_error(data, NSJSONReadingMutableContainers, nil);
 }
 
-function localString(context, langKey) {
+function localizedString(context, langKey) {
     var currentLanguageSetting = NSUserDefaults.standardUserDefaults().stringForKey("ARE_PREFERENCES_LANGUAGE") || "en";
     var languageFilePath = context.plugin.urlForResourceNamed("language_" + currentLanguageSetting + ".json").path();
     var langString = getJSONFromPath(languageFilePath)[langKey];
@@ -313,14 +308,10 @@ function localString(context, langKey) {
 }
 
 function chooseFolder() {
-    var defaultPath = NSUserDefaults.standardUserDefaults().stringForKey("NSNavLastRootDirectory") || NSHomeDirectory().stringByAppendingPathComponent("Desktop");
-
     var panel = NSOpenPanel.openPanel();
     panel.setCanChooseDirectories(true);
     panel.setCanChooseFiles(false);
     panel.setCanCreateDirectories(true);
-    panel.setDirectoryURL(NSURL.fileURLWithPath(defaultPath));
-
     if (panel.runModal() == NSOKButton) {
         return panel.URL().path();
     }

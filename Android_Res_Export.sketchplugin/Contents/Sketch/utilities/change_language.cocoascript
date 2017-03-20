@@ -26,9 +26,9 @@ var onRun = function(context) {
     accessory.addItemsWithObjectValues(supportLanguagesValues);
     accessory.selectItemAtIndex(0);
     var alert = NSAlert.alloc().init();
-    alert.setMessageText(localString(context, "change_language"));
-    alert.addButtonWithTitle(localString(context, "ok"));
-    alert.addButtonWithTitle(localString(context, "cancel"));
+    alert.setMessageText(localizedString(context, "change_language"));
+    alert.addButtonWithTitle(localizedString(context, "ok"));
+    alert.addButtonWithTitle(localizedString(context, "cancel"));
     alert.setAccessoryView(accessory);
 
     // Click OK button
@@ -64,8 +64,8 @@ var onRun = function(context) {
 
             var app = NSApplication.sharedApplication();
             app.displayDialog_withTitle_(
-                localString(context, "language_file_not_found_desc", context.plugin.url().path() + "/Contents/Resources/manifest_" + supportLanguagesKeys[languageIndex] + ".json"),
-                localString(context, "language_file_not_found")
+                localizedString(context, "language_file_not_found_desc", context.plugin.url().path() + "/Contents/Resources/manifest_" + supportLanguagesKeys[languageIndex] + ".json"),
+                localizedString(context, "language_file_not_found")
             );
 
         }

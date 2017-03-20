@@ -80,11 +80,11 @@ var onRun = function(context) {
             }
 
         } else {
-            toast(context, localString(context, "app_icon_artboard_tips"));
+            toast(context, localizedString(context, "app_icon_artboard_tips"));
         }
 
     } else {
-        toast(context, localString(context, "select_app_icon_artboard"));
+        toast(context, localizedString(context, "select_app_icon_artboard"));
     }
 
 }

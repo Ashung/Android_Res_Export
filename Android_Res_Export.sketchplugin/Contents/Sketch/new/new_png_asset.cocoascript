@@ -27,7 +27,7 @@ var onRun = function(context) {
         }
 
     } else {
-        toast(context, localString(context, "no_selection"));
+        toast(context, localizedString(context, "no_selection"));
     }
 
     function addPNGAssetFromLayer_askForName(layer, askForName) {
@@ -35,7 +35,7 @@ var onRun = function(context) {
         if (askForName) {
             var name = ask(
                 context,
-                localString(context, "input_asset_name", layer.name()),
+                localizedString(context, "input_asset_name", layer.name()),
                 androidResName(layer.name())
             );
 

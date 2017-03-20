@@ -14,7 +14,7 @@ var onRun = function(context) {
     var selectionCount = selection.count();
 
     if (selectionCount == 0) {
-        toast(context, localString(context, "no_selection"));
+        toast(context, localizedString(context, "no_selection"));
         return;
     }
 
@@ -30,7 +30,7 @@ var onRun = function(context) {
     }
 
     // Asset name
-    var name = ask(context, localString(context, "asset_name_for_vector_drawable"), "new_vector_drawable");
+    var name = ask(context, localizedString(context, "asset_name_for_vector_drawable"), "new_vector_drawable");
 
     if (name) {
 
@@ -63,37 +63,37 @@ function checkLayerType(context, layer, callback) {
     } else {
 
         if (layer.class() == "MSTextLayer") {
-            toast(context, localString(context, "vector_drawable_no_support_text"));
+            toast(context, localizedString(context, "vector_drawable_no_support_text"));
             callback(0);
         }
 
         if (layer.class() == "MSArtboardGroup") {
-            toast(context, localString(context, "vector_drawable_no_support_artboard"));
+            toast(context, localizedString(context, "vector_drawable_no_support_artboard"));
             callback(0);
         }
 
         if (layer.class() == "MSBitmapLayer") {
-            toast(context, localString(context, "vector_drawable_no_support_bitmap"));
+            toast(context, localizedString(context, "vector_drawable_no_support_bitmap"));
             callback(0);
         }
 
         if (layer.class() == "MSSymbolInstance" || layer.class() == "MSSymbolMaster") {
-            toast(context, localString(context, "vector_drawable_no_support_symbol"));
+            toast(context, localizedString(context, "vector_drawable_no_support_symbol"));
             callback(0);
         }
 
         // Not suppot styles in vector drawable
         if (layer.class() == "MSShapeGroup") {
             if (layer.rotation() != 0) {
-                toast(context, localString(context, "vector_drawable_no_support_rotation"));
+                toast(context, localizedString(context, "vector_drawable_no_support_rotation"));
                 callback(0);
             }
             if (layer.isFlippedVertical() != 0 || layer.isFlippedHorizontal() != 0) {
-                toast(context, localString(context, "vector_drawable_no_support_flipped"));
+                toast(context, localizedString(context, "vector_drawable_no_support_flipped"));
                 callback(0);
             }
             if (layer.hasClippingMask() == 1) {
-                toast(context, localString(context, "vector_drawable_no_support_mask"));
+                toast(context, localizedString(context, "vector_drawable_no_support_mask"));
                 callback(0);
             }
 
@@ -102,7 +102,7 @@ function checkLayerType(context, layer, callback) {
                 for (var i = 0; i < style.enabledFills().count(); i++) {
                     var fill =  style.enabledFills().objectAtIndex(i);
                     if (fill.fillType() != 0) {
-                        toast(context, localString(context, "vector_drawable_no_support_fill"));
+                        toast(context, localizedString(context, "vector_drawable_no_support_fill"));
                         callback(0);
                     }
                 }
@@ -111,21 +111,21 @@ function checkLayerType(context, layer, callback) {
                 for (var i = 0; i < style.enabledBorders().count(); i++) {
                     var border =  style.enabledBorders().objectAtIndex(i);
                     if (border.fillType() != 0) {
-                        toast(context, localString(context, "vector_drawable_no_support_border"));
+                        toast(context, localizedString(context, "vector_drawable_no_support_border"));
                         callback(0);
                     }
                 }
             }
             if (style.enabledShadows().count() > 0) {
-                toast(context, localString(context, "vector_drawable_no_support_shadow"));
+                toast(context, localizedString(context, "vector_drawable_no_support_shadow"));
                 callback(0);
             }
             if (style.enabledInnerShadows().count() > 0) {
-                toast(context, localString(context, "vector_drawable_no_support_inner_shadow"));
+                toast(context, localizedString(context, "vector_drawable_no_support_inner_shadow"));
                 callback(0);
             }
             if (style.blur().isEnabled()) {
-                toast(context, localString(context, "vector_drawable_no_support_blur"));
+                toast(context, localizedString(context, "vector_drawable_no_support_blur"));
                 callback(0);
             }
         }

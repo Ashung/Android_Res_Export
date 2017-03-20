@@ -65,3 +65,4 @@ install_imagemagick_message: |-
     导出 Android 点九资源功能依赖于 ImageMagick 库。
     通过 HomeBrew 安装:
     brew install ImageMagick
+no_nine_patch_asset: 无任何点九资源。

@@ -65,3 +65,4 @@ install_imagemagick_message: |-
     Export Android nine-patch image feature depend on the ImageMagick library.
     Install use HomeBrew:
     $ brew install ImageMagick
+no_nine_patch_asset: No any nine-patch asset.

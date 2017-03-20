@@ -80,7 +80,7 @@ var onRun = function(context) {
         }
 
     } else {
-        toast(context, localString(context, "no_png_asset"));
+        toast(context, localizedString(context, "no_png_asset"));
     }
 
 }

@@ -34,15 +34,15 @@ var onRun = function(context) {
         writeContentToFile(reportFilePath, reports.componentsJoinedByString("\n"));
         NSWorkspace.sharedWorkspace().openFile_withApplication_(reportFilePath, "TextEdit");
     } else {
-        toast(context, localString(context, "no_duplicate_and_invaild_asset_name"));
+        toast(context, localizedString(context, "no_duplicate_and_invaild_asset_name"));
     }
 
     function addAsset(layer) {
         if (assetNames.containsObject(androidResName(layer.name()))) {
-            reports.addObject(localString(context, "report_layer_name_duplicate", layer.name()));
+            reports.addObject(localizedString(context, "report_layer_name_duplicate", layer.name()));
         }
         if (!layer.name().isEqualToString(androidResName(layer.name()))) {
-            reports.addObject(localString(context, "report_layer_rename", layer.name(), androidResName(layer.name())));
+            reports.addObject(localizedString(context, "report_layer_rename", layer.name(), androidResName(layer.name())));
         }
         assetNames.addObject(androidResName(layer.name()));
     }

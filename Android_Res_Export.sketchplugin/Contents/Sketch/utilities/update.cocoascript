@@ -19,17 +19,17 @@ var onRun = function (context) {
 
             var app = NSApplication.sharedApplication();
             app.displayDialog_withTitle(
-                localString(context, "least_version_desc", localVersion),
-                localString(context, "least_version_title")
+                localizedString(context, "least_version_desc", localVersion),
+                localizedString(context, "least_version_title")
             );
 
         } else {
 
             var alert = NSAlert.alloc().init();
-            alert.setMessageText(localString(context, "older_version_title", remoteManifest.version));
-            alert.setInformativeText(localString(context, "older_version_desc", localVersion));
-            alert.addButtonWithTitle(localString(context, "ok"));
-            alert.addButtonWithTitle(localString(context, "cancel"));
+            alert.setMessageText(localizedString(context, "older_version_title", remoteManifest.version));
+            alert.setInformativeText(localizedString(context, "older_version_desc", localVersion));
+            alert.addButtonWithTitle(localizedString(context, "ok"));
+            alert.addButtonWithTitle(localizedString(context, "cancel"));
             var responseCode = alert.runModal();
             if(responseCode == 1000) {
                 NSWorkspace.sharedWorkspace().openURL(context.plugin.downloadURL());
@@ -39,8 +39,8 @@ var onRun = function (context) {
 
         var app = NSApplication.sharedApplication();
         app.displayDialog_withTitle(
-            localString(context, "failure_update_desc", context.plugin.homepageURL()),
-            localString(context, "failure_update_title")
+            localizedString(context, "failure_update_desc", context.plugin.homepageURL()),
+            localizedString(context, "failure_update_title")
         );
 
     }
