@@ -53,6 +53,7 @@ vector_drawable_no_support_inner_shadow: Vector drawable 不支持内投影。
 vector_drawable_no_support_blur: Vector drawable 不支持模糊。
 
 no_png_asset: 无任何 PNG 资源。
+
 report_layer_rename: '图层命名格式不合法: %1 -> %2'
 report_layer_name_duplicate: '图层命名重复: %1'
 no_duplicate_and_invaild_asset_name: 无重复和不合法资源命名。

@@ -42,6 +42,7 @@ var onRun = function(context) {
             if (name) {
                 addPNGAssetFromLayer_name(layer, androidResName(name));
             }
+            
         } else {
             addPNGAssetFromLayer_name(layer, androidResName(layer.name()));
         }

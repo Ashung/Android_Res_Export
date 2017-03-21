@@ -9,8 +9,8 @@
 
 var onRun = function (context) {
 
-    var document = context.document;
-    var page = document.currentPage();
+    var doc = context.document;
+    var page = doc.currentPage();
 
     // New Artboard
     var artboard = MSArtboardGroup.alloc().init();
@@ -24,6 +24,6 @@ var onRun = function (context) {
 
     artboard.select_byExpandingSelection(true, false);
 
-    document.currentView().centerSelectionInVisibleArea();
+    doc.currentView().centerSelectionInVisibleArea();
 
 }

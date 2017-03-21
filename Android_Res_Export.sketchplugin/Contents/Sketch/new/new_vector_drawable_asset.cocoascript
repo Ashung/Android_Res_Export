@@ -42,12 +42,11 @@ var onRun = function(context) {
         }
         groupVector.setName(androidResName(name));
 
-        // add boundLayer
-        var width = groupVector.frame().width();
-        var height = groupVector.frame().height();
-        var boundLayer = addRectShape(groupVector, groupVector.firstLayer(), 0, 0, width, height, null, "#");
-
-        groupVector.select_byExpandingSelection(true, false);
+        // Add slice
+        var slice = addSliceInToGroup(groupVector, "#vector");
+            slice.exportOptions().removeAllExportFormats();
+        var exportOption = slice.exportOptions().addExportFormat();
+            exportOption.setFileFormat("svg");
 
     }
 
