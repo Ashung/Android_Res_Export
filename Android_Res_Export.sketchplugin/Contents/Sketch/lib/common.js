@@ -207,10 +207,11 @@ function insertImageLayer_fromResource(context, layerParent, rect, resName) {
     var imageLayer = MSBitmapLayer.alloc().initWithFrame_image(rect, imageData);
     imageLayer.setName(resName.replace(/\.png$/i, ""));
     if (layerParent.containsLayers()) {
-        layerParent.insertLayers_afterLayer([imageLayer], layerParent.firstlayer());
+        layerParent.insertLayers_afterLayer([imageLayer], layerParent.firstLayer());
     } else {
         layerParent.insertLayers_afterLayer([imageLayer], nil);
     }
+    return imageLayer;
 }
 
 /* =========================================================

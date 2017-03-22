@@ -1,12 +1,12 @@
-description: 导出 Android 资源, 包括 PNG, 点九图, 图标和 Vector Drawable.
-new_png_asset: 新建 PNG 资源
-new_nine_patch_asset: 新建点九图资源
-new_app_icon_asset: 新建应用图标资源
-new_system_icon_asset: 新建系统图标资源
-new_vector_drawable_asset: 新建 Vector Drawable 资源
+description: 导出 Android 资源, 包括 PNG 位图文件, 九宫格文件, 图标和可绘制矢量文件。
+new_png_asset: 新建 PNG 位图资源
+new_nine_patch_asset: 新建九宫格文件资源
+new_app_icon: 新建应用图标
+new_system_icon: 新建系统图标
+new_vector_drawable_asset: 新建可绘制矢量资源
 export_assets: 导出资源
-export_vector_drawable: 导出 Vector Drawables
-export_nine_patch: 导出点九图
+export_vector_drawable: 导出可绘制矢量
+export_nine_patch: 导出九宫格文件
 export_app_icon: 导出应用图标
 asset_name_validator: 资源命名校验
 help: 帮助
@@ -37,22 +37,22 @@ failure_update_desc: |-
     请访问网站并手动下载最新版本。
     %1。
 
-asset_name_for_nine_path: 点九资源命名。
-asset_name_for_vector_drawable: Vector Drawable 资源命名。
-vector_drawable_no_support_text: 文本图层无法转换为 vector drawable，您需要先转为轮廓。
-vector_drawable_no_support_artboard: 画板无法转换为 vector drawable，您需要取消分组。
-vector_drawable_no_support_bitmap: 位图无法转换为 vector drawable。
-vector_drawable_no_support_symbol: 组件无法转换为 vector drawable。
-vector_drawable_no_support_rotation: Vector drawable 不支持旋转属性，请先变平形状。
-vector_drawable_no_support_flipped: Vector drawable 不支持翻转属性，请先变平形状。
-vector_drawable_no_support_mask: Vector drawable 不支持蒙板。
-vector_drawable_no_support_fill: Vector drawable 仅支持单色填充。
-vector_drawable_no_support_border: Vector drawable 仅支持单色描边。
-vector_drawable_no_support_shadow: Vector drawable 不支持投影。
-vector_drawable_no_support_inner_shadow: Vector drawable 不支持内投影。
-vector_drawable_no_support_blur: Vector drawable 不支持模糊。
+asset_name_for_nine_path: 九宫格文件资源命名。
+asset_name_for_vector_drawable: 可绘制矢量资源命名。
+vector_drawable_no_support_text: 文本图层无法转换为可绘制矢量资源，您需要先转为轮廓。
+vector_drawable_no_support_artboard: 画板无法转换为可绘制矢量资源，您需要取消分组。
+vector_drawable_no_support_bitmap: 位图无法转换为可绘制矢量资源。
+vector_drawable_no_support_symbol: 组件无法转换为可绘制矢量资源。
+vector_drawable_no_support_rotation: 可绘制矢量资源不支持旋转属性，请先变平形状。
+vector_drawable_no_support_flipped: 可绘制矢量资源不支持翻转属性，请先变平形状。
+vector_drawable_no_support_mask: 可绘制矢量资源不支持蒙板。
+vector_drawable_no_support_fill: 可绘制矢量资源仅支持单色填充。
+vector_drawable_no_support_border: 可绘制矢量资源仅支持单色描边。
+vector_drawable_no_support_shadow: 可绘制矢量资源不支持投影。
+vector_drawable_no_support_inner_shadow: 可绘制矢量资源不支持内投影。
+vector_drawable_no_support_blur: 可绘制矢量资源不支持模糊。
 
-no_png_asset: 无任何 PNG 资源。
+no_png_asset: 无任何 PNG 位图资源。
 
 report_layer_rename: '图层命名格式不合法: %1 -> %2'
 report_layer_name_duplicate: '图层命名重复: %1'
@@ -63,7 +63,7 @@ app_icon_artboard_tips: 图标必须在画板或组件模版内，并且画板�
 
 install_imagemagick_title: 没有安装 ImageMagick。
 install_imagemagick_message: |-
-    导出 Android 点九资源功能依赖于 ImageMagick 库。
+    导出 Android 九宫格文件功能依赖于 ImageMagick 库。
     通过 HomeBrew 安装:
     brew install ImageMagick
-no_nine_patch_asset: 无任何点九资源。
+no_nine_patch_asset: 无任何九宫格文件资源。

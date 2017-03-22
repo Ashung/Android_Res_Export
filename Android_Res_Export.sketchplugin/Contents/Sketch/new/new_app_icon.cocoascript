@@ -24,6 +24,10 @@ var onRun = function (context) {
 
     artboard.select_byExpandingSelection(true, false);
 
-    doc.currentView().centerSelectionInVisibleArea();
+    // cmd + 3
+    // doc.currentView().centerSelectionInVisibleArea();
+
+    // cmd + 2
+    doc.currentView().zoomToSelection();
 
 }

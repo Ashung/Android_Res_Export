@@ -27,11 +27,15 @@
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "{{new_app_icon_asset}}",
-            "identifier": "new_app_icon_asset",
-            "script": "new/new_app_icon_asset.cocoascript"
+            "name": "{{new_app_icon}}",
+            "identifier": "new_app_icon",
+            "script": "new/new_app_icon.cocoascript"
         },
-
+        {
+            "name": "{{new_system_icon}}",
+            "identifier": "new_system_icon",
+            "script": "new/new_system_icon.cocoascript"
+        },
         {
             "name": "{{export_assets}}",
             "identifier": "export_assets",
@@ -102,10 +106,12 @@
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
+            "new_app_icon",
+            "new_system_icon",
+            "-",
             "new_png_asset",
             "new_nine_patch_asset",
             "new_vector_drawable_asset",
-            "new_app_icon_asset",
             "-",
             "export_assets",
             "export_nine_patch",

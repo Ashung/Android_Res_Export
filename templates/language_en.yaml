@@ -1,12 +1,12 @@
-description: Export Android resources, like pngs, 9-patch, app icon and vector drawable.
+description: Export Android resources, like pngs, nine-patch, app icon and vector drawable.
 new_png_asset: New PNG Asset
-new_nine_patch_asset: New 9-Patch Asset
-new_app_icon_asset: New App Icon Asset
-new_system_icon_asset: New System Icon Asset
+new_nine_patch_asset: New Nine-Patch Asset
+new_app_icon: New App Icon
+new_system_icon: New System Icon
 new_vector_drawable_asset: New Vector Drawable Asset
 export_assets: Export PNG Assets
 export_vector_drawable: Export Vector Drawables
-export_nine_patch: Export 9-Patch Assets
+export_nine_patch: Export Nine-Patch Assets
 export_app_icon: Export App Icon
 asset_name_validator: Asset Name Validator
 help: Help

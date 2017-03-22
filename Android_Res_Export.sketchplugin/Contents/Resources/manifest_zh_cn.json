@@ -1,6 +1,6 @@
 {
     "name": "Android Res Export",
-    "description": "导出 Android 资源, 包括 PNG, 点九图, 图标和 Vector Drawable.",
+    "description": "导出 Android 资源, 包括 PNG 位图文件, 九宫格文件, 图标和可绘制矢量文件。",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
@@ -12,38 +12,42 @@
     "bundleVersion": "1",
     "commands": [
         {
-            "name": "新建 PNG 资源",
+            "name": "新建 PNG 位图资源",
             "identifier": "new_png_asset",
             "script": "new/new_png_asset.cocoascript"
         },
         {
-            "name": "新建点九图资源",
+            "name": "新建九宫格文件资源",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
         {
-            "name": "新建 Vector Drawable 资源",
+            "name": "新建可绘制矢量资源",
             "identifier": "new_vector_drawable_asset",
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "新建应用图标资源",
-            "identifier": "new_app_icon_asset",
-            "script": "new/new_app_icon_asset.cocoascript"
+            "name": "新建应用图标",
+            "identifier": "new_app_icon",
+            "script": "new/new_app_icon.cocoascript"
         },
-
+        {
+            "name": "新建系统图标",
+            "identifier": "new_system_icon",
+            "script": "new/new_system_icon.cocoascript"
+        },
         {
             "name": "导出资源",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
         },
         {
-            "name": "导出 Vector Drawables",
+            "name": "导出可绘制矢量",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "导出点九图",
+            "name": "导出九宫格文件",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
@@ -102,10 +106,12 @@
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
+            "new_app_icon",
+            "new_system_icon",
+            "-",
             "new_png_asset",
             "new_nine_patch_asset",
             "new_vector_drawable_asset",
-            "new_app_icon_asset",
             "-",
             "export_assets",
             "export_nine_patch",

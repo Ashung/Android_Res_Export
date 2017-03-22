@@ -1,6 +1,6 @@
 {
     "name": "Android Res Export",
-    "description": "Export Android resources, like pngs, 9-patch, app icon and vector drawable.",
+    "description": "Export Android resources, like pngs, nine-patch, app icon and vector drawable.",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
@@ -17,7 +17,7 @@
             "script": "new/new_png_asset.cocoascript"
         },
         {
-            "name": "New 9-Patch Asset",
+            "name": "New Nine-Patch Asset",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
@@ -27,11 +27,15 @@
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "New App Icon Asset",
-            "identifier": "new_app_icon_asset",
-            "script": "new/new_app_icon_asset.cocoascript"
+            "name": "New App Icon",
+            "identifier": "new_app_icon",
+            "script": "new/new_app_icon.cocoascript"
         },
-
+        {
+            "name": "New System Icon",
+            "identifier": "new_system_icon",
+            "script": "new/new_system_icon.cocoascript"
+        },
         {
             "name": "Export PNG Assets",
             "identifier": "export_assets",
@@ -43,7 +47,7 @@
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "Export 9-Patch Assets",
+            "name": "Export Nine-Patch Assets",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
@@ -102,10 +106,12 @@
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
+            "new_app_icon",
+            "new_system_icon",
+            "-",
             "new_png_asset",
             "new_nine_patch_asset",
             "new_vector_drawable_asset",
-            "new_app_icon_asset",
             "-",
             "export_assets",
             "export_nine_patch",
