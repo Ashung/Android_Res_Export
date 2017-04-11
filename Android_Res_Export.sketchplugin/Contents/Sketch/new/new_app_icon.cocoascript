@@ -28,6 +28,6 @@ var onRun = function (context) {
     // doc.currentView().centerSelectionInVisibleArea();
 
     // cmd + 2
-    doc.currentView().zoomToSelection();
+    NSApp.sendAction_to_from("zoomToSelection:", nil, doc);
 
 }
