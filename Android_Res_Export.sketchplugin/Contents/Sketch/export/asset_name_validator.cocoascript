@@ -20,14 +20,16 @@ var onRun = function(context) {
     var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
     var layer;
     while (layer = loopAllExportableLayers.nextObject()) {
+
         if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch") {
             addAsset(layer);
         }
 
-        if (layer.class() == "MSSliceLayer" && layer.name() == "#9patch") {
+        if (layer.class() == "MSSliceLayer" && (layer.name() == "#9patch" || layer.name() == "#vector")) {
             var group = layer.parentGroup().parentGroup();
             addAsset(group);
         }
+
     }
 
     if (reports.count() > 0) {
