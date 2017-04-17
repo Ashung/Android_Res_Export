@@ -1,6 +1,6 @@
 # Android Res Export
 
-![](img/android_res_export.png)
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
 **Sketch 43.x Support**
 
@@ -33,21 +33,19 @@ $ npm install -g svgo svg2vectordrawable
 
 ## How it Works
 
-Download [demo.sketch](https://raw.githubusercontent.com/Ashung/Android_Res_Export/master/demo.sketch)
+Design at MDPI (1x) size, NOT support for other sizes. Download [demo.sketch](https://github.com/Ashung/Android_Res_Export/blob/develop/demo.sketch)
 
-Design at MDPI (1x) size, NOT support for other sizes.
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_1.gif?raw=true)
 
 Use menu "Plugins" - "Android Res Export" - "New PNG Asset" to create PNG assets.
 
-![](img/android_res_export_for_sketch_1.gif)
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_2.gif?raw=true)
 
 Use menu "Plugin" - "Android Res Export" - "New Nine-Patch Asset" to create a nine-patch asset.
 
-![](img/android_res_export_for_sketch_2.gif)
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_3.gif?raw=true)
 
 Use menu "Plugin" - "Android Res Export" - "New Vector Drawable Asset" to create a vector drawable asset. Select the shape layers in vector drawable group, click the settings icon in fill property panel, and choose "Non-Zero", then apply "Layer" - "Paths" - "Reverse Order" command from the main menu to reverse the path order.
-
-![](img/android_res_export_for_sketch_3.gif)
 
 Use page name to export asset in different folder.
 
@@ -60,9 +58,7 @@ Use page name to export asset in different folder.
 
 ## License
 
-CC-BY-SA 4.0
-
-[![cc-by-sa-4.0](https://i.creativecommons.org/l/by-sa/4.0/80x15.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ## Donate
 

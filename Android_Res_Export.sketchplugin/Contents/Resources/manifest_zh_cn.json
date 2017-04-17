@@ -6,7 +6,7 @@
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "manifestURL": "https://github.com/Ashung/Android_Res_Export/raw/master/Android_Res_Export.sketchplugin/Contents/Sketch/manifest.json",
     "downloadURL": "https://github.com/Ashung/Android_Res_Export/archive/master.zip",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
     "bundleVersion": "1",
@@ -32,14 +32,9 @@
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "添加系统图标网站",
-            "identifier": "new_system_icon",
-            "script": "new/new_system_icon.cocoascript"
-        },
-        {
-            "name": "导出资源",
-            "identifier": "export_assets",
-            "script": "export/export_assets.cocoascript"
+            "name": "导出 PNG 位图资源",
+            "identifier": "export_png_assets",
+            "script": "export/export_png_assets.cocoascript"
         },
         {
             "name": "导出可绘制矢量",
@@ -55,6 +50,11 @@
             "name": "导出应用图标",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
+        },
+        {
+            "name": "添加系统图标网格",
+            "identifier": "add_system_icon",
+            "script": "utilities/add_system_icon.cocoascript"
         },
         {
             "name": "资源命名校验",
@@ -104,7 +104,7 @@
             "new_vector_drawable_asset",
             "new_app_icon",
             "-",
-            "export_assets",
+            "export_png_assets",
             "export_nine_patch",
             "export_vector_drawable",
             "export_app_icon",
@@ -112,7 +112,7 @@
             {
                 "title": "实用工具",
                 "items": [
-                    "new_system_icon",
+                    "add_system_icon",
                     "asset_name_validator",
                     "fixes_slice_name"
                 ]
