@@ -33,12 +33,16 @@ var onRun = function(context) {
     }
 
     // Asset name
-    var name = ask(context, localizedString(context, "asset_name_for_vector_drawable"), "new_vector_drawable");
+    var name = ask(
+        context,
+        localizedString(context, "asset_name_for_vector_drawable"),
+        selection.lastObject().name()
+    );
 
     if (name) {
 
         // Group vector
-        if (selectionCount == 1 && selection.firstObject().className == "MSLayerGroup") {
+        if (selectionCount == 1 && selection.firstObject().class() == "MSLayerGroup") {
             var groupVector = selection.firstObject();
         } else {
             var groupVector = groupFromSelection(context);
@@ -72,7 +76,7 @@ function checkLayerType(context, layer, callback) {
         var loop = layer.layers().objectEnumerator();
         var item;
         while (item = loop.nextObject()) {
-            checkLayerType(context, item, supported);
+            checkLayerType(context, item, callback);
         }
     } else {
 

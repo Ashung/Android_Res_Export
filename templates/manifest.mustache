@@ -59,13 +59,18 @@
         {
             "name": "{{asset_name_validator}}",
             "identifier": "asset_name_validator",
-            "script": "export/asset_name_validator.cocoascript"
+            "script": "utilities/asset_name_validator.cocoascript"
+        },
+        {
+            "name": "{{fixes_slice_name}}",
+            "identifier": "fixes_slice_name",
+            "script": "utilities/fixes_slice_name.cocoascript"
         },
         {
             "name": "{{web_site}}",
             "identifier": "web_site",
             "handler": "website",
-            "script": "Utilities/utilities.cocoascript"
+            "script": "utilities/utilities.cocoascript"
         },
         {
             "name": "{{report_issues}}",
@@ -84,21 +89,9 @@
             "script": "utilities/update.cocoascript"
         },
         {
-            "name": "{{donate_via_paypal}}",
-            "identifier": "donate_via_paypal",
-            "handler": "donateViaPaypal",
-            "script": "utilities/utilities.cocoascript"
-        },
-        {
-            "name": "{{donate_via_wechat}}",
-            "identifier": "donate_via_wechat",
-            "handler": "donateViaWechat",
-            "script": "utilities/utilities.cocoascript"
-        },
-        {
-            "name": "{{donate_via_alipay}}",
-            "identifier": "donate_via_alipay",
-            "handler": "donateViaAlipay",
+            "name": "{{donate}}",
+            "identifier": "donate",
+            "handler": "donate",
             "script": "utilities/utilities.cocoascript"
         }
     ],
@@ -106,33 +99,35 @@
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
-            "new_app_icon",
-            "new_system_icon",
-            "-",
             "new_png_asset",
             "new_nine_patch_asset",
             "new_vector_drawable_asset",
+            "new_app_icon",
             "-",
             "export_assets",
             "export_nine_patch",
             "export_vector_drawable",
             "export_app_icon",
             "-",
-            "asset_name_validator",
+            {
+                "title": "{{utilities}}",
+                "items": [
+                    "new_system_icon",
+                    "asset_name_validator",
+                    "fixes_slice_name"
+                ]
+            },
             "-",
             {
                 "title": "{{help}}",
                 "items": [
                     "web_site",
                     "report_issues",
-                    "-",
                     "update",
                     "-",
                     "change_language",
                     "-",
-                    "donate_via_paypal",
-                    "donate_via_wechat",
-                    "donate_via_alipay"
+                    "donate"
                 ]
             }
         ]

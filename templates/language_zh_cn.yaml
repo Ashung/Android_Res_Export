@@ -2,19 +2,19 @@ description: 导出 Android 资源, 包括 PNG 位图文件, 九宫格文件, �
 new_png_asset: 新建 PNG 位图资源
 new_nine_patch_asset: 新建九宫格文件资源
 new_app_icon: 新建应用图标
-new_system_icon: 新建系统图标
+new_system_icon: 添加系统图标网站
 new_vector_drawable_asset: 新建可绘制矢量资源
 export_assets: 导出资源
 export_vector_drawable: 导出可绘制矢量
 export_nine_patch: 导出九宫格文件
 export_app_icon: 导出应用图标
 asset_name_validator: 资源命名校验
+fixes_slice_name: 修复切片命名
+utilities: 实用工具
 help: 帮助
 web_site: 网站
 report_issues: 问题反馈
-donate_via_paypal: 通过 PayPal 打赏
-donate_via_wechat: 通过微信打赏
-donate_via_alipay: 通过支付宝打赏
+donate: 捐款
 change_language: 更改菜单语言
 update: 检测更新
 
@@ -65,5 +65,12 @@ install_imagemagick_title: 没有安装 ImageMagick。
 install_imagemagick_message: |-
     导出 Android 九宫格文件功能依赖于 ImageMagick 库。
     通过 HomeBrew 安装:
-    brew install ImageMagick
+    $ brew install ImageMagick
 no_nine_patch_asset: 无任何九宫格文件资源。
+
+install_svg_and_s2v_title: 没有安装 SVGO 和 svg2vectordrawable。
+install_svg_and_s2v_message: |-
+    导出 Android 可绘制矢量文件功能需要安装 Node.js，SVGO 和 svg2vectordrawable。
+    在安装完 Node.js 之后, 在终端运行以下命令。
+    $ npm install -g svgo svg2vectordrawable
+no_vector_drawable_asset: 无任何可绘制矢量资源。

@@ -6,259 +6,98 @@
 
 var onRun = function(context) {
 
-    if (!svgo) {
-        alert(
-            "You have not install SVGO.",
-            "Export Android VectorDrawable feature depend on the Node.js and SVGO.\n" +
-            "https://github.com/svg/svgo"
-        );
-        return;
-    }
+    // SVGO
+    var svgo = which("svgo");
 
-    if (!getFilePath(context)) {
+    // SVG2VectorDrawable
+    var s2v = which("s2v");
+
+    if (!svgo && !s2v) {
+        alert(
+            localizedString(context, "install_svg_and_s2v_title"),
+            localizedString(context, "install_svg_and_s2v_message")
+        );
         return;
     }
 
     var doc = context.document;
-    var page = doc.currentPage();
     var selection = context.selection;
 
-    if (selection.count() == 0) {
-        toast(context, "Select at least one layer.");
-        return;
-    }
+    var exportVectors = NSMutableArray.alloc().init();
 
-    // Get all exportable
-    var vectorDrawable = [];
-    var vectorDrawableIds = [];
-    var vectorDrawableNames = [];
-    var reportInfo = [];
-
-    var loop = selection.objectEnumerator()
-    while (layer = loop.nextObject()) {
-        var name = layer.name();
-        var finalName = androidResName(layer.name());
-        vectorDrawable.push({
-            "id": layer.objectID(),
-            "name": finalName
-        });
-        vectorDrawableIds.push(layer.objectID());
-        // Check name duplicate
-        if (finalName != layer.name()) {
-            reportInfo.push('Changed layer name: ' + layer.name() + ' -> ' + finalName);
-        }
-        if (vectorDrawableNames.indexOf(finalName) >= 0) {
-            reportInfo.push('Duplicate layer name: ' + layer.name());
-        }
-        vectorDrawableNames.push(finalName);
-    }
-
-    // Ready to export
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
-    var vectorDrawableFolder = exportFolder + "/drawable-anydpi-v21"
-    var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
-    var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
-    var doneExportSVG = false;
-
-    doc.saveDocument(nil);
-
-    // Export to tempFolder
-    var formats = "svg";
-    var useIdForName = "yes";
-    sketchtoolExport(
-        "layers",
-        currentFile,
-        "1",
-        formats,
-        vectorDrawableIds,
-        useIdForName,
-        tempFolder,
-        function(success, message) {
-            if (success == true) {
-                doneExportSVG = true;
+    if (selection.count() > 0) {
+        var loopSelection = selection.objectEnumerator();
+        var layer;
+        while (layer = loopSelection.nextObject()) {
+            if (layer.class() == "MSSliceLayer" && layer.name() == "#vector") {
+                exportVectors.addObject({
+                    "slice": layer,
+                    "name": androidResName(layer.parentGroup().name()),
+                });
+            }
+            if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") {
+                var loopChildren = layer.children().objectEnumerator();
+                var child;
+                while (child = loopChildren.nextObject()) {
+                    if (child.class() == "MSSliceLayer" && child.name() == "#vector") {
+                        exportVectors.addObject({
+                            "slice": child,
+                            "name": androidResName(child.parentGroup().name()),
+                        });
+                    }
+                }
             }
         }
-    );
-
-    for (var i = 0; i < vectorDrawable.length; i ++) {
-        var svgFile = tempFolder + "/" + vectorDrawable[i]["id"] + ".svg"
-        var svg = getContentFromFile(svgFile);
-
-        // Clean SVG code
-        svg = svg.replace(/\n*/g, "");
-        svg = svg.replace(/>\s+</g, "><");
-        svg = svg.replace(/<!--.*?-->/g, "");
-        svg = svg.replace(/<\?xml.*?\?>/g, "");
-        svg = svg.replace(/<desc>.*?<\/desc>/g, "");
-        svg = svg.replace(/<g[^<]*>/g, "");
-        svg = svg.replace(/<\/g>/g, "");
-        svg = svg.replace(/<mask.*?<\/mask>/g, "");
-        svg = svg.replace(/<image.*?<\/image>/g, "");
-        svg = svg.replace(/<title.*?<\/title>/g, "");
-        // replace use tag
-        svg = svg.replace(/(<use)([^<]*?)(xlink:href="#)([^<]*?)(")([^<]*?)(><\/use>)/g, function(match, p1, p2, p3, p4, p5, p6, offset, string) {
-            originalTagRegex = new RegExp('<(\\w+)[^<]*id="' + p4 + '"[^<]*><\/(\\w+)>');
-            var originalTag = svg.match(originalTagRegex)[0];
-            var attributes = (p2 + p6).replace(/id=".*?"/, "");
-            return originalTag.replace(">", attributes + ">");
-        });
-        svg = svg.replace(/<defs>.*?<\/defs>/, "");
-        // bounds layer
-        svg = svg.replace(/<\w+[^<]*id="#"[^<]*><\/\w+>/, "");
-        // Ellipse to path
-        svg = svg.replace(/(<ellipse)([^<]*?)(><\/ellipse>)/g, function(match, p1, p2, p3, offset, string) {
-            var cx = /\scx="(.*?)"/.exec(p2)[1];
-            var cy = /\scy="(.*?)"/.exec(p2)[1];
-            var rx = /\srx="(.*?)"/.exec(p2)[1];
-            var ry = /\sry="(.*?)"/.exec(p2)[1];
-            var attributes = p2.replace(/\scx=".*?"/, "")
-                               .replace(/\scy=".*?"/, "")
-                               .replace(/\srx=".*?"/, "")
-                               .replace(/\sry=".*?"/, "");
-            var pathData = ellipseToPath(parseFloat(cx), parseFloat(cy), parseFloat(rx), parseFloat(ry));
-            var code = '<path ' + attributes + ' d="' + pathData + '"></path>';
-            return code;
-        });
-        // Circle to path
-        svg = svg.replace(/(<circle)([^<]*?)(><\/circle>)/g, function(match, p1, p2, p3, offset, string) {
-            var cx = /\scx="(.*?)"/.exec(p2)[1];
-            var cy = /\scy="(.*?)"/.exec(p2)[1];
-            var r = /\sr="(.*?)"/.exec(p2)[1];
-            var attributes = p2.replace(/\scx=".*?"/, "")
-                               .replace(/\scy=".*?"/, "")
-                               .replace(/\sr=".*?"/, "");
-            var pathData = circleToPath(parseFloat(cx), parseFloat(cy), parseFloat(r));
-            var code = '<path ' + attributes + ' d="' + pathData + '"></path>';
-            return code;
-        });
-        // SVGO
-        // rect, line, polyline, polygon can convert to path by SVGO
-        svg = optimizeSVG(svg);
-        // svg to vector drawable
-        var xml = svgToVectorDrawable(svg);
-
-        log(svg);
-        log(xml);
-
-        // Create "drawable-anydpi-v21" folder
-        mkdir(vectorDrawableFolder);
-
-        // Create XML
-        writeContentToFile(
-            vectorDrawableFolder + "/" +vectorDrawable[i]["name"] + ".xml",
-            xml
-        );
-
-    }
-
-    // Report file
-    if (reportInfo.length > 0) {
-        writeContentToFile(reportFile, reportInfo.toString().replace(/,/g, "\n"));
     } else {
-        if (fileExists(reportFile)) {
-            rm(reportFile);
+        var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
+        var layer;
+        while (layer = loopAllExportableLayers.nextObject()) {
+            if (layer.class() == "MSSliceLayer" && layer.name() == "#vector") {
+                exportVectors.addObject({
+                    "slice": layer,
+                    "name": androidResName(layer.parentGroup().name()),
+                });
+            }
         }
     }
 
-    rm(tempFolder);
+    // log(exportVectors);
 
-    toast(context, "Export vector drawable to \"" + vectorDrawableFolder + "\". Done!");
+    if (exportVectors.count() > 0) {
 
-}
+        var exportFolder = chooseFolder();
 
-function svgToVectorDrawable(svg) {
-    var xml = '<?xml version="1.0" encoding="utf-8"?>\n';
-    xml += '<vector xmlns:android="http://schemas.android.com/apk/res/android"\n';
+        if (exportFolder) {
 
-    var width = /<svg[^<]*width=\"(\d+)"/.exec(svg)[1];
-    var height = /<svg[^<]*height=\"(\d+)"/.exec(svg)[1];
-    var viewportWidth = /<svg[^<]*viewBox=\"-?\d+ -?\d+ (\d+) \d+"/.exec(svg)[1];
-    var viewportHeight = /<svg[^<]*viewBox=\"-?\d+ -?\d+ \d+ (\d+)"/.exec(svg)[1];
+            var loopExportVectors = exportVectors.objectEnumerator();
+            var vector;
+            while (vector = loopExportVectors.nextObject()) {
 
-    xml += '    android:width="' + width + 'dp"\n';
-    xml += '    android:height="' + height + 'dp"\n';
-    xml += '    android:viewportWidth="' + viewportWidth + '"\n';
-    xml += '    android:viewportHeight="' + viewportHeight + '">\n';
+                var svgFile = exportFolder + "/" + vector.name + ".svg";
+                doc.saveArtboardOrSlice_toFile(vector.slice, svgFile);
 
-    var tags = svg.match(/<path[^<]*\/>/g);
-    for (var i = 0; i < tags.length; i++) {
-        var path = '<path';
+                optimizeSVG(svgo, svgFile);
 
-        var fillRegex = /\sfill="(#[0-9a-z]{3,6})"/i;
-        if (fillRegex.test(tags[i])) {
-            var color = fillRegex.exec(tags[i])[1];
-            path += ' android:fillColor="' + color + '"';
-        } else {
-            path += ' android:fillColor="#000000"';
+                svg2vector(s2v, svgFile, exportFolder + "/res/drawable-anydpi-v21/" + vector.name + ".xml");
+
+                rm(svgFile);
+
+            }
+
+            openInFinder(exportFolder);
+
         }
 
-        var opacityRegex = /\sopacity="([0-9\.]+)"/;
-        if (opacityRegex.test(tags[i])) {
-            var opacity = parseFloat(opacityRegex.exec(tags[i])[1]).toFixed(2);
-            path += ' android:alpha="' + opacity + '"';
-        }
-
-        var fillOpacityRegex = /\sfill-opacity="([0-9\.]+)"/;
-        if (fillOpacityRegex.test(tags[i])) {
-            var fillOpacity = parseFloat(fillOpacityRegex.exec(tags[i])[1]).toFixed(2);
-            path += ' android:fillAlpha="' + fillOpacity + '"';
-        }
-
-        var strokeRegex = /\sstroke="(#[0-9a-z]{3,6})"/;
-        if (strokeRegex.test(tags[i])) {
-            var stroke = strokeRegex.exec(tags[i])[1];
-            path += ' android:strokeColor="' + stroke + '"';
-        }
-
-        var strokeWidthRegex = /\sstroke-width="([0-9\.]+)"/;
-        if (strokeWidthRegex.test(tags[i])) {
-            var strokeWidth = strokeWidthRegex.exec(tags[i])[1];
-            path += ' android:strokeWidth="' + strokeWidth + '"';
-        }
-
-        var strokeOpacityRegex = /\sstroke-opacity="([0-9\.]+)"/;
-        if (strokeOpacityRegex.test(tags[i])) {
-            var strokeOpacity = parseFloat(strokeOpacityRegex.exec(tags[i])[1]).toFixed(2);
-            path += ' android:strokeAlpha="' + strokeOpacity + '"';
-        }
-
-        var strokeLineCapRegex = /\sstroke-linecap="(\w+)"/;
-        if (strokeLineCapRegex.test(tags[i])) {
-            var strokeLineCap = strokeLineCapRegex.exec(tags[i])[1];
-            path += ' android:strokeLineCap="' + strokeLineCap + '"';
-        }
-
-        var strokeLineJoinRegex = /\sstroke-linejoin="(\w+)"/;
-        if (strokeLineJoinRegex.test(tags[i])) {
-            var strokeLineJoin = strokeLineJoinRegex.exec(tags[i])[1];
-            path += ' android:strokeLineCap="' + strokeLineJoin + '"';
-        }
-
-        var pathData = /\sd="(.*?)"/i.exec(tags[i])[1];
-        path += ' android:pathData="' + pathData + '"/>\n';
-
-        xml += '    ' + path;
+    } else {
+        toast(context, localizedString(context, "no_vector_drawable_asset"));
     }
 
-    xml += '</vector>';
-    return xml;
 }
 
-function ellipseToPath(cx, cy, rx, ry) {
-    var controlDistanceX = rx * 0.5522847498307935;
-    var controlDistanceY = ry * 0.5522847498307935;
-    var d = 'M' + cx + ',' + (cy - ry) + ',' +
-            'C' + (cx + controlDistanceX) + ',' + (cy - ry) + ',' + (cx + rx) + ',' + (cy - controlDistanceY) + ',' + (cx + rx) + ',' + cy + ',' +
-            'C' + (cx + rx) + ',' + (cy + controlDistanceY) + ',' + (cx + controlDistanceX) + ',' + (cy + ry) + ','  + cx + ',' + (cy + ry) + ',' +
-            'C' + (cx - controlDistanceX) + ',' + (cy + ry) + ',' + (cx - rx) + ',' + (cy + controlDistanceY) + ',' + (cx - rx) + ',' + cy + ',' +
-            'C' + (cx - rx) + ',' + (cy - controlDistanceY) + ',' + (cx - controlDistanceX) + ',' + (cy - ry) + ',' + cx + ',' + (cy - ry) + 'z';
-    return d;
+function optimizeSVG(svgo, svgIn) {
+    runCommand("/bin/bash", ["-l", "-c", svgo + " -p 2 '" + svgIn + "'"]);
 }
 
-function circleToPath(cx, cy, r) {
-    var d = 'M' + (cx-r) + ',' + cy +
-            'a' + r + ',' + r + ' 0 0,1 ' + r*2 + ',0' +
-            'a' + r + ',' + r + ' 0 0,1 -' + r*2 + ',0z';
-    return d;
+function svg2vector(s2v, svgFile, vectorFile) {
+    runCommand("/bin/bash", ["-l", "-c", s2v + " '" + svgFile + "' '" + vectorFile + "'"]);
 }

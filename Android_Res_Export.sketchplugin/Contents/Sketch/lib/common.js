@@ -5,19 +5,6 @@
 // Email: Ashung.hung@gmail.com
 // License: https://creativecommons.org/licenses/by-sa/4.0
 
-// sketchtool
-var sketchtool = NSBundle
-    .mainBundle()
-    .pathForResource_ofType_inDirectory("sketchtool", nil, "sketchtool/bin");
-var sketchmigrate = NSBundle
-    .mainBundle()
-    .pathForResource_ofType_inDirectory("sketchmigrate", nil, "sketchtool/bin");
-
-// ImageMagick
-var convert = which("convert");
-
-// SVGO
-var svgo = which("svgo");
 
 /* =========================================================
     Android
@@ -97,36 +84,6 @@ function dpiToScale(dpi) {
                 return 1;
         }
     }
-}
-
-function scaleToSuffix(size) {
-    var r = "";
-    if (size > 0 && size < 0.05) {
-        r = "@0.0x";
-    } else if (size >= 0.05 && size <= 0.15) {
-        r = "@0.1x";
-    } else if (size > 0.15 && size <= 0.25) {
-        r = "@0.2x";
-    } else if (size > 0.25 && size <= 0.35) {
-        r = "@0.3x";
-    } else if (size > 0.35 && size < 0.45) {
-        r = "@0.4x";
-    } else if (size >= 0.45 && size < 0.65) {
-        r = "@0.5x";
-    } else if (size >= 0.55 && size < 0.65) {
-        r = "@0.6x";
-    } else if (size >= 0.65 && size < 0.75) {
-        r = "@0.7x";
-    } else if (size >= 0.75 && size <= 0.85) {
-        r = "@0.8x";
-    } else if (size > 0.85 && size <= 0.95) {
-        r = "@0.9x";
-    } else if (size > 0.95 && size < 1) {
-        r = "@1.0x";
-    } else if (size > 1) {
-        r = "@" + Math.floor(size) + "x";
-    }
-    return r;
 }
 
 /* =========================================================
@@ -235,16 +192,6 @@ function getPluginPath(context) {
     return path;
 }
 
-function getFilePath(context) {
-    var doc = context.document;
-    if (doc.fileURL()) {
-        return doc.fileURL().path();
-    } else {
-        alert(context.plugin.name(), "Save your document first.");
-        return null;
-    }
-}
-
 function alert(title, content) {
     var app = NSApplication.sharedApplication();
     app.displayDialog_withTitle_(content, title);
@@ -335,95 +282,6 @@ function which(command) {
         }
     });
     return path;
-}
-
-function optimizeSVG(svg) {
-    var code = "";
-    runCommand("/bin/bash", ["-l", "-c", svgo + " -s '" + svg + "' -p 2 -o -"], function(status, msg) {
-        if (status && msg != "") {
-            code = msg;
-        }
-    });
-    return code;
-}
-
-function sketchtoolExport(exportType, sketchFile, scales, formats, itemIds, useIdForName, outputFolder, callback) {
-    // sketcktool export
-    //     slices|layers|pages|artboards
-    //     <file.sketch>
-    //     --scales="1, 1.5, 2, 3, 4"
-    //     --items="<id>,<id>"
-    //     --formats="png"
-    //     --use-id-for-name="yes|no"
-    //     --group-contents-only="yes"
-    //     --overwritin="yes"
-    //     --output="<dir>"
-    var command = "/bin/bash";
-    var args = [
-        "-c",
-        sketchtool + ' export ' + exportType
-            + ' "' + sketchFile + '"'
-            + ' --scales="' + scales.toString() + '"'
-            + ' --formats="' + formats.toString() + '"'
-            + ' --use-id-for-name="' + useIdForName + '"'
-            + ' --group-contents-only="yes"'
-            + ' --save-for-web="no"'
-            + ' --overwritin="yes"'
-    ];
-    if (itemIds.length > 1) {
-        args[1] += ' --items="' + itemIds.toString() + '"';
-    } else {
-        args[1] += ' --item="' + itemIds[0] + '"';
-    }
-        args[1] += ' --output="' + outputFolder + '"';
-    runCommand(command, args, callback);
-}
-
-function createMdpiPatchLines(cwd, width, height, mdpiPatchId, callback) {
-    var command = "/bin/bash";
-    var args = [
-        "-l",
-        "-c",
-        'cd "' + cwd + '" && '
-            + convert + ' -crop ' + Math.floor(width) + 'x1+1+0 '
-                + mdpiPatchId + '.png ' + mdpiPatchId + '_top.png && '
-            + convert + ' -crop 1x' + Math.floor(height) + '+' + (Math.floor(width)+1) + '+1 '
-                + mdpiPatchId + '.png ' + mdpiPatchId + '_right.png && '
-            + convert + ' -crop ' + Math.floor(width) + 'x1+1+' + (Math.floor(height)+1) + ' '
-                + mdpiPatchId + '.png ' + mdpiPatchId + '_bottom.png && '
-            + convert + ' -crop 1x' + Math.floor(height) + '+0+1 '
-                + mdpiPatchId + '.png ' + mdpiPatchId + '_left.png'
-    ];
-    runCommand(command, args, callback);
-}
-
-function createNinePath(cwd, scale, suffix, width, height, contentId, patchId, callback) {
-    var newWidth = Math.floor(width * scale);
-    var newHeight = Math.floor(height * scale);
-    var temp = contentId + "_temp" + suffix + ".png";
-    var content = contentId + suffix + ".png";
-    var patchTop = patchId + "_top.png";
-    var patchRight = patchId + "_right.png";
-    var patchBottom = patchId + "_bottom.png";
-    var patchLeft = patchId + "_left.png";
-    var command = "/bin/bash";
-    var args = [
-        "-l",
-        "-c",
-        'cd "' + cwd + '" && '
-            + convert + ' -size ' + (newWidth + 2) + 'x' + (newHeight + 2) + ' xc:none '
-            + content + ' -gravity Center -composite '
-            + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
-                + patchTop + ' \\) -gravity North -composite '
-            + '\\( -resize 1x' + newHeight + '! -filter point -interpolate Nearest '
-                + patchRight + ' \\) -gravity East -composite '
-            + '\\( -resize ' + newWidth + 'x1! -filter point -interpolate Nearest '
-                + patchBottom + ' \\) -gravity South -composite '
-            + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest '
-                + patchLeft + ' \\) -gravity West -composite '
-            + temp
-    ];
-    runCommand(command, args, callback);
 }
 
 function runCommand(command, args, callback) {

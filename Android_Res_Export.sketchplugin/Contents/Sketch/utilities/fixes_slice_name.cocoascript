@@ -1,0 +1,19 @@
+//
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
+    var layer;
+    while (layer = loopAllExportableLayers.nextObject()) {
+        if (layer.class() == "MSSliceLayer") {
+            if(/copy( \d+)?$/gi.test(layer.name())) {
+                var newLayerName = layer.name().replace(/ copy( \d+)?/gi, '');
+                layer.setName(newLayerName);
+            }
+        }
+    }
+
+}

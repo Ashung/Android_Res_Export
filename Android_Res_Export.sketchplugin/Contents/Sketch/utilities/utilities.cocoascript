@@ -13,14 +13,6 @@ var reportIssues = function(context) {
     NSWorkspace.sharedWorkspace().openURL(context.plugin.homepageURL().URLByAppendingPathComponent("issues"));
 }
 
-var donateViaPaypal = function() {
-    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("https://www.paypal.me/ashung/2/"));
-};
-
-var donateViaWechat = function() {
-    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("http://ashung.github.io/Automate-Sketch/css/donate_wechat_rmb_10.png"));
-};
-
-var donateViaAlipay = function() {
-    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("http://ashung.github.io/Automate-Sketch/css/donate_alipay_rmb_10.png"));
+var donate = function() {
+    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("https://ashung.github.io/donate.html"));
 };
