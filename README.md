@@ -1,8 +1,3 @@
-Sorry I am working to make a new version. This version is no support Sketch 43, please download a beta version from branch [develop](https://github.com/Ashung/Android_Res_Export/tree/develop), and export vector drawable is currently no work.
-
-重构代码中，master 分支不支持 Sketch 43.x，请切 [develop](https://github.com/Ashung/Android_Res_Export/tree/develop) 分支。导出 Vector Drawable 未完成。
-
------
 
 # Android Res Export
 
