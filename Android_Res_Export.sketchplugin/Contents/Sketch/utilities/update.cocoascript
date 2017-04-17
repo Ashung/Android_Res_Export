@@ -1,0 +1,54 @@
+//
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
+
+@import "../lib/common.js";
+
+var onRun = function (context) {
+
+    var remoteManifest = getRemoteJson(context.plugin.manifestURL().toString());
+
+    var localVersion = context.plugin.version();
+
+    if (remoteManifest.version) {
+
+        if (localVersion < remoteManifest.version) {
+
+            var app = NSApplication.sharedApplication();
+            app.displayDialog_withTitle(
+                localizedString(context, "least_version_desc", localVersion),
+                localizedString(context, "least_version_title")
+            );
+
+        } else {
+
+            var alert = NSAlert.alloc().init();
+            alert.setMessageText(localizedString(context, "older_version_title", remoteManifest.version));
+            alert.setInformativeText(localizedString(context, "older_version_desc", localVersion));
+            alert.addButtonWithTitle(localizedString(context, "ok"));
+            alert.addButtonWithTitle(localizedString(context, "cancel"));
+            var responseCode = alert.runModal();
+            if(responseCode == 1000) {
+                NSWorkspace.sharedWorkspace().openURL(context.plugin.downloadURL());
+            }
+        }
+    } else {
+
+        var app = NSApplication.sharedApplication();
+        app.displayDialog_withTitle(
+            localizedString(context, "failure_update_desc", context.plugin.homepageURL()),
+            localizedString(context, "failure_update_title")
+        );
+
+    }
+}
+
+function getRemoteJson(url) {
+    var request = NSURLRequest.requestWithURL(NSURL.URLWithString(url));
+    var response = NSURLConnection.sendSynchronousRequest_returningResponse_error(request, null, null);
+    var content = NSString.alloc().initWithData_encoding(response, NSUTF8StringEncoding);
+    return JSON.parse(content);
+}

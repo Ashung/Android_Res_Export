@@ -1,0 +1,31 @@
+//
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
+
+@import "../lib/common.js";
+
+var onRun = function (context) {
+
+    var doc = context.document;
+    var page = doc.currentPage();
+    var selection = context.selection;
+
+    // If artboard selected the origin of rulers will changed.
+    page.setCurrentArtboard(null);
+
+    // Center of viewport
+    var contentDrawView = doc.currentView();
+    var midX = Math.round((contentDrawView.frame().size.width/2 - contentDrawView.horizontalRuler().baseLine())/contentDrawView.zoomValue());
+    var midY = Math.round((contentDrawView.frame().size.height/2 - contentDrawView.verticalRuler().baseLine())/contentDrawView.zoomValue());
+
+    var gridLayer = insertImageLayer_fromResource(context, page, CGRectMake(0, 0, 24, 24), "system_icon_grid.png");
+    gridLayer.absoluteRect().setRulerX(midX - 12);
+    gridLayer.absoluteRect().setRulerY(midY - 12);
+    gridLayer.moveToLayer_beforeLayer(gridLayer.parentPage(), nil);
+
+    page.moveLayersToArtboards();
+
+}

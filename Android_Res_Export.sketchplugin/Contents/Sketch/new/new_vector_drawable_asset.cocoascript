@@ -1,25 +1,30 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
     var doc = context.document;
-    var page = doc.currentPage();
     var selection = context.selection;
     var selectionCount = selection.count();
 
     if (selectionCount == 0) {
-        toast(context, "No any selection layer.");
+        toast(context, localizedString(context, "no_selection"));
         return;
     }
 
     // Checking if layers containt not supported effect
     var supported = 1;
-    for (var i = 0; i < selection.count(); i++) {
-        checkLayerType(context, selection.objectAtIndex(i), function(sup) {
+
+    var loopSelection = selection.objectEnumerator();
+    var layer;
+    while (layer = loopSelection.nextObject()) {
+        checkLayerType(context, layer, function(sup) {
             supported = sup;
         });
         if (supported == 0) {
@@ -27,23 +32,42 @@ var onRun = function(context) {
         }
     }
 
-    // Group vector
-    if (selectionCount == 1 && selection.firstObject().className == "MSLayerGroup") {
-        var groupVector = selection.firstObject();
-    } else {
-        group(context);
-        var groupVector = selection.firstObject().parentGroup();
+    // Asset name
+    var name = ask(
+        context,
+        localizedString(context, "asset_name_for_vector_drawable"),
+        selection.lastObject().name()
+    );
+
+    if (name) {
+
+        // Group vector
+        if (selectionCount == 1 && selection.firstObject().class() == "MSLayerGroup") {
+            var groupVector = selection.firstObject();
+        } else {
+            var groupVector = groupFromSelection(context);
+        }
+        groupVector.setName(androidResName(name));
+
+        // Add slice
+        var slice = addSliceInToGroup(groupVector, "#vector");
+            slice.exportOptions().removeAllExportFormats();
+        var exportOption = slice.exportOptions().addExportFormat();
+            exportOption.setFileFormat("svg");
+
+        // Move bitmap/text layer outside group
+        var loopChild = groupVector.children().objectEnumerator();
+        var child;
+        while (child = loopChild.nextObject()) {
+            if (child.class() == "MSBitmapLayer" || child.class() == "MSTextLayer") {
+                child.moveToLayer_beforeLayer(
+                    groupVector.parentGroup(),
+                    groupVector.parentGroup().layerAtIndex(groupVector.parentGroup().indexOfLayer(groupVector) + 1)
+                );
+            }
+        }
+
     }
-    var name = ask(context, "Asset name for new vector drawable.", "new_vector_drawable");
-    groupVector.setName(androidResName(name));
-
-    // add boundLayer
-    var width = groupVector.frame().width();
-    var height = groupVector.frame().height();
-    var color = "#FFFFFF";
-    var boundLayer = addRectShape(groupVector, groupVector.layers().firstObject(), 0, 0, width, height, color, "#");
-
-    groupVector.select_byExpandingSelection(true, false);
 
 }
 
@@ -52,42 +76,42 @@ function checkLayerType(context, layer, callback) {
         var loop = layer.layers().objectEnumerator();
         var item;
         while (item = loop.nextObject()) {
-            checkLayerType(context, item, supported);
+            checkLayerType(context, item, callback);
         }
     } else {
 
         if (layer.class() == "MSTextLayer") {
-            toast(context, "Text layer can't covert to vector drawable, you can convert to outlines first.");
+            toast(context, localizedString(context, "vector_drawable_no_support_text"));
             callback(0);
         }
 
         if (layer.class() == "MSArtboardGroup") {
-            toast(context, "Artboard can't covert to vector drawable, you can ungroup it.");
+            toast(context, localizedString(context, "vector_drawable_no_support_artboard"));
             callback(0);
         }
 
         if (layer.class() == "MSBitmapLayer") {
-            toast(context, "Bitmap layer can't covert to vector drawable.");
+            toast(context, localizedString(context, "vector_drawable_no_support_bitmap"));
             callback(0);
         }
 
         if (layer.class() == "MSSymbolInstance" || layer.class() == "MSSymbolMaster") {
-            toast(context, "Symbol can't covert to vector drawable.");
+            toast(context, localizedString(context, "vector_drawable_no_support_symbol"));
             callback(0);
         }
 
         // Not suppot styles in vector drawable
         if (layer.class() == "MSShapeGroup") {
             if (layer.rotation() != 0) {
-                toast(context, "Rotation is supported by vector drawable, please flatten first.");
+                toast(context, localizedString(context, "vector_drawable_no_support_rotation"));
                 callback(0);
             }
             if (layer.isFlippedVertical() != 0 || layer.isFlippedHorizontal() != 0) {
-                toast(context, "Flipped is supported by vector drawable, please flatten first.");
+                toast(context, localizedString(context, "vector_drawable_no_support_flipped"));
                 callback(0);
             }
             if (layer.hasClippingMask() == 1) {
-                toast(context, "Mask is supported by vector drawable.");
+                toast(context, localizedString(context, "vector_drawable_no_support_mask"));
                 callback(0);
             }
 
@@ -96,7 +120,7 @@ function checkLayerType(context, layer, callback) {
                 for (var i = 0; i < style.enabledFills().count(); i++) {
                     var fill =  style.enabledFills().objectAtIndex(i);
                     if (fill.fillType() != 0) {
-                        toast(context, "Only solid fill is supported by vector drawable.");
+                        toast(context, localizedString(context, "vector_drawable_no_support_fill"));
                         callback(0);
                     }
                 }
@@ -105,21 +129,21 @@ function checkLayerType(context, layer, callback) {
                 for (var i = 0; i < style.enabledBorders().count(); i++) {
                     var border =  style.enabledBorders().objectAtIndex(i);
                     if (border.fillType() != 0) {
-                        toast(context, "Only solid border is supported by vector drawable.");
+                        toast(context, localizedString(context, "vector_drawable_no_support_border"));
                         callback(0);
                     }
                 }
             }
             if (style.enabledShadows().count() > 0) {
-                toast(context, "Shape layer with shadow is not supported by vector drawable.");
+                toast(context, localizedString(context, "vector_drawable_no_support_shadow"));
                 callback(0);
             }
             if (style.enabledInnerShadows().count() > 0) {
-                toast(context, "Shape layer with inner shadow is not supported by vector drawable.");
+                toast(context, localizedString(context, "vector_drawable_no_support_inner_shadow"));
                 callback(0);
             }
             if (style.blur().isEnabled()) {
-                toast(context, "Shape layer with blur is not supported by vector drawable.");
+                toast(context, localizedString(context, "vector_drawable_no_support_blur"));
                 callback(0);
             }
         }

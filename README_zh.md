@@ -2,40 +2,33 @@
 
 ![](img/android_res_export.png)
 
-**支持 Sketch 41.x**
+**支持 Sketch 43.1 , 支持中文 **
 
 用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、App 图标、点九图和 vector drawable XML 文件。
 
-## 安装步骤
+## 安装
 
 ### 安装插件
 
-> 本插件支持使用 Sketch Toolbox 安装，请搜索 “Android Res Export”。
+- 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) 并解压，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
+- 在 [Sketch Runner](http://sketchrunner.com/)、[Sketchpacks](https://sketchpacks.com/) 或 [Sketch Toolbox](http://sketchtoolbox.com/) 搜索 “Android Res Export”。
 
-1,  [下载 zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) 并解压。
-
-2, 双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
-
-### 配置
-
-插件安装完成后只支持导出普通资源和应用图标资源，需要安装以下工具才可以使用点九和 Vector Drawable 导出。
-
-#### 点九图片导出支持配置
+### 配置九宫格图片导出支持
 
 使用 [Homebrew](http://brew.sh/index_zh-cn.html) 安装 [ImageMagick](http://www.imagemagick.org/script/index.php)。打开终端，粘贴 [Homebrew](http://brew.sh/index_zh-cn.html) 主页上的代码后，按下回车。安装完毕之后，在终端输入以下命令安装 ImageMagick。
 
 ```bash
-brew install imagemagick
+$ brew install imagemagick
 ```
 
-#### Vector Drawable 导出支持配置
+### 配置可绘制矢量文件导出支持
 
 首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。如果速度太慢可以从[国内镜像下载](https://npm.taobao.org/)。
 
-安装完成后，打开终端输入以下命令安装 [SVGO](https://github.com/svg/svgo)。
+安装完成后，打开终端输入以下命令安装 [SVGO](https://github.com/svg/svgo) 和 [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable)。
 
 ```bash
-sudo npm install svgo -g
+$ npm install -g svgo svg2vectordrawable
 ```
 
 ## 如何使用
@@ -46,17 +39,19 @@ sudo npm install svgo -g
 >
 > 下载演示文件 [demo.sketch](https://raw.githubusercontent.com/Ashung/Android_Res_Export/master/demo.sketch)。
 
-### 普通资源
+#### 切换语言
 
-普通的 PNG 资源使用 "Make Exportable" 或者添加切片的方式来表示此图层将会被导出。或者选择图层，然后执行 "Plugins" - "Android Res Export" - "New" - "PNG Asset"，来创建一个可以导出的 PNG 资源，请增加辅助图层来表示切图区域。
+执行 "Plugins" - "Android Res Export" - "Help" - "Change Language"。
 
-资源命名基于 Exportable 图层名称或切片图层的名称。
+#### 普通资源
+
+普通的 PNG 资源选择图层，然后执行 "Plugins" - "Android Res Export" - "New PNG Asset"，来创建一个可以导出的 PNG 资源，请增加辅助图层来表示切图区域。
 
 ![](img/android_res_export_for_sketch_1.gif)
 
-### 点九资源
+#### 九宫格图片
 
-选择图层，然后执行 "Plugins" - "Android Res Export" - "New" - "9-Patch Asset"，来创建一个点九资源，可能需要增加图层来表示切图区域。
+选择图层，然后执行 "Plugins" - "Android Res Export" - "New Nine-Patch Asset"，来创建一个九宫格图片资源，可能需要增加图层来表示切图区域。
 
 在 “patch” 组内修改图层 “left”、“right”、“top” 和 “bottom” 的宽或高。
 
@@ -68,23 +63,21 @@ sudo npm install svgo -g
 
 ![](img/android_res_export_for_sketch_4.png)
 
-### Vector Drawable 资源
+#### 可绘制矢量文件资源
 
-选择图层，执行 "Plugins" - "Android Res Export" - "New" - "Vector drawable Asset"，来创建一个 Vector Drawable 资源。
+选择图层，执行 "Plugins" - "Android Res Export" - "New Vector Drawable Asset"，来创建一个可绘制矢量文件资源。
 
 如果形状包含复杂的布尔运算，需要选择 Vector Drawable 资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"，如果图像有问题，可以执行 "Layer" - "Paths" - "Reverse Order" 反转路径顺序。
 
-组内的白色 “#” 图层表示切图区域，最终导出的代码中不会包含此图层。
-
 ![](img/android_res_export_for_sketch_3.gif)
 
-### App 图标资源
+#### App 图标资源
 
 App 图标必须在 192x192px 的画板内。App 图标则命名在画板上。
 
-### 导出资源
+#### 导出资源
 
-执行 "Plugins" - "Android Res Export" - "Export" 下的相应菜单导出资源。
+执行 "Plugins" - "Android Res Export" - "Export ... " 下的相应菜单导出资源。
 
 导出普通资源和点九资源时，在执行之前，如果文档有选中的图层，则只会导出选中的内容，否则将导出当前页面中的所有资源。导出 App 图标 和 Vector drawable 则必须要求选中需要导出的画板或图层。
 

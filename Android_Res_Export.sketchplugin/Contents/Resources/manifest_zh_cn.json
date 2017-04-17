@@ -1,6 +1,6 @@
 {
     "name": "Android Res Export",
-    "description": "Export Android resources, like pngs, nine-patch, app icon and vector drawable.",
+    "description": "导出 Android 资源, 包括 PNG 位图文件, 九宫格文件, 图标和可绘制矢量文件。",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
@@ -12,84 +12,84 @@
     "bundleVersion": "1",
     "commands": [
         {
-            "name": "New PNG Asset",
+            "name": "新建 PNG 位图资源",
             "identifier": "new_png_asset",
             "script": "new/new_png_asset.cocoascript"
         },
         {
-            "name": "New Nine-Patch Asset",
+            "name": "新建九宫格文件资源",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
         {
-            "name": "New Vector Drawable Asset",
+            "name": "新建可绘制矢量资源",
             "identifier": "new_vector_drawable_asset",
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "New App Icon",
+            "name": "新建应用图标",
             "identifier": "new_app_icon",
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "Add System Icon Grid Line",
+            "name": "添加系统图标网站",
             "identifier": "new_system_icon",
             "script": "new/new_system_icon.cocoascript"
         },
         {
-            "name": "Export PNG Assets",
+            "name": "导出资源",
             "identifier": "export_assets",
             "script": "export/export_assets.cocoascript"
         },
         {
-            "name": "Export Vector Drawables",
+            "name": "导出可绘制矢量",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "Export Nine-Patch Assets",
+            "name": "导出九宫格文件",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
         {
-            "name": "Export App Icon",
+            "name": "导出应用图标",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
         {
-            "name": "Asset Name Validator",
+            "name": "资源命名校验",
             "identifier": "asset_name_validator",
             "script": "utilities/asset_name_validator.cocoascript"
         },
         {
-            "name": "Fixes Slice Names",
+            "name": "修复切片命名",
             "identifier": "fixes_slice_name",
             "script": "utilities/fixes_slice_name.cocoascript"
         },
         {
-            "name": "Web Site",
+            "name": "网站",
             "identifier": "web_site",
             "handler": "website",
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Report Issues",
+            "name": "问题反馈",
             "identifier": "report_issues",
             "handler": "reportIssues",
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Change Language",
+            "name": "更改菜单语言",
             "identifier": "change_language",
             "script": "utilities/change_language.cocoascript"
         },
         {
-            "name": "Check for Update",
+            "name": "检测更新",
             "identifier": "update",
             "script": "utilities/update.cocoascript"
         },
         {
-            "name": "Donate",
+            "name": "捐款",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
@@ -110,7 +110,7 @@
             "export_app_icon",
             "-",
             {
-                "title": "Utilities",
+                "title": "实用工具",
                 "items": [
                     "new_system_icon",
                     "asset_name_validator",
@@ -119,7 +119,7 @@
             },
             "-",
             {
-                "title": "Help",
+                "title": "帮助",
                 "items": [
                     "web_site",
                     "report_issues",

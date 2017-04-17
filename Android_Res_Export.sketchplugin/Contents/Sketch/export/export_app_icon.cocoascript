@@ -1,100 +1,90 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
-    if (!getFilePath(context)) {
-        return;
-    }
-
     var doc = context.document;
-    var page = doc.currentPage();
     var selection = context.selection;
 
-    if (selection.count() == 0) {
-        toast(context, "Selected the app icon artboard.");
-        return;
-    }
+    if (selection.count() > 0) {
 
-    var icon = selection.objectAtIndex(0);
-    if (icon.className() == "MSArtboardGroup" && icon.frame().width() == 192 && icon.frame().height() == 192) {
+        var exportAppIcons = NSMutableArray.alloc().init();
 
-        // Ready to export
-        var currentFile = getFilePath(context);
-        var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
-        var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
-        var doneExportAppIcon = false;
-
-        // Android icon size
-        // mdpi: 48
-        // hdpi: 72
-        // xhdpi: 96
-        // xxhdpi: 144
-        // xxxhdpi: 192
-        // ic_launcher-web: 512
-        exportConfig = [
-            { scale : 0.25,   qualifier : "mdpi" },
-            { scale : 0.375,  qualifier : "hdpi" },
-            { scale : 0.5,    qualifier : "xhdpi" },
-            { scale : 0.75,   qualifier : "xxhdpi" },
-            { scale : 1,      qualifier : "xxxhdpi" },
-            { scale : 2.667 }
-        ];
-        var scales = [];
-        for (index in exportConfig) {
-            scales.push(exportConfig[index].scale);
+        var loopSelection = selection.objectEnumerator();
+        var layer;
+        while (layer = loopSelection.nextObject()) {
+            if (
+                (layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") &&
+                layer.frame().width() == 192 &&
+                layer.frame().height() == 192
+            ) {
+                exportAppIcons.addObject(layer);
+            }
         }
 
-        // Save
-        doc.saveDocument(nil);
+        if (exportAppIcons.count() > 0) {
 
-        // Export
-        var iconName = androidResName(icon.name()) + ".png";
-        var iconId = icon.objectID();
-        var formats = "png";
-        var useIdForName = "yes";
-        sketchtoolExport(
-            "layers",
-            currentFile,
-            scales,
-            formats,
-            [iconId],
-            useIdForName,
-            tempFolder,
-            function(success, message) {
-                if (success == true) {
-                    doneExportAppIcon = true;
+            var exportFolder = chooseFolder();
+            if (exportFolder) {
+
+                var loopExportAppIcons = exportAppIcons.objectEnumerator();
+                var artboard;
+                while (artboard = exportAppIcons.nextObject()) {
+
+                    // Add slice
+                    var slice = addSliceInToGroup(layerGroup, androidResName(artboard.name()));
+                    slice.exportOptions().removeAllExportFormats();
+
+                    // Android icon size
+                    // mdpi: 48
+                    // hdpi: 72
+                    // xhdpi: 96
+                    // xxhdpi: 144
+                    // xxxhdpi: 192
+                    // ic_launcher-web: 512
+                    var exportConfig = [
+                        { scale : 0.25,   name : "res/mipmap-mdpi/" },
+                        { scale : 0.375,  name : "res/mipmap-hdpi/" },
+                        { scale : 0.5,    name : "res/mipmap-xhdpi/" },
+                        { scale : 0.75,   name : "res/mipmap-xxhdpi/" },
+                        { scale : 1,      name : "res/mipmap-xxxhdpi/" },
+                        { scale : 2.667   name : "res/"}
+                    ];
+                    for (var i = 0; i < exportConfig.length; i++) {
+                        var exportOption = slice.exportOptions().addExportFormat();
+                        exportOption.setFileFormat("png");
+                        exportOption.setScale(exportConfig[i]["scale"]);
+                        exportOption.setNamingScheme(1);
+                        exportOption.setName(exportConfig[i]["name"]);
+                    }
+
+                    // Export
+                    var exportRequests = MSExportRequest.exportRequestsFromExportableLayer(slice);
+                    var loopExportRequests = exportRequests.objectEnumerator();
+                    var exportRequest;
+                    while (exportRequest = loopExportRequests.nextObject()) {
+                        doc.saveArtboardOrSlice_toFile(exportRequest, exportFolder + "/" + exportRequest.name() + ".png");
+                    }
+
+                    slice.removeFromParent();
+
                 }
-            }
-        );
 
-        // Rename
-        if (doneExportAppIcon) {
-            for (var i = 0; i < exportConfig.length; i++) {
-                var scale = exportConfig[i].scale;
-                var qualifier = exportConfig[i].qualifier;
-                var tempFile = tempFolder + "/" + iconId + scaleToSuffix(scale) + ".png";
-                if (qualifier) {
-                    // Apk launch icon
-                    var folder = exportFolder + "/mipmap-" + qualifier;
-                    mkdir(folder);
-                    mv(tempFile, exportFolder + "/mipmap-" + qualifier + "/" + iconName);
-                } else {
-                    // 512px Google Play icon
-                    mkdir(exportFolder);
-                    mv(tempFile, getFilePath(context).stringByDeletingPathExtension() + "/ic_launcher-web.png");
-                }
+                openInFinder(exportFolder);
             }
 
-            rm(tempFolder);
-
-            toast(context, "Export App icons to \"" + exportFolder + "\". Done!");
+        } else {
+            toast(context, localizedString(context, "app_icon_artboard_tips"));
         }
 
     } else {
-        toast(context, "Your icon must in an artboard, and the size must be 192x192px.");
+        toast(context, localizedString(context, "select_app_icon_artboard"));
     }
+
 }

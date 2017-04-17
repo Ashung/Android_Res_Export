@@ -1,0 +1,52 @@
+//
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var selection = context.selection;
+
+    var assetNames = NSMutableArray.alloc().init();
+    var reports = NSMutableArray.alloc().init();
+
+    var reportFilePath = NSTemporaryDirectory().stringByAppendingPathComponent("Android_Res_Export_Asset_Name_Validator.txt");
+
+    var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
+    var layer;
+    while (layer = loopAllExportableLayers.nextObject()) {
+
+        if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch") {
+            addAsset(layer);
+        }
+
+        if (layer.class() == "MSSliceLayer" && (layer.name() == "#9patch" || layer.name() == "#vector")) {
+            var group = layer.parentGroup().parentGroup();
+            addAsset(group);
+        }
+
+    }
+
+    if (reports.count() > 0) {
+        writeContentToFile(reportFilePath, reports.componentsJoinedByString("\n"));
+        NSWorkspace.sharedWorkspace().openFile_withApplication_(reportFilePath, "TextEdit");
+    } else {
+        toast(context, localizedString(context, "no_duplicate_and_invaild_asset_name"));
+    }
+
+    function addAsset(layer) {
+        if (assetNames.containsObject(androidResName(layer.name()))) {
+            reports.addObject(localizedString(context, "report_layer_name_duplicate", layer.name()));
+        }
+        if (!layer.name().isEqualToString(androidResName(layer.name()))) {
+            reports.addObject(localizedString(context, "report_layer_rename", layer.name(), androidResName(layer.name())));
+        }
+        assetNames.addObject(androidResName(layer.name()));
+    }
+
+}
