@@ -1,6 +1,9 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 var onRun = function(context) {
 

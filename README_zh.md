@@ -1,21 +1,29 @@
 # Android Res Export
 
-![](img/android_res_export.png)
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
 **支持 Sketch 43.1 , 支持中文 **
 
-用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、App 图标、点九图和 vector drawable XML 文件。
+用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、九宫格（Nine-patch）图片和可绘制矢量（Vector Drawable）文件。
 
 ## 安装
 
 ### 安装插件
 
-- 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) 并解压，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
-- 在 [Sketch Runner](http://sketchrunner.com/)、[Sketchpacks](https://sketchpacks.com/) 或 [Sketch Toolbox](http://sketchtoolbox.com/) 搜索 “Android Res Export”。
+- 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) ，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
+- （推荐安装方法）在 [Sketch Runner](http://sketchrunner.com/)、[Sketchpacks](https://sketchpacks.com/) 或 [Sketch Toolbox](http://sketchtoolbox.com/) 搜索 “Android Res Export”。
 
 ### 配置九宫格图片导出支持
 
-使用 [Homebrew](http://brew.sh/index_zh-cn.html) 安装 [ImageMagick](http://www.imagemagick.org/script/index.php)。打开终端，粘贴 [Homebrew](http://brew.sh/index_zh-cn.html) 主页上的代码后，按下回车。安装完毕之后，在终端输入以下命令安装 ImageMagick。
+首先在终端输入以下命令安装 Xcode 命令行工具。
+
+```bash
+$ xcode-select --install
+```
+
+按照 [Homebrew](http://brew.sh/index_zh-cn.html) 主页上的安装方法安装 Homebrew。
+
+通过 Homebrew 来安装 [ImageMagick](http://www.imagemagick.org/script/index.php)，在终端输入以下命令。
 
 ```bash
 $ brew install imagemagick
@@ -33,11 +41,7 @@ $ npm install -g svgo svg2vectordrawable
 
 ## 如何使用
 
-> **注意**
->
-> 设计稿必须是 MDPI (1x) 尺寸, 目前不支持以后也不会支持其他尺寸的设计稿。
->
-> 下载演示文件 [demo.sketch](https://raw.githubusercontent.com/Ashung/Android_Res_Export/master/demo.sketch)。
+设计稿必须是 MDPI (1x) 尺寸。下载演示文件 [demo.sketch](https://github.com/Ashung/Android_Res_Export/blob/develop/demo.sketch)。
 
 #### 切换语言
 
@@ -45,45 +49,47 @@ $ npm install -g svgo svg2vectordrawable
 
 #### 普通资源
 
-普通的 PNG 资源选择图层，然后执行 "Plugins" - "Android Res Export" - "New PNG Asset"，来创建一个可以导出的 PNG 资源，请增加辅助图层来表示切图区域。
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_1.gif?raw=true)
 
-![](img/android_res_export_for_sketch_1.gif)
+选择图层或图层组，然后执行 "Plugins" - "Android Res Export" - "New PNG Asset （新建 PNG 位图资源）"，来创建一个可以导出的 PNG 资源。
 
 #### 九宫格图片
 
-选择图层，然后执行 "Plugins" - "Android Res Export" - "New Nine-Patch Asset"，来创建一个九宫格图片资源，可能需要增加图层来表示切图区域。
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_2.gif?raw=true)
 
-在 “patch” 组内修改图层 “left”、“right”、“top” 和 “bottom” 的宽或高。
+选择图层，然后执行 "Plugins" - "Android Res Export" - "New Nine-Patch Asset （新建九宫格文件资源）"，来创建一个九宫格图片资源。
 
-资源命名基于 “path” 和 “content” 图层组的上一级图层组名称。“path” 组下的图层可以任意命名，“content” 组下的切片图层必须命名为 “#9patch”。复制组时请重新修改被重命名的切片图层。
+在 “patch” 组内修改图层 “left”、“right”、“top” 和 “bottom” 的宽或高，这个组内可以增加更多图层，建议使用 1 像素的矩形，填充必须是 #000000 或 #FF0000。
 
-![](img/android_res_export_for_sketch_2.gif)
-
-插件支持以下较复杂的点九，请放心使用。
-
-![](img/android_res_export_for_sketch_4.png)
+“content” 图层组下的切片图层必须名为 “#9patch”，复制组时请注意此图层名称。
 
 #### 可绘制矢量文件资源
 
-选择图层，执行 "Plugins" - "Android Res Export" - "New Vector Drawable Asset"，来创建一个可绘制矢量文件资源。
+![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_3.gif?raw=true)
 
-如果形状包含复杂的布尔运算，需要选择 Vector Drawable 资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"，如果图像有问题，可以执行 "Layer" - "Paths" - "Reverse Order" 反转路径顺序。
+选择图层，执行 "Plugins" - "Android Res Export" - "New Vector Drawable Asset（新建可绘制矢量资源）"，来创建一个可绘制矢量文件资源。
 
-![](img/android_res_export_for_sketch_3.gif)
+选择可绘制矢量资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"，如果图像有问题，可以执行 "Layer" - "Paths" - "Reverse Order" 反转路径顺序。
 
-#### App 图标资源
+#### 应用图标资源
 
-App 图标必须在 192x192px 的画板内。App 图标则命名在画板上。
+执行 "Plugins" - "Android Res Export" - "New App Icon（新建应用图标）"，来创建一个可绘制矢量文件资源。
 
 #### 导出资源
 
-执行 "Plugins" - "Android Res Export" - "Export ... " 下的相应菜单导出资源。
+执行 "Plugins" - "Android Res Export" - "Export ...（导出...） " 分组下的相应菜单导出资源。
 
-导出普通资源和点九资源时，在执行之前，如果文档有选中的图层，则只会导出选中的内容，否则将导出当前页面中的所有资源。导出 App 图标 和 Vector drawable 则必须要求选中需要导出的画板或图层。
+在执行之前，如果文档有选中的图层，则只会导出选中的内容，否则将导出当前页面中的所有资源。导出应用图标则必须要求选中需要导出的画板。
 
-部分不合法的字符会被替换为下滑线。被修改和重复的资源命名，在导出时会保存到资源目录下的 "report.txt" 文件内，资源目录位于当前文档的同级目录下。
+部分不合法的字符会被替换为下滑线，执行 "Plugins" - "Android Res Export" - "Asset Name Validator（资源命名校验） " 来查看被改名的资源。
 
-需要导出到特殊后缀的文件夹。可以将文件夹的前缀写在分页的命名上，以 "@" 开头，多个文件夹使用 "," 分隔。
+#### 修复切片命名
+
+“#9patch” 和 “#vector" 等同名的切片会因复制而增加 “copy ...” 的字样，执行 "Plugins" - "Android Res Export" - "Fixes Slice Names（修复切片命名） " 来删除多余的 “copy ...” 。
+
+#### 导出资源到特殊后缀文件夹
+
+可以将文件夹的前缀写在分页的命名上，以 "@" 开头，多个文件夹使用 "," 分隔。
 
 ```
 @land-xxhdpi, land-xhdpi
@@ -94,14 +100,8 @@ App 图标必须在 192x192px 的画板内。App 图标则命名在画板上。
 
 ## 声明
 
-CC-BY-SA 4.0
-
-[![cc-by-sa-4.0](https://i.creativecommons.org/l/by-sa/4.0/80x15.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)
 
 ## 捐助
 
-使用微信或支付宝捐助作者。
-
-![](http://ashung.github.io/Automate-Sketch/css/donate_wechat_rmb_10.png)
-
-![](http://ashung.github.io/Automate-Sketch/css/donate_alipay_rmb_10.png)
+使用 [微信](http://ashung.github.io/donate.html) 或 [支付宝](http://ashung.github.io/donate.html) 捐助作者。
