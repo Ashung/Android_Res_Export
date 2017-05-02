@@ -10,6 +10,7 @@ export_nine_patch: 导出九宫格文件
 export_app_icon: 导出应用图标
 asset_name_validator: 资源命名校验
 fixes_slice_name: 修复切片命名
+preferences: 参数设置
 utilities: 实用工具
 help: 帮助
 web_site: 网站
@@ -74,3 +75,6 @@ install_svg_and_s2v_message: |-
     在安装完 Node.js 之后, 在终端运行以下命令。
     $ npm install -g svgo svg2vectordrawable
 no_vector_drawable_asset: 无任何可绘制矢量资源。
+
+show_in_finder_after_export: 导出资源后在 Finder 中显示。
+use_imageoptim_after_export: 导出资源后使用 ImageOptim 压缩图片。

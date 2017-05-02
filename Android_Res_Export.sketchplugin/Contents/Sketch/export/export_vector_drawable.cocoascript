@@ -87,7 +87,9 @@ var onRun = function(context) {
 
             }
 
-            openInFinder(exportFolder);
+            if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                openInFinder(exportFolder);
+            }
 
         }
 

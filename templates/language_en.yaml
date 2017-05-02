@@ -10,6 +10,7 @@ export_nine_patch: Export Nine-Patch Assets
 export_app_icon: Export App Icon
 asset_name_validator: Asset Name Validator
 fixes_slice_name: Fixes Slice Names
+preferences: Preferences
 utilities: Utilities
 help: Help
 web_site: Web Site
@@ -74,3 +75,6 @@ install_svg_and_s2v_message: |-
     After you installed Node.js, run follow command in the Terminal.
     $ npm install -g svgo svg2vectordrawable
 no_vector_drawable_asset: No any vector drawable asset.
+
+show_in_finder_after_export: Show in Finder After Export.
+use_imageoptim_after_export: Optimize Images use ImageOptim After Export.

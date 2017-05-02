@@ -1,0 +1,53 @@
+//
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
+// Author: Ashung Hung
+// Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
+
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    // Dialog
+    var dialog = COSAlertWindow.new();
+    dialog.setMessageText(context.plugin.name());
+    dialog.setInformativeText(context.plugin.pluginDescription());
+
+    // Icon
+    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+    dialog.setIcon(iconNSImage);
+
+    var checkboxFinder = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 20));
+    checkboxFinder.setButtonType(NSSwitchButton);
+    checkboxFinder.setTitle(localizedString(context, "show_in_finder_after_export"));
+    checkboxFinder.setState(getPreferences(context, "show_in_finder_after_export") == 1 ? NSOnState : NSOffState);
+    dialog.addAccessoryView(checkboxFinder);
+
+    var checkboxImageOptim = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 20));
+    checkboxImageOptim.setButtonType(NSSwitchButton);
+    checkboxImageOptim.setTitle(localizedString(context, "use_imageoptim_after_export"));
+    checkboxImageOptim.setState(getPreferences(context, "use_imageoptim_after_export") == 1 ? NSOnState : NSOffState);
+    dialog.addAccessoryView(checkboxImageOptim);
+
+    dialog.addButtonWithTitle("OK");
+    dialog.addButtonWithTitle("Cancel");
+
+    var responseCode = dialog.runModal();
+    if (responseCode == 1000) {
+
+        if (checkboxFinder.state() == 1) {
+            setPreferences(context, "show_in_finder_after_export", true);
+        } else {
+            setPreferences(context, "show_in_finder_after_export", false);
+        }
+
+        if (checkboxImageOptim.state() == 1) {
+            setPreferences(context, "use_imageoptim_after_export", true);
+        } else {
+            setPreferences(context, "use_imageoptim_after_export", false);
+        }
+
+    }
+}
