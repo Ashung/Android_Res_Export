@@ -245,7 +245,7 @@ function getJSONFromPath(path) {
 }
 
 function localizedString(context, langKey) {
-    var currentLanguageSetting = NSUserDefaults.standardUserDefaults().stringForKey("ARE_PREFERENCES_LANGUAGE") || "en";
+    var currentLanguageSetting = getPreferences(context, "language");
     var languageFilePath = context.plugin.urlForResourceNamed("language_" + currentLanguageSetting + ".json").path();
     var langString = getJSONFromPath(languageFilePath)[langKey];
     for (var i = 2; i < arguments.length; i++) {
@@ -267,6 +267,33 @@ function chooseFolder() {
 
 function openInFinder(path) {
     NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(path, nil);
+}
+
+function getPreferences(context, key) {
+    var identifier = context.plugin.identifier();
+    var userDefaults = NSUserDefaults.standardUserDefaults();
+    if (!userDefaults.dictionaryForKey(identifier)) {
+        var defaultPreferences = NSMutableDictionary.alloc().init();
+        defaultPreferences.setObject_forKey("en", "language");
+        defaultPreferences.setObject_forKey(true, "show_in_finder_after_export");
+        defaultPreferences.setObject_forKey(false, "use_imageoptim_after_export");
+        userDefaults.setObject_forKey(defaultPreferences, identifier);
+        userDefaults.synchronize();
+    }
+    return userDefaults.dictionaryForKey(identifier).objectForKey(key);
+}
+
+function setPreferences(context, key, value) {
+    var identifier = context.plugin.identifier();
+    var userDefaults = NSUserDefaults.standardUserDefaults();
+    if (!userDefaults.dictionaryForKey(identifier)) {
+        var preferences = NSMutableDictionary.alloc().init();
+    } else {
+        var preferences = NSMutableDictionary.dictionaryWithDictionary(userDefaults.dictionaryForKey(identifier));
+    }
+    preferences.setObject_forKey(value, key);
+    userDefaults.setObject_forKey(preferences, identifier);
+    userDefaults.synchronize();
 }
 
 /* =========================================================
@@ -313,4 +340,8 @@ function runCommand(command, args, callback) {
             NSString.alloc().initWithData_encoding_(data, NSUTF8StringEncoding)
         );
     }
+}
+
+function imageOptim(image) {
+    runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
 }

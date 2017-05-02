@@ -12,10 +12,10 @@ Export Android resources in Sketch – PNG assets, app icon, nine-patch image an
 
 ### Install plugin
 
-- Download [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) and unzip, then double-click "Android_Res_Export.sketchplugin" to install.
 - Search "Android Res Export" from [Sketch Runner](http://sketchrunner.com/), [Sketchpacks](https://sketchpacks.com/) or [Sketch Toolbox](http://sketchtoolbox.com/).
+- Download [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) and unzip, then double-click "Android_Res_Export.sketchplugin" to install.
 
-### Nine-patch support configure 
+### Nine-patch support configure
 
 Install [Homebrew](http://brew.sh/), after hombrew installed, use this command to install ImageMagick.
 

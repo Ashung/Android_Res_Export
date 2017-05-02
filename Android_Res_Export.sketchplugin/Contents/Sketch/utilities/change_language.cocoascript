@@ -53,9 +53,7 @@ var onRun = function(context) {
             );
 
             // User Default
-            var userDefaults = NSUserDefaults.standardUserDefaults();
-            userDefaults.setObject_forKey(supportLanguagesKeys[languageIndex], "ARE_PREFERENCES_LANGUAGE");
-            userDefaults.synchronize();
+            setPreferences(context, "language", supportLanguagesKeys[languageIndex]);
 
             // Reload Plugin
             AppController.sharedInstance().pluginManager().reloadPlugins();

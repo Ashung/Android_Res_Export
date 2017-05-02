@@ -69,14 +69,24 @@ var onRun = function(context) {
                     var loopExportRequests = exportRequests.objectEnumerator();
                     var exportRequest;
                     while (exportRequest = loopExportRequests.nextObject()) {
-                        doc.saveArtboardOrSlice_toFile(exportRequest, exportFolder + "/" + exportRequest.name() + ".png");
+
+                        var output = exportFolder + "/" + exportRequest.name() + ".png";
+                        doc.saveArtboardOrSlice_toFile(exportRequest, output);
+
+                        if (getPreferences(context, "use_imageoptim_after_export") == 1) {
+                            imageOptim(output);
+                        }
+
                     }
 
                     slice.removeFromParent();
 
                 }
 
-                openInFinder(exportFolder);
+                if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                    openInFinder(exportFolder);
+                }
+
             }
 
         } else {

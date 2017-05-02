@@ -2,7 +2,7 @@
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
-**支持 Sketch 43.1 , 支持中文 **
+**支持 Sketch 43.1 , 支持中文**
 
 用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、九宫格（Nine-patch）图片和可绘制矢量（Vector Drawable）文件。
 
@@ -10,8 +10,8 @@
 
 ### 安装插件
 
-- 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) ，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
 - （推荐安装方法）在 [Sketch Runner](http://sketchrunner.com/)、[Sketchpacks](https://sketchpacks.com/) 或 [Sketch Toolbox](http://sketchtoolbox.com/) 搜索 “Android Res Export”。
+- 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) ，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
 
 ### 配置九宫格图片导出支持
 
@@ -81,11 +81,15 @@ $ npm install -g svgo svg2vectordrawable
 
 在执行之前，如果文档有选中的图层，则只会导出选中的内容，否则将导出当前页面中的所有资源。导出应用图标则必须要求选中需要导出的画板。
 
-部分不合法的字符会被替换为下滑线，执行 "Plugins" - "Android Res Export" - "Asset Name Validator（资源命名校验） " 来查看被改名的资源。
+部分不合法的字符会被替换为下滑线，执行 "Plugins" - "Android Res Export" - "Asset Name Validator（资源命名校验）" 来查看被改名的资源。
 
 #### 修复切片命名
 
 “#9patch” 和 “#vector" 等同名的切片会因复制而增加 “copy ...” 的字样，执行 "Plugins" - "Android Res Export" - "Fixes Slice Names（修复切片命名） " 来删除多余的 “copy ...” 。
+
+#### 使用 ImageOptim 压缩资源
+
+先安装 [ImageOptim](https://imageoptim.com/mac)，然后在 "Plugins" - "Android Res Export" - "Preferences（参数设置）" 中，勾选 "Optimize Images use ImageOptim After Export.（导出资源后使用 ImageOptim 压缩图片。）"。
 
 #### 导出资源到特殊后缀文件夹
 

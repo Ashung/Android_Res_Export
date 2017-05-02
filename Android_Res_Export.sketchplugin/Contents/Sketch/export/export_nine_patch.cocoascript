@@ -144,15 +144,17 @@ var onRun = function(context) {
                         ninePatchPatchID,
                         function(success, message) {
                             if (success == true) {
+                                var output = exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png";
                                 mkdir(exportFolder + "/res/drawable-" + qualifier);
                                 rm(exportFolder + "/" + ninePatchContentID + ".png");
-                                mv(
-                                    exportFolder + "/" + ninePatchContentID + "_temp.png",
-                                    exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png"
-                                );
+                                mv(exportFolder + "/" + ninePatchContentID + "_temp.png", output);
+                                if (getPreferences(context, "use_imageoptim_after_export") == 1) {
+                                    imageOptim(output);
+                                }
                             }
                         }
                     );
+
                 }
                 tempSlice.removeFromParent();
 
@@ -164,7 +166,9 @@ var onRun = function(context) {
 
             }
 
-            openInFinder(exportFolder);
+            if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                openInFinder(exportFolder);
+            }
 
         }
 

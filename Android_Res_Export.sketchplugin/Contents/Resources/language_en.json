@@ -11,6 +11,7 @@
     "export_app_icon": "Export App Icon",
     "asset_name_validator": "Asset Name Validator",
     "fixes_slice_name": "Fixes Slice Names",
+    "preferences": "Preferences",
     "utilities": "Utilities",
     "help": "Help",
     "web_site": "Web Site",
@@ -55,5 +56,7 @@
     "no_nine_patch_asset": "No any nine-patch asset.",
     "install_svg_and_s2v_title": "You have not install SVGO and svg2vectordrawable.",
     "install_svg_and_s2v_message": "Export Android vector drawable feature depend on Node.js, SVGO and svg2vectordrawable.\nAfter you installed Node.js, run follow command in the Terminal.\n$ npm install -g svgo svg2vectordrawable",
-    "no_vector_drawable_asset": "No any vector drawable asset."
+    "no_vector_drawable_asset": "No any vector drawable asset.",
+    "show_in_finder_after_export": "Show in Finder After Export.",
+    "use_imageoptim_after_export": "Optimize Images use ImageOptim After Export."
 }
