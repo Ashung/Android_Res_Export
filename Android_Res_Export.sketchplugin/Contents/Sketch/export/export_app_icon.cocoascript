@@ -35,11 +35,7 @@ var onRun = function(context) {
 
                 var loopExportAppIcons = exportAppIcons.objectEnumerator();
                 var artboard;
-                while (artboard = exportAppIcons.nextObject()) {
-
-                    // Add slice
-                    var slice = addSliceInToGroup(layerGroup, androidResName(artboard.name()));
-                    slice.exportOptions().removeAllExportFormats();
+                while (artboard = loopExportAppIcons.nextObject()) {
 
                     // Android icon size
                     // mdpi: 48
@@ -49,28 +45,23 @@ var onRun = function(context) {
                     // xxxhdpi: 192
                     // ic_launcher-web: 512
                     var exportConfig = [
-                        { scale : 0.25,   name : "res/mipmap-mdpi/" },
-                        { scale : 0.375,  name : "res/mipmap-hdpi/" },
-                        { scale : 0.5,    name : "res/mipmap-xhdpi/" },
-                        { scale : 0.75,   name : "res/mipmap-xxhdpi/" },
-                        { scale : 1,      name : "res/mipmap-xxxhdpi/" },
-                        { scale : 2.667   name : "res/"}
+                        { scale : 0.25,   name : "res/mipmap-mdpi/",     suffix : "" },
+                        { scale : 0.375,  name : "res/mipmap-hdpi/",     suffix : "" },
+                        { scale : 0.5,    name : "res/mipmap-xhdpi/",    suffix : "" },
+                        { scale : 0.75,   name : "res/mipmap-xxhdpi/",   suffix : "" },
+                        { scale : 1,      name : "res/mipmap-xxxhdpi/",  suffix : "" },
+                        { scale : 2.667,  name : "res/",                 suffix : "-web" }
                     ];
+
                     for (var i = 0; i < exportConfig.length; i++) {
-                        var exportOption = slice.exportOptions().addExportFormat();
-                        exportOption.setFileFormat("png");
-                        exportOption.setScale(exportConfig[i]["scale"]);
-                        exportOption.setNamingScheme(1);
-                        exportOption.setName(exportConfig[i]["name"]);
-                    }
 
-                    // Export
-                    var exportRequests = MSExportRequest.exportRequestsFromExportableLayer(slice);
-                    var loopExportRequests = exportRequests.objectEnumerator();
-                    var exportRequest;
-                    while (exportRequest = loopExportRequests.nextObject()) {
+                        var exportFormat = MSExportFormat.alloc().init();
+                        exportFormat.setFileFormat("png");
+                        exportFormat.setScale(exportConfig[i]["scale"]);
 
-                        var output = exportFolder + "/" + exportRequest.name() + ".png";
+                        var exportRequest = MSExportRequest.exportRequestFromExportFormat_layer_inRect_useIDForName_(exportFormat, artboard, artboard.frame().rect(), false);
+
+                        var output = exportFolder + "/" + exportConfig[i]["name"] + artboard.name() + exportConfig[i]["suffix"] + ".png";
                         doc.saveArtboardOrSlice_toFile(exportRequest, output);
 
                         if (getPreferences(context, "use_imageoptim_after_export") == 1) {
@@ -78,8 +69,6 @@ var onRun = function(context) {
                         }
 
                     }
-
-                    slice.removeFromParent();
 
                 }
 
