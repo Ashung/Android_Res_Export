@@ -345,3 +345,47 @@ function runCommand(command, args, callback) {
 function imageOptim(image) {
     runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
 }
+
+/* =========================================================
+    Google Analytics
+========================================================= */
+
+function ga(trackingID, appName, appId, appVersion, eventCategory, eventAction) {
+
+    var uuidKey = 'google.analytics.uuid';
+    var uuid = NSUserDefaults.standardUserDefaults().objectForKey(uuidKey);
+    if (!uuid) {
+        uuid = NSUUID.UUID().UUIDString();
+        NSUserDefaults.standardUserDefaults().setObject_forKey(uuid, uuidKey);
+    }
+
+    var url = "https://www.google-analytics.com/collect?";
+    url += "v=1" + "&";
+    // Tracking ID
+    url += "tid=" + trackingID + "&";
+    // Source
+    url += "ds=sketch" + MSApplicationMetadata.metadata().appVersion + "&";
+    // Client ID
+    url += "cid=" + uuid + "&";
+    // User GEO location
+    url += "geoid=" + NSLocale.currentLocale().countryCode() + "&";
+    // User language
+    url += "ul=" + NSLocale.currentLocale().localeIdentifier().toLowerCase() + "&";
+    // pageview, screenview, event, transaction, item, social, exception, timing
+    url += "t=event" + "&";
+    // App Name
+    url += "an=" + appName + "&";
+    // App ID
+    url += "aid=" + appId + "&";
+    // App Version
+    url += "av=" + appVersion + "&";
+    // Event category
+    url += "ec=" + eventCategory + "&";
+    // Event action
+    url += "ea=" + eventAction;
+
+    var session = NSURLSession.sharedSession();
+    var task = session.dataTaskWithURL(NSURL.URLWithString(NSString.stringWithString(url)));
+    task.resume();
+
+}
