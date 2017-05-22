@@ -59,6 +59,6 @@ var onRun = function(context) {
         addSliceInToGroup(layerGroup, name);
     }
 
-    ga("New", "new_png_asset", "New");
+    ga(context, "New", "new_png_asset", "New");
 
 }

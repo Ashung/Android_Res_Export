@@ -49,6 +49,6 @@ var onRun = function(context) {
         assetNames.addObject(androidResName(layer.name()));
     }
 
-    ga("Utilities", "asset_name_validator");
+    ga(context, "Utilities", "asset_name_validator");
 
 }

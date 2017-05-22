@@ -58,7 +58,7 @@ var onRun = function(context) {
             // Reload Plugin
             AppController.sharedInstance().pluginManager().reloadPlugins();
 
-            ga("Setting", "language", "Setting", supportLanguagesKeys[languageIndex]);
+            ga(context, "Setting", "language", "Setting", supportLanguagesKeys[languageIndex]);
 
         } else {
 

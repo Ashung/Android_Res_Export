@@ -19,6 +19,6 @@ var onRun = function(context) {
         }
     }
 
-    ga("Utilities", "fixes_slice_name");
+    ga(context, "Utilities", "fixes_slice_name");
 
 }
