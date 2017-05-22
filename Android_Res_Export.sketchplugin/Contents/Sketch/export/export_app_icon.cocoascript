@@ -86,6 +86,6 @@ var onRun = function(context) {
         toast(context, localizedString(context, "select_app_icon_artboard"));
     }
 
-    ga("Export", "export_app_icon", "Export");
+    ga(context, "Export", "export_app_icon", "Export");
 
 }

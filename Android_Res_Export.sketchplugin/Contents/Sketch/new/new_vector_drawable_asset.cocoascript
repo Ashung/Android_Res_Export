@@ -69,7 +69,7 @@ var onRun = function(context) {
 
     }
 
-    ga("New", "new_vector_drawable", "New");
+    ga(context, "New", "new_vector_drawable", "New");
 
 }
 

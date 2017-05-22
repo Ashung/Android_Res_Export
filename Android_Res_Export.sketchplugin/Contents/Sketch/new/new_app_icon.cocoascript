@@ -30,6 +30,6 @@ var onRun = function (context) {
     // cmd + 2
     NSApp.sendAction_to_from("zoomToSelection:", nil, doc);
 
-    ga("New", "new_app_icon", "New");
+    ga(context, "New", "new_app_icon", "New");
 
 }

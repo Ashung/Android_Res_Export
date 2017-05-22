@@ -97,7 +97,7 @@ var onRun = function(context) {
         toast(context, localizedString(context, "no_vector_drawable_asset"));
     }
 
-    ga("Export", "export_vector_drawable", "Export");
+    ga(context, "Export", "export_vector_drawable", "Export");
 
 }
 

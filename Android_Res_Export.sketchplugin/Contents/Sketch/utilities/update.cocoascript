@@ -45,5 +45,5 @@ var onRun = function (context) {
 
     }
 
-    ga("Web", "update");
+    ga(context, "Web", "update");
 }

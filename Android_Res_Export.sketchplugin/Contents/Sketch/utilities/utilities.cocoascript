@@ -7,15 +7,15 @@
 
 var website = function(context) {
     NSWorkspace.sharedWorkspace().openURL(context.plugin.homepageURL());
-    ga("Web", "website");
+    ga(context, "Web", "website");
 }
 
 var reportIssues = function(context) {
     NSWorkspace.sharedWorkspace().openURL(context.plugin.homepageURL().URLByAppendingPathComponent("issues"));
-    ga("Web", "issues");
+    ga(context, "Web", "issues");
 }
 
 var donate = function() {
     NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString("https://ashung.github.io/donate.html?ref=android_res_export"));
-    ga("Web", "donate");
+    ga(context, "Web", "donate");
 };
