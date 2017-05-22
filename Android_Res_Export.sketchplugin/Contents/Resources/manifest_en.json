@@ -6,11 +6,20 @@
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "manifestURL": "https://github.com/Ashung/Android_Res_Export/raw/master/Android_Res_Export.sketchplugin/Contents/Sketch/manifest.json",
     "downloadURL": "https://github.com/Ashung/Android_Res_Export/archive/master.zip",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
     "bundleVersion": "1",
+    "language": "en",
     "commands": [
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "onOpenDocument"
+                }
+            },
+            "script": "utilities/checking_language.cocoascript"
+        },
         {
             "name": "New PNG Asset",
             "identifier": "new_png_asset",

@@ -91,4 +91,6 @@ var onRun = function(context) {
         toast(context, localizedString(context, "no_png_asset"));
     }
 
+    ga("Export", "export_png_assets", "Export");
+
 }

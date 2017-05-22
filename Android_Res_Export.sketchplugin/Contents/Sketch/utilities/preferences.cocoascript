@@ -39,15 +39,20 @@ var onRun = function(context) {
 
         if (checkboxFinder.state() == 1) {
             setPreferences(context, "show_in_finder_after_export", true);
+            ga("Setting", "show_in_finder_after_export", "Setting", "true");
         } else {
             setPreferences(context, "show_in_finder_after_export", false);
+            ga("Setting", "show_in_finder_after_export", "Setting", "false");
         }
 
         if (checkboxImageOptim.state() == 1) {
             setPreferences(context, "use_imageoptim_after_export", true);
+            ga("Setting", "use_imageoptim_after_export", "Setting", "true");
         } else {
             setPreferences(context, "use_imageoptim_after_export", false);
+            ga("Setting", "use_imageoptim_after_export", "Setting", "false");
         }
 
     }
+
 }

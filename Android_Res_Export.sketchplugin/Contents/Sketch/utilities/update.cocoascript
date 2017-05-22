@@ -44,11 +44,6 @@ var onRun = function (context) {
         );
 
     }
-}
 
-function getRemoteJson(url) {
-    var request = NSURLRequest.requestWithURL(NSURL.URLWithString(url));
-    var response = NSURLConnection.sendSynchronousRequest_returningResponse_error(request, null, null);
-    var content = NSString.alloc().initWithData_encoding(response, NSUTF8StringEncoding);
-    return JSON.parse(content);
+    ga("Web", "update");
 }
