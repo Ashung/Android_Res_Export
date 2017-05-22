@@ -42,7 +42,7 @@ var onRun = function(context) {
             if (name) {
                 addPNGAssetFromLayer_name(layer, androidResName(name));
             }
-            
+
         } else {
             addPNGAssetFromLayer_name(layer, androidResName(layer.name()));
         }
@@ -58,5 +58,7 @@ var onRun = function(context) {
         layerGroup.setName(name);
         addSliceInToGroup(layerGroup, name);
     }
+
+    ga("New", "new_png_asset", "New");
 
 }

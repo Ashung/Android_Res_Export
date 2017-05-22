@@ -58,6 +58,8 @@ var onRun = function(context) {
             // Reload Plugin
             AppController.sharedInstance().pluginManager().reloadPlugins();
 
+            ga("Setting", "language", "Setting", supportLanguagesKeys[languageIndex]);
+
         } else {
 
             var app = NSApplication.sharedApplication();

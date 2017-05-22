@@ -83,4 +83,6 @@ var onRun = function(context) {
 
     }
 
+    ga("New", "new_nine_patch", "New");
+
 }

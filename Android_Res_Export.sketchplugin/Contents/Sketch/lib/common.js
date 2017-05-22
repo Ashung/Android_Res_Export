@@ -240,8 +240,33 @@ function mv(srcPath, dstPath) {
 }
 
 function getJSONFromPath(path) {
-    var data = NSData.dataWithContentsOfFile(path);
-    return NSJSONSerialization.JSONObjectWithData_options_error(data, NSJSONReadingMutableContainers, nil);
+    if (fileExists(path)) {
+        var content = NSString.stringWithContentsOfFile_encoding_error_(path, NSUTF8StringEncoding, nil);
+        try {
+            return JSON.parse(content);
+        } catch (e) {
+            log(e);
+            return null;
+        }
+    } else {
+        return null;
+    }
+}
+
+function getRemoteJson(url) {
+    var request = NSURLRequest.requestWithURL(NSURL.URLWithString(url));
+    var response = NSURLConnection.sendSynchronousRequest_returningResponse_error_(request, nil, nil);
+    if (response) {
+        var content = NSString.alloc().initWithData_encoding_(response, NSUTF8StringEncoding);
+        try {
+            return JSON.parse(content);
+        } catch (e) {
+            log(e);
+            return null;
+        }
+    } else {
+        return null;
+    }
 }
 
 function localizedString(context, langKey) {
@@ -344,4 +369,60 @@ function runCommand(command, args, callback) {
 
 function imageOptim(image) {
     runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
+}
+
+/* =========================================================
+    Google Analytics
+========================================================= */
+
+function ga(context, eventCategory, eventAction, eventLabel, eventValue) {
+
+    var uuidKey = 'google.analytics.uuid';
+    var uuid = NSUserDefaults.standardUserDefaults().objectForKey(uuidKey);
+    if (!uuid) {
+        uuid = NSUUID.UUID().UUIDString();
+        NSUserDefaults.standardUserDefaults().setObject_forKey(uuid, uuidKey);
+    }
+
+    var trackingID = "UA-99098773-1",
+        appName = encodeURI(context.plugin.name()),
+        appId = context.plugin.identifier(),
+        appVersion = context.plugin.version();
+
+    var url = "https://www.google-analytics.com/collect?v=1";
+    // Tracking ID
+    url += "&tid=" + trackingID;
+    // Source
+    url += "&ds=sketch" + MSApplicationMetadata.metadata().appVersion;
+    // Client ID
+    url += "&cid=" + uuid;
+    // User GEO location
+    url += "&geoid=" + NSLocale.currentLocale().countryCode();
+    // User language
+    url += "&ul=" + NSLocale.currentLocale().localeIdentifier().toLowerCase();
+    // pageview, screenview, event, transaction, item, social, exception, timing
+    url += "&t=event";
+    // App Name
+    url += "&an=" + appName;
+    // App ID
+    url += "&aid=" + appId;
+    // App Version
+    url += "&av=" + appVersion;
+    // Event category
+    url += "&ec=" + encodeURI(eventCategory);
+    // Event action
+    url += "&ea=" + encodeURI(eventAction);
+    // Event label
+    if (eventLabel) {
+        url += "&el=" + encodeURI(eventLabel);
+    }
+    // Event value
+    if (eventValue) {
+        url += "&ev=" + encodeURI(eventValue);
+    }
+
+    var session = NSURLSession.sharedSession();
+    var task = session.dataTaskWithURL(NSURL.URLWithString(NSString.stringWithString(url)));
+    task.resume();
+
 }

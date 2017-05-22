@@ -28,4 +28,6 @@ var onRun = function (context) {
 
     page.moveLayersToArtboards();
 
+    ga("Utilities", "add_system_icon");
+
 }

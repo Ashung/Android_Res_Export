@@ -176,6 +176,8 @@ var onRun = function(context) {
         toast(context, localizedString(context, "no_nine_patch_asset"));
     }
 
+    ga("Export", "export_nine_patch", "Export");
+
 }
 
 function isNinePatchLayerGroup(sliceLayer) {
