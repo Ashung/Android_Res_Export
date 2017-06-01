@@ -102,8 +102,27 @@ var onRun = function(context) {
 }
 
 function optimizeSVG(svgo, svgIn) {
-    var config = {plugins: [{convertPathData: {leadingZero: false}}]};
-    runCommand("/bin/bash", ["-l", "-c", svgo + " --config='" + JSON.stringify(config) + "' -p 2 '" + svgIn + "'"]);
+    var config = {
+        plugins: [
+            {
+                cleanupListOfValues: {
+                    floatPrecision: 2
+                }
+            },
+            {
+                cleanupNumericValues: {
+                    floatPrecision: 2
+                }
+            },
+            {
+                convertPathData: {
+                    floatPrecision: 2,
+                    leadingZero: false
+                }
+            }
+        ]
+    };
+    runCommand("/bin/bash", ["-l", "-c", svgo + " --config='" + JSON.stringify(config) + "' '" + svgIn + "'"]);
 }
 
 function svg2vector(s2v, svgFile, vectorFile) {
