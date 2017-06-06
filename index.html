@@ -1,0 +1,70 @@
+---
+---
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Android Res Export for Sketch</title>
+<meta name="description" content="Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.">
+<meta name="keywords" content="Sketch, Plugin, Sketch-plugin">
+<meta name="author" content="Ashung Hung">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+<script>
+    function foo(response) {
+        var data = response.data;
+        var star = data.stargazers_count;
+        if(star) {
+            document.getElementById("project-star").innerHTML = star;
+        }
+    }
+    var script = document.createElement('script');
+    script.src = 'https://api.github.com/repos/Ashung/Android_Res_Export?callback=foo';
+    document.getElementsByTagName('head')[0].appendChild(script);
+</script>
+</head>
+<body>
+<header>
+    <hgroup class="logo">
+        <h1>
+            <a href="https://github.com/Ashung/Android_Res_Export/" rel="home">
+                <img src="android_res_export.png" alt="Android Res Export for Sketch"/>
+            </a>
+        </h1>
+        <p class="porject-badge">
+            <span class="star">
+                <i>&nbsp;</i>Star <span id="project-star">0</span>
+            </span>
+            <a class="download" href="https://github.com/Ashung/Android_Res_Export/archive/master.zip">
+                <i>&nbsp;</i>Download
+            </a>
+        </p>
+    </hgroup>
+</header>
+<section>
+    <p>Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.</p>
+</section>
+<footer>
+    <div class="author">
+        <p>
+            Follow me on
+            <a href="https://github.com/Ashung">Github</a>,
+            <a href="https://dribbble.com/ashung">Dribbble</a>,
+            <a href="https://behance.net/ashung">Behance</a>,
+            <a href="http://weibo.com/ashung">Weibo</a>.
+        </p>
+        <p class="donate">
+            Donate via<br>
+            PayPal
+            <a href="https://www.paypal.me/ashung/2">$ 2.<small>00</small></a>
+            <a href="https://www.paypal.me/ashung/5">$ 5.<small>00</small></a>
+            <br>
+            微信 (WeChat Pay) <a href="https://ashung.github.io/donate.html?ref=android_res_export">&yen; 10.<small>00</small></a>
+            <br>
+            支付宝 (Alipay) <a href="https://ashung.github.io/donate.html?ref=android_res_export">&yen; 10.<small>00</small></a>
+        </p>
+    </div>
+    <a class="ribbon" href="https://github.com/Ashung/Android_Res_Export/">Fork me on GitHub</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+---
+---
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>Android Res Export</title>
+        <link>https://ashung.github.io/Android_Res_Export/appcast.xml</link>
+        <description>Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.</description>
+        <language>en</language>
+        {% for item in site.data.release %}
+        <item>
+            <title>{{ item.title }}</title>
+            <enclosure
+                url="https://github.com/Ashung/HSL_Color_Picker/archive/{{ item.commitID }}.zip"
+                sparkle:version="{{ item.version }}"
+                type="application/octet-stream"/>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>
