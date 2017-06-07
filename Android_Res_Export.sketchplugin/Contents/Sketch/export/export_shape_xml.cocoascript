@@ -126,9 +126,13 @@
     }
 
 
-function checkLayerIsSupportAndroidXML(context, layer) {
+function checkLayerIsSupportAndroidXML(layer) {
     var support = false;
     var type;
+
+    var result = {
+
+    };
     if (layer.class() == "MSShapeGroup") {
         if (layer.children().count() == 2) {
             if (

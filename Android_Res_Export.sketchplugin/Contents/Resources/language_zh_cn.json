@@ -54,8 +54,8 @@
     "install_imagemagick_title": "没有安装 ImageMagick。",
     "install_imagemagick_message": "导出 Android 九宫格文件功能依赖于 ImageMagick 库。\n通过 HomeBrew 安装:\n$ brew install ImageMagick",
     "no_nine_patch_asset": "无任何九宫格文件资源。",
-    "install_svg_and_s2v_title": "没有安装 SVGO 和 svg2vectordrawable。",
-    "install_svg_and_s2v_message": "导出 Android 可绘制矢量文件功能需要安装 Node.js，SVGO 和 svg2vectordrawable。\n在安装完 Node.js 之后, 在终端运行以下命令。\n$ npm install -g svgo svg2vectordrawable",
+    "install_svgo_and_s2v_title": "没有安装 SVGO 和 svg2vectordrawable。",
+    "install_svgo_and_s2v_message": "导出 Android 可绘制矢量文件功能需要安装 Node.js，SVGO 和 svg2vectordrawable。\n在安装完 Node.js 之后, 在终端运行以下命令。\n$ npm install -g svgo svg2vectordrawable",
     "no_vector_drawable_asset": "无任何可绘制矢量资源。",
     "show_in_finder_after_export": "导出资源后在 Finder 中显示。",
     "use_imageoptim_after_export": "导出资源后使用 ImageOptim 压缩图片。"
