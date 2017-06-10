@@ -50,7 +50,7 @@
 
         var layer = selection.firstObject();
 
-
+            checkLayerIsSupportAndroidXML(layer);
 
 //         if (layer.class() == "MSShapeGroup") {
 //
@@ -127,18 +127,19 @@
 
 
 function checkLayerIsSupportAndroidXML(layer) {
-    var support = false;
-    var type;
-
-    var result = {
-
-    };
+    var result = {};
     if (layer.class() == "MSShapeGroup") {
         if (layer.children().count() == 2) {
-            if (
-                layer.children().firstObject().class() == "MSRectangleShape" ||
-                layer.children().firstObject().class() == "MSOvalShape"
-            ) {
+            var shapePath = layer.children().firstObject();
+            if (shapePath.class() == "MSRectangleShape" || shapePath.class() == "MSOvalShape") {
+                result.support = true;
+
+                if (shapePath.class() == "MSRectangleShape") {
+                    result.type = "rectangle"
+                } else {
+                    result.type = "oval"
+                }
+
                 if (layer.style().enabledFills().count() > 0) {
 
                 } else {
@@ -153,10 +154,13 @@ function checkLayerIsSupportAndroidXML(layer) {
             }
         } else {
             // not rectangle or oval
-            return false;
+            result.support = false;
         }
     } else {
         // layer type
         return false;
     }
+
+
+    log(result);
 }

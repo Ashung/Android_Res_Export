@@ -379,7 +379,9 @@ function runCommand(command, args, callback) {
 }
 
 function imageOptim(image) {
-    runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
+    if (fileExists("/Applications/ImageOptim.app")) {
+        runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
+    }
 }
 
 /* =========================================================

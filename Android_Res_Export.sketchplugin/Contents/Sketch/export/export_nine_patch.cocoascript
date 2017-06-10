@@ -23,7 +23,7 @@ var onRun = function(context) {
     var doc = context.document;
     var selection = context.selection;
 
-    var exportNinePaths = NSMutableArray.alloc().init();
+    var exportNinePatches = NSMutableArray.alloc().init();
 
     if (selection.count() > 0) {
         var loopSelection = selection.objectEnumerator();
@@ -31,8 +31,8 @@ var onRun = function(context) {
         while (layer = loopSelection.nextObject()) {
             if (layer.class() == "MSSliceLayer" && layer.name() == "#9patch") {
                 if (isNinePatchLayerGroup(layer)) {
-                    exportNinePaths.addObject({
-                        "path": layer.parentGroup().parentGroup().layerWithID("patch"),
+                    exportNinePatches.addObject({
+                        "patch": layer.parentGroup().parentGroup().layerWithID("patch"),
                         "content": layer,
                         "name": androidResName(layer.parentGroup().parentGroup().name()),
                         "width": layer.frame().width(),
@@ -46,8 +46,8 @@ var onRun = function(context) {
                 while (child = loopChildren.nextObject()) {
                     if (child.class() == "MSSliceLayer" && child.name() == "#9patch") {
                         if (isNinePatchLayerGroup(child)) {
-                            exportNinePaths.addObject({
-                                "path": child.parentGroup().parentGroup().layerWithID("patch"),
+                            exportNinePatches.addObject({
+                                "patch": child.parentGroup().parentGroup().layerWithID("patch"),
                                 "content": child,
                                 "name": androidResName(child.parentGroup().parentGroup().name()),
                                 "width": child.frame().width(),
@@ -64,8 +64,8 @@ var onRun = function(context) {
         while (layer = loopAllExportableLayers.nextObject()) {
             if (layer.class() == "MSSliceLayer" && layer.name() == "#9patch") {
                 if (isNinePatchLayerGroup(layer)) {
-                    exportNinePaths.addObject({
-                        "path": layer.parentGroup().parentGroup().layerWithID("patch"),
+                    exportNinePatches.addObject({
+                        "patch": layer.parentGroup().parentGroup().layerWithID("patch"),
                         "content": layer,
                         "name": androidResName(layer.parentGroup().parentGroup().name()),
                         "width": layer.frame().width(),
@@ -76,27 +76,36 @@ var onRun = function(context) {
         }
     }
 
-    // log(exportNinePaths);
+    // log(exportNinePatches);
 
-    if (exportNinePaths.count() > 0) {
+    if (exportNinePatches.count() > 0) {
 
         var exportFolder = chooseFolder();
 
         if (exportFolder) {
 
-            var loopExportNinePaths = exportNinePaths.objectEnumerator();
+            var loopExportNinePatches = exportNinePatches.objectEnumerator();
             var ninePatch;
-            while (ninePatch = loopExportNinePaths.nextObject()) {
+            while (ninePatch = loopExportNinePatches.nextObject()) {
 
                 var ninePatchContent = ninePatch.content,
                     ninePatchContentID = ninePatch.content.objectID(),
-                    ninePatchPatch = ninePatch.path,
-                    ninePatchPatchID = ninePatch.path.objectID(),
+                    ninePatchPatch = ninePatch.patch,
+                    ninePatchPatchID = ninePatch.patch.objectID(),
                     ninePatchName = ninePatch.name,
                     ninePatchWidth = ninePatch.width,
                     ninePatchHeight = ninePatch.height;
 
                 var exportConfig = getExportConfigFromPageName(ninePatchContent.parentPage().name());
+
+                // TODO: Make patch lines round to pixel
+                var loopNinePatchLines = ninePatchPatch.children().objectEnumerator();
+                var line;
+                while (line = loopNinePatchLines.nextObject()) {
+                    if (line.class() == "MSShapeGroup") {
+                        line.frame
+                    }
+                }
 
                 // Export nine-patch patch lines at mdpi
                 var exportOptionForPatch = ninePatchPatch.exportOptions().addExportFormat();
@@ -133,7 +142,7 @@ var onRun = function(context) {
                     var exportRequestForContent = MSExportRequest.exportRequestsFromExportableLayer(tempSlice).firstObject();
                     doc.saveArtboardOrSlice_toFile(exportRequestForContent, exportFolder + "/" + ninePatchContentID + ".png");
 
-                    createNinePath(
+                    createNinePatch(
                         convert,
                         exportFolder,
                         scale,
@@ -212,7 +221,7 @@ function createMdpiPatchLines(convert, cwd, width, height, mdpiPatchId, callback
     runCommand(command, args, callback);
 }
 
-function createNinePath(convert, cwd, scale, suffix, width, height, contentId, patchId, callback) {
+function createNinePatch(convert, cwd, scale, suffix, width, height, contentId, patchId, callback) {
     var newWidth = Math.floor(width * scale);
     var newHeight = Math.floor(height * scale);
     var temp = contentId + "_temp" + suffix + ".png";
