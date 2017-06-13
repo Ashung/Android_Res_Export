@@ -15,10 +15,10 @@ var onRun = function(context) {
     // SVG2VectorDrawable
     var s2v = which("s2v");
 
-    if (!svgo && !s2v) {
+    if (!svgo || !s2v) {
         alert(
-            localizedString(context, "install_svg_and_s2v_title"),
-            localizedString(context, "install_svg_and_s2v_message")
+            localizedString(context, "install_svgo_and_s2v_title"),
+            localizedString(context, "install_svgo_and_s2v_message")
         );
         return;
     }

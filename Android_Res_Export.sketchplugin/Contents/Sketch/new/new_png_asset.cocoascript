@@ -50,7 +50,11 @@ var onRun = function(context) {
     }
 
     function addPNGAssetFromLayer_name(layer, name) {
-        if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboard") {
+        if (
+            layer.class() == "MSLayerGroup" ||
+            layer.class() == "MSArtboardGroup" ||
+            layer.class() == "MSSymbolMaster"
+        ) {
             var layerGroup = layer;
         } else {
             var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));

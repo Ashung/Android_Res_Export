@@ -34,6 +34,7 @@ var onRun = function (context) {
             if(responseCode == 1000) {
                 NSWorkspace.sharedWorkspace().openURL(context.plugin.downloadURL());
             }
+
         }
     } else {
 

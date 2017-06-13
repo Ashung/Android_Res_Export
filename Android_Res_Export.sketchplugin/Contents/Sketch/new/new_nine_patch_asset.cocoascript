@@ -16,6 +16,15 @@ var onRun = function(context) {
     if (selectionCount == 0) {
         toast(context, localizedString(context, "no_selection"));
         return;
+    } else {
+        var loopSelection = selection.objectEnumerator();
+        var item;
+        while (item = loopSelection.nextObject()) {
+            if (item.class() == "MSArtboardGroup" || item.class() == "MSSymbolMaster") {
+                toast(context, localizedString(context, "can_not_create_nine_patch_from_artboard_or_symbol_master"));
+                return;
+            }
+        }
     }
 
     // Asset name
@@ -47,12 +56,12 @@ var onRun = function(context) {
 
         if (!groupContent.layerWithID("#9patch")) {
             var slice = addSliceInToGroup(groupContent, "#9patch");
-
         } else {
             if (groupContent.layerWithID("#9patch").class() != "MSSliceLayer") {
                 var slice = addSliceInToGroup(groupContent, "#9patch");
             }
         }
+
         if (groupNinePatch.layerWithID("patch")) {
             slice.absoluteRect().setRect(
                 CGRectMake(
@@ -62,9 +71,7 @@ var onRun = function(context) {
                     groupNinePatch.absoluteRect().height() - 2
                 )
             );
-        }
-
-        if (!groupNinePatch.layerWithID("patch")) {
+        } else {
             // Add patch lines
             var width = groupContent.frame().width();
             var height = groupContent.frame().height();

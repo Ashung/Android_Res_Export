@@ -24,9 +24,6 @@ var onRun = function (context) {
 
     artboard.select_byExpandingSelection(true, false);
 
-    // cmd + 3
-    // doc.currentView().centerSelectionInVisibleArea();
-
     // cmd + 2
     NSApp.sendAction_to_from("zoomToSelection:", nil, doc);
 
