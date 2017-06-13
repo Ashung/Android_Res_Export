@@ -11,7 +11,7 @@
         <item>
             <title>{{ item.title }}</title>
             <enclosure
-                url="https://github.com/Ashung/HSL_Color_Picker/archive/{{ item.commitID }}.zip"
+                url="https://github.com/Ashung/Android_Res_Export/archive/{{ item.commitID }}.zip"
                 sparkle:version="{{ item.version }}"
                 type="application/octet-stream"/>
         </item>
