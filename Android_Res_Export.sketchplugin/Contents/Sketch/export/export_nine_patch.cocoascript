@@ -98,12 +98,17 @@ var onRun = function(context) {
 
                 var exportConfig = getExportConfigFromPageName(ninePatchContent.parentPage().name());
 
-                // TODO: Make patch lines round to pixel
+                // Patch lines round to pixel
                 var loopNinePatchLines = ninePatchPatch.children().objectEnumerator();
                 var line;
                 while (line = loopNinePatchLines.nextObject()) {
                     if (line.class() == "MSShapeGroup") {
-                        line.frame
+                        line.absoluteRect().setX(Math.round(line.absoluteRect().x()));
+                        line.absoluteRect().setY(Math.round(line.absoluteRect().y()));
+                        var width = Math.round(line.absoluteRect().width()) < 1 ? 1 : Math.round(line.absoluteRect().width());
+                        var height = Math.round(line.absoluteRect().height()) < 1 ? 1 : Math.round(line.absoluteRect().height());
+                        line.absoluteRect().setWidth(width);
+                        line.absoluteRect().setHeight(height);
                     }
                 }
 

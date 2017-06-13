@@ -39,6 +39,8 @@ failure_update_desc: |-
     %1。
 
 asset_name_for_nine_path: 九宫格文件资源命名。
+can_not_create_nine_patch_from_artboard_or_symbol_master: 不可从画板或组件模版创建九宫格文件资源。
+
 asset_name_for_vector_drawable: 可绘制矢量资源命名。
 vector_drawable_no_support_text: 文本图层无法转换为可绘制矢量资源，您需要先转为轮廓。
 vector_drawable_no_support_artboard: 画板无法转换为可绘制矢量资源，您需要取消分组。
@@ -69,8 +71,8 @@ install_imagemagick_message: |-
     brew install ImageMagick
 no_nine_patch_asset: 无任何九宫格文件资源。
 
-install_svg_and_s2v_title: 请检查是否安装 SVGO 和 svg2vectordrawable。
-install_svg_and_s2v_message: |-
+install_svgo_and_s2v_title: 请检查是否安装 SVGO 和 svg2vectordrawable。
+install_svgo_and_s2v_message: |-
     导出 Android 可绘制矢量文件功能需要安装 Node.js，SVGO 和 svg2vectordrawable。
     在安装完 Node.js 之后, 在终端运行以下命令。
     npm install -g svgo svg2vectordrawable

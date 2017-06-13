@@ -39,6 +39,8 @@ failure_update_desc: |-
     %1.
 
 asset_name_for_nine_path: Asset name for new nine-path.
+can_not_create_nine_patch_from_artboard_or_symbol_master: Can't create Nine-Patch from Artboard or Symbol Master.
+
 asset_name_for_vector_drawable: Asset name for new vector drawable.
 vector_drawable_no_support_text: Text layer can't covert to vector drawable, you can convert to outlines first.
 vector_drawable_no_support_artboard: Artboard can't covert to vector drawable, you can ungroup it.
@@ -69,8 +71,8 @@ install_imagemagick_message: |-
     $ brew install ImageMagick
 no_nine_patch_asset: No any nine-patch asset.
 
-install_svg_and_s2v_title: Please check that you have SVGO and svg2vectordrawable installed.
-install_svg_and_s2v_message: |-
+install_svgo_and_s2v_title: Please check that you have SVGO and svg2vectordrawable installed.
+install_svgo_and_s2v_message: |-
     Export Android vector drawable feature depend on Node.js, SVGO and svg2vectordrawable.
     After you installed Node.js, run follow command in the Terminal.
     $ npm install -g svgo svg2vectordrawable
