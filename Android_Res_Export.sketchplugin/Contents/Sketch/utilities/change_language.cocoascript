@@ -22,17 +22,23 @@ var onRun = function(context) {
     }
 
     // Dialog
+
+    var dialog = COSAlertWindow.new();
+    dialog.setMessageText(localizedString(context, "change_language"));
+    dialog.addButtonWithTitle(localizedString(context, "ok"));
+    dialog.addButtonWithTitle(localizedString(context, "cancel"));
+
+    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+    dialog.setIcon(iconNSImage);
+
     var accessory = NSComboBox.alloc().initWithFrame(NSMakeRect(0, 0, 240, 28));
     accessory.addItemsWithObjectValues(supportLanguagesValues);
     accessory.selectItemAtIndex(0);
-    var alert = NSAlert.alloc().init();
-    alert.setMessageText(localizedString(context, "change_language"));
-    alert.addButtonWithTitle(localizedString(context, "ok"));
-    alert.addButtonWithTitle(localizedString(context, "cancel"));
-    alert.setAccessoryView(accessory);
+    dialog.setAccessoryView(accessory);
 
     // Click OK button
-    var responseCode = alert.runModal();
+    var responseCode = dialog.runModal();
     var languageIndex = accessory.indexOfSelectedItem();
     var languageFileURL = context.plugin.urlForResourceNamed("manifest_" + supportLanguagesKeys[languageIndex] + ".json");
     if (responseCode == 1000) {

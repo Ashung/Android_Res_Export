@@ -203,9 +203,16 @@ function getPluginPath(context) {
     return path;
 }
 
-function alert(title, content) {
-    var app = NSApplication.sharedApplication();
-    app.displayDialog_withTitle_(content, title);
+function alert(context, title, content) {
+    var dialog = COSAlertWindow.alloc().init();
+    dialog.setMessageText(title);
+    dialog.setInformativeText(content);
+    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+    dialog.setIcon(iconNSImage);
+    dialog.addButtonWithTitle("OK");
+    dialog.addButtonWithTitle("Cancel");
+    dialog.runModal();
 }
 
 function fileExists(path) {

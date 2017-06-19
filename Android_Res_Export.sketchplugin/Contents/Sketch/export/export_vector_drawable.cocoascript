@@ -10,17 +10,46 @@
 var onRun = function(context) {
 
     // SVGO
-    var svgo = which("svgo");
+    var svgo = getPreferences(context, "svgo");
+    if (!svgo) {
+        svgo = which("svgo");
+        if (svgo) {
+            setPreferences(context, "svgo", svgo);
+        }
+    }
 
     // SVG2VectorDrawable
-    var s2v = which("s2v");
+    var s2v = getPreferences(context, "s2v");
+    if (!s2v) {
+        s2v = which("s2v");
+        if (s2v) {
+            setPreferences(context, "s2v", s2v);
+        }
+    }
 
     if (!svgo || !s2v) {
         alert(
+            context,
             localizedString(context, "install_svgo_and_s2v_title"),
             localizedString(context, "install_svgo_and_s2v_message")
         );
         return;
+    }
+
+    // Check SVG2VectorDrawable version
+    var s2vVersion = getPreferences(context, "s2vVersion");
+    if (!s2vVersion) {
+        s2vVersion = checkVersion(s2v);
+    }
+    if (s2vVersion < "1.1.4") {
+        alert(
+            context,
+            localizedString(context, "s2v_version_title"),
+            localizedString(context, "s2v_version_message")
+        );
+        return;
+    } else {
+        setPreferences(context, "s2vVersion", s2vVersion);
     }
 
     var doc = context.document;
@@ -127,4 +156,15 @@ function optimizeSVG(svgo, svgIn) {
 
 function svg2vector(s2v, svgFile, vectorFile) {
     runCommand("/bin/bash", ["-l", "-c", s2v + " '" + svgFile + "' '" + vectorFile + "'"]);
+}
+
+function checkVersion(command) {
+    var result = "";
+    runCommand("/bin/bash", ["-l", "-c", command + " --version"], function(status, msg) {
+        if (status && msg != "") {
+            result += msg;
+            result = result.replace(/\s*$/g, "");
+        }
+    });
+    return result;
 }

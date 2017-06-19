@@ -68,14 +68,18 @@ install_imagemagick_title: 请检查是否安装 ImageMagick。
 install_imagemagick_message: |-
     导出 Android 九宫格文件功能依赖于 ImageMagick 库。
     通过 HomeBrew 安装,
-    brew install ImageMagick
+    $ brew install ImageMagick
 no_nine_patch_asset: 无任何九宫格文件资源。
 
+s2v_version_title: 您需要更新 svg2vectordrawable。
+s2v_version_message: |-
+    在终端运行以下命令，以更新 svg2vectordrawable。
+    $ npm update -g svg2vectordrawable
 install_svgo_and_s2v_title: 请检查是否安装 SVGO 和 svg2vectordrawable。
 install_svgo_and_s2v_message: |-
     导出 Android 可绘制矢量文件功能需要安装 Node.js，SVGO 和 svg2vectordrawable。
     在安装完 Node.js 之后, 在终端运行以下命令。
-    npm install -g svgo svg2vectordrawable
+    $ npm install -g svgo svg2vectordrawable
 no_vector_drawable_asset: 无任何可绘制矢量资源。
 
 show_in_finder_after_export: 导出资源后在 Finder 中显示。

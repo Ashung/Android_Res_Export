@@ -71,6 +71,10 @@ install_imagemagick_message: |-
     $ brew install ImageMagick
 no_nine_patch_asset: No any nine-patch asset.
 
+s2v_version_title: You need to update svg2vectordrawable.
+s2v_version_message: |-
+    Run follow command in the Terminal to update svg2vectordrawable.
+    $ npm update -g svg2vectordrawable
 install_svgo_and_s2v_title: Please check that you have SVGO and svg2vectordrawable installed.
 install_svgo_and_s2v_message: |-
     Export Android vector drawable feature depend on Node.js, SVGO and svg2vectordrawable.
