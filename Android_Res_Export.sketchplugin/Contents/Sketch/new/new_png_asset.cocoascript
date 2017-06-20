@@ -60,7 +60,7 @@ var onRun = function(context) {
             var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
         }
         layerGroup.setName(name);
-        addSliceInToGroup(layerGroup, name);
+        addSliceInToGroup(layerGroup, name, true);
     }
 
     ga(context, "New", "new_png_asset", "New");

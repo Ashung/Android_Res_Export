@@ -10,10 +10,17 @@
 var onRun = function(context) {
 
     // ImageMagick
-    var convert = which("convert");
+    var convert = getPreferences(context, "convert");
+    if (!convert) {
+        convert = which("convert");
+        if (convert) {
+            setPreferences(context, "convert", convert);
+        }
+    }
 
     if (!convert) {
         alert(
+            context,
             localizedString(context, "install_imagemagick_title"),
             localizedString(context, "install_imagemagick_message")
         );

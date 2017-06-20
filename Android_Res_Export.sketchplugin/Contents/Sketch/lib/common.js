@@ -112,12 +112,14 @@ function groupFromLayers(layers) {
     return group;
 }
 
-function addSliceInToGroup(layerGroup, name) {
+function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
 
     removeSliceInGroup(layerGroup);
 
     var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
-    slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
+    if (useInfluenceRect) {
+        slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
+    }
     slice.setName(name);
     slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);
@@ -203,9 +205,16 @@ function getPluginPath(context) {
     return path;
 }
 
-function alert(title, content) {
-    var app = NSApplication.sharedApplication();
-    app.displayDialog_withTitle_(content, title);
+function alert(context, title, content) {
+    var dialog = COSAlertWindow.alloc().init();
+    dialog.setMessageText(title);
+    dialog.setInformativeText(content);
+    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+    dialog.setIcon(iconNSImage);
+    dialog.addButtonWithTitle("OK");
+    dialog.addButtonWithTitle("Cancel");
+    dialog.runModal();
 }
 
 function fileExists(path) {

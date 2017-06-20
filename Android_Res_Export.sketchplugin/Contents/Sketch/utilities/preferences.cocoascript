@@ -10,7 +10,7 @@
 var onRun = function(context) {
 
     // Dialog
-    var dialog = COSAlertWindow.new();
+    var dialog = COSAlertWindow.alloc().init();
     dialog.setMessageText(context.plugin.name());
     dialog.setInformativeText(context.plugin.pluginDescription());
 

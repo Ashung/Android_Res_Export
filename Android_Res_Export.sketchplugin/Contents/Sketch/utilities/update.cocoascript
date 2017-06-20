@@ -9,7 +9,7 @@
 
 var onRun = function (context) {
 
-    var remoteManifest = getRemoteJson(context.plugin.manifestURL().toString());
+    var remoteManifest = getRemoteJson("https://github.com/Ashung/Android_Res_Export/raw/master/Android_Res_Export.sketchplugin/Contents/Sketch/manifest.json");
 
     var localVersion = context.plugin.version();
 
@@ -17,31 +17,38 @@ var onRun = function (context) {
 
         if (localVersion < remoteManifest.version) {
 
-            var app = NSApplication.sharedApplication();
-            app.displayDialog_withTitle(
-                localizedString(context, "least_version_desc", localVersion),
-                localizedString(context, "least_version_title")
+            alert(
+                context,
+                localizedString(context, "least_version_title"),
+                ocalizedString(context, "least_version_desc", localVersion)
             );
 
         } else {
 
-            var alert = NSAlert.alloc().init();
-            alert.setMessageText(localizedString(context, "older_version_title", remoteManifest.version));
-            alert.setInformativeText(localizedString(context, "older_version_desc", localVersion));
-            alert.addButtonWithTitle(localizedString(context, "ok"));
-            alert.addButtonWithTitle(localizedString(context, "cancel"));
-            var responseCode = alert.runModal();
+            var dialog = NSAlert.alloc().init();
+            dialog.setMessageText(localizedString(context, "older_version_title", remoteManifest.version));
+            dialog.setInformativeText(localizedString(context, "older_version_desc", localVersion));
+
+            var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+            var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+            dialog.setIcon(iconNSImage);
+
+            dialog.addButtonWithTitle(localizedString(context, "ok"));
+            dialog.addButtonWithTitle(localizedString(context, "cancel"));
+
+            var responseCode = dialog.runModal();
             if(responseCode == 1000) {
                 NSWorkspace.sharedWorkspace().openURL(context.plugin.downloadURL());
             }
 
         }
+
     } else {
 
-        var app = NSApplication.sharedApplication();
-        app.displayDialog_withTitle(
-            localizedString(context, "failure_update_desc", context.plugin.homepageURL()),
-            localizedString(context, "failure_update_title")
+        alert(
+            context,
+            localizedString(context, "failure_update_title"),
+            localizedString(context, "failure_update_desc", context.plugin.homepageURL())
         );
 
     }

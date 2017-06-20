@@ -55,10 +55,10 @@ var onRun = function(context) {
         }
 
         if (!groupContent.layerWithID("#9patch")) {
-            var slice = addSliceInToGroup(groupContent, "#9patch");
+            var slice = addSliceInToGroup(groupContent, "#9patch", true);
         } else {
             if (groupContent.layerWithID("#9patch").class() != "MSSliceLayer") {
-                var slice = addSliceInToGroup(groupContent, "#9patch");
+                var slice = addSliceInToGroup(groupContent, "#9patch", true);
             }
         }
 
