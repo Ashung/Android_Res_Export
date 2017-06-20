@@ -97,7 +97,7 @@ function checkLayerType(context, layer, count, callback) {
         var loop = layer.layers().objectEnumerator();
         var item;
         while (item = loop.nextObject()) {
-            checkLayerType(context, item, callback);
+            checkLayerType(context, item, count, callback);
         }
     } else {
 
