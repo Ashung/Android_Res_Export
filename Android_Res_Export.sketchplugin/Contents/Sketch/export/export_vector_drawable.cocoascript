@@ -37,19 +37,14 @@ var onRun = function(context) {
     }
 
     // Check SVG2VectorDrawable version
-    var s2vVersion = getPreferences(context, "s2vVersion");
-    if (!s2vVersion) {
-        s2vVersion = checkVersion(s2v);
-    }
-    if (s2vVersion < "1.1.4") {
+    var s2vVersion = checkVersion(s2v);
+    if (s2vVersion < "1.1.6") {
         alert(
             context,
             localizedString(context, "s2v_version_title"),
             localizedString(context, "s2v_version_message")
         );
         return;
-    } else {
-        setPreferences(context, "s2vVersion", s2vVersion);
     }
 
     var doc = context.document;
@@ -133,6 +128,11 @@ var onRun = function(context) {
 function optimizeSVG(svgo, svgIn) {
     var config = {
         plugins: [
+            {
+                convertColors: {
+                    shorthex: false
+                }
+            },
             {
                 cleanupListOfValues: {
                     floatPrecision: 2

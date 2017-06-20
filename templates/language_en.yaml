@@ -43,9 +43,8 @@ can_not_create_nine_patch_from_artboard_or_symbol_master: Can't create Nine-Patc
 
 asset_name_for_vector_drawable: Asset name for new vector drawable.
 vector_drawable_no_support_text: Text layer can't covert to vector drawable, you can convert to outlines first.
-vector_drawable_no_support_artboard: Artboard can't covert to vector drawable, you can ungroup it.
 vector_drawable_no_support_bitmap: Bitmap layer can't covert to vector drawable.
-vector_drawable_no_support_symbol: Symbol can't covert to vector drawable.
+vector_drawable_no_support_symbol_instance: Symbol can't covert to vector drawable.
 vector_drawable_no_support_rotation: Rotation is not supported by vector drawable, please flatten first.
 vector_drawable_no_support_flipped: Flipped is not supported by vector drawable, please flatten first.
 vector_drawable_no_support_mask: Mask is not supported by vector drawable.
@@ -54,6 +53,7 @@ vector_drawable_no_support_border: Only solid border is supported by vector draw
 vector_drawable_no_support_shadow: Shape layer with shadow is not supported by vector drawable.
 vector_drawable_no_support_inner_shadow: Shape layer with inner shadow is not supported by vector drawable.
 vector_drawable_no_support_blur: Shape layer with blur is not supported by vector drawable.
+can_not_group_artboard: Can't group with Artboard or Symbol Master.
 
 no_png_asset: No any PNG asset.
 

@@ -112,12 +112,14 @@ function groupFromLayers(layers) {
     return group;
 }
 
-function addSliceInToGroup(layerGroup, name) {
+function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
 
     removeSliceInGroup(layerGroup);
 
     var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
-    slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
+    if (useInfluenceRect) {
+        slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
+    }
     slice.setName(name);
     slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);

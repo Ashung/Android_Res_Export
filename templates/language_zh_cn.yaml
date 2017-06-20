@@ -43,9 +43,8 @@ can_not_create_nine_patch_from_artboard_or_symbol_master: 不可从画板或组�
 
 asset_name_for_vector_drawable: 可绘制矢量资源命名。
 vector_drawable_no_support_text: 文本图层无法转换为可绘制矢量资源，您需要先转为轮廓。
-vector_drawable_no_support_artboard: 画板无法转换为可绘制矢量资源，您需要取消分组。
 vector_drawable_no_support_bitmap: 位图无法转换为可绘制矢量资源。
-vector_drawable_no_support_symbol: 组件无法转换为可绘制矢量资源。
+vector_drawable_no_support_symbol_instance: 组件无法转换为可绘制矢量资源。
 vector_drawable_no_support_rotation: 可绘制矢量资源不支持旋转属性，请先变平形状。
 vector_drawable_no_support_flipped: 可绘制矢量资源不支持翻转属性，请先变平形状。
 vector_drawable_no_support_mask: 可绘制矢量资源不支持蒙板。
@@ -54,6 +53,7 @@ vector_drawable_no_support_border: 可绘制矢量资源仅支持单色描边。
 vector_drawable_no_support_shadow: 可绘制矢量资源不支持投影。
 vector_drawable_no_support_inner_shadow: 可绘制矢量资源不支持内投影。
 vector_drawable_no_support_blur: 可绘制矢量资源不支持模糊。
+can_not_group_artboard: 无法对组件母版或画板编组。
 
 no_png_asset: 无任何 PNG 位图资源。
 

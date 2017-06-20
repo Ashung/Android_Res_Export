@@ -24,7 +24,7 @@ var onRun = function(context) {
     var loopSelection = selection.objectEnumerator();
     var layer;
     while (layer = loopSelection.nextObject()) {
-        checkLayerType(context, layer, function(sup) {
+        checkLayerType(context, layer, selectionCount, function(sup) {
             supported = sup;
         });
         if (supported == 0) {
@@ -42,7 +42,14 @@ var onRun = function(context) {
     if (name) {
 
         // Group vector
-        if (selectionCount == 1 && selection.firstObject().class() == "MSLayerGroup") {
+        if (
+            selectionCount == 1 &&
+            (
+                selection.firstObject().class() == "MSLayerGroup" ||
+                selection.firstObject().class() == "MSArtboardGroup" ||
+                selection.firstObject().class() == "MSSymbolMaster"
+            )
+        ) {
             var groupVector = selection.firstObject();
         } else {
             var groupVector = groupFromSelection(context);
@@ -50,7 +57,7 @@ var onRun = function(context) {
         groupVector.setName(androidResName(name));
 
         // Add slice
-        var slice = addSliceInToGroup(groupVector, "#vector");
+        var slice = addSliceInToGroup(groupVector, "#vector", false);
             slice.exportOptions().removeAllExportFormats();
         var exportOption = slice.exportOptions().addExportFormat();
             exportOption.setFileFormat("svg");
@@ -73,8 +80,20 @@ var onRun = function(context) {
 
 }
 
-function checkLayerType(context, layer, callback) {
-    if (layer.class() == "MSLayerGroup") {
+function checkLayerType(context, layer, count, callback) {
+
+    if (count > 1) {
+        var loop = layer.layers().objectEnumerator();
+        var item;
+        while (item = loop.nextObject()) {
+            if (item.class() == "MSArtboardGroup" || item.class() == "MSSymbolMaster") {
+                toast(context, localizedString(context, "can_not_group_artboard"));
+                callback(0);
+            }
+        }
+    }
+
+    if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") {
         var loop = layer.layers().objectEnumerator();
         var item;
         while (item = loop.nextObject()) {
@@ -87,18 +106,13 @@ function checkLayerType(context, layer, callback) {
             callback(0);
         }
 
-        if (layer.class() == "MSArtboardGroup") {
-            toast(context, localizedString(context, "vector_drawable_no_support_artboard"));
-            callback(0);
-        }
-
         if (layer.class() == "MSBitmapLayer") {
             toast(context, localizedString(context, "vector_drawable_no_support_bitmap"));
             callback(0);
         }
 
-        if (layer.class() == "MSSymbolInstance" || layer.class() == "MSSymbolMaster") {
-            toast(context, localizedString(context, "vector_drawable_no_support_symbol"));
+        if (layer.class() == "MSSymbolInstance") {
+            toast(context, localizedString(context, "vector_drawable_no_support_symbol_instance"));
             callback(0);
         }
 
