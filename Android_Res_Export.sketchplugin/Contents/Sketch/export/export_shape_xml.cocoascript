@@ -7,6 +7,163 @@
 
 @import "../lib/common.js";
 
+var selection = context.selection;
+
+if (selection.count() > 0) {
+
+    var layer = selection.firstObject();
+
+    layerInfo(layer);
+}
+
+function layerInfo(layer) {
+    var result = {};
+    if (layer.class() == "MSShapeGroup") {
+        if (layer.children().count() == 2) {
+            var shapePath = layer.children().firstObject();
+            if (shapePath.class() == "MSRectangleShape" || shapePath.class() == "MSOvalShape") {
+
+                var fills = layer.style().enabledFills();
+                if (fills.count() > 0) {
+                    if (fills.lastObject().fillType() == 0) {
+                        result.support = true;
+                        result.solid = colorToAndroid(fills.lastObject().color());
+                    } else if (fills.lastObject().fillType() == 1) {
+                        result.support = true;
+                        var gradient = fills.lastObject().gradient();
+                        if (gradient.stops().count() < 4) {
+
+                            var gradientType = gradient.gradientType();
+                            switch (gradientType) {
+                                case 2:
+                                    result.gradientType = "sweep";
+                                    break;
+                                case 1:
+                                    result.gradientType = "radial";
+                                    break;
+                                case 0:
+                                    result.gradientType = "linear";
+                                    break;
+                                default:
+                                    result.gradientType = "linear";
+                            }
+
+                            result.gradientStops = gradientStopsToColorArray(gradient.stops());
+
+                            // log(gradient.from());
+                            //
+                            // log(gradient.to());
+
+                            var x1 = gradient.from().x * layer.frame().width();
+                            var y1 = gradient.from().y * layer.frame().height();
+                            var x2 = gradient.to().x * layer.frame().width();
+                            var y2 = gradient.to().y * layer.frame().height();
+                            var angle = Math.atan(Math.abs(y1 - y2) / Math.abs(x1 - x2)) * 180 / Math.PI;
+
+                            log(angle);
+
+                        } else {
+                            result.support = false;
+                            result.msg = "too many color stop in gradient";
+                            return result;
+                        }
+
+                    } else {
+                        result.support = false;
+                        result.msg = "no support fill type";
+                        return result;
+                    }
+                } else {
+                    result.support = true;
+                    result.solid = "#000000";
+                }
+
+                var borders;
+
+
+
+                if (result.support) {
+
+
+
+
+                    if (shapePath.class() == "MSRectangleShape") {
+                        result.type = "rectangle"
+
+                        // radius
+
+
+
+                    } else {
+                        result.type = "oval"
+                    }
+                }
+
+            } else {
+                // no support shape
+                result.support = false;
+                result.msg = "no support shape 1";
+                return result;
+            }
+        } else if (layer.children().count() == 3) {
+
+            if (
+                layer.children().objectAtIndex(0).class() == "MSOvalShape" &&
+                layer.children().objectAtIndex(1).class() == "MSOvalShape"
+            ) {
+                result.support = true;
+                result.type = "ring";
+
+
+
+
+
+            } else {
+                result.support = false;
+                result.msg = "no support shape 2";
+                return result;
+            }
+
+        } else {
+            result.support = false;
+            result.msg = "no support shape 3";
+            return result;
+        }
+    } else {
+        result.support = false;
+        result.msg = "no shape layer";
+        return result;
+    }
+
+
+    log(result);
+}
+
+function gradientStopsToColorArray(stops) {
+    var result = [];
+    var loop = stops.objectEnumerator();
+    while (stop = loop.nextObject()) {
+        result.push(colorToAndroid(stop.color()));
+    }
+    return result;
+}
+
+function colorToAndroid(mscolor) {
+    var alpha = mscolor.alpha();
+    var hex = mscolor.immutableModelObject().hexValue();
+    if (alpha < 1) {
+        var alphaHex = Math.round(alpha * 255).toString(16);
+        if (alphaHex.length == 1) {
+            alphaHex = "0" + alphaHex;
+        }
+        return alphaHex.toUpperCase() + hex;
+    } else {
+        return hex;
+    }
+}
+
+
+
 // var onRun = function(context) {
 
     // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
@@ -44,13 +201,7 @@
 //         android:dashGap="integer" />
 // </shape>
 
-    var selection = context.selection;
 
-    if (selection.count() > 0) {
-
-        var layer = selection.firstObject();
-
-            checkLayerIsSupportAndroidXML(layer);
 
 //         if (layer.class() == "MSShapeGroup") {
 //
@@ -123,44 +274,3 @@
 //
 //         }
 //
-    }
-
-
-function checkLayerIsSupportAndroidXML(layer) {
-    var result = {};
-    if (layer.class() == "MSShapeGroup") {
-        if (layer.children().count() == 2) {
-            var shapePath = layer.children().firstObject();
-            if (shapePath.class() == "MSRectangleShape" || shapePath.class() == "MSOvalShape") {
-                result.support = true;
-
-                if (shapePath.class() == "MSRectangleShape") {
-                    result.type = "rectangle"
-                } else {
-                    result.type = "oval"
-                }
-
-                if (layer.style().enabledFills().count() > 0) {
-
-                } else {
-
-                }
-
-
-                support = true;
-            } else {
-                // no support shape
-                return false;
-            }
-        } else {
-            // not rectangle or oval
-            result.support = false;
-        }
-    } else {
-        // layer type
-        return false;
-    }
-
-
-    log(result);
-}
