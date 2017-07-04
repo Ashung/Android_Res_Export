@@ -1,85 +1,181 @@
 //
+// Android Res Export
+// Homepage: https://github.com/Ashung/Android_Res_Export
 // Author: Ashung Hung
 // Email: Ashung.hung@gmail.com
+// License: https://creativecommons.org/licenses/by-sa/4.0
 
 @import "../lib/common.js";
 
-var onRun = function(context) {
 
-    if (!svgo) {
-        alert(
-            "You have not install SVGO.",
-            "Export Android VectorDrawable feature depend on the Node.js and SVGO.\n" +
-            "https://github.com/svg/svgo"
-        );
-        return;
-    }
+var f = "/System_Icons/assets/drawable-anydpi-v21/ic_account_add.xml"
 
-    if (!getFilePath(context)) {
-        return;
-    }
+// default
+var defaultValue = {
+    width: 24,
+    height: 24,
+    pathData: "M0,0L0,24L24,24L24,0z"
+}
 
-    var doc = context.document;
-    var page = doc.currentPage();
-    var selection = context.selection;
+// clean XML code
+var vectorDrawable = getContentFromFile(f);
+    vectorDrawable = vectorDrawable.replace(/<\?xml.*?\?>/g, "");
+    vectorDrawable = vectorDrawable.replace(/\n*/g, "");
+    vectorDrawable = vectorDrawable.replace(/\s+/g, " ");
+    vectorDrawable = vectorDrawable.replace(/>\s+</g, "><");
+    vectorDrawable = vectorDrawable.replace(/<!--.*?-->/g, "");
 
-    if (selection.count() == 0) {
-        toast(context, "Select at least one layer.");
-        return;
-    }
+log(vectorDrawable)
+log("-----------")
+log(vectorDrawableToSVG(vectorDrawable));
 
-    // Get all exportable
-    var vectorDrawable = [];
-    var vectorDrawableIds = [];
-    var vectorDrawableNames = [];
-    var reportInfo = [];
 
-    var loop = selection.objectEnumerator()
-    while (layer = loop.nextObject()) {
-        var name = layer.name();
-        var finalName = androidResName(layer.name());
-        vectorDrawable.push({
-            "id": layer.objectID(),
-            "name": finalName
-        });
-        vectorDrawableIds.push(layer.objectID());
-        // Check name duplicate
-        if (finalName != layer.name()) {
-            reportInfo.push('Changed layer name: ' + layer.name() + ' -> ' + finalName);
-        }
-        if (vectorDrawableNames.indexOf(finalName) >= 0) {
-            reportInfo.push('Duplicate layer name: ' + layer.name());
-        }
-        vectorDrawableNames.push(finalName);
-    }
 
-    // Ready to export
-    var currentFile = getFilePath(context);
-    var exportFolder = getFilePath(context).stringByDeletingPathExtension() + "/res";
-    var vectorDrawableFolder = exportFolder + "/drawable-anydpi-v21"
-    var tempFolder = getFilePath(context).stringByDeletingPathExtension() + "/.temp";
-    var reportFile = getFilePath(context).stringByDeletingPathExtension() + "/report.txt";
-    var doneExportSVG = false;
+function vectorDrawableToSVG(vectorDrawable) {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg"';
 
-    doc.saveDocument(nil);
 
-    // Export to tempFolder
-    var formats = "svg";
-    var useIdForName = "yes";
-    sketchtoolExport(
-        "layers",
-        currentFile,
-        "1",
-        formats,
-        vectorDrawableIds,
-        useIdForName,
-        tempFolder,
-        function(success, message) {
-            if (success == true) {
-                doneExportSVG = true;
+    var width = parseInt(/<vector[^<]*android:width=\"(\w+)\"/.exec(vectorDrawable)[1]) || defaultValue.width,
+        height = parseInt(/<vector[^<]*android:height=\"(\w+)\"/.exec(vectorDrawable)[1]) || defaultValue.height,
+        viewportWidth = parseInt(/<vector[^<]*android:viewportWidth=\"(\w+)\"/.exec(vectorDrawable)[1]) || defaultValue.width,
+        viewportHeight = parseInt(/<vector[^<]*android:viewportHeight=\"(\w+)\"/.exec(vectorDrawable)[1]) || defaultValue.height;
+
+    svg += ' width="' + width + 'px"';
+    svg += ' height="' + height + 'px"';
+    svg += ' viewBox="0 0 ' + viewportWidth + ' ' + viewportHeight + '">\n'
+
+    // log(/<vector[^<]*android:viewportWidth=\"(\w+)\"/.exec(vectorDrawable)[1]);
+    var paths = vectorDrawable.match(/<path[^<]*\/>/g);
+    for (var i = 0; i < paths.length; i++) {
+        var path = paths[i];
+        var pathAttrs = {};
+
+        var fillColorRegex = /android:fillColor="([^\s]*)"/i;
+        if (fillColorRegex.test(path)) {
+            var fill = androidColorToSVG(fillColorRegex.exec(path)[1]);
+            if (fill.color) {
+                pathAttrs.fillColor = fill.color;
+            }
+            if (fill.alpha) {
+                pathAttrs.fillAlpha = fill.alpha;
             }
         }
-    );
+
+        var fillAlphaRegex = /android:fillAlpha="([^\s]*)"/i;
+        if (fillAlphaRegex.test(path)) {
+            pathAttrs.fillAlpha = fillAlphaRegex.exec(path)[1];
+        }
+
+        var strokeColorRegex = /android:strokeColor="([^\s]*)"/i;
+        if (strokeColorRegex.test(path)) {
+            var stroke = androidColorToSVG(strokeColorRegex.exec(path)[1]);
+            if (stroke.color) {
+                pathAttrs.strokeColor = stroke.color;
+            }
+            if (fill.alpha) {
+                pathAttrs.strokeAlpha = stroke.alpha;
+            }
+        }
+
+        var strokeAlphaRegex = /android:strokeAlpha="([^\s]*)"/i;
+        if (strokeAlphaRegex.test(path)) {
+            pathAttrs.strokeAlpha = strokeAlphaRegex.exec(path)[1];
+        }
+
+        svg += '<path';
+
+        if (pathAttrs.fillColor) {
+            svg += ' fill="' + pathAttrs.fillColor + '"';
+        }
+        if (pathAttrs.fillAlpha) {
+            svg += ' fill-opacity="' + pathAttrs.fillAlpha + '"';
+        }
+        if (pathAttrs.strokeColor) {
+            svg += ' stroke="' + pathAttrs.strokeColor + '"';
+        }
+        if (pathAttrs.strokeAlpha) {
+            svg += ' stroke-opacity="' + pathAttrs.strokeAlpha + '"';
+        }
+
+        var strokeWidthRegex = /android:strokeWidth="([^\s]*)"/i;
+        if (strokeWidthRegex.test(path)) {
+            // pathAttrs.strokeWidth = strokeWidthRegex.exec(path)[1];
+            svg += ' stroke-width="' + strokeWidthRegex.exec(path)[1] + '"';
+        }
+
+        var strokeLineCapRegex = /android:strokeLineCap="([^\s]*)"/i;
+        if (strokeLineCapRegex.test(path)) {
+            // pathAttrs.strokeLineCap = strokeLineCapRegex.exec(path)[1];
+            svg += ' stroke-linecap="' + strokeLineCapRegex.exec(path)[1] + '"';
+        }
+
+        var strokeLineJoinRegex = /android:strokeLineJoin="([^\s]*)"/i;
+        if (strokeLineJoinRegex.test(path)) {
+            // pathAttrs.strokeLineJoin = strokeLineJoinRegex.exec(path)[1];
+            svg += ' stroke-linejoin="' + strokeLineJoinRegex.exec(path)[1] + '"';
+        }
+
+        var strokeMiterLimitRegex = /android:strokeMiterLimit="([^\s]*)"/i;
+        if (strokeMiterLimitRegex.test(path)) {
+            // pathAttrs.strokeMiterLimit = strokeMiterLimitRegex.exec(path)[1];
+            svg += ' stroke-miterlimit="' + strokeMiterLimitRegex.exec(path)[1] + '"';
+        }
+
+        var fillTypeRegex = /android:fillType="([^\s]*)"/i;
+        if (fillTypeRegex.test(path)) {
+            // pathAttrs.fillType = fillTypeRegex.exec(path)[1].toLowerCase();
+            svg += ' fill-rule="' + fillTypeRegex.exec(path)[1].toLowerCase() + '"';
+        }
+
+        var pathDataRegex = /android:pathData="([^=].*)"/i;
+        if (pathDataRegex.test(path)) {
+            // pathAttrs.pathData = pathDataRegex.exec(path)[1];
+            svg += ' d="' + pathDataRegex.exec(path)[1] + '"';
+        } else {
+            svg += ' d="' + defaultValue.pathData + '"';
+        }
+
+        svg += '/>\n'
+
+    }
+
+
+    // log(paths);
+
+
+    svg += '</svg>'
+
+    return svg;
+
+
+    // <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    // <path d="M23 19v1H9v-1c0-2.76 3.13-5 7-5s7 2.24 7 5zm-7-7a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM4 11V8h2v3h3v2H6v3H4v-3H1v-2h3z"/>
+    // </svg>
+}
+
+function androidColorToSVG(color) {
+    var result = {};
+    if (/^#[0-9A-F]{3}/i.test(color) && color.length == 4) {
+        result.color = ("#" + color[1] + color[1] + color[2] + color[2] + color[3] + color[3]).toUpperCase();
+    }
+    if (/^#[0-9A-F]{4}/i.test(color) && color.length == 5) {
+        result.color = ("#" + color[2] + color[2] + color[3] + color[3] + color[4] + color[4]).toUpperCase();
+        result.alpha = (parseInt("0x" + color[1] + color[1], 16) / 255).toFixed(2);
+    }
+    if (/^#[0-9A-F]{6}/i.test(color) && color.length == 7) {
+        result.color = (color).toUpperCase();
+    }
+    if (/^#[0-9A-F]{8}/i.test(color) && color.length == 9) {
+        result.color = ("#" + color.substr(3)).toUpperCase();
+        result.alpha = (parseInt("0x" + color.substr(1, 2), 16) / 255).toFixed(2);
+    }
+    return result;
+}
+
+
+var onRun = function(context) {
+
+
 
     for (var i = 0; i < vectorDrawable.length; i ++) {
         var svgFile = tempFolder + "/" + vectorDrawable[i]["id"] + ".svg"

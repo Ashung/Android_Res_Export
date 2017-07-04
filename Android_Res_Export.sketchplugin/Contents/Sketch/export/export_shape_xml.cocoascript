@@ -7,102 +7,307 @@
 
 @import "../lib/common.js";
 
-var selection = context.selection;
+var onRun = function (context) {
 
-if (selection.count() > 0) {
+    var selection = context.selection;
 
-    var layer = selection.firstObject();
+    if (selection.count() == 1) {
 
-    layerInfo(layer);
+        var layer = selection.firstObject();
+        var layerInfo = getLayerInfo(context, layer);
+
+        if (layerInfo.support) {
+
+            // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
+            var xml = '\
+<?xml version="1.0" encoding="utf-8"?>\n\
+<shape xmlns:android="http://schemas.android.com/apk/res/android"\n\
+    android:shape="' + layerInfo.type + '"';
+
+            if (
+                layerInfo.type == "ring" &&
+                layerInfo.thickness &&
+                layerInfo.innerRadius
+            ) {
+                xml += '\n\
+    android:thickness="' + layerInfo.thickness + '"\n\
+    android:innerRadius="' + layerInfo.innerRadius + '"';
+            }
+
+            xml += '\n\
+    android:useLevel="false">\n';
+
+            if (layerInfo.width && layerInfo.height) {
+                xml += '\
+    <size\n\
+        android:width="' + layerInfo.width + '"\n\
+        android:height="' + layerInfo.height + '"/>\n';
+            }
+
+            if (layerInfo.solid) {
+                xml += '\
+    <solid\n\
+        android:color="' + layerInfo.solid + '"/>\n';
+            }
+
+            if (layerInfo.gradientType) {
+                xml += '\
+    <gradient\n\
+        android:type="' + layerInfo.gradientType + '"\n';
+
+                if (layerInfo.gradientAngle) {
+                    xml += '\
+        android:angle="' + layerInfo.gradientAngle + '"\n';
+                }
+                if (layerInfo.gradientStops) {
+                    if (layerInfo.gradientStops.length == 2) {
+                        xml += '\
+        android:startColor="' + layerInfo.gradientStops[0] + '"\n\
+        android:endColor="' + layerInfo.gradientStops[1] + '"';
+                    }
+                    if (layerInfo.gradientStops.length == 3) {
+                        xml += '\
+        android:startColor="' + layerInfo.gradientStops[0] + '"\n\
+        android:centerColor="' + layerInfo.gradientStops[1] + '"\n\
+        android:endColor="' + layerInfo.gradientStops[2] + '"';
+                    }
+                }
+                if (layerInfo.gradientRadius) {
+                    xml += '\n\
+        android:gradientRadius="' + layerInfo.gradientRadius + '"';
+                }
+                xml += '/>\n';
+            }
+
+            if (layerInfo.cornersRadius) {
+                xml += '\
+    <corners\n\
+        android:radius="' + layerInfo.cornersRadius + '"/>\n';
+            }
+            if (
+                layerInfo.cornersRadiusTopLeft ||
+                layerInfo.cornersRadiusTopRight ||
+                layerInfo.cornersRadiusBottomRight ||
+                layerInfo.cornersRadiusBottomLeft
+            ) {
+                xml += '\
+    <corners';
+                if (layerInfo.cornersRadiusTopLeft) {
+                    xml += '\n\
+        android:topLeftRadius="' + layerInfo.cornersRadiusTopLeft + '"';
+                }
+                if (layerInfo.cornersRadiusTopRight) {
+                    xml += '\n\
+        android:topRightRadius="' + layerInfo.cornersRadiusTopRight + '"';
+                }
+                if (layerInfo.cornersRadiusBottomRight) {
+                    xml += '\n\
+        android:bottomRightRadius="' + layerInfo.cornersRadiusBottomRight + '"';
+                }
+                if (layerInfo.cornersRadiusBottomLeft) {
+                    xml += '\n\
+        android:bottomLeftRadius="' + layerInfo.cornersRadiusBottomLeft + '"';
+                }
+                xml += '/>\n';
+            }
+
+            if (layerInfo.strokeWidth) {
+                xml += '\
+    <stroke\n\
+        android:width="' + layerInfo.strokeWidth + '"';
+                if (layerInfo.strokeColor) {
+                    xml += '\n\
+        android:color="' + layerInfo.strokeColor + '"';
+                }
+                if (layerInfo.strokeDashWidth) {
+                    xml += '\n\
+        android:dashWidth="' + layerInfo.strokeDashWidth + '"';
+                }
+                if (layerInfo.strokeDashGap) {
+                    xml += '\n\
+        android:dashGap="' + layerInfo.strokeDashGap + '"';
+                }
+                xml += '/>\n';
+            }
+
+            xml += '</shape>';
+
+            // log(xml)
+
+            // Export
+            var exportFolder = chooseFolder();
+            if (exportFolder) {
+                var filePath = exportFolder + "/res/drawable/" + androidResName(layer.name()) + ".xml";
+
+                mkdir(exportFolder + "/res/drawable/");
+                writeContentToFile(filePath, xml);
+
+                if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                    openInFinder(filePath);
+                }
+            }
+
+        } else {
+            toast(context, localizedString(context, layerInfo.msg));
+        }
+    } else {
+        toast(context, localizedString(context, "no_shape_layer"));
+    }
 }
 
-function layerInfo(layer) {
+function getLayerInfo(context, layer) {
     var result = {};
     if (layer.class() == "MSShapeGroup") {
+
+        // fills
+        var fills = layer.style().enabledFills();
+        if (fills.count() > 0) {
+            if (fills.lastObject().fillType() == 0) {
+                result.support = true;
+                result.solid = colorToAndroid(fills.lastObject().color());
+            } else if (fills.lastObject().fillType() == 1) {
+                result.support = true;
+                var gradient = fills.lastObject().gradient();
+                if (gradient.stops().count() < 4) {
+
+                    // gradient type
+                    var gradientType = gradient.gradientType();
+                    switch (gradientType) {
+                        case 2:
+                            result.gradientType = "sweep";
+                            break;
+                        case 1:
+                            result.gradientType = "radial";
+                            result.gradientRadius = Math.round(layer.frame().width() / 2) + "dp";
+                            break;
+                        case 0:
+                            result.gradientType = "linear";
+                            break;
+                        default:
+                            result.gradientType = "linear";
+                    }
+
+                    // gradient stops
+                    var sortByPosition = NSSortDescriptor.sortDescriptorWithKey_ascending("position", true);
+                    gradient.stops().sortUsingDescriptors(NSArray.arrayWithObjects(sortByPosition, nil));
+
+                    result.gradientStops = gradientStopsToColorArray(gradient.stops());
+                    // sweep
+                    if (result.gradientType == "sweep" && gradient.stops().count() == 2) {
+                        var pos1 = gradient.stops().firstObject().position();
+                        var pos2 = gradient.stops().lastObject().position();
+                        var pos1Color = colorToAndroid(gradient.stops().firstObject().color());
+                        var pos2Color = colorToAndroid(gradient.stops().lastObject().color());
+                        if (pos1 > 0.3 && pos2 > 0.7) {
+                            result.gradientStops = [pos1Color].concat(result.gradientStops);
+                        }
+                        if (pos1 < 0.3 && pos2 < 0.7) {
+                            result.gradientStops.push(pos2Color);
+                        }
+                    }
+
+                    // gradient angle
+                    if (result.gradientType == "linear") {
+                        var x1 = gradient.from().x * layer.frame().width();
+                        var y1 = gradient.from().y * layer.frame().height();
+                        var x2 = gradient.to().x * layer.frame().width();
+                        var y2 = gradient.to().y * layer.frame().height();
+                        var angle = Math.round(Math.atan(Math.abs(y1 - y2) / Math.abs(x1 - x2)) * 180 / Math.PI / 45) * 45;
+                        switch (true) {
+                            case x1 > x2 && y1 > y2:
+                                result.gradientAngle = angle + 90;
+                                break;
+                            case x1 >= x2 && y1 <= y2:
+                                result.gradientAngle = angle + 180;
+                                break;
+                            case x1 < x2 && y1 < y2:
+                                result.gradientAngle = angle + 275;
+                                break;
+                            default:
+                                // x1 <= x2 && y1 >= y2:
+                                result.gradientAngle = angle;
+                        }
+                    }
+
+                } else {
+                    result.support = false;
+                    result.msg = "too_many_color_stop";
+                    return result;
+                }
+
+            } else {
+                result.support = false;
+                result.msg = "no_support_fill_type";
+                return result;
+            }
+        } else {
+            result.support = true;
+            result.solid = "#000000";
+        }
+
+        // borders
+        var borders = layer.style().enabledBorders();
+        if (borders.count() > 0) {
+            if (borders.lastObject().fillType() == 0) {
+                result.strokeWidth = borders.lastObject().thickness() + "dp";
+                result.strokeColor = colorToAndroid(borders.lastObject().color());
+
+                var dashPattern = layer.style().borderOptions().dashPattern();
+                if (dashPattern.count() > 0) {
+                    result.strokeDashWidth = dashPattern.firstObject() + "dp";
+                    if (dashPattern.count() == 1) {
+                        result.strokeDashGap = dashPattern.firstObject() + "dp";
+                    } else {
+                        result.strokeDashGap = dashPattern.objectAtIndex(1) + "dp";
+                    }
+                }
+
+            } else {
+                result.support = false;
+                result.msg = "no_support_stroke_type";
+                return result;
+            }
+        }
+
         if (layer.children().count() == 2) {
             var shapePath = layer.children().firstObject();
             if (shapePath.class() == "MSRectangleShape" || shapePath.class() == "MSOvalShape") {
 
-                var fills = layer.style().enabledFills();
-                if (fills.count() > 0) {
-                    if (fills.lastObject().fillType() == 0) {
-                        result.support = true;
-                        result.solid = colorToAndroid(fills.lastObject().color());
-                    } else if (fills.lastObject().fillType() == 1) {
-                        result.support = true;
-                        var gradient = fills.lastObject().gradient();
-                        if (gradient.stops().count() < 4) {
-
-                            var gradientType = gradient.gradientType();
-                            switch (gradientType) {
-                                case 2:
-                                    result.gradientType = "sweep";
-                                    break;
-                                case 1:
-                                    result.gradientType = "radial";
-                                    break;
-                                case 0:
-                                    result.gradientType = "linear";
-                                    break;
-                                default:
-                                    result.gradientType = "linear";
-                            }
-
-                            result.gradientStops = gradientStopsToColorArray(gradient.stops());
-
-                            // log(gradient.from());
-                            //
-                            // log(gradient.to());
-
-                            var x1 = gradient.from().x * layer.frame().width();
-                            var y1 = gradient.from().y * layer.frame().height();
-                            var x2 = gradient.to().x * layer.frame().width();
-                            var y2 = gradient.to().y * layer.frame().height();
-                            var angle = Math.atan(Math.abs(y1 - y2) / Math.abs(x1 - x2)) * 180 / Math.PI;
-
-                            log(angle);
-
-                        } else {
-                            result.support = false;
-                            result.msg = "too many color stop in gradient";
-                            return result;
-                        }
-
-                    } else {
-                        result.support = false;
-                        result.msg = "no support fill type";
-                        return result;
-                    }
-                } else {
-                    result.support = true;
-                    result.solid = "#000000";
-                }
-
-                var borders;
-
-
-
                 if (result.support) {
-
-
-
-
                     if (shapePath.class() == "MSRectangleShape") {
                         result.type = "rectangle"
 
                         // radius
-
-
-
+                        var points = layer.children().firstObject().path().points();
+                        var radius = 0,
+                            radiusTopLeft = Math.round(points.objectAtIndex(0).cornerRadius()),
+                            radiusTopRight = Math.round(points.objectAtIndex(1).cornerRadius()),
+                            radiusBottomRight = Math.round(points.objectAtIndex(2).cornerRadius()),
+                            radiusBottomLeft = Math.round(points.objectAtIndex(3).cornerRadius());
+                        if (
+                            radiusTopLeft == radiusTopRight &&
+                            radiusTopLeft == radiusBottomRight &&
+                            radiusTopLeft == radiusBottomLeft
+                        ) {
+                            radius = radiusTopLeft;
+                        } else {
+                            result.cornersRadiusTopLeft = radiusTopLeft + "dp";
+                            result.cornersRadiusTopRight = radiusTopRight + "dp";
+                            result.cornersRadiusBottomRight = radiusBottomRight + "dp";
+                            result.cornersRadiusBottomLeft = radiusBottomLeft + "dp";
+                        }
+                        if (radius != 0) {
+                            result.cornersRadius = radius + "dp";
+                        }
                     } else {
-                        result.type = "oval"
+                        result.type = "oval";
                     }
                 }
 
             } else {
                 // no support shape
                 result.support = false;
-                result.msg = "no support shape 1";
+                result.msg = "no_support_shape";
                 return result;
             }
         } else if (layer.children().count() == 3) {
@@ -114,29 +319,35 @@ function layerInfo(layer) {
                 result.support = true;
                 result.type = "ring";
 
+                var diameter1 = layer.children().objectAtIndex(0).frame().width(),
+                    diameter2 = layer.children().objectAtIndex(1).frame().width();
 
-
-
+                result.thickness = Math.abs(diameter1 - diameter2) + "dp";
+                result.innerRadius = Math.min(diameter1, diameter2) + "dp";
 
             } else {
                 result.support = false;
-                result.msg = "no support shape 2";
+                result.msg = "no_support_shape";
                 return result;
             }
 
         } else {
             result.support = false;
-            result.msg = "no support shape 3";
+            result.msg = "no_support_shape";
             return result;
         }
     } else {
         result.support = false;
-        result.msg = "no shape layer";
+        result.msg = "no_shape_layer";
         return result;
     }
 
+    // Size
+    result.width = Math.round(layer.frame().width()) + "dp";
+    result.height = Math.round(layer.frame().height()) + "dp";
 
-    log(result);
+    return result;
+
 }
 
 function gradientStopsToColorArray(stops) {
@@ -156,121 +367,8 @@ function colorToAndroid(mscolor) {
         if (alphaHex.length == 1) {
             alphaHex = "0" + alphaHex;
         }
-        return alphaHex.toUpperCase() + hex;
+        return "#" + alphaHex.toUpperCase() + hex;
     } else {
-        return hex;
+        return "#" + hex;
     }
 }
-
-
-
-// var onRun = function(context) {
-
-    // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
-// }
-
-// <?xml version="1.0" encoding="utf-8"?>
-// <shape
-//     xmlns:android="http://schemas.android.com/apk/res/android"
-//     android:shape=["rectangle" | "oval" | "line" | "ring"] >
-//     <corners
-//         android:radius="integer"
-//         android:topLeftRadius="integer"
-//         android:topRightRadius="integer"
-//         android:bottomLeftRadius="integer"
-//         android:bottomRightRadius="integer" />
-//     <gradient
-//         android:angle="integer"
-//         android:centerX="float"
-//         android:centerY="float"
-//         android:centerColor="integer"
-//         android:endColor="color"
-//         android:gradientRadius="integer"
-//         android:startColor="color"
-//         android:type=["linear" | "radial" | "sweep"]
-//         android:useLevel=["true" | "false"] />
-//     <size
-//         android:width="integer"
-//         android:height="integer" />
-//     <solid
-//         android:color="color" />
-//     <stroke
-//         android:width="integer"
-//         android:color="color"
-//         android:dashWidth="integer"
-//         android:dashGap="integer" />
-// </shape>
-
-
-
-//         if (layer.class() == "MSShapeGroup") {
-//
-//             // Rect
-//
-//             if (
-//                 layer.children().count() == 2 &&
-//                 layer.children().firstObject().path().isRectangle()
-//             ) {
-//
-//                 var xml ='\
-// <?xml version="1.0" encoding="utf-8"?>\n\
-// <shape xmlns:android="http://schemas.android.com/apk/res/android"\n\
-//     android:shape="rectangle">\n';
-//
-//                 var width = layer.frame().width(),
-//                     height = layer.frame().height();
-//                 xml += '\
-//     <size\n\
-//         android:width="' + width + 'dp"\n\
-//         android:height="' + height + 'dp"/>\n';
-//
-//                 if (layer.style().enabledFills().count() > 0) {
-//                     var fill = layer.style().enabledFills().lastObject();
-//
-//                     if (fill.fillType() == 0) {
-//                         var color = fill.color();
-//                         xml += '\
-//     <solid\n\
-//         android:color="' + nsColorToAndroid(color) + '"/>\n';
-//                     }
-//
-//                     if (fill.fillType() == 1) {
-//                         var gradient = fill.gradient();
-//
-//                         var androidGradientType = "linear";
-//                         // gradient.gradientType() == 0
-//                         switch (gradient.gradientType()) {
-//                             case 2:
-//                                 androidGradientType = "sweep";
-//                                 break;
-//                             case 1:
-//                                 androidGradientType = "radial";
-//                                 break;
-//                             default:
-//                                 androidGradientType = "linear";
-//                         }
-//
-//
-//
-//
-//                     }
-//
-//
-//                 }
-//
-//                 var points = layer.children().firstObject().path().points();
-//                 var radius,
-//                     radiusTopLeft = points.objectAtIndex(0).cornerRadius(),
-//                     radiusTopRight = points.objectAtIndex(1).cornerRadius(),
-//                     radiusBottomRight = points.objectAtIndex(2).cornerRadius(),
-//                     radiusBottomLeft = points.objectAtIndex(3).cornerRadius();
-//
-//                 if (radiusTopLeft == radiusTopRight == radiusBottomRight == radiusBottomLeft) {
-//                     radius = radiusTopLeft;
-//                 }
-//
-//             }
-//
-//
-//         }
-//

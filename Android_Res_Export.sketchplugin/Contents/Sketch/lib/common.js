@@ -86,17 +86,6 @@ function dpiToScale(dpi) {
     }
 }
 
-function nsColorToAndroid(color) {
-    var r = parseInt(color.red() * 255).toString(16),
-        g = parseInt(color.green() * 255).toString(16),
-        b = parseInt(color.blue() * 255).toString(16),
-        a = parseInt(color.alpha() * 255).toString(16);
-    return "#" + (a.length == 1 ? "0" + a : a)
-        + (r.length == 1 ? "0" + r : r)
-        + (g.length == 1 ? "0" + g : g)
-        + (b.length == 1 ? "0" + b : b);
-}
-
 /* =========================================================
     Sketch
 ========================================================= */

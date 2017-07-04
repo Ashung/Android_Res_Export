@@ -9,6 +9,7 @@
 
 var onRun = function (context) {
 
+    var sketch = context.api();
     var doc = context.document;
     var page = doc.currentPage();
 
@@ -22,7 +23,12 @@ var onRun = function (context) {
 
     insertImageLayer_fromResource(context, artboard, CGRectMake(0, 0, 192, 192), "app_icon_grid.png");
 
-    artboard.select_byExpandingSelection(true, false);
+    // Fix Sketch 45
+    if (sketch.build < 43475) {
+        artboard.select_byExpandingSelection(true, false);
+    } else {
+        artboard.select_byExtendingSelection(true, false);
+    }
 
     // cmd + 2
     NSApp.sendAction_to_from("zoomToSelection:", nil, doc);
