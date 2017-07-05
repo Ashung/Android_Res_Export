@@ -147,7 +147,7 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
             1.0
         );
         shapeGroup.style().addStylePartOfType(0);
-        shapeGroup.style().fill().setColor(colorObject);
+        shapeGroup.style().fills().firstObject().setColor(colorObject);
     }
 
     if (beforeLayer) {

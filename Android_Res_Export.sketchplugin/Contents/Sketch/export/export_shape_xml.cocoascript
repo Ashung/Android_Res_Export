@@ -159,6 +159,17 @@ function getLayerInfo(context, layer) {
     var result = {};
     if (layer.class() == "MSShapeGroup") {
 
+        // Not support layer style
+        if (
+            layer.style().hasEnabledShadow() ||
+            layer.style().enabledInnerShadows().count() > 0 ||
+            layer.style().blur().isEnabled()
+        ) {
+            result.support = false;
+            result.msg = "not_support_layer_style";
+            return result;
+        }
+
         // fills
         var fills = layer.style().enabledFills();
         if (fills.count() > 0) {
