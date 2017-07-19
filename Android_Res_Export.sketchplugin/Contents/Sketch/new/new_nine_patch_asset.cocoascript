@@ -9,6 +9,7 @@
 
 var onRun = function(context) {
 
+    var sketch = context.api();
     var doc = context.document;
     var selection = context.selection;
     var selectionCount = selection.count();
@@ -86,7 +87,12 @@ var onRun = function(context) {
         }
 
         // Select layerGroup
-        groupNinePatch.select_byExpandingSelection(true, false);
+        // Fix Sketch 45
+        if (sketch.build < 43475) {
+            groupNinePatch.select_byExpandingSelection(true, false);
+        } else {
+            groupNinePatch.select_byExtendingSelection(true, false);
+        }
 
     }
 
