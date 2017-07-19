@@ -37,7 +37,7 @@ var onRun = function (context) {
             dialog.addButtonWithTitle(localizedString(context, "cancel"));
 
             var responseCode = dialog.runModal();
-            if(responseCode == 1000) {
+            if (responseCode == 1000) {
                 NSWorkspace.sharedWorkspace().openURL(context.plugin.downloadURL());
             }
 

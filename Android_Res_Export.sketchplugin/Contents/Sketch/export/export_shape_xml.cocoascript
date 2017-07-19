@@ -18,6 +18,7 @@ var onRun = function (context) {
 
         if (layerInfo.support) {
 
+            // Android Shape Drawable References
             // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
             var xml = '\
 <?xml version="1.0" encoding="utf-8"?>\n\
@@ -170,7 +171,7 @@ function getLayerInfo(context, layer) {
             return result;
         }
 
-        // fills
+        // Fills
         var fills = layer.style().enabledFills();
         if (fills.count() > 0) {
             if (fills.lastObject().fillType() == 0) {
@@ -181,7 +182,7 @@ function getLayerInfo(context, layer) {
                 var gradient = fills.lastObject().gradient();
                 if (gradient.stops().count() < 4) {
 
-                    // gradient type
+                    // Gradient type
                     var gradientType = gradient.gradientType();
                     switch (gradientType) {
                         case 2:
@@ -198,12 +199,12 @@ function getLayerInfo(context, layer) {
                             result.gradientType = "linear";
                     }
 
-                    // gradient stops
+                    // Gradient stops
                     var sortByPosition = NSSortDescriptor.sortDescriptorWithKey_ascending("position", true);
                     gradient.stops().sortUsingDescriptors(NSArray.arrayWithObjects(sortByPosition, nil));
-
                     result.gradientStops = gradientStopsToColorArray(gradient.stops());
-                    // sweep
+
+                    // Sweep
                     if (result.gradientType == "sweep" && gradient.stops().count() == 2) {
                         var pos1 = gradient.stops().firstObject().position();
                         var pos2 = gradient.stops().lastObject().position();
@@ -217,7 +218,7 @@ function getLayerInfo(context, layer) {
                         }
                     }
 
-                    // gradient angle
+                    // Gradient angle
                     if (result.gradientType == "linear") {
                         var x1 = gradient.from().x * layer.frame().width();
                         var y1 = gradient.from().y * layer.frame().height();
@@ -288,7 +289,7 @@ function getLayerInfo(context, layer) {
                     if (shapePath.class() == "MSRectangleShape") {
                         result.type = "rectangle"
 
-                        // radius
+                        // Radius
                         var points = layer.children().firstObject().path().points();
                         var radius = 0,
                             radiusTopLeft = Math.round(points.objectAtIndex(0).cornerRadius()),
@@ -316,7 +317,6 @@ function getLayerInfo(context, layer) {
                 }
 
             } else {
-                // no support shape
                 result.support = false;
                 result.msg = "no_support_shape";
                 return result;
