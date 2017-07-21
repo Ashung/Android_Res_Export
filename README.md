@@ -2,8 +2,6 @@
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
-**Sketch 43.x Support**
-
 [中文说明](https://github.com/Ashung/Android_Res_Export/blob/master/README_zh.md)
 
 Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.
@@ -17,18 +15,32 @@ Export Android resources in Sketch – PNG assets, app icon, nine-patch image an
 
 ### Nine-patch support configure
 
-Install [Homebrew](http://brew.sh/), after hombrew installed, use this command to install ImageMagick.
+Install Xcode.
+
+```shell
+xcode-select --install
+```
+
+Install [Homebrew](http://brew.sh/).
+
+```shell
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+After hombrew installed, use this command to install ImageMagick.
 
 ```bash
-$ brew install imagemagick
+brew install imagemagick
 ```
 
 ### Vector drawable support configure
 
-Install [Node.js](https://nodejs.org/en/), then use this command to install [SVGO](https://github.com/svg/svgo) and [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable).
+Install [Node.js](https://nodejs.org/en/).
+
+Then use this command to install [SVGO](https://github.com/svg/svgo) and [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable).
 
 ```bash
-$ npm install -g svgo svg2vectordrawable
+npm install -g svgo svg2vectordrawable
 ```
 
 ## How it Works

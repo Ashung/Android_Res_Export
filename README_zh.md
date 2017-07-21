@@ -2,41 +2,47 @@
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
-**支持 Sketch 43.1 , 支持中文**
+**支持 Sketch 45+ , 支持中文**
 
-用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、九宫格（Nine-patch）图片和可绘制矢量（Vector Drawable）文件。
+用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、九宫格（Nine-patch）图片、形状 XML 和可绘制矢量（Vector Drawable）文件。
 
 ## 安装
 
 ### 安装插件
 
-- （推荐安装方法）在 [Sketch Runner](http://sketchrunner.com/)、[Sketchpacks](https://sketchpacks.com/) 或 [Sketch Toolbox](http://sketchtoolbox.com/) 搜索 “Android Res Export”。
+- 推荐在 [Sketch Runner](http://sketchrunner.com/)、[Sketchpacks](https://sketchpacks.com/) 或 [Sketch Toolbox](http://sketchtoolbox.com/) 搜索 “Android Res Export”。
 - 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) ，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
 
 ### 配置九宫格图片导出支持
 
-首先在终端输入以下命令安装 Xcode 命令行工具。
+首先在复制以下命令到终端，安装 Xcode 命令行工具。
 
-```bash
-$ xcode-select --install
+```shell
+xcode-select --install
 ```
 
-按照 [Homebrew](http://brew.sh/index_zh-cn.html) 主页上的安装方法安装 Homebrew。
+复制以下命令到终端，安装 [Homebrew](http://brew.sh/index_zh-cn.html)。
 
-通过 Homebrew 来安装 [ImageMagick](http://www.imagemagick.org/script/index.php)，在终端输入以下命令。
+```shell
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
 
-```bash
-$ brew install imagemagick
+在终端输入以下命令，通过 Homebrew 来安装 [ImageMagick](http://www.imagemagick.org/script/index.php)。
+
+```shell
+brew install imagemagick
 ```
 
 ### 配置可绘制矢量文件导出支持
 
-首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。如果速度太慢可以从[国内镜像下载](https://npm.taobao.org/)。
+首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。
+
+如果速度太慢可以从 [国内镜像下载 Node.js v8.0.0](https://npm.taobao.org/mirrors/node/v8.0.0/node-v8.0.0.pkg)。
 
 安装完成后，打开终端输入以下命令安装 [SVGO](https://github.com/svg/svgo) 和 [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable)。
 
 ```bash
-$ npm install -g svgo svg2vectordrawable
+npm install -g svgo svg2vectordrawable
 ```
 
 ## 如何使用
@@ -69,7 +75,11 @@ $ npm install -g svgo svg2vectordrawable
 
 选择图层，执行 "Plugins" - "Android Res Export" - "New Vector Drawable Asset（新建可绘制矢量资源）"，来创建一个可绘制矢量文件资源。
 
-选择可绘制矢量资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"，如果图像有问题，可以执行 "Layer" - "Paths" - "Reverse Order" 反转路径顺序。
+**若要 Vector Drawable 支持低于 API V24 (Android 7) 的设备需要以下操作**。
+
+选择可绘制矢量资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"。
+
+插件暂不支持 API V25 的渐变。
 
 #### 应用图标资源
 
@@ -89,7 +99,7 @@ $ npm install -g svgo svg2vectordrawable
 
 #### 使用 ImageOptim 压缩资源
 
-先安装 [ImageOptim](https://imageoptim.com/mac)，然后在 "Plugins" - "Android Res Export" - "Preferences（参数设置）" 中，勾选 "Optimize Images use ImageOptim After Export.（导出资源后使用 ImageOptim 压缩图片。）"。
+先安装 [ImageOptim](https://imageoptim.com/mac)，然后在 "Plugins" - "Android Res Export" - "Preferences（参数设置）" 中，勾选 "Optimize Images use ImageOptim After Export.（导出资源后使用 ImageOptim 压缩图片）"。
 
 #### 导出资源到特殊后缀文件夹
 
