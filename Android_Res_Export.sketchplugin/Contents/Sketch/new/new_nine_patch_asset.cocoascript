@@ -94,6 +94,8 @@ var onRun = function(context) {
             groupNinePatch.select_byExtendingSelection(true, false);
         }
 
+        groupNinePatch.resizeToFitChildrenWithOption(1);
+
     }
 
     ga(context, "New", "new_nine_patch", "New");
