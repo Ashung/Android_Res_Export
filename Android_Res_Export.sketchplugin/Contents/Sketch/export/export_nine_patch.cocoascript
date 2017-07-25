@@ -83,7 +83,7 @@ var onRun = function(context) {
         }
     }
 
-    // log(exportNinePatches);
+    log(exportNinePatches);
 
     if (exportNinePatches.count() > 0) {
 
@@ -154,21 +154,24 @@ var onRun = function(context) {
                     var exportRequestForContent = MSExportRequest.exportRequestsFromExportableLayer(tempSlice).firstObject();
                     doc.saveArtboardOrSlice_toFile(exportRequestForContent, exportFolder + "/" + ninePatchContentID + ".png");
 
+                    mkdir(exportFolder + "/res/drawable-" + qualifier);
+
                     createNinePatch(
                         convert,
                         exportFolder,
                         scale,
-                        "",
+                        exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png",
                         ninePatchWidth,
                         ninePatchHeight,
                         ninePatchContentID,
                         ninePatchPatchID,
                         function(success, message) {
+                            log(message);
                             if (success == true) {
-                                var output = exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png";
-                                mkdir(exportFolder + "/res/drawable-" + qualifier);
+                                // var output = exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png";
+                                // mkdir(exportFolder + "/res/drawable-" + qualifier);
                                 rm(exportFolder + "/" + ninePatchContentID + ".png");
-                                mv(exportFolder + "/" + ninePatchContentID + "_temp.png", output);
+                                // mv(exportFolder + "/" + ninePatchContentID + "_temp.png", output);
                                 if (getPreferences(context, "use_imageoptim_after_export") == 1) {
                                     imageOptim(output);
                                 }
@@ -187,9 +190,9 @@ var onRun = function(context) {
 
             }
 
-            if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                openInFinder(exportFolder);
-            }
+            // if (getPreferences(context, "show_in_finder_after_export") == 1) {
+            //     openInFinder(exportFolder);
+            // }
 
         }
 
@@ -233,11 +236,11 @@ function createMdpiPatchLines(convert, cwd, width, height, mdpiPatchId, callback
     runCommand(command, args, callback);
 }
 
-function createNinePatch(convert, cwd, scale, suffix, width, height, contentId, patchId, callback) {
+function createNinePatch(convert, cwd, scale, output, width, height, contentId, patchId, callback) {
     var newWidth = Math.floor(width * scale);
     var newHeight = Math.floor(height * scale);
-    var temp = contentId + "_temp" + suffix + ".png";
-    var content = contentId + suffix + ".png";
+    // var temp = contentId + "_temp" + suffix + ".png";
+    var content = contentId + ".png";
     var patchTop = patchId + "_top.png";
     var patchRight = patchId + "_right.png";
     var patchBottom = patchId + "_bottom.png";
@@ -257,7 +260,7 @@ function createNinePatch(convert, cwd, scale, suffix, width, height, contentId, 
                 + patchBottom + ' \\) -gravity South -composite '
             + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest '
                 + patchLeft + ' \\) -gravity West -composite '
-            + temp
+            + output
     ];
     runCommand(command, args, callback);
 }
