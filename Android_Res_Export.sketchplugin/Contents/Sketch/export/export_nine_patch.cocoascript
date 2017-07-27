@@ -141,26 +141,27 @@ var onRun = function(context) {
                 );
 
                 // Export nine-patch content
-                var tempSlice = ninePatchContent.duplicate();
                 for (var i = 0; i < exportConfig.length; i++) {
 
                     var scale = exportConfig[i]["scale"];
                     var qualifier = exportConfig[i]["qualifier"];
+                    var exportFormat = ninePatchContent.exportOptions().addExportFormat();
+                    exportFormat.setFileFormat("png");
+                    exportFormat.setScale(scale);
+                    var exportRequest = MSExportRequest.exportRequestsFromExportableLayer(ninePatchContent).lastObject();
+                    doc.saveArtboardOrSlice_toFile(exportRequest, exportFolder + "/" + ninePatchContentID + ".png");
+                    exportFormat.remove();
 
-                    tempSlice.exportOptions().removeAllExportFormats();
-                    var exportOptionForContent = tempSlice.exportOptions().addExportFormat();
-                        exportOptionForContent.setFileFormat("png");
-                        exportOptionForContent.setScale(scale);
-                    var exportRequestForContent = MSExportRequest.exportRequestsFromExportableLayer(tempSlice).firstObject();
-                    doc.saveArtboardOrSlice_toFile(exportRequestForContent, exportFolder + "/" + ninePatchContentID + ".png");
+                    var outputFolder = exportFolder + "/res/drawable-" + qualifier;
+                    var outputImage = outputFolder + "/" + ninePatchName + ".9.png";
 
-                    mkdir(exportFolder + "/res/drawable-" + qualifier);
+                    mkdir(outputFolder);
 
                     createNinePatch(
                         convert,
                         exportFolder,
                         scale,
-                        exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png",
+                        outputImage,
                         ninePatchWidth,
                         ninePatchHeight,
                         ninePatchContentID,
@@ -168,19 +169,15 @@ var onRun = function(context) {
                         function(success, message) {
                             log(message);
                             if (success == true) {
-                                // var output = exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png";
-                                // mkdir(exportFolder + "/res/drawable-" + qualifier);
                                 rm(exportFolder + "/" + ninePatchContentID + ".png");
-                                // mv(exportFolder + "/" + ninePatchContentID + "_temp.png", output);
                                 if (getPreferences(context, "use_imageoptim_after_export") == 1) {
-                                    imageOptim(output);
+                                    imageOptim(outputImage);
                                 }
                             }
                         }
                     );
 
                 }
-                tempSlice.removeFromParent();
 
                 // Remove nine-patch patch lines
                 rm(exportFolder + "/" + ninePatchPatchID + "_top.png");
@@ -190,9 +187,9 @@ var onRun = function(context) {
 
             }
 
-            // if (getPreferences(context, "show_in_finder_after_export") == 1) {
-            //     openInFinder(exportFolder);
-            // }
+            if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                openInFinder(exportFolder);
+            }
 
         }
 

@@ -63,6 +63,7 @@
     "show_in_finder_after_export": "Show in Finder After Export.",
     "use_imageoptim_after_export": "Optimize Images use ImageOptim After Export.",
     "export_shape_xml": "Export Shape Drawable XML",
+    "not_support_layer_style": "Layer style like shadow and blur is not support by Android shape drawable.",
     "too_many_color_stop": "The gradient in Android shape drawable not support greater than 3 colors.",
     "no_support_fill_type": "The fill type is not support for Android shape drawable.",
     "no_support_stroke_type": "The stroke type is not support for Android shape drawable.",

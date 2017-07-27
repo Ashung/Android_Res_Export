@@ -2,6 +2,7 @@ description: Export Android resources, like pngs, nine-patch, app icon and vecto
 new_png_asset: New PNG Asset
 new_nine_patch_asset: New Nine-Patch Asset
 new_app_icon: New App Icon
+new_app_icon_android_o: New App Icon (Android O)
 add_system_icon: Add System Icon Grid Line
 new_vector_drawable_asset: New Vector Drawable Asset
 export_png_assets: Export PNG Assets
