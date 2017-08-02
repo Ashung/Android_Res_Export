@@ -1,0 +1,35 @@
+*{margin:0;padding:0;}
+html,body{height:100%;}
+body{background:#f8f8f8;font-family:Roboto,Helvetica,Arial,sans-serif;}
+pre code{display:block;font:14px Consolas,Monaco,monospace;}
+
+button{display:inline-block;font:inherit;font-size:14px;font-weight:500;text-transform:uppercase;border:0;border-radius:2px;height:36px;line-height:36px;margin:0;padding:0 16px;vertical-align:middle;outline:none;cursor:pointer;color:#000;background:none;background:none;transition:background-color .2s cubic-bezier(.4,0,.2,1);}
+button:hover{background:rgba(158, 158, 158, 0.2);}
+button:active{background:rgba(158, 158, 158, 0.4);}
+
+#main{height:100%;}
+#main,#code-preview,#code-preview pre{display:flex;flex-direction:column;}
+#code-preview,#code-preview pre,#code{flex:auto;}
+#foot-actions{height:56px;text-align:right;padding:0 16px;align-items:center;display:flex;}
+
+.gap{width:8px;}
+.gap-flex{flex:auto;}
+
+/* github.com style (c) Vasily Polovnyov <vast@whiteants.net> */
+.hljs{display:block;overflow-x:auto;padding:1em;color:#333;background:#f8f8f8}
+.hljs-comment,.hljs-quote{color:#998;font-style:italic}
+.hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}
+.hljs-number,.hljs-literal,.hljs-variable,.hljs-template-variable,.hljs-tag .hljs-attr{color:#008080}
+.hljs-string,.hljs-doctag{color:#d14}
+.hljs-title,.hljs-section,.hljs-selector-id{color:#900;font-weight:700}
+.hljs-subst{font-weight:400}
+.hljs-type,.hljs-class .hljs-title{color:#458;font-weight:700}
+.hljs-tag,.hljs-name,.hljs-attribute{color:navy;font-weight:400}
+.hljs-regexp,.hljs-link{color:#009926}
+.hljs-symbol,.hljs-bullet{color:#990073}
+.hljs-built_in,.hljs-builtin-name{color:#0086b3}
+.hljs-meta{color:#999;font-weight:700}
+.hljs-deletion{background:#fdd}
+.hljs-addition{background:#dfd}
+.hljs-emphasis{font-style:italic}
+.hljs-strong{font-weight:700}

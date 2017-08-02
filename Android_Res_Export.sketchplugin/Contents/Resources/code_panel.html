@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Code Viewer</title>
+<link rel="stylesheet" href="style.css">
+<script src="highlight.pack.js"></script>
+</head>
+<body>
+<div id="main">
+
+<div id="code-preview">
+<pre><code id="code" class="xml"></code></pre>
+</div>
+
+<div id="foot-actions">
+    <span class="gap-flex"></span>
+    <button class="mdl-button mdl-js-button">Copy</button>
+    <span class="gap"></span>
+    <button class="mdl-button mdl-js-button">Save</button>
+</div>
+
+</div>
+<script>
+
+function previewCode(code) {
+    const ele_code = document.getElementById("code");
+    ele_code.innerText = code || '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">\n<path d="M15 9h6V7H3v2h6v13h2v-7h2v7h2V9zm-3-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>\n</svg>';
+    hljs.highlightBlock(ele_code);
+}
+
+</script>
+</body>
+</html>

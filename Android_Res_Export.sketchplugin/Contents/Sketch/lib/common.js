@@ -86,6 +86,29 @@ function dpiToScale(dpi) {
     }
 }
 
+function colorToAndroid(mscolor) {
+    var alpha = mscolor.alpha();
+    var hex = mscolor.immutableModelObject().hexValue();
+    if (alpha < 1) {
+        var alphaHex = Math.round(alpha * 255).toString(16);
+        if (alphaHex.length == 1) {
+            alphaHex = "0" + alphaHex;
+        }
+        return "#" + alphaHex.toUpperCase() + hex;
+    } else {
+        return "#" + hex;
+    }
+}
+
+function gradientStopsToColorArray(stops) {
+    var result = [];
+    var loop = stops.objectEnumerator();
+    while (stop = loop.nextObject()) {
+        result.push(colorToAndroid(stop.color()));
+    }
+    return result;
+}
+
 /* =========================================================
     Sketch
 ========================================================= */

@@ -11,11 +11,7 @@
 var f = "/System_Icons/assets/drawable-anydpi-v21/ic_account_add.xml"
 
 // default
-var defaultValue = {
-    width: 24,
-    height: 24,
-    pathData: "M0,0L0,24L24,24L24,0z"
-}
+
 
 // clean XML code
 var vectorDrawable = getContentFromFile(f);
@@ -32,9 +28,13 @@ log(vectorDrawableToSVG(vectorDrawable));
 
 
 function vectorDrawableToSVG(vectorDrawable) {
+
+    var defaultValue = {
+        width: 24,
+        height: 24,
+        pathData: "M0,0L0,24L24,24L24,0z"
+    };
     var svg = '<svg xmlns="http://www.w3.org/2000/svg"';
-
-
     var width = parseInt(/<vector[^<]*android:width=\"(\w+)\"/.exec(vectorDrawable)[1]) || defaultValue.width,
         height = parseInt(/<vector[^<]*android:height=\"(\w+)\"/.exec(vectorDrawable)[1]) || defaultValue.height,
         viewportWidth = parseInt(/<vector[^<]*android:viewportWidth=\"(\w+)\"/.exec(vectorDrawable)[1]) || defaultValue.width,
@@ -42,7 +42,7 @@ function vectorDrawableToSVG(vectorDrawable) {
 
     svg += ' width="' + width + 'px"';
     svg += ' height="' + height + 'px"';
-    svg += ' viewBox="0 0 ' + viewportWidth + ' ' + viewportHeight + '">\n'
+    svg += ' viewBox="0 0 ' + viewportWidth + ' ' + viewportHeight + '">';
 
     // log(/<vector[^<]*android:viewportWidth=\"(\w+)\"/.exec(vectorDrawable)[1]);
     var paths = vectorDrawable.match(/<path[^<]*\/>/g);
