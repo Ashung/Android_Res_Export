@@ -8,8 +8,8 @@ button:hover{background:rgba(158, 158, 158, 0.2);}
 button:active{background:rgba(158, 158, 158, 0.4);}
 
 #main{height:100%;}
-#main,#code-preview,#code-preview pre{display:flex;flex-direction:column;}
-#code-preview,#code-preview pre,#code{flex:auto;}
+#main,#preview,#preview pre{display:flex;flex-direction:column;}
+#preview,#preview pre,#code{flex:auto;}
 #foot-actions{height:56px;text-align:right;padding:0 16px;align-items:center;display:flex;}
 
 .gap{width:8px;}
@@ -33,3 +33,6 @@ button:active{background:rgba(158, 158, 158, 0.4);}
 .hljs-addition{background:#dfd}
 .hljs-emphasis{font-style:italic}
 .hljs-strong{font-weight:700}
+
+#preview{position:relative;}
+#nine_patch_preview{position:absolute;width:100px;height:100px;top:50%;left:50%;box-sizing:border-box;}
