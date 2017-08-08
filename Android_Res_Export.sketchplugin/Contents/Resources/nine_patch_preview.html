@@ -9,9 +9,21 @@
 <div id="main">
 
     <div id="preview">
+        <div>
+            <label for="show_content">Content</label>
+            <input id="show_content" type="checkbox">
+        </div>
         <div id="nine_patch_preview"></div>
     </div>
-
+    <div id="controlor">
+        <label for="ninepatch_width">Width</label>
+        <span class="gap"></span>
+        <input id="ninepatch_width" type="range" step="20" value="0">
+        <span class="gap"></span>
+        <label for="ninepatch_height">Height</label>
+        <span class="gap"></span>
+        <input id="ninepatch_height" type="range" step="20" value="0">
+    </div>
     <div id="foot-actions">
         <span class="gap-flex"></span>
         <button class="mdl-button mdl-js-button">Save</button>
