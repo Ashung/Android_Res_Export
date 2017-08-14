@@ -8,24 +8,32 @@
 </head>
 <body>
 <div id="main">
-
-<div id="preview">
-<pre><code id="code" class="xml"></code></pre>
+    <div id="preview">
+        <pre><code id="code" class="xml"></code></pre>
+    </div>
+    <div id="foot-actions">
+        <span class="gap-flex"></span>
+        <button class="button">Copy</button>
+        <span class="gap"></span>
+        <button class="button-blue">Save</button>
+    </div>
 </div>
 
-<div id="foot-actions">
-    <span class="gap-flex"></span>
-    <button class="mdl-button mdl-js-button">Copy</button>
-    <span class="gap"></span>
-    <button class="mdl-button mdl-js-button">Save</button>
-</div>
-
-</div>
 <script>
 
+previewCode('<svg width="24" height="24" viewBox="0 0 24 24"\n    xmlns="http://www.w3.org/2000/svg">\n    <path d="M15 9h6V7H3v2h6v13h2v-7h2v7h2V9zm-3-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>\n</svg>');
+
+window.onfocus = function() {
+    window.location.hash = "windowOnFocus";
+}
+
+document.oncontextmenu = function() {
+    window.event.returnValue = false;
+}
+
 function previewCode(code) {
-    const ele_code = document.getElementById("code");
-    ele_code.innerText = code || '<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">\n<path d="M15 9h6V7H3v2h6v13h2v-7h2v7h2V9zm-3-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>\n</svg>';
+    var ele_code = document.getElementById("code");
+    ele_code.innerText = code;
     hljs.highlightBlock(ele_code);
 }
 
