@@ -241,7 +241,9 @@ function getContentFromFile(filePath) {
 }
 
 function writeContentToFile(filePath, content) {
-    content = NSString.stringWithFormat('%@', content);
+    var parentDir = NSString.stringWithString(filePath).stringByDeletingLastPathComponent();
+    mkdir(parentDir);
+    content = NSString.stringWithString(content);
     content.writeToFile_atomically_encoding_error_(
         filePath, true, NSUTF8StringEncoding, null
     );

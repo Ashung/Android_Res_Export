@@ -2,7 +2,7 @@ description: 导出 Android 资源, 包括 PNG 位图文件, 九宫格文件, �
 new_png_asset: 新建 PNG 位图资源
 new_nine_patch_asset: 新建九宫格文件资源
 new_app_icon: 新建应用图标
-new_app_icon_android_o: 新建应用图标 (Android O)
+new_app_icon_legacy: 新建应用图标 (旧版)
 add_system_icon: 添加系统图标网格
 new_vector_drawable_asset: 新建可绘制矢量资源
 export_png_assets: 导出 PNG 位图资源

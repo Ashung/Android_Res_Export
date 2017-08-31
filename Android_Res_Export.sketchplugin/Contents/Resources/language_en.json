@@ -3,6 +3,7 @@
     "new_png_asset": "New PNG Asset",
     "new_nine_patch_asset": "New Nine-Patch Asset",
     "new_app_icon": "New App Icon",
+    "new_app_icon_legacy": "New App Icon (Legacy)",
     "add_system_icon": "Add System Icon Grid Line",
     "new_vector_drawable_asset": "New Vector Drawable Asset",
     "export_png_assets": "Export PNG Assets",
@@ -68,5 +69,6 @@
     "no_support_fill_type": "The fill type is not support for Android shape drawable.",
     "no_support_stroke_type": "The stroke type is not support for Android shape drawable.",
     "no_support_shape": "Only support shape layer like rectangle or oval.",
-    "no_shape_layer": "Please choose one shape layer like rectangle or oval."
+    "no_shape_layer": "Please choose one shape layer like rectangle or oval.",
+    "template_no_exists": "Template file \"%1\" is no exists."
 }

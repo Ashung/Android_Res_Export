@@ -35,14 +35,16 @@
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "New App Icon",
-            "identifier": "new_app_icon",
+            "name": "New App Icon (Legacy)",
+            "identifier": "new_app_icon_legacy",
+            "handler": "newAppIconTemplateLegacy",
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "",
-            "identifier": "new_app_icon_android_o",
-            "script": "new/new_app_icon_android_o.cocoascript"
+            "name": "New App Icon",
+            "identifier": "new_app_icon",
+            "handler": "newAppIconTemplate",
+            "script": "new/new_app_icon.cocoascript"
         },
         {
             "name": "Export PNG Assets",
@@ -116,6 +118,10 @@
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
+        },
+        {
+            "identifier": "reload_plugins",
+            "script": "utilities/reload_plugins.cocoascript"
         }
     ],
     "menu": {
@@ -126,7 +132,7 @@
             "new_nine_patch_asset",
             "new_vector_drawable_asset",
             "new_app_icon",
-            "new_app_icon_android_o",
+            "new_app_icon_legacy",
             "-",
             "export_png_assets",
             "export_nine_patch",

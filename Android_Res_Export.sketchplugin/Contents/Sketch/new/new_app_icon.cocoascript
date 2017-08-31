@@ -1,38 +1,97 @@
-//
-// Android Res Export
-// Homepage: https://github.com/Ashung/Android_Res_Export
-// Author: Ashung Hung
-// Email: Ashung.hung@gmail.com
-// License: https://creativecommons.org/licenses/by-sa/4.0
+/*----------------------------------------------------------
+
+Android Res Export
+https://github.com/Ashung/Android_Res_Export
+
+Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------*/
 
 @import "../lib/common.js";
 
-var onRun = function (context) {
+var newAppIconTemplate = function(context) {
 
-    var sketch = context.api();
+    importTemplateLayersFromResource(context, "app_icon_template.sketch");
+
+    var page = context.document.currentPage();
+    page.storeMetadata_forKey(true, "is_android_app_icon_template");
+    page.storeMetadata_forKey(false, "is_legacy_android_app_icon");
+
+    ga(context, "New", "new_app_icon");
+
+}
+
+var newAppIconTemplateLegacy = function(context) {
+
+    importTemplateLayersFromResource(context, "app_icon_template_legacy.sketch");
+
+    var page = context.document.currentPage();
+    page.storeMetadata_forKey(true, "is_android_app_icon_template");
+    page.storeMetadata_forKey(true, "is_legacy_android_app_icon");
+
+    ga(context, "New", "new_app_icon_legacy");
+
+}
+
+function importTemplateLayersFromResource(context, resourceName) {
+
     var doc = context.document;
-    var page = doc.currentPage();
 
-    // New Artboard
-    var artboard = MSArtboardGroup.alloc().init();
-    artboard.setRect(CGRectMake(page.originForNewArtboard().x, page.originForNewArtboard().y, 192, 192));
-    artboard.frame().setConstrainProportions(false);
-    artboard.setName("ic_launcher");
+    // Template file.
+    var template = context.plugin.urlForResourceNamed(resourceName);
 
-    page.addLayers([artboard]);
-
-    insertImageLayer_fromResource(context, artboard, CGRectMake(0, 0, 192, 192), "app_icon_grid.png");
-
-    // Fix Sketch 45
-    if (sketch.build < 43475) {
-        artboard.select_byExpandingSelection(true, false);
-    } else {
-        artboard.select_byExtendingSelection(true, false);
+    if (!template) {
+        // Template file path.
+        var templatePath = context.plugin.url().path().lastPathComponent() + "/Contents/Resources/" + resourceName;
+        toast(context, localizedString(context, 'template_no_exists', templatePath));
+        return;
     }
 
-    // cmd + 2
-    NSApp.sendAction_to_from("zoomToSelection:", nil, doc);
+    // Create new page.
+    var pageForIcon = doc.addBlankPage();
+    pageForIcon.setName("App Icon");
 
-    ga(context, "New", "new_app_icon", "New");
+    // Read data from Sketch file.
+    var templateDocument = MSDocument.alloc().init();
+    templateDocument.readFromURL_ofType_error(template, "com.bohemiancoding.sketch.drawing", nil);
+
+    // Old symbolID to new symbolID mapping.
+    var symbolIDMapping = NSMutableDictionary.alloc().init();
+    var allSymbols = templateDocument.documentData().allSymbols();
+    var loopAllSymbols = allSymbols.objectEnumerator();
+    var symbol;
+    while (symbol = loopAllSymbols.nextObject()) {
+        symbolIDMapping.setObject_forKey(
+            symbol.generateObjectID(),
+            symbol.symbolID()
+        );
+    }
+
+    // Change all objectID and symbolID
+    var templatePage = templateDocument.pages().firstObject();
+    var loopChildren = templatePage.children().objectEnumerator();
+    var child;
+    while (child = loopChildren.nextObject()) {
+        child.setObjectID(child.generateObjectID());
+        child.setLayerListExpandedType(1);
+        if (child.class() == "MSSymbolMaster" || child.class() == "MSSymbolInstance") {
+            var newSymbolID = symbolIDMapping.objectForKey(child.symbolID());
+            child.setSymbolID(newSymbolID);
+        }
+    }
+
+    // Add layers.
+    pageForIcon.addLayers(templatePage.layers());
 
 }

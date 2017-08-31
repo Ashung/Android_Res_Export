@@ -4,7 +4,7 @@
   "main": "make.js",
   "author": "Ashung Hung",
   "scripts": {
-    "make": "node make.js"
+    "make": "node make.js && /Applications/Sketch.app/Contents/Resources/sketchtool/bin/sketchtool run Android_Res_Export.sketchplugin reload_plugins"
   },
   "devDependencies": {
     "js-yaml": "^3.6.1",

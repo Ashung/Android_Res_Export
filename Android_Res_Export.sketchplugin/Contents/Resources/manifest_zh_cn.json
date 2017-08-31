@@ -35,14 +35,16 @@
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "新建应用图标",
-            "identifier": "new_app_icon",
+            "name": "新建应用图标 (旧版)",
+            "identifier": "new_app_icon_legacy",
+            "handler": "newAppIconTemplateLegacy",
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "",
-            "identifier": "new_app_icon_android_o",
-            "script": "new/new_app_icon_android_o.cocoascript"
+            "name": "新建应用图标",
+            "identifier": "new_app_icon",
+            "handler": "newAppIconTemplate",
+            "script": "new/new_app_icon.cocoascript"
         },
         {
             "name": "导出 PNG 位图资源",
@@ -116,6 +118,10 @@
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
+        },
+        {
+            "identifier": "reload_plugins",
+            "script": "utilities/reload_plugins.cocoascript"
         }
     ],
     "menu": {
@@ -126,7 +132,7 @@
             "new_nine_patch_asset",
             "new_vector_drawable_asset",
             "new_app_icon",
-            "new_app_icon_android_o",
+            "new_app_icon_legacy",
             "-",
             "export_png_assets",
             "export_nine_patch",
