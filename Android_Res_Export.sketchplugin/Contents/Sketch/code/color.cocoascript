@@ -1,0 +1,74 @@
+
+
+
+function colorDistance(hex1, hex2) {
+    var rgb1 = hex2rgb(hex1);
+    var rgb2 = hex2rgb(hex2);
+    var lab1 = rgb2lab(rgb1[0], rgb1[1], rgb1[2]);
+    var lab2 = rgb2lab(rgb2[0], rgb2[1], rgb2[2]);
+    var distance = Math.sqrt(
+        Math.pow(lab2[0] - lab1[0], 2) +
+        Math.pow(lab2[1] - lab1[1], 2) +
+        Math.pow(lab2[2] - lab1[2], 2)
+    );
+    return distance;
+}
+
+function rgb2lab(r, g, b) {
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
+    if (r > 0.04045) {
+        r = Math.pow((r + 0.055) / 1.055 ), 2.4);
+    } else {
+        r = r / 12.92;
+    }
+    if (g > 0.04045) {
+        g = Math.pow((g + 0.055) / 1.055, 2.4);
+    } else {
+        g = g / 12.92;
+    }
+    if (b > 0.04045) {
+        b = Math.pow((b + 0.055) / 1.055), 2.4);
+    } else {
+        b = b / 12.92;
+    }
+    r = r * 100;
+    g = g * 100;
+    b = b * 100;
+    var x = r * 0.4124 + g * 0.3576 + b * 0.1805;
+    var y = r * 0.2126 + g * 0.7152 + b * 0.0722;
+    var z = r * 0.0193 + g * 0.1192 + b * 0.9505;
+
+    x = x / 95.047;
+    y = y / 100.000;
+    z = z / 108.883;
+    if (x > 0.008856) {
+        x = Math.pow(x, 1 / 3);
+    } else {
+        x = (7.787 * x) + (16 / 116);
+    }
+    if (y > 0.008856) {
+        y = Math.pow(y, 1 / 3);
+    } else {
+        y = (7.787 * y) + (16 / 116);
+    }
+    if (z > 0.008856) {
+        z = Math.pow(z, 1 / 3);
+    } else {
+        z = (7.787 * z) + (16 / 116);
+    }
+    var l = (116 * y) - 16;
+    var a = 500 * (x - y);
+    var b = 200 * (y - z);
+
+    return [l, a, b];
+}
+
+function hex2rgb(hex) {
+    var u = parseInt(hex, 16);
+    var r = u >> 16,
+        g = u >> 8 & 0xFF;
+        b = u & 0xFF;
+    return [r, g, b];
+}

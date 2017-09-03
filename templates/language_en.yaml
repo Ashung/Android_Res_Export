@@ -62,10 +62,6 @@ report_layer_rename: 'Invaild layer name: %1 -> %2'
 report_layer_name_duplicate: 'Duplicate layer name: %1'
 no_duplicate_and_invaild_asset_name: No duplicate and invaild asset name.
 
-select_app_icon_artboard: Please selected the app icon artboard or symbol master.
-app_icon_artboard_tips: Your icon must in an artboard or symbol master, and the size must be 192x192px.
-current_page_is_no_template: Current page is no a Android app icon template.
-
 install_imagemagick_title: Please check that you have ImageMagick installed.
 install_imagemagick_message: |-
     Export Android nine-patch image feature depend on ImageMagick library.
@@ -96,3 +92,5 @@ no_support_shape: Only support shape layer like rectangle or oval.
 no_shape_layer: Please choose one shape layer like rectangle or oval.
 
 template_no_exists: Template file "%1" is no exists.
+current_page_is_no_template: Current page is no a Android app icon template.
+app_icon_not_find: Can't find Android app icon inside current page.

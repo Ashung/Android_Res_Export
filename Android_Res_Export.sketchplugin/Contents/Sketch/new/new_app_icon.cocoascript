@@ -22,11 +22,15 @@ limitations under the License.
 
 var newAppIconTemplate = function(context) {
 
-    importTemplateLayersFromResource(context, "app_icon_template.sketch");
-
-    var page = context.document.currentPage();
-    page.storeMetadata_forKey(true, "is_android_app_icon_template");
-    page.storeMetadata_forKey(false, "is_legacy_android_app_icon");
+    importFromResource_toPage_withMetadate(
+        context,
+        "app_icon_template.sketch",
+        "App Icon",
+        {
+            "is_android_app_icon_template": true,
+            "is_legacy_android_app_icon": false
+        }
+    );
 
     ga(context, "New", "new_app_icon");
 
@@ -34,37 +38,45 @@ var newAppIconTemplate = function(context) {
 
 var newAppIconTemplateLegacy = function(context) {
 
-    importTemplateLayersFromResource(context, "app_icon_template_legacy.sketch");
-
-    var page = context.document.currentPage();
-    page.storeMetadata_forKey(true, "is_android_app_icon_template");
-    page.storeMetadata_forKey(true, "is_legacy_android_app_icon");
+    importFromResource_toPage_withMetadate(
+        context,
+        "app_icon_template_legacy.sketch",
+        "App Icon Legacy",
+        {
+            "is_android_app_icon_template": true,
+            "is_legacy_android_app_icon": true
+        }
+    );
 
     ga(context, "New", "new_app_icon_legacy");
 
 }
 
-function importTemplateLayersFromResource(context, resourceName) {
+function importFromResource_toPage_withMetadate(context, resource, pageName, metadata) {
 
     var doc = context.document;
 
     // Template file.
-    var template = context.plugin.urlForResourceNamed(resourceName);
+    var template = context.plugin.urlForResourceNamed(resource);
 
     if (!template) {
         // Template file path.
-        var templatePath = context.plugin.url().path().lastPathComponent() + "/Contents/Resources/" + resourceName;
+        var templatePath = context.plugin.url().path().lastPathComponent() + "/Contents/Resources/" + resource;
         toast(context, localizedString(context, 'template_no_exists', templatePath));
         return;
     }
 
     // Create new page.
     var pageForIcon = doc.addBlankPage();
-    pageForIcon.setName("App Icon");
+    pageForIcon.setName(pageName);
 
     // Read data from Sketch file.
     var templateDocument = MSDocument.alloc().init();
     templateDocument.readFromURL_ofType_error(template, "com.bohemiancoding.sketch.drawing", nil);
+
+    if (templateDocument.currentPage().layers().count() == 0) {
+        return;
+    }
 
     // Old symbolID to new symbolID mapping.
     var symbolIDMapping = NSMutableDictionary.alloc().init();
@@ -93,5 +105,13 @@ function importTemplateLayersFromResource(context, resourceName) {
 
     // Add layers.
     pageForIcon.addLayers(templatePage.layers());
+
+    // Add metadata to page.
+    for (key in metadata) {
+        pageForIcon.storeMetadata_forKey(metadata[key], key);
+    }
+
+    // Centere layers in canvas.
+    doc.currentView().centerLayersInCanvas();
 
 }

@@ -198,7 +198,16 @@ input[type=range]:focus {
     margin-right: 16px;
 }
 
-
+#tips {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 0;
+    padding: 16px;
+    color: #fff;
+    background: #f00;
+    border-radius: 4px;
+}
 
 
 /* github.com style (c) Vasily Polovnyov <vast@whiteants.net> */

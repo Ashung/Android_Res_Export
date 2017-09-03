@@ -62,9 +62,6 @@ report_layer_rename: '图层命名格式不合法: %1 -> %2'
 report_layer_name_duplicate: '图层命名重复: %1'
 no_duplicate_and_invaild_asset_name: 无重复和不合法资源命名。
 
-select_app_icon_artboard: 请选中应用图标的画板或组件模版。
-app_icon_artboard_tips: 图标必须在画板或组件模版内，并且画板或组件模版的尺寸为 192x192 像素。
-
 install_imagemagick_title: 请检查是否安装 ImageMagick。
 install_imagemagick_message: |-
     导出 Android 九宫格文件功能依赖于 ImageMagick 库。
@@ -93,3 +90,7 @@ no_support_fill_type: Android 形状可绘制资源不支持图像等填充类�
 no_support_stroke_type: Android 形状可绘制资源不支持渐变、图像等描边类型。
 no_support_shape: Android 形状可绘制资源只支持矩形、圆等形状。
 no_shape_layer: 请选择一个矩形、圆等形状图层。
+
+template_no_exists: 模版文件 "%1" 不存在。
+current_page_is_no_template: 当前页不是一个 Android 应用图标模版。
+app_icon_not_find: 在当前页中找不到 Android 应用图标。
