@@ -94,3 +94,5 @@ no_shape_layer: Please choose one shape layer like rectangle or oval.
 template_no_exists: Template file "%1" is no exists.
 current_page_is_no_template: Current page is no a Android app icon template.
 app_icon_not_find: Can't find Android app icon inside current page.
+
+view_code: View Code

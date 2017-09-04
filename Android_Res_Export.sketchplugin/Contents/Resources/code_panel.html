@@ -10,32 +10,47 @@
 <div id="main">
     <div id="preview">
         <pre><code id="code" class="xml"></code></pre>
-        <div id="tips" class="tips-warning">xx</div>
+        <!-- <div id="tips" class="tips-warning">xx</div> -->
     </div>
     <div id="foot-actions">
         <span class="gap-flex"></span>
-        <button class="button">Copy</button>
+        <button id="copy" class="button">Copy</button>
         <span class="gap"></span>
-        <button class="button-blue">Save</button>
+        <button id="save" class="button-blue">Save</button>
     </div>
 </div>
 
 <script>
+var copy = document.getElementById("copy"),
+    save = document.getElementById("save");
 
-previewCode('<svg width="24" height="24" viewBox="0 0 24 24"\n    xmlns="http://www.w3.org/2000/svg">\n    <path d="M15 9h6V7H3v2h6v13h2v-7h2v7h2V9zm-3-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>\n</svg>');
+copy.onclick = function() {
+    window.location.hash = "copy_" + new Date().getTime();
+    return false;
+}
+
+save.onclick = function() {
+    window.location.hash = "save_" + new Date().getTime();
+    return false;
+}
 
 window.onfocus = function() {
-    window.location.hash = "windowOnFocus";
+    window.location.hash = "focus";
 }
 
-document.oncontextmenu = function() {
-    window.event.returnValue = false;
-}
+// document.oncontextmenu = function() {
+//     window.event.returnValue = false;
+// }
 
 function previewCode(code) {
     var ele_code = document.getElementById("code");
     ele_code.innerText = code;
     hljs.highlightBlock(ele_code);
+}
+
+function clickAtPoint(x, y) {
+    var element = document.elementFromPoint(x, y);
+    element.click();
 }
 
 </script>

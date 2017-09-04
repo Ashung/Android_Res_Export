@@ -78,14 +78,14 @@ window.onfocus = function() {
     window.location.hash = "windowOnFocus";
 }
 
-document.oncontextmenu = function() {
-    window.event.returnValue = false;
-}
+// document.oncontextmenu = function() {
+//     window.event.returnValue = false;
+// }
 
 function redrawNinePatch() {
     var ninePatchWidth = originalWidth + originalWidth * stretchWidth.value/50,
         ninePatchHeight = originalHeight + originalHeight * stretchHeight.value/50;
-    ninePatchPreview.style.transition = ".2s";
+    ninePatchPreview.style.transition = ".2s"; //width .2s, height
     stretchHeight.style.backgroundSize = stretchHeight.value + "% 100%";
     stretchWidth.style.backgroundSize = stretchWidth.value + "% 100%";
     drawNinePatch(ninePatchWidth, ninePatchHeight, showContent.checked);

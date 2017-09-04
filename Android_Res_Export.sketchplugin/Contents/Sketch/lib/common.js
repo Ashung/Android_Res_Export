@@ -474,3 +474,52 @@ function ga(context, eventCategory, eventAction, eventLabel, eventValue) {
     task.resume();
 
 }
+
+/* =========================================================
+    Window
+========================================================= */
+function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocationFunction) {
+
+    var windowWidth = 800,
+        windowHeight = 600;
+    var window = NSWindow.alloc().init();
+    window.setTitle(title);
+    window.setFrame_display(NSMakeRect(0, 0, windowWidth, windowHeight), false);
+    window.setStyleMask(NSTitledWindowMask | NSClosableWindowMask);
+    window.standardWindowButton(NSWindowMiniaturizeButton).setHidden(true);
+    window.standardWindowButton(NSWindowZoomButton).setHidden(true);
+
+    var closeButton = window.standardWindowButton(NSWindowCloseButton);
+    closeButton.setCOSJSTargetFunction(function(sender) {
+        NSApp.stopModal();
+    });
+
+    var webView = WebView.alloc().initWithFrame(NSMakeRect(0, 0, windowWidth, windowHeight - 22));
+    webView.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(248/255, 248/255, 248/255, 1));
+    var scriptObject = webView.windowScriptObject();
+
+    var delegate = new MochaJSDelegate({
+        "webView:didFinishLoadForFrame:": (function(webView, webFrame) {
+            didFinishLoadFunction(scriptObject);
+        }),
+        "webView:didChangeLocationWithinPageForFrame:": (function(webView, webFrame) {
+            var locationHash = scriptObject.evaluateWebScript("window.location.hash");
+            if (locationHash == "#focus") {
+                var point = colorPicker.currentEvent().locationInWindow();
+                var x = point.x;
+                var y = windowHeight - point.y - 22;
+                if (x > 0 && y > 0) {
+                    windowObject.evaluateWebScript("clickAtPoint(" + x + ", " + y + ")");
+                }
+            }
+            didChangeLocationFunction(locationHash);
+        })
+    });
+    webView.setFrameLoadDelegate_(delegate.getClassInstance());
+    webView.setMainFrameURL_(context.plugin.urlForResourceNamed(htmlPath).path());
+
+    window.contentView().addSubview(webView);
+    window.autorelease();
+    window.center();
+    NSApp.runModalForWindow(window);
+}
