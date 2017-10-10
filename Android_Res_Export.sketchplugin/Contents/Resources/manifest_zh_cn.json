@@ -1,11 +1,11 @@
 {
     "name": "Android Res Export",
-    "description": "导出 Android 资源, 包括 PNG 位图文件, 九宫格文件, 图标和可绘制矢量文件。",
+    "description": "导出 Android 资源, 包括 PNG 资源, 点九资源, 图标和矢量资源。",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
     "bundleVersion": "1",
@@ -20,17 +20,17 @@
             "script": "utilities/checking_language.cocoascript"
         },
         {
-            "name": "新建 PNG 位图资源",
+            "name": "新建 PNG 资源",
             "identifier": "new_png_asset",
             "script": "new/new_png_asset.cocoascript"
         },
         {
-            "name": "新建九宫格文件资源",
+            "name": "新建点九资源",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
         {
-            "name": "新建可绘制矢量资源",
+            "name": "新建矢量资源",
             "identifier": "new_vector_drawable_asset",
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
@@ -47,17 +47,17 @@
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "导出 PNG 位图资源",
+            "name": "导出 PNG 资源",
             "identifier": "export_png_assets",
             "script": "export/export_png_assets.cocoascript"
         },
         {
-            "name": "导出可绘制矢量",
+            "name": "导出矢量资源",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "导出九宫格文件",
+            "name": "导出点九资源",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
@@ -67,7 +67,7 @@
             "script": "export/export_app_icon.cocoascript"
         },
         {
-            "name": "导出形状可绘制 XML",
+            "name": "导出形状 XML 代码",
             "identifier": "export_shape_xml",
             "script": "export/export_shape_xml.cocoascript"
         },
@@ -144,8 +144,6 @@
             "export_vector_drawable",
             "export_app_icon",
             "export_shape_xml",
-            "-",
-            "view_code",
             "-",
             {
                 "title": "实用工具",

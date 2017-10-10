@@ -1,11 +1,11 @@
 {
     "name": "Android Res Export",
-    "description": "Export Android resources, like pngs, nine-patch, app icon and vector drawable.",
+    "description": "导出 Android 资源, 包括 PNG 资源, 点九资源, 图标和矢量资源。",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
     "bundleVersion": "1",
@@ -20,106 +20,106 @@
             "script": "utilities/checking_language.cocoascript"
         },
         {
-            "name": "New PNG Asset",
+            "name": "新建 PNG 资源",
             "identifier": "new_png_asset",
             "script": "new/new_png_asset.cocoascript"
         },
         {
-            "name": "New Nine-Patch Asset",
+            "name": "新建点九资源",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
         {
-            "name": "New Vector Drawable Asset",
+            "name": "新建矢量资源",
             "identifier": "new_vector_drawable_asset",
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
-            "name": "New App Icon (Legacy)",
+            "name": "新建应用图标 (旧版)",
             "identifier": "new_app_icon_legacy",
             "handler": "newAppIconTemplateLegacy",
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "New App Icon",
+            "name": "新建应用图标",
             "identifier": "new_app_icon",
             "handler": "newAppIconTemplate",
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "Export PNG Assets",
+            "name": "导出 PNG 资源",
             "identifier": "export_png_assets",
             "script": "export/export_png_assets.cocoascript"
         },
         {
-            "name": "Export Vector Drawables",
+            "name": "导出矢量资源",
             "identifier": "export_vector_drawable",
             "script": "export/export_vector_drawable.cocoascript"
         },
         {
-            "name": "Export Nine-Patch Assets",
+            "name": "导出点九资源",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.cocoascript"
         },
         {
-            "name": "Export App Icon",
+            "name": "导出应用图标",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
         {
-            "name": "Export Shape Drawable XML",
+            "name": "导出形状 XML 代码",
             "identifier": "export_shape_xml",
             "script": "export/export_shape_xml.cocoascript"
         },
         {
-            "name": "View Code",
+            "name": "",
             "identifier": "view_code",
             "script": "code/window.cocoascript"
         },
         {
-            "name": "Add System Icon Grid Line",
+            "name": "添加系统图标网格",
             "identifier": "add_system_icon",
             "script": "utilities/add_system_icon.cocoascript"
         },
         {
-            "name": "Asset Name Validator",
+            "name": "资源命名校验",
             "identifier": "asset_name_validator",
             "script": "utilities/asset_name_validator.cocoascript"
         },
         {
-            "name": "Fixes Slice Names",
+            "name": "修复切片命名",
             "identifier": "fixes_slice_name",
             "script": "utilities/fixes_slice_name.cocoascript"
         },
         {
-            "name": "Preferences",
+            "name": "参数设置",
             "identifier": "preferences",
             "script": "utilities/preferences.cocoascript"
         },
         {
-            "name": "Web Site",
+            "name": "网站",
             "identifier": "web_site",
             "handler": "website",
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Report Issues",
+            "name": "问题反馈",
             "identifier": "report_issues",
             "handler": "reportIssues",
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "Change Language",
+            "name": "更改菜单语言",
             "identifier": "change_language",
             "script": "utilities/change_language.cocoascript"
         },
         {
-            "name": "Check for Update",
+            "name": "检测更新",
             "identifier": "update",
             "script": "utilities/update.cocoascript"
         },
         {
-            "name": "Donate",
+            "name": "捐款",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
@@ -145,10 +145,8 @@
             "export_app_icon",
             "export_shape_xml",
             "-",
-            "view_code",
-            "-",
             {
-                "title": "Utilities",
+                "title": "实用工具",
                 "items": [
                     "add_system_icon",
                     "asset_name_validator",
@@ -159,7 +157,7 @@
             "preferences",
             "-",
             {
-                "title": "Help",
+                "title": "帮助",
                 "items": [
                     "web_site",
                     "report_issues",
