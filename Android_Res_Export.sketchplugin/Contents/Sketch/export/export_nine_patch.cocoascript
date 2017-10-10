@@ -1,23 +1,29 @@
-//
-// Android Res Export
-// Homepage: https://github.com/Ashung/Android_Res_Export
-// Author: Ashung Hung
-// Email: Ashung.hung@gmail.com
-// License: https://creativecommons.org/licenses/by-sa/4.0
+/*----------------------------------------------------------
+
+Android Res Export
+https://github.com/Ashung/Android_Res_Export
+
+Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------*/
 
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
     // ImageMagick
-    var convert = getPreferences(context, "convert");
-    if (!convert) {
-        convert = which("convert");
-        if (convert) {
-            setPreferences(context, "convert", convert);
-        }
-    }
-
+    var convert = which("convert");
     if (!convert) {
         alert(
             context,
@@ -141,43 +147,43 @@ var onRun = function(context) {
                 );
 
                 // Export nine-patch content
-                var tempSlice = ninePatchContent.duplicate();
                 for (var i = 0; i < exportConfig.length; i++) {
 
                     var scale = exportConfig[i]["scale"];
                     var qualifier = exportConfig[i]["qualifier"];
+                    var exportFormat = ninePatchContent.exportOptions().addExportFormat();
+                    exportFormat.setFileFormat("png");
+                    exportFormat.setScale(scale);
+                    var exportRequest = MSExportRequest.exportRequestsFromExportableLayer(ninePatchContent).lastObject();
+                    doc.saveArtboardOrSlice_toFile(exportRequest, exportFolder + "/" + ninePatchContentID + ".png");
+                    exportFormat.remove();
 
-                    tempSlice.exportOptions().removeAllExportFormats();
-                    var exportOptionForContent = tempSlice.exportOptions().addExportFormat();
-                        exportOptionForContent.setFileFormat("png");
-                        exportOptionForContent.setScale(scale);
-                    var exportRequestForContent = MSExportRequest.exportRequestsFromExportableLayer(tempSlice).firstObject();
-                    doc.saveArtboardOrSlice_toFile(exportRequestForContent, exportFolder + "/" + ninePatchContentID + ".png");
+                    var outputFolder = exportFolder + "/res/drawable-" + qualifier;
+                    var outputImage = outputFolder + "/" + ninePatchName + ".9.png";
+
+                    mkdir(outputFolder);
 
                     createNinePatch(
                         convert,
                         exportFolder,
                         scale,
-                        "",
+                        outputImage,
                         ninePatchWidth,
                         ninePatchHeight,
                         ninePatchContentID,
                         ninePatchPatchID,
                         function(success, message) {
+                            // log(message);
                             if (success == true) {
-                                var output = exportFolder + "/res/drawable-" + qualifier + "/" + ninePatchName + ".9.png";
-                                mkdir(exportFolder + "/res/drawable-" + qualifier);
                                 rm(exportFolder + "/" + ninePatchContentID + ".png");
-                                mv(exportFolder + "/" + ninePatchContentID + "_temp.png", output);
                                 if (getPreferences(context, "use_imageoptim_after_export") == 1) {
-                                    imageOptim(output);
+                                    imageOptim(outputImage);
                                 }
                             }
                         }
                     );
 
                 }
-                tempSlice.removeFromParent();
 
                 // Remove nine-patch patch lines
                 rm(exportFolder + "/" + ninePatchPatchID + "_top.png");
@@ -233,11 +239,11 @@ function createMdpiPatchLines(convert, cwd, width, height, mdpiPatchId, callback
     runCommand(command, args, callback);
 }
 
-function createNinePatch(convert, cwd, scale, suffix, width, height, contentId, patchId, callback) {
+function createNinePatch(convert, cwd, scale, output, width, height, contentId, patchId, callback) {
     var newWidth = Math.floor(width * scale);
     var newHeight = Math.floor(height * scale);
-    var temp = contentId + "_temp" + suffix + ".png";
-    var content = contentId + suffix + ".png";
+    // var temp = contentId + "_temp" + suffix + ".png";
+    var content = contentId + ".png";
     var patchTop = patchId + "_top.png";
     var patchRight = patchId + "_right.png";
     var patchBottom = patchId + "_bottom.png";
@@ -257,7 +263,7 @@ function createNinePatch(convert, cwd, scale, suffix, width, height, contentId, 
                 + patchBottom + ' \\) -gravity South -composite '
             + '\\( -resize 1x' +  newHeight + '! -filter point -interpolate Nearest '
                 + patchLeft + ' \\) -gravity West -composite '
-            + temp
+            + output
     ];
     runCommand(command, args, callback);
 }

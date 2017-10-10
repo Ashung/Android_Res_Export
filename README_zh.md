@@ -2,9 +2,9 @@
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
-**支持 Sketch 45+ , 支持中文**
+**支持 Sketch 46+ , 支持中文**
 
-用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、九宫格（Nine-patch）图片、形状 XML 和可绘制矢量（Vector Drawable）文件。
+用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、点九（Nine-patch）图片、形状 XML 和矢量（Vector Drawable）文件。
 
 ## 安装
 
@@ -13,7 +13,7 @@
 - 推荐在 [Sketch Runner](http://sketchrunner.com/)、[Sketchpacks](https://sketchpacks.com/) 或 [Sketch Toolbox](http://sketchtoolbox.com/) 搜索 “Android Res Export”。
 - 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) ，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
 
-### 配置九宫格图片导出支持
+### 配置点九宫资源导出支持
 
 首先在复制以下命令到终端，安装 Xcode 命令行工具。
 
@@ -33,11 +33,9 @@ xcode-select --install
 brew install imagemagick
 ```
 
-### 配置可绘制矢量文件导出支持
+### 配置矢量资源导出支持
 
-首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。
-
-如果速度太慢可以从 [国内镜像下载 Node.js v8.0.0](https://npm.taobao.org/mirrors/node/v8.0.0/node-v8.0.0.pkg)。
+首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。如果速度太慢可以从 [国内镜像下载 Node.js v8.0.0](https://npm.taobao.org/mirrors/node/v8.0.0/node-v8.0.0.pkg)。
 
 安装完成后，打开终端输入以下命令安装 [SVGO](https://github.com/svg/svgo) 和 [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable)。
 
@@ -57,29 +55,29 @@ npm install -g svgo svg2vectordrawable
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_1.gif?raw=true)
 
-选择图层或图层组，然后执行 "Plugins" - "Android Res Export" - "New PNG Asset （新建 PNG 位图资源）"，来创建一个可以导出的 PNG 资源。
+选择图层或图层组，然后执行 "Plugins" - "Android Res Export" - "New PNG Asset （新建 PNG 资源）"，来创建一个可以导出的 PNG 资源。
 
-#### 九宫格图片
+#### 点九资源
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_2.gif?raw=true)
 
-选择图层，然后执行 "Plugins" - "Android Res Export" - "New Nine-Patch Asset （新建九宫格文件资源）"，来创建一个九宫格图片资源。
+选择图层，然后执行 "Plugins" - "Android Res Export" - "New Nine-Patch Asset （新建点九资源）"，来创建一个点九资源。
 
 在 “patch” 组内修改图层 “left”、“right”、“top” 和 “bottom” 的宽或高，这个组内可以增加更多图层，建议使用 1 像素的矩形，填充必须是 #000000 或 #FF0000。
 
 “content” 图层组下的切片图层必须名为 “#9patch”，复制组时请注意此图层名称。
 
-#### 可绘制矢量文件资源
+#### 矢量资源
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_3.gif?raw=true)
 
-选择图层，执行 "Plugins" - "Android Res Export" - "New Vector Drawable Asset（新建可绘制矢量资源）"，来创建一个可绘制矢量文件资源。
+选择图层，执行 "Plugins" - "Android Res Export" - "New Vector Drawable Asset（新建矢量资源）"，来创建一个矢量文件资源。
 
 **若要 Vector Drawable 支持低于 API V24 (Android 7) 的设备需要以下操作**。
 
 选择可绘制矢量资源组内所有的形状图层，在属性面板的填充中点击设置图标，选择 "Non-Zero"。
 
-插件暂不支持 API V25 的渐变。
+插件暂不支持 API V25+ 的渐变。
 
 #### 应用图标资源
 
@@ -114,7 +112,7 @@ npm install -g svgo svg2vectordrawable
 
 ## 声明
 
-[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)
+Apache 2.o
 
 ## 捐助
 

@@ -5,7 +5,7 @@
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
     "bundleVersion": "1",
@@ -35,8 +35,15 @@
             "script": "new/new_vector_drawable_asset.cocoascript"
         },
         {
+            "name": "New App Icon (Legacy)",
+            "identifier": "new_app_icon_legacy",
+            "handler": "newAppIconTemplateLegacy",
+            "script": "new/new_app_icon.cocoascript"
+        },
+        {
             "name": "New App Icon",
             "identifier": "new_app_icon",
+            "handler": "newAppIconTemplate",
             "script": "new/new_app_icon.cocoascript"
         },
         {
@@ -63,6 +70,11 @@
             "name": "Export Shape Drawable XML",
             "identifier": "export_shape_xml",
             "script": "export/export_shape_xml.cocoascript"
+        },
+        {
+            "name": "View Code",
+            "identifier": "view_code",
+            "script": "code/window.cocoascript"
         },
         {
             "name": "Add System Icon Grid Line",
@@ -111,6 +123,10 @@
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
+        },
+        {
+            "identifier": "reload_plugins",
+            "script": "utilities/reload_plugins.cocoascript"
         }
     ],
     "menu": {
@@ -121,6 +137,7 @@
             "new_nine_patch_asset",
             "new_vector_drawable_asset",
             "new_app_icon",
+            "new_app_icon_legacy",
             "-",
             "export_png_assets",
             "export_nine_patch",

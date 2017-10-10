@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Code Viewer</title>
+<link rel="stylesheet" href="style.css">
+<script src="highlight.pack.js"></script>
+</head>
+<body>
+<div id="main">
+    <div id="preview">
+        <pre><code id="code" class="xml"></code></pre>
+        <!-- <div id="tips" class="tips-warning">xx</div> -->
+    </div>
+    <div id="foot-actions">
+        <span class="gap-flex"></span>
+        <button id="copy" class="button">Copy</button>
+        <span class="gap"></span>
+        <button id="save" class="button-blue">Save</button>
+    </div>
+</div>
+
+<script>
+var copy = document.getElementById("copy"),
+    save = document.getElementById("save");
+
+copy.onclick = function() {
+    window.location.hash = "copy_" + new Date().getTime();
+    return false;
+}
+
+save.onclick = function() {
+    window.location.hash = "save_" + new Date().getTime();
+    return false;
+}
+
+window.onfocus = function() {
+    window.location.hash = "focus";
+}
+
+// document.oncontextmenu = function() {
+//     window.event.returnValue = false;
+// }
+
+function previewCode(code) {
+    var ele_code = document.getElementById("code");
+    ele_code.innerText = code;
+    hljs.highlightBlock(ele_code);
+}
+
+function clickAtPoint(x, y) {
+    var element = document.elementFromPoint(x, y);
+    element.click();
+}
+
+</script>
+</body>
+</html>

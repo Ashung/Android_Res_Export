@@ -1,0 +1,28 @@
+
+@import "../lib/MochaJSDelegate.js";
+@import "../lib/common.js";
+
+
+var onRun = function(context) {
+
+    // var xml = '<svg width=\'24\' height="24" viewBox="0 0 24 24"\n    xmlns="http://www.w3.org/2000/svg">\n    <path d="M15 9h6V7H3v2h6v13h2v-7h2v7h2V9zm-3-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>\n</svg>';
+    //
+    // xml = xml.replace(/\'/g, '___');
+    // xml = xml.split("\n").join("\\n");
+    //
+    // log(String(xml));
+
+    window(
+        context,
+        "title",
+        "code_panel.html", //"nine_patch_preview.html", //
+        function(scriptObject) {
+            scriptObject.evaluateWebScript("previewCode('<svg width=\\'24\\'>\\n<svg width=\\'24\\'>\\n')");
+        },
+        function(locationHash) {
+
+            log(locationHash);
+
+        }
+    );
+};

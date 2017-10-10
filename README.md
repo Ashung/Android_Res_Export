@@ -70,7 +70,7 @@ Use page name to export asset in different folder.
 
 ## License
 
-[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)
+Apache 2.o
 
 ## Donate
 

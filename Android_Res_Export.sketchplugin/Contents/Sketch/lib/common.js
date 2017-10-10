@@ -1,10 +1,22 @@
-//
-// Android Res Export
-// Homepage: https://github.com/Ashung/Android_Res_Export
-// Author: Ashung Hung
-// Email: Ashung.hung@gmail.com
-// License: https://creativecommons.org/licenses/by-sa/4.0
+/*----------------------------------------------------------
 
+Android Res Export
+https://github.com/Ashung/Android_Res_Export
+
+Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------*/
 
 /* =========================================================
     Android
@@ -84,6 +96,29 @@ function dpiToScale(dpi) {
                 return 1;
         }
     }
+}
+
+function colorToAndroid(mscolor) {
+    var alpha = mscolor.alpha();
+    var hex = mscolor.immutableModelObject().hexValue();
+    if (alpha < 1) {
+        var alphaHex = Math.round(alpha * 255).toString(16);
+        if (alphaHex.length == 1) {
+            alphaHex = "0" + alphaHex;
+        }
+        return "#" + alphaHex.toUpperCase() + hex;
+    } else {
+        return "#" + hex;
+    }
+}
+
+function gradientStopsToColorArray(stops) {
+    var result = [];
+    var loop = stops.objectEnumerator();
+    while (stop = loop.nextObject()) {
+        result.push(colorToAndroid(stop.color()));
+    }
+    return result;
 }
 
 /* =========================================================
@@ -218,7 +253,9 @@ function getContentFromFile(filePath) {
 }
 
 function writeContentToFile(filePath, content) {
-    content = NSString.stringWithFormat('%@', content);
+    var parentDir = NSString.stringWithString(filePath).stringByDeletingLastPathComponent();
+    mkdir(parentDir);
+    content = NSString.stringWithString(content);
     content.writeToFile_atomically_encoding_error_(
         filePath, true, NSUTF8StringEncoding, null
     );
@@ -436,4 +473,53 @@ function ga(context, eventCategory, eventAction, eventLabel, eventValue) {
     var task = session.dataTaskWithURL(NSURL.URLWithString(NSString.stringWithString(url)));
     task.resume();
 
+}
+
+/* =========================================================
+    Window
+========================================================= */
+function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocationFunction) {
+
+    var windowWidth = 800,
+        windowHeight = 600;
+    var window = NSWindow.alloc().init();
+    window.setTitle(title);
+    window.setFrame_display(NSMakeRect(0, 0, windowWidth, windowHeight), false);
+    window.setStyleMask(NSTitledWindowMask | NSClosableWindowMask);
+    window.standardWindowButton(NSWindowMiniaturizeButton).setHidden(true);
+    window.standardWindowButton(NSWindowZoomButton).setHidden(true);
+
+    var closeButton = window.standardWindowButton(NSWindowCloseButton);
+    closeButton.setCOSJSTargetFunction(function(sender) {
+        NSApp.stopModal();
+    });
+
+    var webView = WebView.alloc().initWithFrame(NSMakeRect(0, 0, windowWidth, windowHeight - 22));
+    webView.setBackgroundColor(NSColor.colorWithRed_green_blue_alpha(248/255, 248/255, 248/255, 1));
+    var scriptObject = webView.windowScriptObject();
+
+    var delegate = new MochaJSDelegate({
+        "webView:didFinishLoadForFrame:": (function(webView, webFrame) {
+            didFinishLoadFunction(scriptObject);
+        }),
+        "webView:didChangeLocationWithinPageForFrame:": (function(webView, webFrame) {
+            var locationHash = scriptObject.evaluateWebScript("window.location.hash");
+            if (locationHash == "#focus") {
+                var point = colorPicker.currentEvent().locationInWindow();
+                var x = point.x;
+                var y = windowHeight - point.y - 22;
+                if (x > 0 && y > 0) {
+                    windowObject.evaluateWebScript("clickAtPoint(" + x + ", " + y + ")");
+                }
+            }
+            didChangeLocationFunction(locationHash);
+        })
+    });
+    webView.setFrameLoadDelegate_(delegate.getClassInstance());
+    webView.setMainFrameURL_(context.plugin.urlForResourceNamed(htmlPath).path());
+
+    window.contentView().addSubview(webView);
+    window.autorelease();
+    window.center();
+    NSApp.runModalForWindow(window);
 }

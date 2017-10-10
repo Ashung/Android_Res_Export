@@ -1,91 +1,186 @@
-//
-// Android Res Export
-// Homepage: https://github.com/Ashung/Android_Res_Export
-// Author: Ashung Hung
-// Email: Ashung.hung@gmail.com
-// License: https://creativecommons.org/licenses/by-sa/4.0
+/*----------------------------------------------------------
+
+Android Res Export
+https://github.com/Ashung/Android_Res_Export
+
+Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------*/
 
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
     var doc = context.document;
-    var selection = context.selection;
+    var page = doc.currentPage();
 
-    if (selection.count() > 0) {
+    if (page.metadataForKey("is_android_app_icon_template") == true) {
 
-        var exportAppIcons = NSMutableArray.alloc().init();
+        if (page.metadataForKey("is_legacy_android_app_icon") == true) {
 
-        var loopSelection = selection.objectEnumerator();
-        var layer;
-        while (layer = loopSelection.nextObject()) {
-            if (
-                (layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") &&
-                layer.frame().width() == 192 &&
-                layer.frame().height() == 192
-            ) {
-                exportAppIcons.addObject(layer);
+            // Android app icon legacy.
+            var iconNormal = page.layerWithID("ic_launcher"),
+                iconRound = page.layerWithID("ic_launcher_round");
+
+            if (!iconNormal && !iconRound) {
+                toast(context, localizedString(context, "app_icon_not_find"));
+                return;
             }
-        }
 
-        if (exportAppIcons.count() > 0) {
+            resizeArtboard(iconNormal, 192);
+            resizeArtboard(iconRound, 192);
 
+            // Export.
             var exportFolder = chooseFolder();
             if (exportFolder) {
 
-                var loopExportAppIcons = exportAppIcons.objectEnumerator();
-                var artboard;
-                while (artboard = loopExportAppIcons.nextObject()) {
-
-                    // Android icon size
-                    // mdpi: 48
-                    // hdpi: 72
-                    // xhdpi: 96
-                    // xxhdpi: 144
-                    // xxxhdpi: 192
-                    // ic_launcher-web: 512
-                    var exportConfig = [
-                        { scale : 0.25,   name : "res/mipmap-mdpi/",     suffix : "" },
-                        { scale : 0.375,  name : "res/mipmap-hdpi/",     suffix : "" },
-                        { scale : 0.5,    name : "res/mipmap-xhdpi/",    suffix : "" },
-                        { scale : 0.75,   name : "res/mipmap-xxhdpi/",   suffix : "" },
-                        { scale : 1,      name : "res/mipmap-xxxhdpi/",  suffix : "" },
-                        { scale : 2.667,  name : "res/",                 suffix : "-web" }
-                    ];
-
-                    for (var i = 0; i < exportConfig.length; i++) {
-
-                        var exportFormat = MSExportFormat.alloc().init();
-                        exportFormat.setFileFormat("png");
-                        exportFormat.setScale(exportConfig[i]["scale"]);
-
-                        var exportRequest = MSExportRequest.exportRequestFromExportFormat_layer_inRect_useIDForName_(exportFormat, artboard, artboard.frame().rect(), false);
-
-                        var output = exportFolder + "/" + exportConfig[i]["name"] + artboard.name() + exportConfig[i]["suffix"] + ".png";
-                        doc.saveArtboardOrSlice_toFile(exportRequest, output);
-
-                        if (getPreferences(context, "use_imageoptim_after_export") == 1) {
-                            imageOptim(output);
+                // Export pngs.
+                exportIconAssets(
+                    context,
+                    [
+                        { scale: 0.25, suffix: "mdpi" },
+                        { scale: 0.375, suffix: "hdpi" },
+                        { scale: 0.5, suffix: "xhdpi" },
+                        { scale: 0.75, suffix: "xxhdpi" },
+                        { scale: 1, suffix: "xxxhdpi" }
+                    ],
+                    [
+                        {
+                            layer: iconNormal,
+                            path: exportFolder + "/res/",
+                            name: "ic_launcher.png"
+                        },
+                        {
+                            layer: iconRound,
+                            path: exportFolder + "/res/",
+                            name: "ic_launcher_round.png"
                         }
+                    ]
+                );
 
-                    }
-
-                }
-
+                // Open in Finder.
                 if (getPreferences(context, "show_in_finder_after_export") == 1) {
                     openInFinder(exportFolder);
                 }
 
             }
 
-        } else {
-            toast(context, localizedString(context, "app_icon_artboard_tips"));
-        }
+            ga(context, "Export", "export_app_icon_legacy");
 
+        } else {
+
+            // Android adaptive icon.
+            var background = page.layerWithID("ic_background"),
+                foreground = page.layerWithID("ic_foreground");
+
+            if (!background && !foreground) {
+                toast(context, localizedString(context, "app_icon_not_find"));
+                return;
+            }
+
+            resizeArtboard(background, 108);
+            resizeArtboard(foreground, 108);
+
+            // Export.
+            var exportFolder = chooseFolder();
+            if (exportFolder) {
+
+                // Export XML.
+                var xmlFilePath = exportFolder + "/res/mipmap-anydpi-v26/ic_launcher.xml";
+                var xmlContent = '' +
+                    '<?xml version="1.0" encoding="utf-8"?>\n' +
+                    '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n' +
+                    '    <background android:drawable="@mipmap/ic_launcher_background"/>\n' +
+                    '    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>\n' +
+                    '</adaptive-icon>';
+
+                writeContentToFile(xmlFilePath, xmlContent);
+
+                // Export pngs.
+                exportIconAssets(
+                    context,
+                    [
+                        { scale: 1, suffix: "mdpi" },
+                        { scale: 1.5, suffix: "hdpi" },
+                        { scale: 2, suffix: "xhdpi" },
+                        { scale: 3, suffix: "xxhdpi" },
+                        { scale: 4, suffix: "xxxhdpi" }
+                    ],
+                    [
+                        {
+                            layer: background,
+                            path: exportFolder + "/res/",
+                            name: "ic_launcher_background.png"
+                        },
+                        {
+                            layer: foreground,
+                            path: exportFolder + "/res/",
+                            name: "ic_launcher_foreground.png"
+                        }
+                    ]
+                );
+
+                // Open in Finder.
+                if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                    openInFinder(exportFolder);
+                }
+            }
+
+            ga(context, "Export", "export_app_icon");
+
+        }
     } else {
-        toast(context, localizedString(context, "select_app_icon_artboard"));
+        toast(context, localizedString(context, "current_page_is_no_template"));
     }
 
-    ga(context, "Export", "export_app_icon", "Export");
+}
 
+function resizeArtboard(artboard, size) {
+    artboard.frame().setWidth(size);
+    artboard.frame().setHeight(size);
+}
+
+function exportIconAssets(context, exportConfig, outputConfig) {
+
+    var doc = context.document;
+
+    for (var i = 0; i < exportConfig.length; i++) {
+        for (var j = 0; j < outputConfig.length; j++) {
+
+            var exportFormat = MSExportFormat.alloc().init();
+            exportFormat.setScale(exportConfig[i]["scale"]);
+
+            var exportRequest = MSExportRequest
+                .exportRequestFromExportFormat_layer_inRect_useIDForName(
+                exportFormat,
+                outputConfig[j]["layer"],
+                outputConfig[j]["layer"].frame().rect(),
+                false
+            );
+
+            var outputPath = outputConfig[j]["path"] + "mipmap-" +
+                exportConfig[i]["suffix"] + "/" + outputConfig[j]["name"];
+
+            doc.saveExportRequest_toFile(
+                exportRequest, outputPath
+            );
+
+            if (getPreferences(context, "use_imageoptim_after_export") == 1) {
+                imageOptim(outputPath);
+            }
+
+        }
+
+    }
 }
