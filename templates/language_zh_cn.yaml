@@ -17,7 +17,7 @@ help: 帮助
 web_site: 网站
 report_issues: 问题反馈
 donate: 捐款
-change_language: 更改菜单语言
+change_language: 更改语言
 update: 检测更新
 
 no_selection: 请至少选中一个图层。
