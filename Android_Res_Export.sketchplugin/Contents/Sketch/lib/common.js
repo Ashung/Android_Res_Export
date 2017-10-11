@@ -197,7 +197,13 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
 function insertImageLayer_fromResource(context, layerParent, rect, resName) {
     var imagePath = context.plugin.urlForResourceNamed(resName).path();
     var image = NSImage.alloc().initWithContentsOfFile(imagePath);
-    var imageData = MSImageData.alloc().initWithImage_convertColorSpace(image, false);
+
+    if (MSApplicationMetadata.metadata().appVersion < 47) {
+        var imageData = MSImageData.alloc().initWithImage_convertColorSpace(image, false);
+    } else {
+        var imageData = MSImageData.alloc().initWithImage(image);
+    }
+
     var imageLayer = MSBitmapLayer.alloc().initWithFrame_image(rect, imageData);
     imageLayer.setName(resName.replace(/\.png$/i, ""));
     if (layerParent.containsLayers()) {
