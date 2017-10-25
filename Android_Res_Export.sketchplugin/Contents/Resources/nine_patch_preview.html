@@ -47,15 +47,15 @@ var ninePatchPreview = document.getElementById("nine_patch_preview"),
     originalHeight = ninePatchPreview.offsetHeight;
 
 stretchWidth.oninput = function() {
-    redrawNinePatch();
+    redrawNinePatch(base64);
 }
 
 stretchHeight.oninput = function() {
-    redrawNinePatch();
+    redrawNinePatch(base64);
 }
 
 showContent.onchange = function() {
-    redrawNinePatch();
+    redrawNinePatch(base64);
 }
 
 bgToggleWhite.onclick = function() {
@@ -70,9 +70,10 @@ bgToggleNone.onclick = function() {
     previewBackground.setAttribute("class", "bg_none");
 }
 
-window.onload = function() {
-    drawNinePatch(100, 100, showContent.checked);
-}
+// window.onload = function() {
+//
+//     // drawNinePatch(base64, 100, 100, showContent.checked);
+// }
 
 window.onfocus = function() {
     window.location.hash = "windowOnFocus";
@@ -82,16 +83,16 @@ window.onfocus = function() {
 //     window.event.returnValue = false;
 // }
 
-function redrawNinePatch() {
+function redrawNinePatch(base64) {
     var ninePatchWidth = originalWidth + originalWidth * stretchWidth.value/50,
         ninePatchHeight = originalHeight + originalHeight * stretchHeight.value/50;
     ninePatchPreview.style.transition = ".2s"; //width .2s, height
     stretchHeight.style.backgroundSize = stretchHeight.value + "% 100%";
     stretchWidth.style.backgroundSize = stretchWidth.value + "% 100%";
-    drawNinePatch(ninePatchWidth, ninePatchHeight, showContent.checked);
+    drawNinePatch(base64, ninePatchWidth, ninePatchHeight, showContent.checked);
 }
 
-function drawNinePatch(width, height, showContent) {
+function drawNinePatch(base64, width, height, showContent) {
     var _canvas = document.createElement("canvas");
     var _ctx = _canvas.getContext("2d");
     var img = new Image();
@@ -255,7 +256,8 @@ function drawNinePatch(width, height, showContent) {
 
     }
 
-    img.src = "nine_patch_test.png";
+    // img.src = "nine_patch_test.png";
+    img.src = "data:image/png;base64," + base64;
 }
 
 function getLength(patchData, maxLength) {
