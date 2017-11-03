@@ -70,5 +70,7 @@
     "no_shape_layer": "请选择一个矩形、圆等形状图层。",
     "template_no_exists": "模版文件 \"%1\" 不存在。",
     "current_page_is_no_template": "当前页不是一个 Android 应用图标模版。",
-    "app_icon_not_find": "在当前页中找不到 Android 应用图标。"
+    "app_icon_not_find": "在当前页中找不到 Android 应用图标。",
+    "view_code": "View Code",
+    "nine_patch_preview": "点九图片预览"
 }
