@@ -60,6 +60,9 @@ var onRun = function(context) {
 
         if (exportFolder) {
 
+            // TODO: Check if writeable
+
+            
             var loopExportAssets = exportAssets.objectEnumerator();
             var slice;
             while (slice = loopExportAssets.nextObject()) {

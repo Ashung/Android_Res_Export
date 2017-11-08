@@ -94,6 +94,8 @@ var onRun = function(context) {
 
         if (exportFolder) {
 
+            // TODO: Check if writeable
+
             var loopExportVectors = exportVectors.objectEnumerator();
             var vector;
             while (vector = loopExportVectors.nextObject()) {

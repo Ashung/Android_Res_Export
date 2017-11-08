@@ -397,6 +397,7 @@ function runCommand(command, args, callback) {
         task.standardOutput = pipe;
         task.standardError = errPipe;
         task.launch();
+        task.waitUntilExit();
     var errorData = errPipe.fileHandleForReading().readDataToEndOfFile();
     if (errorData != nil && errorData.length()) {
         var message = NSString.alloc().initWithData_encoding_(errorData, NSUTF8StringEncoding);

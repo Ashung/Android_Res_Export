@@ -151,6 +151,11 @@ var onRun = function (context) {
             // Export
             var exportFolder = chooseFolder();
             if (exportFolder) {
+
+                // TODO: Check if writeable
+
+
+                
                 var filePath = exportFolder + "/res/drawable/" + androidResName(layer.name()) + ".xml";
 
                 mkdir(exportFolder + "/res/drawable/");
