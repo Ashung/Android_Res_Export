@@ -72,19 +72,14 @@
             "script": "export/export_shape_xml.cocoascript"
         },
         {
-            "name": "View Code",
-            "identifier": "view_code",
-            "script": "code/view_code.cocoascript"
-        },
-        {
             "name": "Nine-Patch Preview",
             "identifier": "nine_patch_preview",
             "script": "code/nine_patch_preview.cocoascript"
         },
         {
-            "name": "View Code",
-            "identifier": "view_code",
-            "script": "code/view_code.cocoascript"
+            "name": "Code Preview",
+            "identifier": "code_preview",
+            "script": "code/code_preview.cocoascript"
         },
         {
             "name": "Add System Icon Grid Line",
@@ -156,7 +151,7 @@
             "export_shape_xml",
             "-",
             "nine_patch_preview",
-            "view_code",
+            "code_preview",
             "-",
             {
                 "title": "Utilities",

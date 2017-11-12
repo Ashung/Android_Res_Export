@@ -219,20 +219,17 @@ function insertImageLayer_fromResource(context, layerParent, rect, resName) {
 ========================================================= */
 
 function ask(context, tip, defaultValue) {
-    var doc = context.document;
-    return doc.askForUserInput_initialValue(tip, defaultValue + "");
+    return context.document.askForUserInput_initialValue(tip, defaultValue + "");
 }
 
 function toast(context, message) {
-    var doc = context.document;
     if (message) {
-        doc.showMessage(message + "");
+        context.document.showMessage(message + "");
     }
 }
 
 function getPluginPath(context) {
-    var path = context.plugin.url().path();
-    return path;
+    return context.plugin.url().path();
 }
 
 function alert(context, title, content) {
@@ -244,7 +241,7 @@ function alert(context, title, content) {
     dialog.setIcon(iconNSImage);
     dialog.addButtonWithTitle("OK");
     dialog.addButtonWithTitle("Cancel");
-    dialog.runModal();
+    return dialog.runModal();
 }
 
 function fileExists(path) {
@@ -252,43 +249,38 @@ function fileExists(path) {
 }
 
 function getContentFromFile(filePath) {
-    var content = NSString.stringWithContentsOfFile_encoding_error_(
+    return NSString.stringWithContentsOfFile_encoding_error_(
         filePath, NSUTF8StringEncoding, nil
     );
-    return content;
 }
 
 function writeContentToFile(filePath, content) {
     var parentDir = NSString.stringWithString(filePath).stringByDeletingLastPathComponent();
     mkdir(parentDir);
     content = NSString.stringWithString(content);
-    content.writeToFile_atomically_encoding_error_(
+    return content.writeToFile_atomically_encoding_error_(
         filePath, true, NSUTF8StringEncoding, null
     );
 }
 
 function mkdir(path) {
     if (!fileExists(path)) {
-        NSFileManager.defaultManager().createDirectoryAtPath_withIntermediateDirectories_attributes_error_(
+        return NSFileManager.defaultManager().createDirectoryAtPath_withIntermediateDirectories_attributes_error_(
             path, true, nil, nil
         );
     }
 }
 
 function rm(path) {
-    if (fileExists(path)) {
-        NSFileManager.defaultManager().removeItemAtPath_error_(
-            path, nil
-        );
-    }
+    return NSFileManager.defaultManager().removeItemAtPath_error_(path, nil);
 }
 
 function mv(srcPath, dstPath) {
-    if (fileExists(srcPath)) {
-        NSFileManager.defaultManager().moveItemAtPath_toPath_error_(
-            srcPath, dstPath, nil
-        )
-    }
+    return NSFileManager.defaultManager().moveItemAtPath_toPath_error_(srcPath, dstPath, nil);
+}
+
+function directoryIsWriteable(path) {
+    return NSFileManager.defaultManager().isWritableFileAtPath(path);
 }
 
 function getJSONFromPath(path) {
@@ -343,7 +335,7 @@ function chooseFolder() {
 }
 
 function openInFinder(path) {
-    NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(path, nil);
+    return NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(path, nil);
 }
 
 function getPreferences(context, key) {
@@ -392,10 +384,10 @@ function runCommand(command, args, callback) {
     var task = NSTask.alloc().init();
     var pipe = NSPipe.pipe();
     var errPipe = NSPipe.pipe();
-        task.launchPath = command;
-        task.arguments = args;
-        task.standardOutput = pipe;
-        task.standardError = errPipe;
+        task.setLaunchPath(command);
+        task.setArguments(args);
+        task.setStandardOutput(pipe);
+        task.setStandardError(errPipe);
         task.launch();
         task.waitUntilExit();
     var errorData = errPipe.fileHandleForReading().readDataToEndOfFile();
@@ -422,7 +414,7 @@ function runCommand(command, args, callback) {
 
 function imageOptim(image) {
     if (fileExists("/Applications/ImageOptim.app")) {
-        runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
+        return runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
     }
 }
 
@@ -528,5 +520,6 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
     window.contentView().addSubview(webView);
     window.autorelease();
     window.center();
-    NSApp.runModalForWindow(window);
+
+    return NSApp.runModalForWindow(window);
 }

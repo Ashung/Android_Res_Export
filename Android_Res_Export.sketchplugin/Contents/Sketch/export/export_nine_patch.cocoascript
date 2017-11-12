@@ -99,6 +99,8 @@ var onRun = function(context) {
 
             // TODO: Check if writeable
 
+            
+
             var loopExportNinePatches = exportNinePatches.objectEnumerator();
             var ninePatch;
             while (ninePatch = loopExportNinePatches.nextObject()) {

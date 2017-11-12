@@ -14,8 +14,8 @@ var onRun = function(context) {
 
     window(
         context,
-        localizedString(context, "nine_patch_preview"),
-        "view_code.html", //"nine_patch_preview.html", //
+        localizedString(context, "code_preview"),
+        "code_preview.html", //"nine_patch_preview.html", //
         function(scriptObject) {
             scriptObject.evaluateWebScript("previewCode('<svg width=\\'24\\'>\\n<svg width=\\'24\\'>\\n')");
         },
