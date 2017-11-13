@@ -19,15 +19,13 @@ report_issues: 问题反馈
 donate: 捐款
 change_language: 更改语言
 update: 检测更新
-
 no_selection: 请至少选中一个图层。
 input_asset_name: 输入 "%1" 的资源名。
-
 language_file_not_found: 语言文件未找到。
 language_file_not_found_desc: 语言文件 "%1" 不存在。
 ok: 确定
 cancel: 取消
-
+export: 导出
 least_version_desc: 您所安装的 Android Res Export %1 是最新版本。
 least_version_title: 您已经是最新版本
 older_version_desc: |-
@@ -38,10 +36,8 @@ failure_update_title: 更新失败
 failure_update_desc: |-
     请访问网站并手动下载最新版本。
     %1。
-
 asset_name_for_nine_path: 点九资源命名。
 can_not_create_nine_patch_from_artboard_or_symbol_master: 不可从画板或组件模版创建点九资源。
-
 asset_name_for_vector_drawable: 矢量资源命名。
 vector_drawable_no_support_text: 文本图层无法转换为矢量资源，您需要先转为轮廓。
 vector_drawable_no_support_bitmap: 位图无法转换为矢量资源。
@@ -55,20 +51,16 @@ vector_drawable_no_support_shadow: 矢量资源不支持投影。
 vector_drawable_no_support_inner_shadow: 矢量资源不支持内投影。
 vector_drawable_no_support_blur: 矢量资源不支持模糊。
 can_not_group_artboard: 无法对组件母版或画板编组。
-
 no_png_asset: 无任何 PNG 位图资源。
-
 report_layer_rename: '图层命名格式不合法: %1 -> %2'
 report_layer_name_duplicate: '图层命名重复: %1'
 no_duplicate_and_invaild_asset_name: 无重复和不合法资源命名。
-
 install_imagemagick_title: 请检查是否安装 ImageMagick。
 install_imagemagick_message: |-
     导出 Android 点九资源功能依赖于 ImageMagick 库。
     通过 HomeBrew 安装,
     $ brew install ImageMagick
 no_nine_patch_asset: 无任何点九资源。
-
 s2v_version_title: 您需要更新 svg2vectordrawable。
 s2v_version_message: |-
     在终端运行以下命令，以更新 svg2vectordrawable。
@@ -79,10 +71,8 @@ install_svgo_and_s2v_message: |-
     在安装完 Node.js 之后, 在终端运行以下命令。
     $ npm install -g svgo svg2vectordrawable
 no_vector_drawable_asset: 无任何矢量资源。
-
 show_in_finder_after_export: 导出资源后在 Finder 中显示。
 use_imageoptim_after_export: 导出资源后使用 ImageOptim 压缩图片。
-
 export_shape_xml: 导出形状 XML 代码
 not_support_layer_style: Android 形状资源不支持投影、模糊等图层样式。
 too_many_color_stop: Android 形状资源不支持大于 3 种颜色的渐变。
@@ -90,10 +80,19 @@ no_support_fill_type: Android 形状资源不支持图像等填充类型。
 no_support_stroke_type: Android 形状资源不支持渐变、图像等描边类型。
 no_support_shape: Android 形状资源只支持矩形、圆等形状。
 no_shape_layer: 请选择一个矩形、圆等形状图层。
-
 template_no_exists: 模版文件 "%1" 不存在。
 current_page_is_no_template: 当前页不是一个 Android 应用图标模版。
 app_icon_not_find: 在当前页中找不到 Android 应用图标。
-
-view_code: View Code
+code_preview: 代码预览
 nine_patch_preview: 点九图片预览
+no_permission: 无写入权限
+cannot_export_to_folder: 无法导入文件到此文件夹。
+select_one_nine_patch_asset: 请选择一个点九资源。
+nine_patch_layer_structure_is_wrong: 点九资源的图层结构有误。
+
+html_tip_bg_light: 使用亮色透明背景
+html_tip_bg_dark: 使用暗色透明色背景
+html_tip_bg_white: 使用白色背景
+html_label_width: 宽
+html_label_height: 高
+html_label_content: 内容区

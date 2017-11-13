@@ -74,12 +74,12 @@
         {
             "name": "点九图片预览",
             "identifier": "nine_patch_preview",
-            "script": "code/nine_patch_preview.cocoascript"
+            "script": "preview/nine_patch_preview.cocoascript"
         },
         {
-            "name": "",
+            "name": "代码预览",
             "identifier": "code_preview",
-            "script": "code/code_preview.cocoascript"
+            "script": "preview/code_preview.cocoascript"
         },
         {
             "name": "添加系统图标网格",
@@ -151,7 +151,6 @@
             "export_shape_xml",
             "-",
             "nine_patch_preview",
-            "code_preview",
             "-",
             {
                 "title": "实用工具",

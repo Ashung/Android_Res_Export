@@ -26,6 +26,7 @@
     "language_file_not_found_desc": "Language file \"%1\" does not existed.",
     "ok": "OK",
     "cancel": "Cancel",
+    "export": "Export",
     "least_version_desc": "Android Res Export %1 is currently the newest version available.",
     "least_version_title": "You are up-to-date.",
     "older_version_desc": "You are use the old verion of Automate Sketch. (%1)\nClick \"OK\" to download newest version.",
@@ -72,5 +73,15 @@
     "current_page_is_no_template": "Current page is no a Android app icon template.",
     "app_icon_not_find": "Can't find Android app icon inside current page.",
     "code_preview": "Code Preview",
-    "nine_patch_preview": "Nine-Patch Preview"
+    "nine_patch_preview": "Nine-Patch Preview",
+    "no_permission": "No Permission",
+    "cannot_export_to_folder": "You can't export assets to this folder.",
+    "select_one_nine_patch_asset": "Please select one nine-patch asset.",
+    "nine_patch_layer_structure_is_wrong": "The layer structure of nine-patch asset is wrong.",
+    "html_tip_bg_light": "Use light transparent background",
+    "html_tip_bg_dark": "Use dark transparent background",
+    "html_tip_bg_white": "Use white background",
+    "html_label_width": "Width",
+    "html_label_height": "Height",
+    "html_label_content": "Content"
 }

@@ -97,9 +97,11 @@ var onRun = function(context) {
 
         if (exportFolder) {
 
-            // TODO: Check if writeable
-
-            
+            // ExportFolder is writeable
+            if (!directoryIsWriteable(exportFolder + "/res")) {
+                toast(context, localizedString(context, "cannot_export_to_folder"));
+                return;
+            }
 
             var loopExportNinePatches = exportNinePatches.objectEnumerator();
             var ninePatch;
@@ -207,7 +209,7 @@ var onRun = function(context) {
         toast(context, localizedString(context, "no_nine_patch_asset"));
     }
 
-    ga(context, "Export", "export_nine_patch", "Export");
+    ga(context, "Export", "export_nine_patch");
 
 }
 

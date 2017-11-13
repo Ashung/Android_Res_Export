@@ -60,9 +60,12 @@ var onRun = function(context) {
 
         if (exportFolder) {
 
-            // TODO: Check if writeable
+            // ExportFolder is writeable
+            if (!directoryIsWriteable(exportFolder + "/res")) {
+                toast(context, localizedString(context, "cannot_export_to_folder"));
+                return;
+            }
 
-            
             var loopExportAssets = exportAssets.objectEnumerator();
             var slice;
             while (slice = loopExportAssets.nextObject()) {
@@ -107,6 +110,6 @@ var onRun = function(context) {
         toast(context, localizedString(context, "no_png_asset"));
     }
 
-    ga(context, "Export", "export_png_assets", "Export");
+    ga(context, "Export", "export_png_assets");
 
 }

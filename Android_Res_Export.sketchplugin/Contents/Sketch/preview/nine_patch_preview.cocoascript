@@ -1,0 +1,128 @@
+/*----------------------------------------------------------
+
+Android Res Export
+https://github.com/Ashung/Android_Res_Export
+
+Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------*/
+
+@import "../lib/MochaJSDelegate.js";
+@import "../lib/common.js";
+
+var onRun = function(context) {
+
+    var doc = context.document;
+    var selection = context.selection;
+
+    if (selection.count() == 0 || selection.count() > 1) {
+        toast(context, localizedString(context, "select_one_nine_patch_asset"));
+        return;
+    }
+
+    // Checking nine-patch
+    var selectedLayer = selection.firstObject();
+    var ninePath;
+    if (selectedLayer.class() == "MSLayerGroup" || selectedLayer.class() == "MSArtboardGroup" || selectedLayer.class() == "MSSymbolMaster") {
+        if (selectedLayer.layers().count() == 2 && selectedLayer.layerWithID("patch") && selectedLayer.layerWithID("content")) {
+            if (selectedLayer.layerWithID("patch").layers().count() >= 4 &&
+                selectedLayer.layerWithID("content").layerWithID("#9patch").class() == "MSSliceLayer") {
+                ninePath = selectedLayer;
+            }
+            else {
+                toast(context, localizedString(context, "nine_patch_layer_structure_is_wrong"));
+                return;
+            }
+        }
+        else {
+            toast(context, localizedString(context, "select_one_nine_patch_asset"));
+            return;
+        }
+    }
+    else if (selectedLayer.class() == "MSSliceLayer" && selectedLayer.name() == "#9patch") {
+        if (selectedLayer.parentGroup().name() == "content" && selectedLayer.parentGroup().parentGroup().layers().count() == 2 && selectedLayer.parentGroup().parentGroup().layerWithID("patch")) {
+            if (selectedLayer.parentGroup().parentGroup().layerWithID("patch").layers().count() >= 4) {
+               ninePath = selectedLayer;
+            }
+            else {
+               toast(context, localizedString(context, "nine_patch_layer_structure_is_wrong"));
+               return;
+            }
+        }
+        else {
+            toast(context, localizedString(context, "nine_patch_asset_layer_format"));
+            return;
+        }
+    }
+    else {
+        toast(context, localizedString(context, "select_one_nine_patch_asset"));
+        return;
+    }
+
+    // Get base64 code of nine-patch asset
+    var exportRequest = MSExportRequest.exportRequestsFromExportableLayer_inRect_useIDForName(
+        ninePath, ninePath.absoluteInfluenceRect(), false
+    ).firstObject();
+    exportRequest.setFormat("png");
+    var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, NSColorSpace.sRGBColorSpace());
+    var base64 = exporter.data().base64EncodedStringWithOptions(nil);
+
+    // Dialog
+    window(
+        context,
+        localizedString(context, "nine_patch_preview"),
+        "nine_patch_preview.html",
+        function(scriptObject) {
+
+            // Translation HTML
+            var currentLanguageSetting = getPreferences(context, "language");
+            if (currentLanguageSetting != "en") {
+                var languageJSON = {
+                    "html_tip_bg_light": localizedString(context, "html_tip_bg_light"),
+                    "html_tip_bg_dark": localizedString(context, "html_tip_bg_dark"),
+                    "html_tip_bg_white": localizedString(context, "html_tip_bg_white"),
+                    "html_label_width": localizedString(context, "html_label_width"),
+                    "html_label_height": localizedString(context, "html_label_height"),
+                    "html_label_content": localizedString(context, "html_label_content"),
+                    "cancel": localizedString(context, "cancel"),
+                    "export": localizedString(context, "export")
+                }
+                scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+            }
+
+            scriptObject.evaluateWebScript("var base64 ='" + base64 + "'");
+            scriptObject.evaluateWebScript("drawNinePatch('" + base64 + "',100,100,false)");
+        },
+        function(locationHash) {
+
+            // Export
+            if (locationHash == "#export") {
+                NSApp.stopModal();
+                NSApp.delegate().runPluginCommand_fromMenu_context(
+                    context.plugin.commands().objectForKey("export_nine_patch"),
+                    false,
+                    context
+                );
+            }
+
+            if (locationHash == "#cancel") {
+                NSApp.stopModal();
+            }
+
+        }
+    );
+
+    ga(context, "Preview", "nine_patch_preview");
+
+};
