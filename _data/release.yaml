@@ -1,23 +1,20 @@
--   title: v2.3.1
-    version: 2.3.1
+-   version: 2.3.2
+    commitID: 49ec265e6c48bdbf7706dd22dea0ba7ad7fa2f38
+
+-   version: 2.3.1
     commitID: 9aacdd50c22fe6e4fe457afea70535eb2401af8e
 
--   title: v2.3.0
-    version: 2.3.0
+-   version: 2.3.0
     commitID: c0d9fc512cbaa7cedfca878386a66f744130cde7
 
--   title: v2.2.0
-    version: 2.2.0
+-   version: 2.2.0
     commitID: 535ad58e3c4f0eca6d890a08153a969f6b2d5856
 
--   title: v2.1.8
-    version: 2.1.8
+-   version: 2.1.8
     commitID: b2c73624a0def9d4fb1439296d6284a17eec69f1
 
--   title: v2.1.6
-    version: 2.1.6
+-   version: 2.1.6
     commitID: cddbcb640d8de8d9b26ff9742b45970fb36057dd
 
--   title: v2.1.4
-    version: 2.1.4
+-   version: 2.1.4
     commitID: 12e3ba58833de5c551f84c7bd134cc33685e3c54
