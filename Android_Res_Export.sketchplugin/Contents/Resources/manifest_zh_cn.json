@@ -72,9 +72,14 @@
             "script": "export/export_shape_xml.cocoascript"
         },
         {
-            "name": "",
-            "identifier": "view_code",
-            "script": "code/window.cocoascript"
+            "name": "点九图片预览",
+            "identifier": "nine_patch_preview",
+            "script": "preview/nine_patch_preview.cocoascript"
+        },
+        {
+            "name": "代码预览",
+            "identifier": "code_preview",
+            "script": "preview/code_preview.cocoascript"
         },
         {
             "name": "添加系统图标网格",
@@ -144,6 +149,8 @@
             "export_vector_drawable",
             "export_app_icon",
             "export_shape_xml",
+            "-",
+            "nine_patch_preview",
             "-",
             {
                 "title": "实用工具",

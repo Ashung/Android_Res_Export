@@ -151,6 +151,13 @@ var onRun = function (context) {
             // Export
             var exportFolder = chooseFolder();
             if (exportFolder) {
+
+                // ExportFolder is writeable
+                if (!directoryIsWriteable(exportFolder + "/res")) {
+                    toast(context, localizedString(context, "cannot_export_to_folder"));
+                    return;
+                }
+
                 var filePath = exportFolder + "/res/drawable/" + androidResName(layer.name()) + ".xml";
 
                 mkdir(exportFolder + "/res/drawable/");
@@ -167,6 +174,9 @@ var onRun = function (context) {
     } else {
         toast(context, localizedString(context, "no_shape_layer"));
     }
+
+    ga(context, "Export", "export_shape_xml");
+
 }
 
 function getLayerInfo(context, layer) {

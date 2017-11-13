@@ -45,6 +45,12 @@ var onRun = function(context) {
             var exportFolder = chooseFolder();
             if (exportFolder) {
 
+                // ExportFolder is writeable
+                if (!directoryIsWriteable(exportFolder + "/res")) {
+                    toast(context, localizedString(context, "cannot_export_to_folder"));
+                    return;
+                }
+
                 // Export pngs.
                 exportIconAssets(
                     context,
@@ -96,6 +102,12 @@ var onRun = function(context) {
             var exportFolder = chooseFolder();
             if (exportFolder) {
 
+                // ExportFolder is writeable
+                if (!directoryIsWriteable(exportFolder + "/res")) {
+                    toast(context, localizedString(context, "cannot_export_to_folder"));
+                    return;
+                }
+
                 // Export XML.
                 var xmlFilePath = exportFolder + "/res/mipmap-anydpi-v26/ic_launcher.xml";
                 var xmlContent = '' +
@@ -137,12 +149,12 @@ var onRun = function(context) {
                 }
             }
 
-            ga(context, "Export", "export_app_icon");
-
         }
     } else {
         toast(context, localizedString(context, "current_page_is_no_template"));
     }
+
+    ga(context, "Export", "export_app_icon");
 
 }
 

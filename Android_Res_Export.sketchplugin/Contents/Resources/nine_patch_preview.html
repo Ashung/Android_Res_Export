@@ -9,19 +9,19 @@
 <div id="main">
     <div id="preview">
         <ul id="background_toggle">
-            <li><a href="#" id="bg_toggle_white" title="Use white transparent background">White</a></li>
-            <li><a href="#" id="bg_toggle_black" title="Use black transparent background">Black</a></li>
-            <li><a href="#" id="bg_toggle_none" title="Use transparent background">None</a></li>
+            <li><a href="#" id="bg_toggle_light" title="Use light transparent background">White</a></li>
+            <li><a href="#" id="bg_toggle_dark" title="Use dark transparent background">Black</a></li>
+            <li><a href="#" id="bg_toggle_white" title="Use White background">None</a></li>
         </ul>
         <div id="nine_patch_preview"></div>
     </div>
     <div id="controlor">
-        <label for="stretch_width">Width</label>
+        <label id="label_stretch_width" for="stretch_width">Width</label>
         <input id="stretch_width" type="range" step="20" value="0">
-        <label for="stretch_height">Height</label>
+        <label id="label_stretch_height" for="stretch_height">Height</label>
         <input id="stretch_height" type="range" step="20" value="0">
         <span class="gap-flex"></span>
-        <label for="show_content">Content</label>
+        <label id="label_stretch_content" for="show_content">Content</label>
         <label class="switch">
             <input id="show_content" type="checkbox">
             <span class="slider"></span>
@@ -29,7 +29,9 @@
     </div>
     <div id="foot-actions">
         <span class="gap-flex"></span>
-        <button class="button-blue">Save</button>
+        <button id="cancel" class="button">Cancel</button>
+        <span class="gap"></span>
+        <button id="export" class="button-blue">Export</button>
     </div>
 </div>
 
@@ -40,58 +42,67 @@ var ninePatchPreview = document.getElementById("nine_patch_preview"),
     stretchWidth = document.getElementById("stretch_width"),
     stretchHeight = document.getElementById("stretch_height"),
     showContent = document.getElementById("show_content"),
+    bgToggleLight = document.getElementById("bg_toggle_light"),
+    bgToggleDark = document.getElementById("bg_toggle_dark"),
     bgToggleWhite = document.getElementById("bg_toggle_white"),
-    bgToggleBlack = document.getElementById("bg_toggle_black"),
-    bgToggleNone = document.getElementById("bg_toggle_none"),
+    labelStretchWidth = document.getElementById("label_stretch_width"),
+    labelStretchHeight = document.getElementById("label_stretch_height"),
+    labelStretchContext = document.getElementById("label_stretch_content"),
+    btnCancel = document.getElementById("cancel"),
+    btnExport = document.getElementById("export"),
     originalWidth = ninePatchPreview.offsetWidth,
     originalHeight = ninePatchPreview.offsetHeight;
 
 stretchWidth.oninput = function() {
-    redrawNinePatch();
+    redrawNinePatch(base64);
 }
 
 stretchHeight.oninput = function() {
-    redrawNinePatch();
+    redrawNinePatch(base64);
 }
 
 showContent.onchange = function() {
-    redrawNinePatch();
+    redrawNinePatch(base64);
+}
+
+bgToggleLight.onclick = function() {
+    previewBackground.setAttribute("class", "bg_light");
+}
+
+bgToggleDark.onclick = function() {
+    previewBackground.setAttribute("class", "bg_dark");
 }
 
 bgToggleWhite.onclick = function() {
     previewBackground.setAttribute("class", "bg_white");
 }
 
-bgToggleBlack.onclick = function() {
-    previewBackground.setAttribute("class", "bg_black");
-}
-
-bgToggleNone.onclick = function() {
-    previewBackground.setAttribute("class", "bg_none");
-}
-
-window.onload = function() {
-    drawNinePatch(100, 100, showContent.checked);
-}
-
 window.onfocus = function() {
     window.location.hash = "windowOnFocus";
 }
 
-// document.oncontextmenu = function() {
-//     window.event.returnValue = false;
-// }
+btnCancel.onclick = function() {
+    window.location.hash = "cancel";
+}
 
-function redrawNinePatch() {
+btnExport.onclick = function() {
+    window.location.hash = "export";
+}
+
+document.oncontextmenu = function() {
+    window.event.returnValue = false;
+}
+
+function redrawNinePatch(base64) {
     var ninePatchWidth = originalWidth + originalWidth * stretchWidth.value/50,
         ninePatchHeight = originalHeight + originalHeight * stretchHeight.value/50;
     ninePatchPreview.style.transition = ".2s"; //width .2s, height
     stretchHeight.style.backgroundSize = stretchHeight.value + "% 100%";
     stretchWidth.style.backgroundSize = stretchWidth.value + "% 100%";
-    drawNinePatch(ninePatchWidth, ninePatchHeight, showContent.checked);
+    drawNinePatch(base64, ninePatchWidth, ninePatchHeight, showContent.checked);
 }
 
-function drawNinePatch(width, height, showContent) {
+function drawNinePatch(base64, width, height, showContent) {
     var _canvas = document.createElement("canvas");
     var _ctx = _canvas.getContext("2d");
     var img = new Image();
@@ -255,7 +266,7 @@ function drawNinePatch(width, height, showContent) {
 
     }
 
-    img.src = "nine_patch_test.png";
+    img.src = "data:image/png;base64," + base64;
 }
 
 function getLength(patchData, maxLength) {
@@ -271,8 +282,17 @@ function getLength(patchData, maxLength) {
     return Math.round((maxLength - fixWidth) / count);
 }
 
+function i18n(json) {
+    bgToggleLight.setAttribute("title", json["html_tip_bg_light"]);
+    bgToggleDark.setAttribute("title", json["html_tip_bg_dark"]);
+    bgToggleWhite.setAttribute("title", json["html_tip_bg_white"]);
+    labelStretchWidth.innerHTML = json["html_label_width"];
+    labelStretchHeight.innerHTML = json["html_label_height"];
+    labelStretchContext.innerHTML = json["html_label_content"];
+    btnCancel.innerHTML = json["cancel"];
+    btnExport.innerHTML = json["export"];
+}
+
 </script>
-
-
 </body>
 </html>

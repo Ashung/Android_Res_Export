@@ -26,6 +26,7 @@
     "language_file_not_found_desc": "语言文件 \"%1\" 不存在。",
     "ok": "确定",
     "cancel": "取消",
+    "export": "导出",
     "least_version_desc": "您所安装的 Android Res Export %1 是最新版本。",
     "least_version_title": "您已经是最新版本",
     "older_version_desc": "您正在使用旧版的 Android Res Export。(版本号 %1)\n点击 \"确认\" 下载最新版本。",
@@ -70,5 +71,17 @@
     "no_shape_layer": "请选择一个矩形、圆等形状图层。",
     "template_no_exists": "模版文件 \"%1\" 不存在。",
     "current_page_is_no_template": "当前页不是一个 Android 应用图标模版。",
-    "app_icon_not_find": "在当前页中找不到 Android 应用图标。"
+    "app_icon_not_find": "在当前页中找不到 Android 应用图标。",
+    "code_preview": "代码预览",
+    "nine_patch_preview": "点九图片预览",
+    "no_permission": "无写入权限",
+    "cannot_export_to_folder": "无法导入文件到此文件夹。",
+    "select_one_nine_patch_asset": "请选择一个点九资源。",
+    "nine_patch_layer_structure_is_wrong": "点九资源的图层结构有误。",
+    "html_tip_bg_light": "使用亮色透明背景",
+    "html_tip_bg_dark": "使用暗色透明色背景",
+    "html_tip_bg_white": "使用白色背景",
+    "html_label_width": "宽",
+    "html_label_height": "高",
+    "html_label_content": "内容区"
 }

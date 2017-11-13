@@ -94,6 +94,12 @@ var onRun = function(context) {
 
         if (exportFolder) {
 
+            // ExportFolder is writeable
+            if (!directoryIsWriteable(exportFolder + "/res")) {
+                toast(context, localizedString(context, "cannot_export_to_folder"));
+                return;
+            }
+
             var loopExportVectors = exportVectors.objectEnumerator();
             var vector;
             while (vector = loopExportVectors.nextObject()) {
@@ -119,7 +125,7 @@ var onRun = function(context) {
         toast(context, localizedString(context, "no_vector_drawable_asset"));
     }
 
-    ga(context, "Export", "export_vector_drawable", "Export");
+    ga(context, "Export", "export_vector_drawable");
 
 }
 
