@@ -11,7 +11,7 @@ body {
 }
 pre code {
     display: block;
-    font: 15px/20px Monaco, Consolas, monospace;
+    font: 15px/24px Monaco, Consolas, monospace;
 }
 
 button {

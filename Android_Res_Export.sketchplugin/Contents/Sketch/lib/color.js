@@ -1,4 +1,22 @@
+/*----------------------------------------------------------
 
+Android Res Export
+https://github.com/Ashung/Android_Res_Export
+
+Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------*/
 
 function getColorName(hex) {
 
@@ -423,6 +441,7 @@ function getColorName(hex) {
         { name: "white_smoke", value: "f5f5f5" },
         { name: "yellow", value: "ffff00" },
         { name: "yellow_green", value: "9acd32" },
+        { name: "yellow_green", value: "aaee55" },
         // variants
         { name: "gray", value: "333333" },
         { name: "antique_white", value: "ffefdb" },
@@ -440,10 +459,10 @@ function getColorName(hex) {
         { name: "blue", value: "0000ee" },
         { name: "blue", value: "0000cd" },
         { name: "blue", value: "00008b" },
-        { name: "brown", value: "ff4040" },
-        { name: "brown", value: "ee3b3b" },
-        { name: "brown", value: "cd3333" },
-        { name: "brown", value: "8b2323" },
+        { name: "red", value: "ff4040" },
+        { name: "red", value: "ee3b3b" },
+        { name: "red", value: "cd3333" },
+        { name: "dark_red", value: "8b2323" },
         { name: "burlywood", value: "ffd39b" },
         { name: "burlywood", value: "eec591" },
         { name: "burlywood", value: "cdaa7d" },
@@ -707,6 +726,8 @@ function getColorName(hex) {
         { name: "yellow", value: "8b8b00" }
     ];
 
+    // TODO: name of 256 colors
+
     var similarColors = [];
     for (var i = 0; i < color_names.length; i++) {
         var reg = new RegExp("^" + color_names[i]["value"] + "$", "i");
@@ -714,14 +735,17 @@ function getColorName(hex) {
             return color_names[i]["name"];
         } else {
             var distance = colorDistance(hex, color_names[i]["value"]);
-            if (distance < 5.5) {
+            if (distance < 6) {
                 similarColors.push({
+                    "hex": color_names[i]["value"],
                     "name": color_names[i]["name"],
                     "distance": distance
                 });
             }
         }
     }
+
+    log(similarColors)
 
     if (similarColors.length > 0) {
         similarColors.sort(function(a, b){

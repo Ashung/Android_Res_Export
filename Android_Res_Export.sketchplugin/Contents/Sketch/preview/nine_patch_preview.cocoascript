@@ -33,12 +33,12 @@ var onRun = function(context) {
 
     // Checking nine-patch
     var selectedLayer = selection.firstObject();
-    var ninePath;
+    var ninePatch;
     if (selectedLayer.class() == "MSLayerGroup" || selectedLayer.class() == "MSArtboardGroup" || selectedLayer.class() == "MSSymbolMaster") {
         if (selectedLayer.layers().count() == 2 && selectedLayer.layerWithID("patch") && selectedLayer.layerWithID("content")) {
             if (selectedLayer.layerWithID("patch").layers().count() >= 4 &&
                 selectedLayer.layerWithID("content").layerWithID("#9patch").class() == "MSSliceLayer") {
-                ninePath = selectedLayer;
+                ninePatch = selectedLayer;
             }
             else {
                 toast(context, localizedString(context, "nine_patch_layer_structure_is_wrong"));
@@ -53,7 +53,7 @@ var onRun = function(context) {
     else if (selectedLayer.class() == "MSSliceLayer" && selectedLayer.name() == "#9patch") {
         if (selectedLayer.parentGroup().name() == "content" && selectedLayer.parentGroup().parentGroup().layers().count() == 2 && selectedLayer.parentGroup().parentGroup().layerWithID("patch")) {
             if (selectedLayer.parentGroup().parentGroup().layerWithID("patch").layers().count() >= 4) {
-               ninePath = selectedLayer;
+               ninePatch = selectedLayer;
             }
             else {
                toast(context, localizedString(context, "nine_patch_layer_structure_is_wrong"));
@@ -70,9 +70,14 @@ var onRun = function(context) {
         return;
     }
 
+    if (!ninePatch) {
+        toast(context, localizedString(context, "select_one_nine_patch_asset"));
+        return;
+    }
+
     // Get base64 code of nine-patch asset
     var exportRequest = MSExportRequest.exportRequestsFromExportableLayer_inRect_useIDForName(
-        ninePath, ninePath.absoluteInfluenceRect(), false
+        ninePatch, ninePatch.absoluteInfluenceRect(), false
     ).firstObject();
     exportRequest.setFormat("png");
     var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, NSColorSpace.sRGBColorSpace());
@@ -97,7 +102,7 @@ var onRun = function(context) {
                     "html_label_content": localizedString(context, "html_label_content"),
                     "cancel": localizedString(context, "cancel"),
                     "export": localizedString(context, "export")
-                }
+                };
                 scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
             }
 

@@ -76,8 +76,15 @@
             "script": "preview/nine_patch_preview.cocoascript"
         },
         {
-            "name": "{{code_preview}}",
-            "identifier": "code_preview",
+            "name": "{{color_resource_code_from_selected_layer}}",
+            "identifier": "color_resource_code_from_selected_layer",
+            "handler": "colorResourceCodeFromSelectedLayer",
+            "script": "preview/code_preview.cocoascript"
+        },
+        {
+            "name": "{{color_resource_code_from_document_color}}",
+            "identifier": "color_resource_code_from_document_color",
+            "handler": "colorResourceCodeFromDocumentColor",
             "script": "preview/code_preview.cocoascript"
         },
         {
@@ -150,6 +157,8 @@
             "export_shape_xml",
             "-",
             "nine_patch_preview",
+            "color_resource_code_from_document_color",
+            "color_resource_code_from_selected_layer",
             "-",
             {
                 "title": "{{utilities}}",

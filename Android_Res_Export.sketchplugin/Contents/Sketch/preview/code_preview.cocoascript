@@ -1,23 +1,46 @@
 
 @import "../lib/MochaJSDelegate.js";
 @import "../lib/common.js";
+@import "../lib/color.js";
+
+var colorResourceCodeFromDocumentColor = function(context) {
+
+    // res/values/colors.xml
+    // <?xml version="1.0" encoding="utf-8"?>
+    // <resources>
+    //     <color name="opaque_red">#f00</color>
+    //     <color name="translucent_red">#80ff0000</color>
+    // </resources>
+    var doc = context.document;
+    var documentData = doc.documentData()
+    var documentColors = documentData.assets().colors();
 
 
-var onRun = function(context) {
+    var code = '<?xml version="1.0" encoding="utf-8"?>\\n<resources>\\n'
 
-    // var xml = '<svg width=\'24\' height="24" viewBox="0 0 24 24"\n    xmlns="http://www.w3.org/2000/svg">\n    <path d="M15 9h6V7H3v2h6v13h2v-7h2v7h2V9zm-3-3a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>\n</svg>';
-    //
-    // xml = xml.replace(/\'/g, '___');
-    // xml = xml.split("\n").join("\\n");
-    //
-    // log(String(xml));
+    var loopDocumentColors = documentColors.objectEnumerator();
+    var color;
+    while (color = loopDocumentColors.nextObject()) {
+        var colorAlpha = color.alpha();
+        var colorHex = color.immutableModelObject().hexValue();
+        var colorName = getColorName(colorHex);
+        var colorAndroid = colorToAndroid(color);
+        if (colorAlpha != 1) {
+            colorName += "_transparent";
+        }
+        code += '    <color name="' + colorName + '">' + colorAndroid + '</color>\\n';
+    }
+
+    code += "</resources>\\n";
+
+    log(code);
 
     window(
         context,
         localizedString(context, "code_preview"),
-        "code_preview.html", //"nine_patch_preview.html", //
+        "code_preview.html",
         function(scriptObject) {
-            scriptObject.evaluateWebScript("previewCode('<svg width=\\'24\\'>\\n<svg width=\\'24\\'>\\n')");
+            scriptObject.evaluateWebScript("previewCode('" + code + "')");
         },
         function(locationHash) {
 
@@ -26,3 +49,7 @@ var onRun = function(context) {
         }
     );
 };
+
+function getColorsFromDocument(context) {
+    return context.document.documentData().assets().colors();
+}

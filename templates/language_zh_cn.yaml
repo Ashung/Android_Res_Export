@@ -89,6 +89,8 @@ no_permission: 无写入权限
 cannot_export_to_folder: 无法导入文件到此文件夹。
 select_one_nine_patch_asset: 请选择一个点九资源。
 nine_patch_layer_structure_is_wrong: 点九资源的图层结构有误。
+color_resource_code_from_selected_layer: Color Resource Code From Selected Layer
+color_resource_code_from_document_color: Color Resource Code From Document Color
 
 html_tip_bg_light: 使用亮色透明背景
 html_tip_bg_dark: 使用暗色透明色背景
