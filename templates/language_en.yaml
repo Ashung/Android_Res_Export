@@ -26,6 +26,7 @@ language_file_not_found_desc: Language file "%1" does not existed.
 ok: OK
 cancel: Cancel
 export: Export
+save: Save
 least_version_desc: Android Res Export %1 is currently the newest version available.
 least_version_title: You are up-to-date.
 older_version_desc: |-
