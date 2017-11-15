@@ -334,8 +334,37 @@ function chooseFolder() {
     }
 }
 
+function showInFinder(path) {
+    return NSWorkspace.sharedWorkspace().openFile_withApplication(path, "Finder");
+}
+
 function openInFinder(path) {
-    return NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath(path, nil);
+    var fileManager =  NSFileManager.defaultManager();
+    var workspace = NSWorkspace.sharedWorkspace();
+    var attributesOfFile = fileManager.attributesOfItemAtPath_error(path, nil);
+    if (attributesOfFile) {
+        var fileType = attributesOfFile.objectForKey("NSFileType");
+        if (fileType == "NSFileTypeSymbolicLink") {
+            var symbolicLinkPath = fileManager.destinationOfSymbolicLinkAtPath_error(path, nil);
+            var url = NSURL.alloc().initWithString(path);
+            var absolutePath = NSURL.fileURLWithPath_relativeToURL(symbolicLinkPath, url).path();
+            if (fileManager.fileExistsAtPath(absolutePath)) {
+                var fileTypeOfSymbolicLink = fileManager.attributesOfItemAtPath_error(absolutePath, nil).objectForKey("NSFileType");
+                if (fileTypeOfSymbolicLink == "NSFileTypeRegular") {
+                    return workspace.selectFile_inFileViewerRootedAtPath(path, nil);
+                }
+                if (fileTypeOfSymbolicLink == "NSFileTypeDirectory") {
+                    return workspace.openFile(path);
+                }
+            } else {
+                return workspace.selectFile_inFileViewerRootedAtPath(path, nil);
+            }
+        } else if (fileType == "NSFileTypeRegular") {
+            return workspace.selectFile_inFileViewerRootedAtPath(path, nil);
+        } else if (fileType == "NSFileTypeDirectory") {
+            return workspace.openFile(path);
+        }
+    }
 }
 
 function getPreferences(context, key) {

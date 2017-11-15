@@ -5,11 +5,10 @@
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "version": "2.3.1",
+    "version": "2.3.3",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
     "bundleVersion": "1",
-    "language": "en",
     "commands": [
         {
             "handlers": {
@@ -77,9 +76,16 @@
             "script": "preview/nine_patch_preview.cocoascript"
         },
         {
-            "name": "Code Preview",
-            "identifier": "code_preview",
-            "script": "preview/code_preview.cocoascript"
+            "name": "Color Resource Code From Selected Layer",
+            "identifier": "color_resource_code_from_selected_layer",
+            "handler": "colorResourceCodeFromSelectedLayer",
+            "script": "preview/color_code_preview.cocoascript"
+        },
+        {
+            "name": "Color Resource Code From Document Color",
+            "identifier": "color_resource_code_from_document_color",
+            "handler": "colorResourceCodeFromDocumentColor",
+            "script": "preview/color_code_preview.cocoascript"
         },
         {
             "name": "Add System Icon Grid Line",
@@ -151,6 +157,7 @@
             "export_shape_xml",
             "-",
             "nine_patch_preview",
+            "color_resource_code_from_document_color",
             "-",
             {
                 "title": "Utilities",

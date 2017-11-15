@@ -89,6 +89,11 @@ btnExport.onclick = function() {
     window.location.hash = "export";
 }
 
+function clickAtPoint(x, y) {
+    var element = document.elementFromPoint(x, y);
+    element.click();
+}
+
 document.oncontextmenu = function() {
     window.event.returnValue = false;
 }

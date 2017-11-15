@@ -5,11 +5,10 @@
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "version": "2.3.1",
+    "version": "2.3.3",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "3",
     "bundleVersion": "1",
-    "language": "en",
     "commands": [
         {
             "handlers": {
@@ -77,9 +76,16 @@
             "script": "preview/nine_patch_preview.cocoascript"
         },
         {
-            "name": "代码预览",
-            "identifier": "code_preview",
-            "script": "preview/code_preview.cocoascript"
+            "name": "从选中图层生成色彩资源代码",
+            "identifier": "color_resource_code_from_selected_layer",
+            "handler": "colorResourceCodeFromSelectedLayer",
+            "script": "preview/color_code_preview.cocoascript"
+        },
+        {
+            "name": "从文档色彩生成色彩资源代码",
+            "identifier": "color_resource_code_from_document_color",
+            "handler": "colorResourceCodeFromDocumentColor",
+            "script": "preview/color_code_preview.cocoascript"
         },
         {
             "name": "添加系统图标网格",
@@ -151,6 +157,7 @@
             "export_shape_xml",
             "-",
             "nine_patch_preview",
+            "color_resource_code_from_document_color",
             "-",
             {
                 "title": "实用工具",

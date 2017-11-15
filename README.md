@@ -15,7 +15,7 @@ Export Android resources in Sketch – PNG assets, app icon, nine-patch image an
 
 ### Nine-patch support configure
 
-Install Xcode.
+Install Command Line Tools.
 
 ```shell
 xcode-select --install
@@ -35,9 +35,7 @@ brew install imagemagick
 
 ### Vector drawable support configure
 
-Install [Node.js](https://nodejs.org/en/).
-
-Then use this command to install [SVGO](https://github.com/svg/svgo) and [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable).
+Install [Node.js](https://nodejs.org/en/). Then use this command to install [SVGO](https://github.com/svg/svgo) and [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable).
 
 ```bash
 npm install -g svgo svg2vectordrawable

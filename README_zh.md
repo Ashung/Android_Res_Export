@@ -2,9 +2,20 @@
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
-**支持 Sketch 46+ , 支持中文**
+**支持 Sketch 47+ , 支持中文**
 
 用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、点九（Nine-patch）图片、形状 XML 和矢量（Vector Drawable）文件。
+
+## 功能
+
+- 导出多分辨率 PNG 资源。
+- 导出多分辨率点九资源。
+- 导出 Android 8 及旧版应用图标。
+- 导出形状 XML 代码。
+- 导出矢量（Vector Drawable）资源。
+- 导出图片资源后可以直接使用 ImageOptim 压缩（需安装 ImageOptim）。
+- 预览点九资源。**新功能**
+- 查看和导出色彩资源代码。**新功能**
 
 ## 安装
 
@@ -27,7 +38,7 @@ xcode-select --install
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-在终端输入以下命令，通过 Homebrew 来安装 [ImageMagick](http://www.imagemagick.org/script/index.php)。
+安装完成后，在终端输入以下命令安装 [ImageMagick](http://www.imagemagick.org/script/index.php)。
 
 ```shell
 brew install imagemagick
@@ -35,7 +46,7 @@ brew install imagemagick
 
 ### 配置矢量资源导出支持
 
-首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。如果速度太慢可以从 [国内镜像下载 Node.js v8.0.0](https://npm.taobao.org/mirrors/node/v8.0.0/node-v8.0.0.pkg)。
+首先从 [Node.js](https://nodejs.org/en/) 官网下载安装包，按照安装向导安装 Node.js。如果速度太慢可以从 [国内镜像](https://npm.taobao.org/mirrors/node/)，下载 node-v8(9).x.x.pkg 文件。
 
 安装完成后，打开终端输入以下命令安装 [SVGO](https://github.com/svg/svgo) 和 [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable)。
 

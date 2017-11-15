@@ -46,7 +46,7 @@ var onRun = function(context) {
             if (exportFolder) {
 
                 // ExportFolder is writeable
-                if (!directoryIsWriteable(exportFolder + "/res")) {
+                if (!directoryIsWriteable(exportFolder)) {
                     toast(context, localizedString(context, "cannot_export_to_folder"));
                     return;
                 }
@@ -64,12 +64,12 @@ var onRun = function(context) {
                     [
                         {
                             layer: iconNormal,
-                            path: exportFolder + "/res/",
+                            path: exportFolder,
                             name: "ic_launcher.png"
                         },
                         {
                             layer: iconRound,
-                            path: exportFolder + "/res/",
+                            path: exportFolder,
                             name: "ic_launcher_round.png"
                         }
                     ]
@@ -77,7 +77,7 @@ var onRun = function(context) {
 
                 // Open in Finder.
                 if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                    openInFinder(exportFolder);
+                    showInFinder(exportFolder);
                 }
 
             }
@@ -103,13 +103,13 @@ var onRun = function(context) {
             if (exportFolder) {
 
                 // ExportFolder is writeable
-                if (!directoryIsWriteable(exportFolder + "/res")) {
+                if (!directoryIsWriteable(exportFolder)) {
                     toast(context, localizedString(context, "cannot_export_to_folder"));
                     return;
                 }
 
                 // Export XML.
-                var xmlFilePath = exportFolder + "/res/mipmap-anydpi-v26/ic_launcher.xml";
+                var xmlFilePath = exportFolder + "/mipmap-anydpi-v26/ic_launcher.xml";
                 var xmlContent = '' +
                     '<?xml version="1.0" encoding="utf-8"?>\n' +
                     '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n' +
@@ -132,12 +132,12 @@ var onRun = function(context) {
                     [
                         {
                             layer: background,
-                            path: exportFolder + "/res/",
+                            path: exportFolder,
                             name: "ic_launcher_background.png"
                         },
                         {
                             layer: foreground,
-                            path: exportFolder + "/res/",
+                            path: exportFolder,
                             name: "ic_launcher_foreground.png"
                         }
                     ]
@@ -145,7 +145,7 @@ var onRun = function(context) {
 
                 // Open in Finder.
                 if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                    openInFinder(exportFolder);
+                    showInFinder(exportFolder);
                 }
             }
 

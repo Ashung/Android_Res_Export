@@ -80,7 +80,7 @@ var onRun = function(context) {
                     exportOption.setFileFormat("png");
                     exportOption.setScale(exportConfig[i]["scale"]);
                     exportOption.setNamingScheme(1);
-                    exportOption.setName("res/drawable-" + exportConfig[i]["qualifier"] + "/");
+                    exportOption.setName("drawable-" + exportConfig[i]["qualifier"] + "/");
                 }
 
                 var exportRequests = MSExportRequest.exportRequestsFromExportableLayer(tempSlice);
@@ -101,7 +101,7 @@ var onRun = function(context) {
             }
 
             if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                openInFinder(exportFolder);
+                showInFinder(exportFolder);
             }
 
         }

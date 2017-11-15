@@ -153,18 +153,18 @@ var onRun = function (context) {
             if (exportFolder) {
 
                 // ExportFolder is writeable
-                if (!directoryIsWriteable(exportFolder + "/res")) {
+                if (!directoryIsWriteable(exportFolder)) {
                     toast(context, localizedString(context, "cannot_export_to_folder"));
                     return;
                 }
 
-                var filePath = exportFolder + "/res/drawable/" + androidResName(layer.name()) + ".xml";
+                var filePath = exportFolder + "/drawable/" + androidResName(layer.name()) + ".xml";
 
-                mkdir(exportFolder + "/res/drawable/");
+                mkdir(exportFolder + "/drawable/");
                 writeContentToFile(filePath, xml);
 
                 if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                    openInFinder(filePath);
+                    showInFinder(exportFolder + "/drawable");
                 }
             }
 

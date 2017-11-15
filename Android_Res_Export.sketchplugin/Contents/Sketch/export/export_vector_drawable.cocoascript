@@ -95,7 +95,7 @@ var onRun = function(context) {
         if (exportFolder) {
 
             // ExportFolder is writeable
-            if (!directoryIsWriteable(exportFolder + "/res")) {
+            if (!directoryIsWriteable(exportFolder)) {
                 toast(context, localizedString(context, "cannot_export_to_folder"));
                 return;
             }
@@ -109,14 +109,14 @@ var onRun = function(context) {
 
                 optimizeSVG(svgo, svgFile);
 
-                svg2vector(s2v, svgFile, exportFolder + "/res/drawable-anydpi-v21/" + vector.name + ".xml");
+                svg2vector(s2v, svgFile, exportFolder + "/drawable-anydpi-v21/" + vector.name + ".xml");
 
                 rm(svgFile);
 
             }
 
             if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                openInFinder(exportFolder);
+                showInFinder(exportFolder + "/drawable-anydpi-v21");
             }
 
         }

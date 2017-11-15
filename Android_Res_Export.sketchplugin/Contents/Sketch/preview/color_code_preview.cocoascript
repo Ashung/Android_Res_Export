@@ -1,0 +1,112 @@
+/*----------------------------------------------------------
+
+Android Res Export
+https://github.com/Ashung/Android_Res_Export
+
+Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+----------------------------------------------------------*/
+
+@import "../lib/MochaJSDelegate.js";
+@import "../lib/common.js";
+@import "../lib/color.js";
+
+var colorResourceCodeFromDocumentColor = function(context) {
+
+    var doc = context.document;
+    var documentData = doc.documentData()
+    var documentColors = documentData.assets().colors();
+
+    var code = '<?xml version="1.0" encoding="utf-8"?>\\n<resources>\\n'
+
+    var colorNamesAndCount = NSMutableDictionary.alloc().init();
+    var loopDocumentColors = documentColors.objectEnumerator();
+    var color;
+    while (color = loopDocumentColors.nextObject()) {
+        var colorAlpha = color.alpha();
+        var colorHex = color.immutableModelObject().hexValue();
+        var colorName = getColorName(colorHex);
+        var colorAndroid = colorToAndroid(color);
+        if (colorAlpha != 1) {
+            colorName += "_transparent";
+        }
+
+        if (colorNamesAndCount.objectForKey(colorName)) {
+            var count = colorNamesAndCount.objectForKey(colorName) + 1;
+            colorNamesAndCount.setObject_forKey(count, colorName);
+        } else {
+            colorNamesAndCount.setObject_forKey(1, colorName);
+        }
+        if (colorNamesAndCount.objectForKey(colorName) > 1) {
+            colorName += "_" + colorNamesAndCount.objectForKey(colorName);
+        }
+
+        code += '    <color name="' + colorName + '">' + colorAndroid + '</color>\\n';
+    }
+
+    code += "</resources>\\n";
+
+    window(
+        context,
+        localizedString(context, "code_preview"),
+        "code_preview.html",
+        function(scriptObject) {
+
+            // Translation HTML
+            var currentLanguageSetting = getPreferences(context, "language");
+            if (currentLanguageSetting != "en") {
+                var languageJSON = {
+                    "cancel": localizedString(context, "cancel"),
+                    "save": localizedString(context, "save")
+                };
+                scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+            }
+
+            scriptObject.evaluateWebScript("previewCode('" + code + "')");
+        },
+        function(locationHash) {
+
+            if (locationHash == "#save") {
+                NSApp.stopModal();
+
+                var exportFolder = chooseFolder();
+                if (exportFolder) {
+
+                    if (!directoryIsWriteable(exportFolder)) {
+                        toast(context, localizedString(context, "cannot_export_to_folder"));
+                        return;
+                    }
+
+                    mkdir(exportFolder + "/values/");
+
+                    code = code.replace(/\\n/g, "\n");
+                    writeContentToFile(exportFolder + "/values/colors.xml", code);
+
+                    if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                        showInFinder(exportFolder + "/values");
+                    }
+
+                }
+            }
+
+            if (locationHash == "#cancel") {
+                NSApp.stopModal();
+            }
+
+        }
+    );
+
+    ga(context, "Preview", "color_code_preview");
+
+};

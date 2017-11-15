@@ -98,7 +98,7 @@ var onRun = function(context) {
         if (exportFolder) {
 
             // ExportFolder is writeable
-            if (!directoryIsWriteable(exportFolder + "/res")) {
+            if (!directoryIsWriteable(exportFolder)) {
                 toast(context, localizedString(context, "cannot_export_to_folder"));
                 return;
             }
@@ -164,7 +164,7 @@ var onRun = function(context) {
                     doc.saveArtboardOrSlice_toFile(exportRequest, exportFolder + "/" + ninePatchContentID + ".png");
                     exportFormat.remove();
 
-                    var outputFolder = exportFolder + "/res/drawable-" + qualifier;
+                    var outputFolder = exportFolder + "/drawable-" + qualifier;
                     var outputImage = outputFolder + "/" + ninePatchName + ".9.png";
 
                     mkdir(outputFolder);
@@ -200,7 +200,7 @@ var onRun = function(context) {
             }
 
             if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                openInFinder(exportFolder);
+                showInFinder(exportFolder);
             }
 
         }
