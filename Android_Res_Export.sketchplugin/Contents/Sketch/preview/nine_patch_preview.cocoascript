@@ -63,6 +63,10 @@ var onRun = function(context) {
     var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, NSColorSpace.sRGBColorSpace());
     var base64 = exporter.data().base64EncodedStringWithOptions(nil);
 
+    // Nine-patch width and height
+    var ninePatchWidth = ninePatch.frame().width() - 2;
+    var ninePatchHeight = ninePatch.frame().height() - 2;
+
     // Dialog
     window(
         context,
@@ -87,7 +91,9 @@ var onRun = function(context) {
             }
 
             scriptObject.evaluateWebScript("var base64 ='" + base64 + "'");
-            scriptObject.evaluateWebScript("drawNinePatch('" + base64 + "',100,100,false)");
+            scriptObject.evaluateWebScript("originalWidth=" + ninePatchWidth + "");
+            scriptObject.evaluateWebScript("originalHeight=" + ninePatchHeight + "");
+            scriptObject.evaluateWebScript("drawNinePatch('" + base64 + "'," + ninePatchWidth + "," + ninePatchHeight + ",false)");
         },
         function(locationHash) {
 
