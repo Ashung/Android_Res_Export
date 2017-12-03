@@ -75,6 +75,7 @@ no_vector_drawable_asset: 无任何矢量资源。
 show_in_finder_after_export: 导出资源后在 Finder 中显示。
 use_imageoptim_after_export: 导出资源后使用 ImageOptim 压缩图片。
 export_shape_xml: 导出形状 XML 代码
+view_shape_xml_code: 查看形状 XML 代码
 not_support_layer_style: Android 形状资源不支持投影、模糊等图层样式。
 too_many_color_stop: Android 形状资源不支持大于 3 种颜色的渐变。
 no_support_fill_type: Android 形状资源不支持图像等填充类型。

@@ -1,162 +1,223 @@
+@import "../lib/MochaJSDelegate.js";
 @import "../lib/common.js";
 
-var onRun = function (context) {
+var exportShapeXML = function (context) {
 
     var selection = context.selection;
 
-    if (selection.count() == 1) {
-
-        var layer = selection.firstObject();
-        var layerInfo = getLayerInfo(context, layer);
-
-        if (layerInfo.support) {
-
-            // Android Shape Drawable References
-            // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
-            var xml = '\
-<?xml version="1.0" encoding="utf-8"?>\n\
-<shape xmlns:android="http://schemas.android.com/apk/res/android"\n\
-    android:shape="' + layerInfo.type + '"';
-
-            if (
-                layerInfo.type == "ring" &&
-                layerInfo.thickness &&
-                layerInfo.innerRadius
-            ) {
-                xml += '\n\
-    android:thickness="' + layerInfo.thickness + '"\n\
-    android:innerRadius="' + layerInfo.innerRadius + '"';
-            }
-
-            xml += '\n\
-    android:useLevel="false">\n';
-
-            if (layerInfo.width && layerInfo.height) {
-                xml += '\
-    <size\n\
-        android:width="' + layerInfo.width + '"\n\
-        android:height="' + layerInfo.height + '"/>\n';
-            }
-
-            if (layerInfo.solid) {
-                xml += '\
-    <solid\n\
-        android:color="' + layerInfo.solid + '"/>\n';
-            }
-
-            if (layerInfo.gradientType) {
-                xml += '\
-    <gradient\n\
-        android:type="' + layerInfo.gradientType + '"\n';
-
-                if (layerInfo.gradientAngle) {
-                    xml += '\
-        android:angle="' + layerInfo.gradientAngle + '"\n';
-                }
-                if (layerInfo.gradientStops) {
-                    if (layerInfo.gradientStops.length == 2) {
-                        xml += '\
-        android:startColor="' + layerInfo.gradientStops[0] + '"\n\
-        android:endColor="' + layerInfo.gradientStops[1] + '"';
-                    }
-                    if (layerInfo.gradientStops.length == 3) {
-                        xml += '\
-        android:startColor="' + layerInfo.gradientStops[0] + '"\n\
-        android:centerColor="' + layerInfo.gradientStops[1] + '"\n\
-        android:endColor="' + layerInfo.gradientStops[2] + '"';
-                    }
-                }
-                if (layerInfo.gradientRadius) {
-                    xml += '\n\
-        android:gradientRadius="' + layerInfo.gradientRadius + '"';
-                }
-                xml += '/>\n';
-            }
-
-            if (layerInfo.cornersRadius) {
-                xml += '\
-    <corners\n\
-        android:radius="' + layerInfo.cornersRadius + '"/>\n';
-            }
-            if (
-                layerInfo.cornersRadiusTopLeft ||
-                layerInfo.cornersRadiusTopRight ||
-                layerInfo.cornersRadiusBottomRight ||
-                layerInfo.cornersRadiusBottomLeft
-            ) {
-                xml += '\
-    <corners';
-                if (layerInfo.cornersRadiusTopLeft) {
-                    xml += '\n\
-        android:topLeftRadius="' + layerInfo.cornersRadiusTopLeft + '"';
-                }
-                if (layerInfo.cornersRadiusTopRight) {
-                    xml += '\n\
-        android:topRightRadius="' + layerInfo.cornersRadiusTopRight + '"';
-                }
-                if (layerInfo.cornersRadiusBottomRight) {
-                    xml += '\n\
-        android:bottomRightRadius="' + layerInfo.cornersRadiusBottomRight + '"';
-                }
-                if (layerInfo.cornersRadiusBottomLeft) {
-                    xml += '\n\
-        android:bottomLeftRadius="' + layerInfo.cornersRadiusBottomLeft + '"';
-                }
-                xml += '/>\n';
-            }
-
-            if (layerInfo.strokeWidth) {
-                xml += '\
-    <stroke\n\
-        android:width="' + layerInfo.strokeWidth + '"';
-                if (layerInfo.strokeColor) {
-                    xml += '\n\
-        android:color="' + layerInfo.strokeColor + '"';
-                }
-                if (layerInfo.strokeDashWidth) {
-                    xml += '\n\
-        android:dashWidth="' + layerInfo.strokeDashWidth + '"';
-                }
-                if (layerInfo.strokeDashGap) {
-                    xml += '\n\
-        android:dashGap="' + layerInfo.strokeDashGap + '"';
-                }
-                xml += '/>\n';
-            }
-
-            xml += '</shape>';
-
-            // log(xml)
-
-            // Export
-            var exportFolder = chooseFolder();
-            if (exportFolder) {
-
-                // ExportFolder is writeable
-                if (!directoryIsWriteable(exportFolder)) {
-                    toast(context, localizedString(context, "cannot_export_to_folder"));
-                    return;
-                }
-
-                var filePath = exportFolder + "/drawable/" + androidResName(layer.name()) + ".xml";
-
-                mkdir(exportFolder + "/drawable/");
-                writeContentToFile(filePath, xml);
-
-                if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                    showInFinder(exportFolder + "/drawable");
-                }
-            }
-
-        } else {
-            toast(context, localizedString(context, layerInfo.msg));
-        }
-    } else {
+    if (selection.count() != 1) {
         toast(context, localizedString(context, "no_shape_layer"));
+        return;
+    }
+
+    var layer = selection.firstObject();
+    var xml = getXMLFromLayer(context, layer);
+
+    if (xml) {
+        exportXML(context, xml, androidResName(layer.name()));
     }
 
     ga(context, "Export", "export_shape_xml");
 
+};
+
+var viewShapeXMLCode = function(context) {
+
+    var selection = context.selection;
+
+    if (selection.count() != 1) {
+        toast(context, localizedString(context, "no_shape_layer"));
+        return;
+    }
+
+    var layer = selection.firstObject();
+    var xml = getXMLFromLayer(context, layer);
+
+    if (xml) {
+        window(
+            context,
+            localizedString(context, "view_shape_xml_code"),
+            "code_preview.html",
+            function(scriptObject) {
+
+                // Translation HTML
+                var currentLanguageSetting = getPreferences(context, "language");
+                if (currentLanguageSetting != "en") {
+                    var languageJSON = {
+                        "cancel": localizedString(context, "cancel"),
+                        "save": localizedString(context, "save")
+                    };
+                    scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+                }
+
+                xml = xml.replace(/\n/g, "\\n");
+                scriptObject.evaluateWebScript("previewCode('" + xml + "')");
+            },
+            function(locationHash) {
+
+                if (locationHash == "#save") {
+
+                    NSApp.stopModal();
+                    exportXML(context, xml, androidResName(layer.name()));
+
+                }
+
+                if (locationHash == "#cancel") {
+                    NSApp.stopModal();
+                }
+
+            }
+        );
+    }
+
+    ga(context, "Export", "view_shape_xml_code");
+};
+
+function getXMLFromLayer(context, layer) {
+    var layerInfo = getLayerInfo(context, layer);
+    if (layerInfo.support) {
+        // Android Shape Drawable References
+        // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
+        var xml = '\
+<?xml version="1.0" encoding="utf-8"?>\n\
+<shape xmlns:android="http://schemas.android.com/apk/res/android"\n\
+    android:shape="' + layerInfo.type + '"';
+
+        if (
+            layerInfo.type == "ring" &&
+            layerInfo.thickness &&
+            layerInfo.innerRadius
+        ) {
+            xml += '\n\
+    android:thickness="' + layerInfo.thickness + '"\n\
+    android:innerRadius="' + layerInfo.innerRadius + '"';
+        }
+
+        xml += '\n\
+    android:useLevel="false">\n';
+
+        if (layerInfo.width && layerInfo.height) {
+            xml += '\
+    <size\n\
+        android:width="' + layerInfo.width + '"\n\
+        android:height="' + layerInfo.height + '"/>\n';
+        }
+
+        if (layerInfo.solid) {
+            xml += '\
+    <solid\n\
+        android:color="' + layerInfo.solid + '"/>\n';
+        }
+
+        if (layerInfo.gradientType) {
+            xml += '\
+    <gradient\n\
+        android:type="' + layerInfo.gradientType + '"\n';
+
+            if (layerInfo.gradientAngle) {
+                xml += '\
+        android:angle="' + layerInfo.gradientAngle + '"\n';
+            }
+            if (layerInfo.gradientStops) {
+                if (layerInfo.gradientStops.length == 2) {
+                    xml += '\
+        android:startColor="' + layerInfo.gradientStops[0] + '"\n\
+        android:endColor="' + layerInfo.gradientStops[1] + '"';
+                }
+                if (layerInfo.gradientStops.length == 3) {
+                    xml += '\
+        android:startColor="' + layerInfo.gradientStops[0] + '"\n\
+        android:centerColor="' + layerInfo.gradientStops[1] + '"\n\
+        android:endColor="' + layerInfo.gradientStops[2] + '"';
+                }
+            }
+            if (layerInfo.gradientRadius) {
+                xml += '\n\
+        android:gradientRadius="' + layerInfo.gradientRadius + '"';
+            }
+            xml += '/>\n';
+        }
+
+        if (layerInfo.cornersRadius) {
+            xml += '\
+    <corners\n\
+        android:radius="' + layerInfo.cornersRadius + '"/>\n';
+        }
+        if (
+            layerInfo.cornersRadiusTopLeft ||
+            layerInfo.cornersRadiusTopRight ||
+            layerInfo.cornersRadiusBottomRight ||
+            layerInfo.cornersRadiusBottomLeft
+        ) {
+            xml += '\
+    <corners';
+            if (layerInfo.cornersRadiusTopLeft) {
+                xml += '\n\
+        android:topLeftRadius="' + layerInfo.cornersRadiusTopLeft + '"';
+            }
+            if (layerInfo.cornersRadiusTopRight) {
+                xml += '\n\
+        android:topRightRadius="' + layerInfo.cornersRadiusTopRight + '"';
+            }
+            if (layerInfo.cornersRadiusBottomRight) {
+                xml += '\n\
+        android:bottomRightRadius="' + layerInfo.cornersRadiusBottomRight + '"';
+            }
+            if (layerInfo.cornersRadiusBottomLeft) {
+                xml += '\n\
+        android:bottomLeftRadius="' + layerInfo.cornersRadiusBottomLeft + '"';
+            }
+            xml += '/>\n';
+        }
+
+        if (layerInfo.strokeWidth) {
+            xml += '\
+    <stroke\n\
+        android:width="' + layerInfo.strokeWidth + '"';
+            if (layerInfo.strokeColor) {
+                xml += '\n\
+        android:color="' + layerInfo.strokeColor + '"';
+            }
+            if (layerInfo.strokeDashWidth) {
+                xml += '\n\
+        android:dashWidth="' + layerInfo.strokeDashWidth + '"';
+            }
+            if (layerInfo.strokeDashGap) {
+                xml += '\n\
+        android:dashGap="' + layerInfo.strokeDashGap + '"';
+            }
+            xml += '/>\n';
+        }
+
+        xml += '</shape>';
+
+        return xml;
+    } else {
+        toast(context, localizedString(context, layerInfo.msg));
+        return;
+    }
+}
+
+function exportXML(context, xml, fileName) {
+    // Export
+    var exportFolder = chooseFolder();
+    if (exportFolder) {
+
+        // ExportFolder is writeable
+        if (!directoryIsWriteable(exportFolder)) {
+            toast(context, localizedString(context, "cannot_export_to_folder"));
+            return;
+        }
+
+        var filePath = exportFolder + "/drawable/" + fileName + ".xml";
+
+        mkdir(exportFolder + "/drawable/");
+        writeContentToFile(filePath, xml);
+
+        if (getPreferences(context, "show_in_finder_after_export") == 1) {
+            showInFinder(exportFolder + "/drawable");
+        }
+    }
 }
 
 function getLayerInfo(context, layer) {

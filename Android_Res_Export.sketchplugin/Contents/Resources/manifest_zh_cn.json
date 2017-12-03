@@ -68,6 +68,7 @@
         {
             "name": "导出形状 XML 代码",
             "identifier": "export_shape_xml",
+            "handler": "exportShapeXML",
             "script": "export/export_shape_xml.cocoascript"
         },
         {
@@ -86,6 +87,12 @@
             "identifier": "color_resource_code_from_document_color",
             "handler": "colorResourceCodeFromDocumentColor",
             "script": "preview/color_code_preview.cocoascript"
+        },
+        {
+            "name": "查看形状 XML 代码",
+            "identifier": "view_shape_xml_code",
+            "handler": "viewShapeXMLCode",
+            "script": "export/export_shape_xml.cocoascript"
         },
         {
             "name": "添加系统图标网格",
@@ -158,6 +165,7 @@
             "-",
             "nine_patch_preview",
             "color_resource_code_from_document_color",
+            "view_shape_xml_code",
             "-",
             {
                 "title": "实用工具",
