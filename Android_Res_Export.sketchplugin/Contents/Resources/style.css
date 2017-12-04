@@ -11,7 +11,7 @@ body {
 }
 pre code {
     display: block;
-    font: 15px/24px Monaco, Consolas, monospace;
+    font: 14px/24px Monaco, Consolas, monospace;
 }
 
 button {
@@ -133,6 +133,7 @@ input[type=range]:focus {
     padding: 8px 16px;
     align-items: center;/* 8px 16px*/
     display: flex;
+    border-top: 1px solid #ddd;
 }
 
 .gap {
@@ -191,6 +192,7 @@ input[type=range]:focus {
     padding: 0 16px;
     align-items: center;
     display: flex;
+    border-top: 1px solid #ddd;
 }
 #controlor label {
     margin-right: 8px;
@@ -198,21 +200,12 @@ input[type=range]:focus {
 #controlor input[type="range"] {
     margin-right: 16px;
 }
-
-#tips {
-    position: absolute;
-    left: 16px;
-    right: 16px;
-    bottom: 0;
-    padding: 16px;
-    color: #fff;
-    background: #f00;
-    border-radius: 4px;
+#controlor + #foot-actions {
+    border: 0;
 }
 
-
 /* github.com style (c) Vasily Polovnyov <vast@whiteants.net> */
-.hljs{display:block;overflow-x:auto;padding:1em;color:#333;}
+.hljs{display:block;overflow-x:auto;color:#333;}
 .hljs-comment,.hljs-quote{color:#998;font-style:italic}
 .hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}
 .hljs-number,.hljs-literal,.hljs-variable,.hljs-template-variable,.hljs-tag .hljs-attr{color:#008080}
@@ -229,3 +222,20 @@ input[type=range]:focus {
 .hljs-addition{background:#dfd}
 .hljs-emphasis{font-style:italic}
 .hljs-strong{font-weight:700}
+
+td.hljs-ln-numbers {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: right;
+    color: #ccc;
+    border-right: 1px solid #ccc;
+    padding: 0 10px !important;
+    background: #F8F8F8;
+}
+td.hljs-ln-code {
+    padding-left: 10px !important;
+}

@@ -8,12 +8,12 @@ var colorResourceCodeFromDocumentColor = function(context) {
     var documentData = doc.documentData()
     var documentColors = documentData.assets().colors();
 
-    if (documentColors == 0) {
+    if (documentColors.count() == 0) {
         toast(context, localizedString(context, "no_document_color"));)
         return;
     }
 
-    var code = '<?xml version="1.0" encoding="utf-8"?>\\n<resources>\\n'
+    var xml = '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
 
     var colorNamesAndCount = NSMutableDictionary.alloc().init();
     var loopDocumentColors = documentColors.objectEnumerator();
@@ -37,11 +37,95 @@ var colorResourceCodeFromDocumentColor = function(context) {
             colorName += "_" + colorNamesAndCount.objectForKey(colorName);
         }
 
-        code += '    <color name="' + colorName + '">' + colorAndroid + '</color>\\n';
+        xml += '    <color name="' + colorName + '">' + colorAndroid + '</color>\n';
     }
 
-    code += "</resources>\\n";
+    xml += "</resources>\n";
 
+    showCodeWindow(context, xml);
+
+    ga(context, "Preview", "color_code_preview");
+
+};
+
+var colorResourceCodeFromLayers = function(context) {
+
+    var doc = context.document;
+    var selection = context.selection;
+
+    if (selection.count() == 0) {
+
+        return;
+    }
+
+    var colorsDictionary = NSMutableDictionary.alloc().init();
+    var baseColorNamesAndCount = NSMutableDictionary.alloc().init();
+
+    var loopSelection = selection.objectEnumerator();
+    var layer;
+    while (layer = loopSelection.nextObject()) {
+
+        // Name
+        var layerName = layerNameToXMLValue(layer.name());
+        if (baseColorNamesAndCount.objectForKey(layerName)) {
+            var count = baseColorNamesAndCount.objectForKey(layerName) + 1;
+            baseColorNamesAndCount.setObject_forKey(count, layerName);
+        } else {
+            baseColorNamesAndCount.setObject_forKey(1, layerName);
+        }
+        if (baseColorNamesAndCount.objectForKey(layerName) > 1) {
+            layerName += "_" + baseColorNamesAndCount.objectForKey(layerName);
+        }
+
+        // log(layerName);
+
+        // Color
+        if (layer.class() == "MSShapeGroup") {
+            if (layer.style().enabledFills().count() > 0) {
+                var fillType = layer.style().enabledFills().lastObject().fillType();
+                if (fillType == 0) {
+                    var lastColor = layer.style().enabledFills().lastObject().color();
+                    var color = colorToAndroid(lastColor);
+                    var name = layerName;
+                    colorsDictionary.setObject_forKey(color, name);
+                }
+                if (fillType == 1) {
+                    var stops = layer.style().enabledFills().lastObject().gradient().stops();
+                    var loopStops = stops.objectEnumerator();
+                    var stopIndex = 1;
+                    var stop;
+                    while (stop = loopStops.nextObject()) {
+                        var color = colorToAndroid(stop.color());
+                        var name = layerName + "_gradient_stop_" + stopIndex;
+                        stopIndex ++;
+                        colorsDictionary.setObject_forKey(color, name);
+                    }
+                }
+            }
+        }
+
+
+        log(colorsDictionary)
+
+    }
+
+
+};
+
+function layerNameToXMLValue(name) {
+    var result = name.replace(/[^A-Za-z0-9\s\_]/g, "")
+        .replace(/^\d+/, "")
+        .trim()
+        .replace(/\s+/g, "_")
+        .toLowerCase();
+    if (result == "") {
+        return "untitled";
+    } else {
+        return result;
+    }
+}
+
+function showCodeWindow(context, xml) {
     window(
         context,
         localizedString(context, "code_preview"),
@@ -58,7 +142,8 @@ var colorResourceCodeFromDocumentColor = function(context) {
                 scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
             }
 
-            scriptObject.evaluateWebScript("previewCode('" + code + "')");
+            xml = xml.replace(/\n/g, "\\n");
+            scriptObject.evaluateWebScript("previewCode('" + xml + "')");
         },
         function(locationHash) {
 
@@ -75,8 +160,7 @@ var colorResourceCodeFromDocumentColor = function(context) {
 
                     mkdir(exportFolder + "/values/");
 
-                    code = code.replace(/\\n/g, "\n");
-                    writeContentToFile(exportFolder + "/values/colors.xml", code);
+                    writeContentToFile(exportFolder + "/values/colors.xml", xml);
 
                     if (getPreferences(context, "show_in_finder_after_export") == 1) {
                         showInFinder(exportFolder + "/values");
@@ -91,7 +175,4 @@ var colorResourceCodeFromDocumentColor = function(context) {
 
         }
     );
-
-    ga(context, "Preview", "color_code_preview");
-
-};
+}

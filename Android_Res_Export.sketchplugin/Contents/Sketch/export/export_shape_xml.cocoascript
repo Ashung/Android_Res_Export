@@ -189,7 +189,7 @@ function getXMLFromLayer(context, layer) {
             xml += '/>\n';
         }
 
-        xml += '</shape>';
+        xml += '</shape>\n';
 
         return xml;
     } else {

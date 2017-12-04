@@ -78,7 +78,7 @@
     "nine_patch_preview": "Nine-Patch Preview",
     "no_permission": "No Permission",
     "cannot_export_to_folder": "You can't export assets to this folder.",
-    "select_one_nine_patch_asset": "Please select one nine-patch asset.",
+    "select_one_nine_patch_asset": "Please select a nine-patch asset.",
     "nine_patch_layer_structure_is_wrong": "The layer structure of nine-patch asset is wrong.",
     "color_resource_code_from_selected_layer": "Color Resource Code From Selected Layer",
     "color_resource_code_from_document_color": "Color Resource Code From Document Color",

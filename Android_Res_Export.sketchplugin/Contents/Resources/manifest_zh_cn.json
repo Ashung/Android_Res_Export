@@ -79,7 +79,7 @@
         {
             "name": "从选中图层生成色彩资源代码",
             "identifier": "color_resource_code_from_selected_layer",
-            "handler": "colorResourceCodeFromSelectedLayer",
+            "handler": "colorResourceCodeFromLayers",
             "script": "preview/color_code_preview.cocoascript"
         },
         {
@@ -164,6 +164,7 @@
             "export_shape_xml",
             "-",
             "nine_patch_preview",
+            "color_resource_code_from_selected_layer",
             "color_resource_code_from_document_color",
             "view_shape_xml_code",
             "-",
