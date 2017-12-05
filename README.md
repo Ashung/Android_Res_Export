@@ -6,6 +6,16 @@
 
 Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.
 
+## Features
+
+- Export PNG assets into multiple sizes.
+- Preview and export nine-patch assets into multiple sizes.
+- Export app launcher icon for Android 8 and older version.
+- View and export shape drawable XML code.
+- Export vector drawable asset.
+- Compress PNGs after export use ImageOptim.
+- View and export color resource XML code from Sketch document colors or selected layers.
+
 ## Installation
 
 ### Install plugin

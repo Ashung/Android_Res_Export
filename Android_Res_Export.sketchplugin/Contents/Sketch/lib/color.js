@@ -1,23 +1,3 @@
-/*----------------------------------------------------------
-
-Android Res Export
-https://github.com/Ashung/Android_Res_Export
-
-Copyright 2017 Ashung Hung (Ashung.hung@gmail.com)
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-----------------------------------------------------------*/
-
 function getColorName(hex) {
 
     var colorNames = [
@@ -644,20 +624,19 @@ function getColorName(hex) {
         { name: "light_pink", value: "ff99cc" },
         { name: "light_purple", value: "ff99ff" },
         { name: "yellow", value: "ffcc00" },
-        { name: "yellow", value: "ffcc33" },
-        { name: "yellow", value: "ffcc66" },
+        { name: "amber", value: "ffcc33" },
+        { name: "amber", value: "ffcc66" },
         { name: "light_orange", value: "ffcc99" },
         { name: "light_red", value: "ffcccc" },
         { name: "light_purple", value: "ffccff" },
         { name: "yellow", value: "ffff00" },
-        { name: "light_yellow", value: "ffff33" },
+        { name: "yellow", value: "ffff33" },
         { name: "light_yellow", value: "ffff66" },
         { name: "light_yellow", value: "ffff99" },
         { name: "light_yellow", value: "ffffcc" },
         { name: "white", value: "ffffff" }
     ];
 
-    var similarColors = [];
     for (var i = 0; i < colorNames.length; i++) {
         var reg = new RegExp("^" + colorNames[i]["value"] + "$", "i");
         if (reg.test(hex)) {
@@ -665,93 +644,12 @@ function getColorName(hex) {
         }
     }
 
-    var similarColors = [];
     for (var i = 0; i < safeColors.length; i++) {
-       var distance = colorDistance(hex, safeColors[i]["value"]);
-       if (distance < 15) {
-           similarColors.push({
-               "hex": safeColors[i]["value"],
-               "name": safeColors[i]["name"],
-               "distance": distance
-           });
-       }
+        var webSafeColor = hex2WebSafe(hex);
+        if (webSafeColor == safeColors[i]["value"]) {
+            return safeColors[i]["name"];
+        }
     }
-
-    // log(similarColors);
-
-    if (similarColors.length > 0) {
-        similarColors.sort(function(a, b){
-            return a.distance - b.distance;
-        });
-        return similarColors[0].name;
-    } else {
-        return "unknown";
-    }
-
-}
-
-function colorDistance(hex1, hex2) {
-    var rgb1 = hex2rgb(hex1);
-    var rgb2 = hex2rgb(hex2);
-    var lab1 = rgb2lab(rgb1[0], rgb1[1], rgb1[2]);
-    var lab2 = rgb2lab(rgb2[0], rgb2[1], rgb2[2]);
-    var distance = Math.sqrt(
-        Math.pow(lab2[0] - lab1[0], 2) +
-        Math.pow(lab2[1] - lab1[1], 2) +
-        Math.pow(lab2[2] - lab1[2], 2)
-    );
-    return distance;
-}
-
-function rgb2lab(r, g, b) {
-    r = r / 255;
-    g = g / 255;
-    b = b / 255;
-    if (r > 0.04045) {
-        r = Math.pow((r + 0.055) / 1.055, 2.4);
-    } else {
-        r = r / 12.92;
-    }
-    if (g > 0.04045) {
-        g = Math.pow((g + 0.055) / 1.055, 2.4);
-    } else {
-        g = g / 12.92;
-    }
-    if (b > 0.04045) {
-        b = Math.pow((b + 0.055) / 1.055, 2.4);
-    } else {
-        b = b / 12.92;
-    }
-    r = r * 100;
-    g = g * 100;
-    b = b * 100;
-    var x = r * 0.4124 + g * 0.3576 + b * 0.1805;
-    var y = r * 0.2126 + g * 0.7152 + b * 0.0722;
-    var z = r * 0.0193 + g * 0.1192 + b * 0.9505;
-
-    x = x / 95.047;
-    y = y / 100.000;
-    z = z / 108.883;
-    if (x > 0.008856) {
-        x = Math.pow(x, 1 / 3);
-    } else {
-        x = (7.787 * x) + (16 / 116);
-    }
-    if (y > 0.008856) {
-        y = Math.pow(y, 1 / 3);
-    } else {
-        y = (7.787 * y) + (16 / 116);
-    }
-    if (z > 0.008856) {
-        z = Math.pow(z, 1 / 3);
-    } else {
-        z = (7.787 * z) + (16 / 116);
-    }
-    var l = (116 * y) - 16;
-    var a = 500 * (x - y);
-    var b = 200 * (y - z);
-
-    return [l, a, b];
 }
 
 function hex2rgb(hex) {
@@ -760,4 +658,20 @@ function hex2rgb(hex) {
         g = u >> 8 & 0xFF;
         b = u & 0xFF;
     return [r, g, b];
+}
+
+function hex2WebSafe(hex) {
+    var r = hex2rgb(hex)[0],
+        g = hex2rgb(hex)[1],
+        b = hex2rgb(hex)[2];
+
+    var hexR = (Math.round(r / 255 * 5) * 51).toString(16),
+        hexG = (Math.round(g / 255 * 5) * 51).toString(16),
+        hexB = (Math.round(b / 255 * 5) * 51).toString(16);
+
+    hexR = hexR.length == 1 ? "0" + hexR : hexR;
+    hexG = hexG.length == 1 ? "0" + hexG : hexG;
+    hexB = hexB.length == 1 ? "0" + hexB : hexB;
+
+    return hexR + hexG + hexB;
 }

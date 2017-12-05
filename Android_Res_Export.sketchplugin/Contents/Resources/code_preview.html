@@ -5,6 +5,7 @@
 <title>Code Viewer</title>
 <link rel="stylesheet" href="style.css">
 <script src="highlight.pack.js"></script>
+<script src="highlightjs-line-numbers.min.js"></script>
 </head>
 <body>
 <div id="main">
@@ -23,11 +24,6 @@
 
 var btnCancel = document.getElementById("cancel"),
     btnSave = document.getElementById("save");
-
-// btnCopy.onclick = function() {
-//     window.location.hash = "copy_" + new Date().getTime();
-//     return false;
-// }
 
 btnSave.onclick = function() {
     window.location.hash = "save";
@@ -54,6 +50,7 @@ function previewCode(code) {
     var ele_code = document.getElementById("code");
     ele_code.innerText = code;
     hljs.highlightBlock(ele_code);
+    hljs.lineNumbersBlock(ele_code);
 }
 
 function i18n(json) {
