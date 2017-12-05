@@ -94,6 +94,8 @@ nine_patch_layer_structure_is_wrong: 点九资源的图层结构有误。
 color_resource_code_from_selected_layer: 从选中图层生成色彩资源代码
 color_resource_code_from_document_color: 从文档色彩生成色彩资源代码
 no_document_color: 当前文档中没有任何文档色彩。
+no_selected_shape_layer: 请选中至少一个带有单色或渐变填充的图层。
+no_color_in_selected_layers: 选中的图层中没有任何颜色。
 
 html_tip_bg_light: 使用亮色透明背景
 html_tip_bg_dark: 使用暗色透明色背景
