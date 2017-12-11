@@ -128,7 +128,12 @@ function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
     slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);
 
-    var exportOption = slice.exportOptions().addExportFormat();
+    if (slice.exportOptions().exportFormats().count() > 0) {
+        var exportOption = slice.exportOptions().exportFormats().firstObject();
+    } else {
+        var exportOption = slice.exportOptions().addExportFormat();
+    }
+
     exportOption.setFileFormat("png");
     exportOption.setName("@android_res_export");
     exportOption.setScale(1);

@@ -56,16 +56,18 @@ var onRun = function(context) {
     }
 
     // Get base64 code of nine-patch asset
+    var scale = 2;
     var exportRequest = MSExportRequest.exportRequestsFromExportableLayer_inRect_useIDForName(
         ninePatch, ninePatch.absoluteInfluenceRect(), false
     ).firstObject();
     exportRequest.setFormat("png");
+    exportRequest.setScale(scale);
     var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, NSColorSpace.sRGBColorSpace());
     var base64 = exporter.data().base64EncodedStringWithOptions(nil);
 
     // Nine-patch width and height
-    var ninePatchWidth = ninePatch.frame().width() - 2;
-    var ninePatchHeight = ninePatch.frame().height() - 2;
+    var ninePatchWidth = (ninePatch.frame().width() - 2) * scale;
+    var ninePatchHeight = (ninePatch.frame().height() - 2) * scale;
 
     // Dialog
     window(

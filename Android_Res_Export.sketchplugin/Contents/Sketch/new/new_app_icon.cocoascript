@@ -35,6 +35,7 @@ var newAppIconTemplateLegacy = function(context) {
 function importFromResource_toPage_withMetadate(context, resource, pageName, metadata) {
 
     var doc = context.document;
+    var documentData = doc.documentData();
 
     // Template file.
     var template = context.plugin.urlForResourceNamed(resource);
@@ -47,8 +48,11 @@ function importFromResource_toPage_withMetadate(context, resource, pageName, met
     }
 
     // Create new page.
-    var pageForIcon = doc.addBlankPage();
+    var pageForIcon = MSPage.alloc().init();
     pageForIcon.setName(pageName);
+    documentData.insertPage_atIndex(pageForIcon, 0)
+    documentData.setCurrentPage(pageForIcon);
+    doc.pageTreeLayoutDidChange();
 
     // Read data from Sketch file.
     var templateDocument = MSDocument.alloc().init();
@@ -65,7 +69,7 @@ function importFromResource_toPage_withMetadate(context, resource, pageName, met
     var symbol;
     while (symbol = loopAllSymbols.nextObject()) {
         symbolIDMapping.setObject_forKey(
-            symbol.generateObjectID(),
+            NSUUID.UUID().UUIDString(),
             symbol.symbolID()
         );
     }
@@ -92,6 +96,10 @@ function importFromResource_toPage_withMetadate(context, resource, pageName, met
     }
 
     // Centere layers in canvas.
-    doc.currentView().centerLayersInCanvas();
+    if (doc.contentDrawView) {
+        doc.contentDrawView().centerLayersInCanvas();
+    } else {
+        doc.currentView().centerLayersInCanvas();
+    }
 
 }

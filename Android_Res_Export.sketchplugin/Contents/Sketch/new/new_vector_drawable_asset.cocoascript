@@ -51,9 +51,9 @@ var onRun = function(context) {
 
         // Add slice
         var slice = addSliceInToGroup(groupVector, "#vector", false);
-            slice.exportOptions().removeAllExportFormats();
-        var exportOption = slice.exportOptions().addExportFormat();
+        var exportOption = slice.exportOptions().exportFormats().firstObject();
             exportOption.setFileFormat("svg");
+            exportOption.setName("@android_res_export");
 
         // Move bitmap/text layer outside group
         var loopChild = groupVector.children().objectEnumerator();
@@ -71,7 +71,7 @@ var onRun = function(context) {
 
     ga(context, "New", "new_vector_drawable");
 
-}
+};
 
 function checkLayerType(context, layer, count, callback) {
 

@@ -9,53 +9,53 @@ var onRun = function(context) {
     if (selectionCount == 1) {
 
         var layer = selection.firstObject();
-        addPNGAssetFromLayer_askForName(layer, true);
+        addPNGAssetFromLayer_askForName(context, layer, true);
 
     } else if (selectionCount > 1) {
 
         var loopSelection = selection.objectEnumerator();
         var layer;
         while (layer = loopSelection.nextObject()) {
-            addPNGAssetFromLayer_askForName(layer, false);
+            addPNGAssetFromLayer_askForName(context, layer, false);
         }
 
     } else {
         toast(context, localizedString(context, "no_selection"));
     }
 
-    function addPNGAssetFromLayer_askForName(layer, askForName) {
-
-        if (askForName) {
-            var name = ask(
-                context,
-                localizedString(context, "input_asset_name", layer.name()),
-                androidResName(layer.name())
-            );
-
-            if (name) {
-                addPNGAssetFromLayer_name(layer, androidResName(name));
-            }
-
-        } else {
-            addPNGAssetFromLayer_name(layer, androidResName(layer.name()));
-        }
-
-    }
-
-    function addPNGAssetFromLayer_name(layer, name) {
-        if (
-            layer.class() == "MSLayerGroup" ||
-            layer.class() == "MSArtboardGroup" ||
-            layer.class() == "MSSymbolMaster"
-        ) {
-            var layerGroup = layer;
-        } else {
-            var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
-        }
-        layerGroup.setName(name);
-        addSliceInToGroup(layerGroup, name, true);
-    }
-
     ga(context, "New", "new_png_asset");
 
+};
+
+function addPNGAssetFromLayer_askForName(context, layer, askForName) {
+
+    if (askForName) {
+        var name = ask(
+            context,
+            localizedString(context, "input_asset_name", layer.name()),
+            androidResName(layer.name())
+        );
+
+        if (name) {
+            addPNGAssetFromLayer_name(layer, androidResName(name));
+        }
+
+    } else {
+        addPNGAssetFromLayer_name(layer, androidResName(layer.name()));
+    }
+
+}
+
+function addPNGAssetFromLayer_name(layer, name) {
+    if (
+        layer.class() == "MSLayerGroup" ||
+        layer.class() == "MSArtboardGroup" ||
+        layer.class() == "MSSymbolMaster"
+    ) {
+        var layerGroup = layer;
+    } else {
+        var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
+    }
+    layerGroup.setName(name);
+    addSliceInToGroup(layerGroup, name, true);
 }
