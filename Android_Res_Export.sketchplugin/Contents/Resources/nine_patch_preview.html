@@ -34,7 +34,6 @@
         <button id="export" class="button-blue">Export</button>
     </div>
 </div>
-
 <script>
 
 var ninePatchPreview = document.getElementById("nine_patch_preview"),
@@ -78,7 +77,7 @@ bgToggleWhite.onclick = function() {
 }
 
 window.onfocus = function() {
-    window.location.hash = "windowOnFocus";
+    window.location.hash = "windowOnFocus_" + new Date().getTime();
 }
 
 btnCancel.onclick = function() {
