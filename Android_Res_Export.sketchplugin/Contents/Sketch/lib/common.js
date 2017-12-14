@@ -128,7 +128,12 @@ function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
     slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);
 
-    var exportOption = slice.exportOptions().addExportFormat();
+    if (slice.exportOptions().exportFormats().count() > 0) {
+        var exportOption = slice.exportOptions().exportFormats().firstObject();
+    } else {
+        var exportOption = slice.exportOptions().addExportFormat();
+    }
+
     exportOption.setFileFormat("png");
     exportOption.setName("@android_res_export");
     exportOption.setScale(1);
@@ -308,6 +313,15 @@ function chooseFolder() {
     var panel = NSOpenPanel.openPanel();
     panel.setCanChooseDirectories(true);
     panel.setCanChooseFiles(false);
+    panel.setCanCreateDirectories(true);
+    if (panel.runModal() == NSOKButton) {
+        return panel.URL().path();
+    }
+}
+
+function saveToFolder(fileName) {
+    var panel = NSSavePanel.savePanel();
+    panel.setNameFieldStringValue(fileName);
     panel.setCanCreateDirectories(true);
     if (panel.runModal() == NSOKButton) {
         return panel.URL().path();
@@ -512,12 +526,12 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
         }),
         "webView:didChangeLocationWithinPageForFrame:": (function(webView, webFrame) {
             var locationHash = scriptObject.evaluateWebScript("window.location.hash");
-            if (locationHash == "#focus") {
-                var point = colorPicker.currentEvent().locationInWindow();
-                var x = point.x;
-                var y = windowHeight - point.y - 22;
-                if (x > 0 && y > 0) {
-                    windowObject.evaluateWebScript("clickAtPoint(" + x + ", " + y + ")");
+            if (/^#windowOnFocus_.*/.test(locationHash)) {
+                if (window.currentEvent().window() == window) {
+                    var point = window.currentEvent().locationInWindow();
+                    var x = point.x;
+                    var y = windowHeight - point.y - 24;
+                    scriptObject.evaluateWebScript("clickAtPoint(" + x + ", " + y + ")");
                 }
             }
             didChangeLocationFunction(locationHash);
@@ -527,7 +541,6 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
     webView.setMainFrameURL_(context.plugin.urlForResourceNamed(htmlPath).path());
 
     window.contentView().addSubview(webView);
-    window.autorelease();
     window.center();
 
     return NSApp.runModalForWindow(window);

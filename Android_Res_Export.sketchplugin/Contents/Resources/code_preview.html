@@ -34,7 +34,7 @@ btnCancel.onclick = function() {
 }
 
 window.onfocus = function() {
-    window.location.hash = "windowOnFocus";
+    window.location.hash = "windowOnFocus_" + new Date().getTime();
 }
 
 document.oncontextmenu = function() {

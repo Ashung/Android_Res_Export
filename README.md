@@ -4,7 +4,7 @@
 
 [中文说明](https://github.com/Ashung/Android_Res_Export/blob/master/README_zh.md)
 
-Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.
+Export Android resources in Sketch – PNG assets, app icon, nine-patch image, shape XML, color resource xml and vector drawable.
 
 ## Features
 
@@ -55,26 +55,23 @@ npm install -g svgo svg2vectordrawable
 
 Design at MDPI (1x) size, NOT support for other sizes. Download [demo.sketch](https://github.com/Ashung/Android_Res_Export/blob/develop/demo.sketch)
 
+Use menu "Plugins" - "Android Res Export" - "New PNG Asset" to create PNG assets.
+
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_1.gif?raw=true)
 
-Use menu "Plugins" - "Android Res Export" - "New PNG Asset" to create PNG assets.
+Use menu "Plugin" - "Android Res Export" - "New Nine-Patch Asset" to create a nine-patch asset. Run "Nine-Patch Preview " for preview the nine-patch assset.
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_2.gif?raw=true)
 
-Use menu "Plugin" - "Android Res Export" - "New Nine-Patch Asset" to create a nine-patch asset.
+Use menu "Plugin" - "Android Res Export" - "New Vector Drawable Asset" to create a vector drawable asset. 
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export_3.gif?raw=true)
 
-Use menu "Plugin" - "Android Res Export" - "New Vector Drawable Asset" to create a vector drawable asset. Select the shape layers in vector drawable group, click the settings icon in fill property panel, and choose "Non-Zero", then apply "Layer" - "Paths" - "Reverse Order" command from the main menu to reverse the path order.
+If you want to support Android API < 24 (7.0), select the shape layers in vector drawable group, click the settings icon in fill property panel, and choose "Non-Zero".
 
-Use page name to export asset in different folder.
+Before export the assets, you must create them use "New ... Asset" in plugin menu. Selected the spical asset layer group, then run "Export ... Assets" to export them, and deselected all to export all assets.
 
-```
-@land-xxhdpi, land-xhdpi
-@nodpi
-@zh-rCN-xxhdpi
-@sw600dp-xxhdpi
-```
+For app icons, you need to selected the template page, before run the "Export App Icon".
 
 ## License
 

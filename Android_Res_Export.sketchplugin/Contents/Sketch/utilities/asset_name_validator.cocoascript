@@ -1,38 +1,29 @@
+@import "../lib/MochaJSDelegate.js";
 @import "../lib/common.js";
 
 var onRun = function(context) {
 
     var doc = context.document;
-    var selection = context.selection;
-
     var assetNames = NSMutableArray.alloc().init();
     var reports = NSMutableArray.alloc().init();
 
-    var reportFilePath = NSTemporaryDirectory().stringByAppendingPathComponent("Android_Res_Export_Asset_Name_Validator.txt");
+    var predicate = NSPredicate.predicateWithFormat("className == %@", "MSSliceLayer");
+    var allSlices = doc.allExportableLayers().filteredArrayUsingPredicate(predicate);
 
-    var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
-    var layer;
-    while (layer = loopAllExportableLayers.nextObject()) {
+    var loopAllSlices = allSlices.objectEnumerator();
+    var slice;
+    while (slice = loopAllSlices.nextObject()) {
 
-        if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch") {
-            addAsset(layer);
+        if (/^#9patch/.test(slice.name())) {
+            var layer = slice.parentGroup().parentGroup();
+        }
+        else if (/^#vector/.test(slice.name())) {
+            var layer = slice.parentGroup();
+        }
+        else {
+            var layer = slice;
         }
 
-        if (layer.class() == "MSSliceLayer" && (layer.name() == "#9patch" || layer.name() == "#vector")) {
-            var group = layer.parentGroup().parentGroup();
-            addAsset(group);
-        }
-
-    }
-
-    if (reports.count() > 0) {
-        writeContentToFile(reportFilePath, reports.componentsJoinedByString("\n"));
-        NSWorkspace.sharedWorkspace().openFile_withApplication_(reportFilePath, "TextEdit");
-    } else {
-        toast(context, localizedString(context, "no_duplicate_and_invaild_asset_name"));
-    }
-
-    function addAsset(layer) {
         if (assetNames.containsObject(androidResName(layer.name()))) {
             reports.addObject(localizedString(context, "report_layer_name_duplicate", layer.name()));
         }
@@ -40,7 +31,62 @@ var onRun = function(context) {
             reports.addObject(localizedString(context, "report_layer_rename", layer.name(), androidResName(layer.name())));
         }
         assetNames.addObject(androidResName(layer.name()));
+
     }
+
+    if (reports.count() == 0) {
+        toast(context, localizedString(context, "no_duplicate_and_invaild_asset_name"));
+        return;
+    }
+
+    var reportCode = reports.componentsJoinedByString("\n");
+
+    window(
+        context,
+        localizedString(context, "asset_name_validator"),
+        "code_preview.html",
+        function(scriptObject) {
+
+            // Translation HTML
+            var currentLanguageSetting = getPreferences(context, "language");
+            if (currentLanguageSetting != "en") {
+                var languageJSON = {
+                    "cancel": localizedString(context, "cancel"),
+                    "save": localizedString(context, "save")
+                };
+                scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+            }
+
+            scriptObject.evaluateWebScript("previewCode('" + reportCode.replace(/\n/g, "\\n") + "\\n')");
+        },
+        function(locationHash) {
+
+            if (locationHash == "#save") {
+                NSApp.stopModal();
+
+                var exportFolder = saveToFolder("Android_Res_Export_Asset_Name_Validator.txt");
+                if (exportFolder) {
+
+                    if (!directoryIsWriteable(exportFolder)) {
+                        toast(context, localizedString(context, "cannot_export_to_folder"));
+                        return;
+                    }
+
+                    writeContentToFile(exportFolder, reportCode);
+
+                    if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                        showInFinder(exportFolder);
+                    }
+
+                }
+            }
+
+            if (locationHash == "#cancel") {
+                NSApp.stopModal();
+            }
+
+        }
+    );
 
     ga(context, "Utilities", "asset_name_validator");
 

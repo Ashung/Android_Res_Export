@@ -34,7 +34,6 @@
         <button id="export" class="button-blue">Export</button>
     </div>
 </div>
-
 <script>
 
 var ninePatchPreview = document.getElementById("nine_patch_preview"),
@@ -78,7 +77,7 @@ bgToggleWhite.onclick = function() {
 }
 
 window.onfocus = function() {
-    window.location.hash = "windowOnFocus";
+    window.location.hash = "windowOnFocus_" + new Date().getTime();
 }
 
 btnCancel.onclick = function() {
@@ -108,6 +107,8 @@ function redrawNinePatch(base64) {
 }
 
 function drawNinePatch(base64, width, height, showContent) {
+
+    var scale = 2;
     var _canvas = document.createElement("canvas");
     var _ctx = _canvas.getContext("2d");
     var img = new Image();
@@ -117,10 +118,10 @@ function drawNinePatch(base64, width, height, showContent) {
         _ctx.drawImage(img, 0, 0);
 
         // Patch data
-        var horizontalData = _ctx.getImageData(0, 0, img.width - 1, 1).data;
-        var verticalData = _ctx.getImageData(0, 0, 1, img.height - 1).data;
-        var patchTop = [[1,0,0]];
-        var patchLeft = [[1,0,0]];
+        var horizontalData = _ctx.getImageData(0, 0, img.width - 1 * scale, 1).data;
+        var verticalData = _ctx.getImageData(0, 0, 1, img.height - 1 * scale).data;
+        var patchTop = [[scale,0,0]];
+        var patchLeft = [[scale,0,0]];
         for (var i = 1; i < horizontalData.length/4; i ++) {
             var a = horizontalData[i*4+3],
                 _a = horizontalData[(i-1)*4+3];
@@ -162,8 +163,8 @@ function drawNinePatch(base64, width, height, showContent) {
             paddingBottom = 0,
             paddingLeft = 0,
             paddingRight = 0;
-        var paddingTopBottonData = _ctx.getImageData(img.width-1, 1, 1, img.height-2).data;
-        var paddingLeftRightData = _ctx.getImageData(1, img.height-1, img.width-2, 1).data;
+        var paddingTopBottonData = _ctx.getImageData(img.width-1, 1*scale, 1, img.height-2*scale).data;
+        var paddingLeftRightData = _ctx.getImageData(1*scale, img.height-1*scale, img.width-2*scale, 1).data;
         for (var i = 0; i < paddingTopBottonData.length/4; i ++) {
             if (
                 paddingTopBottonData[i*4] == 0 &&
@@ -263,11 +264,12 @@ function drawNinePatch(base64, width, height, showContent) {
         var base64 = canvas.toDataURL("image/png");
 
         var nine_patch_preview = document.getElementById("nine_patch_preview");
-        nine_patch_preview.style.width = width + "px";
-        nine_patch_preview.style.height = height + "px";
-        nine_patch_preview.style.marginLeft = width * -0.5 + "px";
-        nine_patch_preview.style.marginTop = height * -0.5 + "px";
+        nine_patch_preview.style.width = (width / scale) + "px";
+        nine_patch_preview.style.height = (height / scale) + "px";
+        nine_patch_preview.style.marginLeft = (width / scale) * -0.5 + "px";
+        nine_patch_preview.style.marginTop = (height / scale) * -0.5 + "px";
         nine_patch_preview.style.background = "url(" + base64 + ") no-repeat";
+        nine_patch_preview.style.backgroundSize = "cover";
 
     }
 

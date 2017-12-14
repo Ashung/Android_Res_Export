@@ -10,7 +10,11 @@ var onRun = function (context) {
     page.setCurrentArtboard(null);
 
     // Center of viewport
-    var contentDrawView = doc.currentView();
+    if (doc.contentDrawView) {
+        var contentDrawView = doc.contentDrawView();
+    } else {
+        var contentDrawView = doc.currentView();
+    }
     var midX = Math.round((contentDrawView.frame().size.width/2 - contentDrawView.horizontalRuler().baseLine())/contentDrawView.zoomValue());
     var midY = Math.round((contentDrawView.frame().size.height/2 - contentDrawView.verticalRuler().baseLine())/contentDrawView.zoomValue());
 
