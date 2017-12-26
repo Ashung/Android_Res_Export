@@ -161,7 +161,7 @@ function exportIconAssets(context, exportConfig, outputConfig) {
                 false
             );
 
-            var outputPath = outputConfig[j]["path"] + "mipmap-" +
+            var outputPath = outputConfig[j]["path"] + "/mipmap-" +
                 exportConfig[i]["suffix"] + "/" + outputConfig[j]["name"];
 
             doc.saveExportRequest_toFile(
