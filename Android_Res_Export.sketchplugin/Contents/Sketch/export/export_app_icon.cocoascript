@@ -18,9 +18,6 @@ var onRun = function(context) {
                 return;
             }
 
-            resizeArtboard(iconNormal, 192);
-            resizeArtboard(iconRound, 192);
-
             // Export.
             var exportFolder = chooseFolder();
             if (exportFolder) {
@@ -32,28 +29,47 @@ var onRun = function(context) {
                 }
 
                 // Export pngs.
-                exportIconAssets(
-                    context,
-                    [
-                        { scale: 0.25, suffix: "mdpi" },
-                        { scale: 0.375, suffix: "hdpi" },
-                        { scale: 0.5, suffix: "xhdpi" },
-                        { scale: 0.75, suffix: "xxhdpi" },
-                        { scale: 1, suffix: "xxxhdpi" }
-                    ],
-                    [
-                        {
-                            layer: iconNormal,
-                            path: exportFolder,
-                            name: "ic_launcher.png"
-                        },
-                        {
-                            layer: iconRound,
-                            path: exportFolder,
-                            name: "ic_launcher_round.png"
-                        }
-                    ]
-                );
+                if (iconNormal) {
+                    resizeArtboard(iconNormal, 192);
+                    exportIconAssets(
+                        context,
+                        [
+                            { scale: 0.25, suffix: "mdpi" },
+                            { scale: 0.375, suffix: "hdpi" },
+                            { scale: 0.5, suffix: "xhdpi" },
+                            { scale: 0.75, suffix: "xxhdpi" },
+                            { scale: 1, suffix: "xxxhdpi" }
+                        ],
+                        [
+                            {
+                                layer: iconNormal,
+                                path: exportFolder,
+                                name: "ic_launcher.png"
+                            }
+                        ]
+                    );
+                }
+
+                if (iconRound) {
+                    resizeArtboard(iconRound, 192);
+                    exportIconAssets(
+                        context,
+                        [
+                            { scale: 0.25, suffix: "mdpi" },
+                            { scale: 0.375, suffix: "hdpi" },
+                            { scale: 0.5, suffix: "xhdpi" },
+                            { scale: 0.75, suffix: "xxhdpi" },
+                            { scale: 1, suffix: "xxxhdpi" }
+                        ],
+                        [
+                            {
+                                layer: iconRound,
+                                path: exportFolder,
+                                name: "ic_launcher_round.png"
+                            }
+                        ]
+                    );
+                }
 
                 // Open in Finder.
                 if (getPreferences(context, "show_in_finder_after_export") == 1) {
@@ -70,7 +86,7 @@ var onRun = function(context) {
             var background = page.layerWithID("ic_background"),
                 foreground = page.layerWithID("ic_foreground");
 
-            if (!background && !foreground) {
+            if (!background || !foreground) {
                 toast(context, localizedString(context, "app_icon_not_find"));
                 return;
             }
