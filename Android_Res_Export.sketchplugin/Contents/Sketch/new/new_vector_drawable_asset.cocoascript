@@ -50,7 +50,7 @@ var onRun = function(context) {
         groupVector.setName(androidResName(name));
 
         // Add slice
-        var slice = addSliceInToGroup(groupVector, "#vector", false);
+        var slice = addSliceInToGroup(groupVector, "#vector", true);
         var exportOption = slice.exportOptions().exportFormats().firstObject();
             exportOption.setFileFormat("svg");
             exportOption.setName("@android_res_export");
