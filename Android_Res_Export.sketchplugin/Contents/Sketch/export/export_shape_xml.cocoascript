@@ -50,8 +50,8 @@ var viewShapeXMLCode = function(context) {
                     scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
                 }
 
-                xml = xml.replace(/\n/g, "\\n");
-                scriptObject.evaluateWebScript("previewCode('" + xml + "')");
+                var xmlForHtml = xml.replace(/\n/g, "\\n");
+                scriptObject.evaluateWebScript("previewCode('" + xmlForHtml + "')");
             },
             function(locationHash) {
 
