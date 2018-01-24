@@ -58,12 +58,14 @@ var viewShapeXMLCode = function(context) {
                 if (locationHash == "#save") {
 
                     NSApp.stopModal();
+                    context.document.documentWindow().makeKeyAndOrderFront(nil);
                     exportXML(context, xml, androidResName(layer.name()));
 
                 }
 
                 if (locationHash == "#cancel") {
                     NSApp.stopModal();
+                    context.document.documentWindow().makeKeyAndOrderFront(nil);
                 }
 
             }

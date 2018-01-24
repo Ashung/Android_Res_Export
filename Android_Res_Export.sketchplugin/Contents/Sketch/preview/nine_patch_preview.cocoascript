@@ -102,6 +102,7 @@ var onRun = function(context) {
             // Export
             if (locationHash == "#export") {
                 NSApp.stopModal();
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
                 NSApp.delegate().runPluginCommand_fromMenu_context(
                     context.plugin.commands().objectForKey("export_nine_patch"),
                     false,
@@ -111,6 +112,7 @@ var onRun = function(context) {
 
             if (locationHash == "#cancel") {
                 NSApp.stopModal();
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
             }
 
         }
