@@ -173,6 +173,7 @@ function showCodeWindow(context, xml) {
 
             if (locationHash == "#save") {
                 NSApp.stopModal();
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
 
                 var exportFolder = chooseFolder();
                 if (exportFolder) {
@@ -195,6 +196,7 @@ function showCodeWindow(context, xml) {
 
             if (locationHash == "#cancel") {
                 NSApp.stopModal();
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
             }
 
         }
