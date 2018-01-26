@@ -204,7 +204,10 @@ function insertImageLayer_fromResource(context, layerParent, rect, resName) {
 ========================================================= */
 
 function ask(context, tip, defaultValue) {
-    return context.document.askForUserInput_initialValue(tip, defaultValue + "");
+    // return context.document.askForUserInput_initialValue(tip, defaultValue + "");
+    var dialog = COSAlertWindow.alloc().init();
+    dialog.setMessageText("Auto Slice");
+    dialog.setInformativeText(tip);
 }
 
 function toast(context, message) {

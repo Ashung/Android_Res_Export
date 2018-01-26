@@ -65,6 +65,10 @@ var onRun = function(context) {
                     groupVector.parentGroup().layerAtIndex(groupVector.parentGroup().indexOfLayer(groupVector) + 1)
                 );
             }
+            // remove invisible layers
+            if (child.class() == "MSShapeGroup" && layerIsInvisible(child)) {
+                child.removeFromParent();
+            }
         }
 
     }
@@ -72,6 +76,49 @@ var onRun = function(context) {
     ga(context, "New", "new_vector_drawable");
 
 };
+
+function layerIsInvisible(layer) {
+    if (layer.style().enabledFills().count() == 0 && layer.style().enabledBorders().count() == 0) {
+        return true;
+    }
+    if (layer.style().contextSettings().opacity() == 0) {
+        return true;
+    }
+
+    var allFillsAlphaIsZero = true;
+    var loopFills = layer.style().enabledFills().objectEnumerator();
+    var fill;
+    while (fill = loopFills.nextObject()) {
+        if (fill.fillType() == 0) {
+            if (fill.color().alpha() != 0) {
+                return false;
+            }
+        } else {
+            if (fill.contextSettings().opacity() != 0) {
+                return false;
+            }
+        }
+    }
+    return allFillsAlphaIsZero;
+
+    var allBordersAlphaIsZero = true;
+    var loopBorders = layer.style().enabledBorders().objectEnumerator();
+    var borders;
+    while (borders = loopBorders.nextObject()) {
+        if (borders.fillType() == 0) {
+            if (borders.color().alpha() != 0) {
+                return false;
+            }
+        } else {
+            if (borders.contextSettings().opacity() != 0) {
+                return false;
+            }
+        }
+    }
+    return allBordersAlphaIsZero;
+
+    return false;
+}
 
 function checkLayerType(context, layer, count, callback) {
 
