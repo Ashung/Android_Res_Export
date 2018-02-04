@@ -28,6 +28,7 @@ var onRun = function(context) {
     // Asset name
     var name = ask(
         context,
+        localizedString(context, "new_vector_drawable_asset"),
         localizedString(context, "asset_name_for_vector_drawable"),
         selection.lastObject().name()
     );
