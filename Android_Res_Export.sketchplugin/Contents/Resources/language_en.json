@@ -85,6 +85,7 @@
     "no_document_color": "No any document color in current Sketch document.",
     "no_selected_shape_layer": "Please select at least one shape layer with solid or gradient fill.",
     "no_color_in_selected_layers": "No any color in selected layer.",
+    "remove_invisible_layers": "Remove invisible layers.",
     "html_tip_bg_light": "Use light transparent background",
     "html_tip_bg_dark": "Use dark transparent background",
     "html_tip_bg_white": "Use white background",

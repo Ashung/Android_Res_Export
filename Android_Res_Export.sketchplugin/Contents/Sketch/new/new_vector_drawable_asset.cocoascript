@@ -26,14 +26,29 @@ var onRun = function(context) {
     }
 
     // Asset name
-    var name = ask(
-        context,
-        localizedString(context, "new_vector_drawable_asset"),
-        localizedString(context, "asset_name_for_vector_drawable"),
-        selection.lastObject().name()
-    );
+    // ask(context, title, tip, defaultValue) {
+    var dialog = COSAlertWindow.alloc().init();
+    dialog.setMessageText(localizedString(context, "new_vector_drawable_asset"));
+    dialog.setInformativeText(localizedString(context, "asset_name_for_vector_drawable"));
+    dialog.addButtonWithTitle(localizedString(context, "ok"));
+    dialog.addButtonWithTitle(localizedString(context, "cancel"));
 
-    if (name) {
+    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+    dialog.setIcon(iconNSImage);
+
+    dialog.addTextFieldWithValue(selection.lastObject().name());
+    var textField = dialog.viewAtIndex(0);
+    dialog.alert().window().setInitialFirstResponder(textField);
+
+    var removeInvisibleLayers = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 20));
+    removeInvisibleLayers.setButtonType(NSSwitchButton);
+    removeInvisibleLayers.setTitle(localizedString(context, "remove_invisible_layers"));
+    removeInvisibleLayers.setState(getPreferences(context, "remove_invisible_layers") == 1 ? NSOnState : NSOffState);
+    dialog.addAccessoryView(removeInvisibleLayers);
+
+    var responseCode = dialog.runModal();
+    if (responseCode == 1000) {
 
         // Group vector
         if (
@@ -48,6 +63,7 @@ var onRun = function(context) {
         } else {
             var groupVector = groupFromSelection(context);
         }
+        var name = textField.stringValue();
         groupVector.setName(androidResName(name));
 
         // Add slice
@@ -67,9 +83,15 @@ var onRun = function(context) {
                 );
             }
             // remove invisible layers
-            if (child.class() == "MSShapeGroup" && layerIsInvisible(child)) {
+            if (child.class() == "MSShapeGroup" && layerIsInvisible(child) && removeInvisibleLayers.state() == 1) {
                 child.removeFromParent();
             }
+        }
+
+        if (removeInvisibleLayers.state() == 1) {
+            setPreferences(context, "remove_invisible_layers", true);
+        } else {
+            setPreferences(context, "remove_invisible_layers", false);
         }
 
     }
@@ -79,14 +101,20 @@ var onRun = function(context) {
 };
 
 function layerIsInvisible(layer) {
-    if (layer.style().enabledFills().count() == 0 && layer.style().enabledBorders().count() == 0) {
-        return true;
-    }
+
     if (layer.style().contextSettings().opacity() == 0) {
         return true;
     }
 
-    var allFillsAlphaIsZero = true;
+    if (
+        layer.style().enabledFills().count() == 0 &&
+        layer.style().enabledBorders().count() == 0 &&
+        layer.style().enabledShadows().count() == 0 &&
+        layer.style().enabledInnerShadows().count() == 0
+    ) {
+        return true;
+    }
+
     var loopFills = layer.style().enabledFills().objectEnumerator();
     var fill;
     while (fill = loopFills.nextObject()) {
@@ -94,15 +122,24 @@ function layerIsInvisible(layer) {
             if (fill.color().alpha() != 0) {
                 return false;
             }
-        } else {
-            if (fill.contextSettings().opacity() != 0) {
-                return false;
+        }
+        if (fill.fillType() == 1) {
+            var gradientStops = fill.gradient().stops();
+            var loopStops = gradientStops.objectEnumerator();
+            var stop;
+            while (stop = loopStops.nextObject()) {
+                if (stop.color().alpha() != 0) {
+                    return false;
+                }
+            }
+        }
+        if (fill.fillType() == 1 || fill.fillType() == 4 || fill.fillType() == 5) {
+            if (fill.contextSettings().opacity() == 0) {
+               return true;
             }
         }
     }
-    return allFillsAlphaIsZero;
 
-    var allBordersAlphaIsZero = true;
     var loopBorders = layer.style().enabledBorders().objectEnumerator();
     var borders;
     while (borders = loopBorders.nextObject()) {
@@ -111,14 +148,38 @@ function layerIsInvisible(layer) {
                 return false;
             }
         } else {
-            if (borders.contextSettings().opacity() != 0) {
-                return false;
+            if (borders.contextSettings().opacity() == 0) {
+               return true;
+            } else {
+                var gradientStops = borders.gradient().stops();
+                var loopStops = gradientStops.objectEnumerator();
+                var stop;
+                while (stop = loopStops.nextObject()) {
+                    if (stop.color().alpha() != 0) {
+                        return false;
+                    }
+                }
             }
         }
     }
-    return allBordersAlphaIsZero;
 
-    return false;
+    var loopShadows = layer.style().enabledShadows().objectEnumerator();
+    var shadow;
+    while (shadow = loopShadows.nextObject()) {
+        if (shadow.color().alpha() != 0) {
+            return false;
+        }
+    }
+
+    var loopInnerShadows = layer.style().enabledInnerShadows().objectEnumerator();
+    var innerShadows;
+    while (innerShadows = loopInnerShadows.nextObject()) {
+        if (innerShadows.color().alpha() != 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function checkLayerType(context, layer, count, callback) {

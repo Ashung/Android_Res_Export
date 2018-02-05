@@ -85,6 +85,7 @@
     "no_document_color": "当前文档中没有任何文档色彩。",
     "no_selected_shape_layer": "请选中至少一个带有单色或渐变填充的图层。",
     "no_color_in_selected_layers": "选中的图层中没有任何颜色。",
+    "remove_invisible_layers": "删除不可见图层。",
     "html_tip_bg_light": "使用亮色透明背景",
     "html_tip_bg_dark": "使用暗色透明色背景",
     "html_tip_bg_white": "使用白色背景",
