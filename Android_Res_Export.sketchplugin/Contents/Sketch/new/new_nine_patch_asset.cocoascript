@@ -22,7 +22,12 @@ var onRun = function(context) {
     }
 
     // Asset name
-    var name = ask(context, localizedString(context, "asset_name_for_nine_path"), selection.firstObject().name());
+    var name = ask(
+        context,
+        localizedString(context, "new_nine_patch_asset"),
+        localizedString(context, "asset_name_for_nine_path"),
+        selection.firstObject().name()
+    );
 
     if (name) {
 

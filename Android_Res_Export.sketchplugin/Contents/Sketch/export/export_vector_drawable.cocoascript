@@ -16,7 +16,7 @@ var onRun = function(context) {
 
     // Check SVG2VectorDrawable version
     var s2vVersion = checkVersion(s2v);
-    if (s2vVersion < "1.1.8") {
+    if (versionCompare(s2vVersion, "1.1.8") == -1) {
         alert(
             context,
             localizedString(context, "s2v_version_title"),
@@ -151,4 +151,21 @@ function checkVersion(command) {
         }
     });
     return result;
+}
+
+function versionCompare(version1, version2) {
+    var v1 = version1.split("."),
+        v2 = version2.split(".");
+    var length = Math.max(v1.length, v2.length);
+    for (var i = 0; i < length; i ++) {
+        var part1 = v1[i] ? parseInt(v1[i]) : 0,
+            part2 = v2[i] ? parseInt(v2[i]) : 0;
+        if (part1 < part2) {
+            return -1;
+        }
+        if (part1 > part2) {
+            return 1;
+        }
+    }
+    return 0;
 }

@@ -203,8 +203,23 @@ function insertImageLayer_fromResource(context, layerParent, rect, resName) {
     Utilities
 ========================================================= */
 
-function ask(context, tip, defaultValue) {
-    return context.document.askForUserInput_initialValue(tip, defaultValue + "");
+function ask(context, title, tip, defaultValue) {
+    var dialog = COSAlertWindow.alloc().init();
+    dialog.setMessageText(title);
+    dialog.setInformativeText(tip);
+    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+    dialog.setIcon(iconNSImage);
+    dialog.addTextFieldWithValue(defaultValue);
+    dialog.addButtonWithTitle(localizedString(context, "ok"));
+    dialog.addButtonWithTitle(localizedString(context, "cancel"));
+    var textField = dialog.viewAtIndex(0);
+    dialog.alert().window().setInitialFirstResponder(textField);
+    var responseCode = dialog.runModal();
+    if (responseCode == 1000) {
+        return textField.stringValue();
+    }
+    return nil;
 }
 
 function toast(context, message) {

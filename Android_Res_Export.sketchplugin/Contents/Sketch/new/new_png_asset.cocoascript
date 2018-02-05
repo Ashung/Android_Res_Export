@@ -32,6 +32,7 @@ function addPNGAssetFromLayer_askForName(context, layer, askForName) {
     if (askForName) {
         var name = ask(
             context,
+            localizedString(context, "new_png_asset"),
             localizedString(context, "input_asset_name", layer.name()),
             androidResName(layer.name())
         );
