@@ -26,7 +26,6 @@ var onRun = function(context) {
     }
 
     // Asset name
-    // ask(context, title, tip, defaultValue) {
     var dialog = COSAlertWindow.alloc().init();
     dialog.setMessageText(localizedString(context, "new_vector_drawable_asset"));
     dialog.setInformativeText(localizedString(context, "asset_name_for_vector_drawable"));
@@ -102,25 +101,69 @@ var onRun = function(context) {
 
 function layerIsInvisible(layer) {
 
-    if (layer.style().contextSettings().opacity() == 0) {
+    if (!layer.isVisible()) {
         return true;
     }
 
-    if (
-        layer.style().enabledFills().count() == 0 &&
-        layer.style().enabledBorders().count() == 0 &&
-        layer.style().enabledShadows().count() == 0 &&
-        layer.style().enabledInnerShadows().count() == 0
-    ) {
-        return true;
+    if (layer.isKindOfClass(MSStyledLayer)) {
+        if (layer.style().contextSettings().opacity() == 0) {
+            return true;
+        }
     }
 
+    if (layer.class() == "MSShapeGroup") {
+        if (
+            checkingFills(layer) &&
+            checkingBorders(layer) &&
+            checkingShadows(layer) &&
+            checkingInnerShadows(layer)
+        ) {
+            return true;
+        }
+    }
+
+    if (layer.class() == "MSTextLayer") {
+        if (layer.style().enabledFills().count() == 0) {
+            if (
+                layer.textColor().alpha() == 0 &&
+                checkingBorders(layer) &&
+                checkingShadows(layer) &&
+                checkingInnerShadows(layer)
+            ) {
+                return true;
+            }
+        } else {
+            if (
+                checkingFills(layer) &&
+                checkingBorders(layer) &&
+                checkingShadows(layer) &&
+                checkingInnerShadows(layer)
+            ) {
+                return true;
+            }
+        }
+
+    }
+
+    return false;
+
+}
+
+function checkingFills(layer) {
+    if (layer.style().enabledFills().count() == 0) {
+        return true;
+    }
     var loopFills = layer.style().enabledFills().objectEnumerator();
     var fill;
     while (fill = loopFills.nextObject()) {
         if (fill.fillType() == 0) {
             if (fill.color().alpha() != 0) {
                 return false;
+            }
+        }
+        if (fill.fillType() == 1 || fill.fillType() == 4 || fill.fillType() == 5) {
+            if (fill.contextSettings().opacity() == 0) {
+               return true;
             }
         }
         if (fill.fillType() == 1) {
@@ -133,13 +176,14 @@ function layerIsInvisible(layer) {
                 }
             }
         }
-        if (fill.fillType() == 1 || fill.fillType() == 4 || fill.fillType() == 5) {
-            if (fill.contextSettings().opacity() == 0) {
-               return true;
-            }
-        }
     }
+    return true;
+}
 
+function checkingBorders(layer) {
+    if (layer.style().enabledBorders().count() == 0) {
+        return true;
+    }
     var loopBorders = layer.style().enabledBorders().objectEnumerator();
     var borders;
     while (borders = loopBorders.nextObject()) {
@@ -162,7 +206,13 @@ function layerIsInvisible(layer) {
             }
         }
     }
+    return true;
+}
 
+function checkingShadows(layer) {
+    if (layer.style().enabledShadows().count() == 0) {
+        return true;
+    }
     var loopShadows = layer.style().enabledShadows().objectEnumerator();
     var shadow;
     while (shadow = loopShadows.nextObject()) {
@@ -170,7 +220,13 @@ function layerIsInvisible(layer) {
             return false;
         }
     }
+    return true;
+}
 
+function checkingInnerShadows(layer) {
+    if (layer.style().enabledInnerShadows().count() == 0) {
+        return true;
+    }
     var loopInnerShadows = layer.style().enabledInnerShadows().objectEnumerator();
     var innerShadows;
     while (innerShadows = loopInnerShadows.nextObject()) {
@@ -178,7 +234,6 @@ function layerIsInvisible(layer) {
             return false;
         }
     }
-
     return true;
 }
 
