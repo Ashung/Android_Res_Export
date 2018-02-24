@@ -26,7 +26,6 @@ var onRun = function(context) {
     }
 
     // Asset name
-    // ask(context, title, tip, defaultValue) {
     var dialog = COSAlertWindow.alloc().init();
     dialog.setMessageText(localizedString(context, "new_vector_drawable_asset"));
     dialog.setInformativeText(localizedString(context, "asset_name_for_vector_drawable"));
