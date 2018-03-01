@@ -529,6 +529,7 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
     var closeButton = window.standardWindowButton(NSWindowCloseButton);
     closeButton.setCOSJSTargetFunction(function(sender) {
         NSApp.stopModal();
+        context.document.documentWindow().makeKeyAndOrderFront(nil);
     });
 
     var webView = WebView.alloc().initWithFrame(NSMakeRect(0, 0, windowWidth, windowHeight - 22));

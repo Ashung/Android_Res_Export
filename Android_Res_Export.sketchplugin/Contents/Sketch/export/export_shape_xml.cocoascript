@@ -348,7 +348,14 @@ function getLayerInfo(context, layer) {
         }
 
         if (layer.children().count() == 2) {
-            var shapePath = layer.children().firstObject();
+
+            var shapePath;
+            if (MSApplicationMetadata.metadata().appVersion >= 49) {
+                shapePath = layer.children().lastObject();
+            } else {
+                shapePath = layer.children().firstObject();
+            }
+
             if (shapePath.class() == "MSRectangleShape" || shapePath.class() == "MSOvalShape") {
 
                 if (result.support) {
@@ -356,7 +363,13 @@ function getLayerInfo(context, layer) {
                         result.type = "rectangle"
 
                         // Radius
-                        var points = layer.children().firstObject().path().points();
+                        var points;
+                        if (MSApplicationMetadata.metadata().appVersion >= 49) {
+                            points = shapePath.points();
+                        } else {
+                            points = shapePath.path().points();
+                        }
+
                         var radius = 0,
                             radiusTopLeft = Math.round(points.objectAtIndex(0).cornerRadius()),
                             radiusTopRight = Math.round(points.objectAtIndex(1).cornerRadius()),
