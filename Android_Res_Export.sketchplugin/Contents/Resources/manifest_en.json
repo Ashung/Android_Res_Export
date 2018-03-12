@@ -1,13 +1,13 @@
 {
     "name": "Android Res Export",
-    "description": "Export Android resources, like pngs, nine-patch, app icon and vector drawable.",
+    "description": "Export Android resources in Sketch – PNG assets, app icon, nine-patch image, shape XML, color resource xml and vector drawable.",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "version": "2.3.14",
+    "version": "2.3.15",
     "identifier": "com.ashung.hung.android_res_export",
-    "compatibleVersion": "3",
+    "compatibleVersion": "4",
     "bundleVersion": "1",
     "commands": [
         {

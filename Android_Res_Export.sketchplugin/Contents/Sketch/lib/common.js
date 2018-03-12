@@ -199,6 +199,12 @@ function insertImageLayer_fromResource(context, layerParent, rect, resName) {
     return imageLayer;
 }
 
+function getLayerWithNameFromParent(name, parent) {
+    var predicate = NSPredicate.predicateWithFormat("name == %@", name);
+    var layers = parent.layers().filteredArrayUsingPredicate(predicate);
+    return layers.firstObject();
+}
+
 /* =========================================================
     Utilities
 ========================================================= */

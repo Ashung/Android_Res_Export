@@ -1,4 +1,4 @@
-description: Export Android resources, like pngs, nine-patch, app icon and vector drawable.
+description: Export Android resources in Sketch – PNG assets, app icon, nine-patch image, shape XML, color resource xml and vector drawable.
 new_png_asset: New PNG Asset
 new_nine_patch_asset: New Nine-Patch Asset
 new_app_icon: New App Icon

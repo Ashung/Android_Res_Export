@@ -25,7 +25,7 @@ var onRun = function(context) {
             if (layer.class() == "MSSliceLayer" && layer.name() == "#9patch") {
                 if (isNinePatchLayerGroup(layer)) {
                     exportNinePatches.addObject({
-                        "patch": layer.parentGroup().parentGroup().layerWithID("patch"),
+                        "patch": getLayerWithNameFromParent("patch", layer.parentGroup().parentGroup()),
                         "content": layer,
                         "name": androidResName(layer.parentGroup().parentGroup().name()),
                         "width": layer.frame().width(),
@@ -40,7 +40,7 @@ var onRun = function(context) {
                     if (child.class() == "MSSliceLayer" && child.name() == "#9patch") {
                         if (isNinePatchLayerGroup(child)) {
                             exportNinePatches.addObject({
-                                "patch": child.parentGroup().parentGroup().layerWithID("patch"),
+                                "patch": getLayerWithNameFromParent("patch", child.parentGroup().parentGroup()),
                                 "content": child,
                                 "name": androidResName(child.parentGroup().parentGroup().name()),
                                 "width": child.frame().width(),
@@ -58,7 +58,7 @@ var onRun = function(context) {
             if (layer.class() == "MSSliceLayer" && layer.name() == "#9patch") {
                 if (isNinePatchLayerGroup(layer)) {
                     exportNinePatches.addObject({
-                        "patch": layer.parentGroup().parentGroup().layerWithID("patch"),
+                        "patch": getLayerWithNameFromParent("patch", layer.parentGroup().parentGroup()),
                         "content": layer,
                         "name": androidResName(layer.parentGroup().parentGroup().name()),
                         "width": layer.frame().width(),
@@ -198,7 +198,7 @@ function isNinePatchLayerGroup(sliceLayer) {
     if(sliceLayer.parentGroup().parentGroup().class() != "MSPage") {
         var root = sliceLayer.parentGroup().parentGroup();
         if(
-            (root.layers().indexOfObject(root.layerWithID("patch")) < root.layers().count()) &&
+            (root.layers().indexOfObject(getLayerWithNameFromParent("patch", root)) < root.layers().count()) &&
             sliceLayer.parentGroup().name() == "content"
         ) {
             result = true;

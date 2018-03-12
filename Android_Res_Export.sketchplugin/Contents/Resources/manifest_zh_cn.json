@@ -1,13 +1,13 @@
 {
     "name": "Android Res Export",
-    "description": "导出 Android 资源, 包括 PNG 资源, 点九资源, 图标和矢量资源。",
+    "description": "用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、点九（Nine-patch）图片、形状 XML 、色彩资源 XML 和矢量（Vector Drawable）文件。",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "version": "2.3.14",
+    "version": "2.3.15",
     "identifier": "com.ashung.hung.android_res_export",
-    "compatibleVersion": "3",
+    "compatibleVersion": "4",
     "bundleVersion": "1",
     "commands": [
         {
