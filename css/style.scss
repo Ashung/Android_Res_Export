@@ -37,7 +37,7 @@ a:link, a:visited {
 }
 
 header {
-    margin: 128px auto;
+    margin: 64px auto;
     overflow: hidden;
     h1 {
         margin: 0;
@@ -85,6 +85,33 @@ header {
             background-color: $highlight_color_hover;
             border-color: $highlight_color_hover;
         }
+    }
+    .install {
+        margin: 32px auto;
+        color: $text_color_gray;
+    }
+}
+
+.features {
+    width: 600px;
+    margin: 0 auto 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 16px;
+    li {
+        padding: 16px;
+        box-sizing: border-box;
+    }
+    img {
+        display: block;
+        margin: auto;
+    }
+    h3 {
+        font-size: 1.2em;
+        margin: 8px 0;
+    }
+    p {
+        color: $text_color_gray;
     }
 }
 
