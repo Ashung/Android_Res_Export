@@ -2,19 +2,19 @@
 
 ![](https://github.com/Ashung/Android_Res_Export/blob/develop/img/android_res_export.png?raw=true)
 
-**支持 Sketch 48+ , 支持中文**
+**支持 Sketch 49+ , 支持中文**
 
 用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、点九（Nine-patch）图片、形状 XML 、色彩资源 XML 和矢量（Vector Drawable）文件。
 
 ## 功能
 
 - 导出多分辨率 PNG 资源。
-- 查看和导出多分辨率点九资源。
-- 导出 Android 8 及旧版应用图标。
-- 查看和导出形状 XML 代码。
+- 预览和导出多分辨率点九资源。
 - 导出矢量（Vector Drawable）资源。
-- 导出图片资源后可以直接使用 ImageOptim 压缩（需安装 ImageOptim）。
+- 导出 Android 8 的自适应图标，圆形图标及旧版应用图标。
+- 查看和导出形状图层的 XML 代码。
 - 查看和导出色彩资源代码。
+- 导出图片资源后可以直接使用 ImageOptim 压缩（需安装 ImageOptim）。
 
 ## 安装
 

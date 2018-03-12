@@ -20,7 +20,7 @@ Export Android resources in Sketch – PNG assets, app icon, nine-patch image, s
 
 ### Install plugin
 
-- Search "Android Res Export" from [Sketch Runner](http://sketchrunner.com/), [Sketchpacks](https://sketchpacks.com/) or [Sketch Toolbox](http://sketchtoolbox.com/).
+- Search "Android Res Export" from [Sketch Runner or [Sketchpacks](https://sketchpacks.com/).
 - Download [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) and unzip, then double-click "Android_Res_Export.sketchplugin" to install.
 
 ### Nine-patch support configure
@@ -75,8 +75,8 @@ For app icons, you need to selected the template page, before run the "Export Ap
 
 ## License
 
-Apache 2.o
+Apache 2.0
 
 ## Donate
 
-Donate [$1.00](https://www.paypal.me/ashung/1), [$2.00](https://www.paypal.me/ashung/2), [$5.00](https://www.paypal.me/ashung/5) via PayPal.
+Donate[$2.00](https://www.paypal.me/ashung/2), [$5.00](https://www.paypal.me/ashung/5) [$10.00](https://www.paypal.me/ashung/10) via PayPal.

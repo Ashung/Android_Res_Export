@@ -15,9 +15,15 @@ var onRun = function(context) {
     var selectedLayer = selection.firstObject();
     var ninePatch;
     if (selectedLayer.class() == "MSLayerGroup" || selectedLayer.class() == "MSArtboardGroup" || selectedLayer.class() == "MSSymbolMaster") {
-        if (selectedLayer.layers().count() == 2 && selectedLayer.layerWithID("patch") && selectedLayer.layerWithID("content")) {
-            if (selectedLayer.layerWithID("patch").layers().count() >= 4 &&
-                selectedLayer.layerWithID("content").layerWithID("#9patch").class() == "MSSliceLayer") {
+        if (
+            selectedLayer.layers().count() == 2 &&
+            getLayerWithNameFromParent("patch", selectedLayer) &&
+            getLayerWithNameFromParent("content", selectedLayer)
+        ) {
+            if (
+                getLayerWithNameFromParent("patch", selectedLayer).layers().count() >= 4 &&
+                getLayerWithNameFromParent("#9patch", getLayerWithNameFromParent("content", selectedLayer)).class() == "MSSliceLayer"
+            ) {
                 ninePatch = selectedLayer;
             }
             else {
@@ -31,8 +37,12 @@ var onRun = function(context) {
         }
     }
     else if (selectedLayer.class() == "MSSliceLayer" && selectedLayer.name() == "#9patch") {
-        if (selectedLayer.parentGroup().name() == "content" && selectedLayer.parentGroup().parentGroup().layers().count() == 2 && selectedLayer.parentGroup().parentGroup().layerWithID("patch")) {
-            if (selectedLayer.parentGroup().parentGroup().layerWithID("patch").layers().count() >= 4) {
+        if (
+            selectedLayer.parentGroup().name() == "content" &&
+            selectedLayer.parentGroup().parentGroup().layers().count() == 2 &&
+            getLayerWithNameFromParent("patch", selectedLayer.parentGroup().parentGroup())
+        ) {
+            if (getLayerWithNameFromParent("patch", selectedLayer.parentGroup().parentGroup()).layers().count() >= 4) {
                ninePatch = selectedLayer;
             }
             else {

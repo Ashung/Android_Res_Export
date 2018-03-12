@@ -35,9 +35,9 @@ var onRun = function(context) {
         if (selectionCount == 1 && selection.firstObject().class() == "MSLayerGroup") {
             var group = selection.firstObject();
             // No cotent and patch group
-            if (group.layerWithID("content")) {
+            if (getLayerWithNameFromParent("content", group)) {
                 var groupNinePatch = group;
-                var groupContent = group.layerWithID("content");
+                var groupContent = getLayerWithNameFromParent("content", group);
             } else {
                 var groupContent = group;
                 groupContent.setName("content");
@@ -53,15 +53,15 @@ var onRun = function(context) {
             groupNinePatch.setName(androidResName(name));
         }
 
-        if (!groupContent.layerWithID("#9patch")) {
+        if (!getLayerWithNameFromParent("#9patch", groupContent)) {
             var slice = addSliceInToGroup(groupContent, "#9patch", true);
         } else {
-            if (groupContent.layerWithID("#9patch").class() != "MSSliceLayer") {
+            if (getLayerWithNameFromParent("#9patch", groupContent).class() != "MSSliceLayer") {
                 var slice = addSliceInToGroup(groupContent, "#9patch", true);
             }
         }
 
-        if (groupNinePatch.layerWithID("patch")) {
+        if (getLayerWithNameFromParent("patch", groupNinePatch)) {
             slice.absoluteRect().setRect(
                 CGRectMake(
                     groupNinePatch.absoluteRect().x() + 1,
@@ -80,7 +80,7 @@ var onRun = function(context) {
             var patchRight = addRectShape(groupNinePatch, null, width, 0, 1, height, color, "right");
             var patchTop = addRectShape(groupNinePatch, null, 0, -1, width, 1, color, "top");
             // Group patch line
-            var groupPatch = groupFromLayers([patchLeft, patchBottom, patchRight, patchTop]);
+            var groupPatch = groupFromLayers([patchBottom, patchRight, patchTop, patchLeft]);
             groupPatch.setName("patch");
         }
 

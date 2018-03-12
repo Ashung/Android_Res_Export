@@ -10,8 +10,8 @@ var onRun = function(context) {
         if (page.metadataForKey("is_legacy_android_app_icon") == true) {
 
             // Android app icon legacy.
-            var iconNormal = page.layerWithID("ic_launcher"),
-                iconRound = page.layerWithID("ic_launcher_round");
+            var iconNormal = getLayerWithNameFromParent("ic_launcher", page),
+                iconRound = getLayerWithNameFromParent("ic_launcher_round", page);
 
             if (!iconNormal && !iconRound) {
                 toast(context, localizedString(context, "app_icon_not_find"));
@@ -83,8 +83,8 @@ var onRun = function(context) {
         } else {
 
             // Android adaptive icon.
-            var background = page.layerWithID("ic_background"),
-                foreground = page.layerWithID("ic_foreground");
+            var background = getLayerWithNameFromParent("ic_background", page),
+                foreground = getLayerWithNameFromParent("ic_foreground", page);
 
             if (!background || !foreground) {
                 toast(context, localizedString(context, "app_icon_not_find"));
