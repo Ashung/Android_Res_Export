@@ -8,6 +8,7 @@
         <description>Export Android resources in Sketch – PNG assets, app icon, nine-patch image and vector drawable.</description>
         <language>en</language>
         {% for item in site.data.release %}
+        {% if forloop.index0 < 1 %}
         <item>
             <title>V{{ item.version }}</title>
             <enclosure
@@ -15,6 +16,7 @@
                 sparkle:version="{{ item.version }}"
                 type="application/octet-stream"/>
         </item>
+        {% endif %}
         {% endfor %}
     </channel>
 </rss>
