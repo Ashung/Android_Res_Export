@@ -275,14 +275,15 @@ function checkLayerType(context, layer, count, callback) {
 
         // Not suppot styles in vector drawable
         if (layer.class() == "MSShapeGroup") {
-            if (layer.rotation() != 0) {
-                toast(context, localizedString(context, "vector_drawable_no_support_rotation"));
-                callback(0);
-            }
-            if (layer.isFlippedVertical() != 0 || layer.isFlippedHorizontal() != 0) {
-                toast(context, localizedString(context, "vector_drawable_no_support_flipped"));
-                callback(0);
-            }
+            // SVGO will flatten the svg.
+            // if (layer.rotation() != 0) {
+            //     toast(context, localizedString(context, "vector_drawable_no_support_rotation"));
+            //     callback(0);
+            // }
+            // if (layer.isFlippedVertical() != 0 || layer.isFlippedHorizontal() != 0) {
+            //     toast(context, localizedString(context, "vector_drawable_no_support_flipped"));
+            //     callback(0);
+            // }
             if (layer.hasClippingMask() == 1) {
                 toast(context, localizedString(context, "vector_drawable_no_support_mask"));
                 callback(0);

@@ -28,6 +28,16 @@ var onRun = function(context) {
                     return;
                 }
 
+                // Hide grid layers
+                var gridArtboard = getLayerWithNameFromParent("grid", page);
+                var gridStatus = {};
+                var loopLayersInGridArtboard = gridArtboard.layers().objectEnumerator();
+                var layerInGridArtboard;
+                while (layerInGridArtboard = loopLayersInGridArtboard.nextObject()) {
+                    gridStatus[layerInGridArtboard.objectID() + ""] = layerInGridArtboard.isVisible();
+                    layerInGridArtboard.setIsVisible(false);
+                }
+
                 // Export pngs.
                 if (iconNormal) {
                     resizeArtboard(iconNormal, 192);
@@ -71,6 +81,11 @@ var onRun = function(context) {
                     );
                 }
 
+                // Restore grid layer status
+                for (var layerID in gridStatus) {
+                    page.layerWithID(layerID).setIsVisible(gridStatus[layerID]);
+                }
+
                 // Open in Finder.
                 if (getPreferences(context, "show_in_finder_after_export") == 1) {
                     showInFinder(exportFolder);
@@ -102,6 +117,16 @@ var onRun = function(context) {
                 if (!directoryIsWriteable(exportFolder)) {
                     toast(context, localizedString(context, "cannot_export_to_folder"));
                     return;
+                }
+
+                // Hide grid layers
+                var gridArtboard = getLayerWithNameFromParent("grid_android_o", page);
+                var gridStatus = {};
+                var loopLayersInGridArtboard = gridArtboard.layers().objectEnumerator();
+                var layerInGridArtboard;
+                while (layerInGridArtboard = loopLayersInGridArtboard.nextObject()) {
+                    gridStatus[layerInGridArtboard.objectID() + ""] = layerInGridArtboard.isVisible();
+                    layerInGridArtboard.setIsVisible(false);
                 }
 
                 // Export XML.
@@ -138,6 +163,11 @@ var onRun = function(context) {
                         }
                     ]
                 );
+
+                // Restore grid layer status
+                for (var layerID in gridStatus) {
+                    page.layerWithID(layerID).setIsVisible(gridStatus[layerID]);
+                }
 
                 // Open in Finder.
                 if (getPreferences(context, "show_in_finder_after_export") == 1) {
