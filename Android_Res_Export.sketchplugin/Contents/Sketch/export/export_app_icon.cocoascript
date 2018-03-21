@@ -131,6 +131,7 @@ var onRun = function(context) {
 
                 // Export XML.
                 var xmlFilePath = exportFolder + "/mipmap-anydpi-v26/ic_launcher.xml";
+                var xmlFilePathRound = exportFolder + "/mipmap-anydpi-v26/ic_launcher_round.xml";
                 var xmlContent = '' +
                     '<?xml version="1.0" encoding="utf-8"?>\n' +
                     '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n' +
@@ -139,6 +140,7 @@ var onRun = function(context) {
                     '</adaptive-icon>';
 
                 writeContentToFile(xmlFilePath, xmlContent);
+                writeContentToFile(xmlFilePathRound, xmlContent);
 
                 // Export pngs.
                 exportIconAssets(
