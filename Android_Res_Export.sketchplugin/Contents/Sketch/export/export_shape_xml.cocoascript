@@ -53,18 +53,18 @@ var viewShapeXMLCode = function(context) {
                 var xmlForHtml = xml.replace(/\n/g, "\\n");
                 scriptObject.evaluateWebScript("previewCode('" + xmlForHtml + "')");
             },
-            function(locationHash) {
+            function(nswindow, locationHash) {
 
                 if (locationHash == "#save") {
-
                     NSApp.stopModal();
+                    NSApp.endSheet(nswindow);
                     context.document.documentWindow().makeKeyAndOrderFront(nil);
                     exportXML(context, xml, androidResName(layer.name()));
-
                 }
 
                 if (locationHash == "#cancel") {
                     NSApp.stopModal();
+                    NSApp.endSheet(nswindow);
                     context.document.documentWindow().makeKeyAndOrderFront(nil);
                 }
 

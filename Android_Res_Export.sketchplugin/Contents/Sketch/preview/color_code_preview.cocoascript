@@ -169,10 +169,11 @@ function showCodeWindow(context, xml) {
             xml = xml.replace(/\n/g, "\\n");
             scriptObject.evaluateWebScript("previewCode('" + xml + "')");
         },
-        function(locationHash) {
+        function(nswindow, locationHash) {
 
             if (locationHash == "#save") {
                 NSApp.stopModal();
+                NSApp.endSheet(nswindow);
                 context.document.documentWindow().makeKeyAndOrderFront(nil);
 
                 var exportFolder = chooseFolder();
@@ -196,6 +197,7 @@ function showCodeWindow(context, xml) {
 
             if (locationHash == "#cancel") {
                 NSApp.stopModal();
+                NSApp.endSheet(nswindow);
                 context.document.documentWindow().makeKeyAndOrderFront(nil);
             }
 

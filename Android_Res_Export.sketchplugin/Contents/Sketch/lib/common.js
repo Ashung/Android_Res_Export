@@ -535,6 +535,7 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
     var closeButton = window.standardWindowButton(NSWindowCloseButton);
     closeButton.setCOSJSTargetFunction(function(sender) {
         NSApp.stopModal();
+        NSApp.endSheet(window);
         context.document.documentWindow().makeKeyAndOrderFront(nil);
     });
 
@@ -556,7 +557,7 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
                     scriptObject.evaluateWebScript("clickAtPoint(" + x + ", " + y + ")");
                 }
             }
-            didChangeLocationFunction(locationHash);
+            didChangeLocationFunction(window, locationHash);
         })
     });
     webView.setFrameLoadDelegate_(delegate.getClassInstance());

@@ -107,11 +107,12 @@ var onRun = function(context) {
             scriptObject.evaluateWebScript("originalHeight=" + ninePatchHeight + "");
             scriptObject.evaluateWebScript("drawNinePatch('" + base64 + "'," + ninePatchWidth + "," + ninePatchHeight + ",false)");
         },
-        function(locationHash) {
+        function(nswindow, locationHash) {
 
             // Export
             if (locationHash == "#export") {
                 NSApp.stopModal();
+                NSApp.endSheet(nswindow);
                 context.document.documentWindow().makeKeyAndOrderFront(nil);
                 NSApp.delegate().runPluginCommand_fromMenu_context(
                     context.plugin.commands().objectForKey("export_nine_patch"),
@@ -122,6 +123,7 @@ var onRun = function(context) {
 
             if (locationHash == "#cancel") {
                 NSApp.stopModal();
+                NSApp.endSheet(nswindow);
                 context.document.documentWindow().makeKeyAndOrderFront(nil);
             }
 
