@@ -164,7 +164,7 @@ function drawNinePatch(base64, width, height, showContent) {
             paddingLeft = 0,
             paddingRight = 0;
         var paddingTopBottonData = _ctx.getImageData(img.width-1, 1*scale, 1, img.height-2*scale).data;
-        var paddingLeftRightData = _ctx.getImageData(1*scale, img.height-1*scale, img.width-2*scale, 1).data;
+        var paddingLeftRightData = _ctx.getImageData(1*scale, img.height-1, img.width-2*scale, 1).data;
         for (var i = 0; i < paddingTopBottonData.length/4; i ++) {
             if (
                 paddingTopBottonData[i*4] == 0 &&
@@ -209,6 +209,7 @@ function drawNinePatch(base64, width, height, showContent) {
                 break;
             }
         }
+
         // console.log(paddingTop+","+paddingRight+","+paddingBottom+","+paddingLeft);
 
         var canvas = document.createElement("canvas");

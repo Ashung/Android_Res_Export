@@ -1,3 +1,0 @@
-var onRun = function(context) {
-    AppController.sharedInstance().pluginManager().reloadPlugins();
-};

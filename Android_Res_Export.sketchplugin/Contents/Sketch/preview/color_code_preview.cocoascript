@@ -4,6 +4,8 @@
 
 var colorResourceCodeFromDocumentColor = function(context) {
 
+    ga(context, "Preview", "color_resource_code_from_document_color");
+
     var doc = context.document;
     var documentData = doc.documentData()
     var documentColors = documentData.assets().colors();
@@ -13,7 +15,7 @@ var colorResourceCodeFromDocumentColor = function(context) {
         return;
     }
 
-    var xml = '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n';
+    var xml = '<resources>\n';
 
     var colorNamesAndCount = NSMutableDictionary.alloc().init();
     var loopDocumentColors = documentColors.objectEnumerator();
@@ -44,11 +46,11 @@ var colorResourceCodeFromDocumentColor = function(context) {
 
     showCodeWindow(context, xml);
 
-    ga(context, "Preview", "color_resource_code_from_document_color");
-
 };
 
 var colorResourceCodeFromLayers = function(context) {
+
+    ga(context, "Preview", "color_resource_code_from_selected_layer");
 
     var doc = context.document;
     var selection = context.selection;
@@ -120,7 +122,7 @@ var colorResourceCodeFromLayers = function(context) {
         return a - b;
     });
 
-    var xml = '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n';
+    var xml = '<resources>\n';
 
     for (var i = 0; i < allKeys.length; i ++) {
         var key = allKeys[i];
@@ -131,8 +133,6 @@ var colorResourceCodeFromLayers = function(context) {
     xml += "</resources>\n";
 
     showCodeWindow(context, xml);
-
-    ga(context, "Preview", "color_resource_code_from_selected_layer");
 
 };
 

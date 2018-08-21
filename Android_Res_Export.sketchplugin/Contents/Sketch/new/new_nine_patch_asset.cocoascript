@@ -2,7 +2,8 @@
 
 var onRun = function(context) {
 
-    var sketch = context.api();
+    ga(context, "New", "new_nine_patch");
+
     var doc = context.document;
     var selection = context.selection;
     var selectionCount = selection.count();
@@ -10,92 +11,78 @@ var onRun = function(context) {
     if (selectionCount == 0) {
         toast(context, localizedString(context, "no_selection"));
         return;
-    } else {
-        var loopSelection = selection.objectEnumerator();
-        var item;
-        while (item = loopSelection.nextObject()) {
-            if (item.class() == "MSArtboardGroup" || item.class() == "MSSymbolMaster") {
-                toast(context, localizedString(context, "can_not_create_nine_patch_from_artboard_or_symbol_master"));
-                return;
-            }
-        }
+    }
+
+    var predicate = NSPredicate.predicateWithFormat('className == "MSArtboardGroup" || className == "MSSymbolMaster"');
+    if (selection.filteredArrayUsingPredicate(predicate).count() > 0) {
+        toast(context, localizedString(context, "can_not_create_nine_patch_from_artboard_or_symbol_master"));
+        return;
     }
 
     // Asset name
-    var name = ask(
-        context,
-        localizedString(context, "new_nine_patch_asset"),
-        localizedString(context, "asset_name_for_nine_path"),
-        selection.firstObject().name()
-    );
+    // TODO: name setting
+    var name = androidResName(selection.firstObject().name());
 
-    if (name) {
-
-        // Group content
-        if (selectionCount == 1 && selection.firstObject().class() == "MSLayerGroup") {
-            var group = selection.firstObject();
-            // No cotent and patch group
-            if (getLayerWithNameFromParent("content", group)) {
-                var groupNinePatch = group;
-                var groupContent = getLayerWithNameFromParent("content", group);
-            } else {
-                var groupContent = group;
-                groupContent.setName("content");
-                // Group nine patch
-                var groupNinePatch = groupFromLayers([groupContent]);
-                groupNinePatch.setName(androidResName(name));
-            }
+    // Group content
+    if (selectionCount == 1 && selection.firstObject().class() == "MSLayerGroup") {
+        var group = selection.firstObject();
+        // No cotent and patch group
+        if (getLayerWithNameFromParent("content", group)) {
+            var groupNinePatch = group;
+            var groupContent = getLayerWithNameFromParent("content", group);
         } else {
-            var groupContent = groupFromSelection(context);
+            var groupContent = group;
             groupContent.setName("content");
             // Group nine patch
             var groupNinePatch = groupFromLayers([groupContent]);
             groupNinePatch.setName(androidResName(name));
         }
-
-        if (!getLayerWithNameFromParent("#9patch", groupContent)) {
-            var slice = addSliceInToGroup(groupContent, "#9patch", true);
-        } else {
-            if (getLayerWithNameFromParent("#9patch", groupContent).class() != "MSSliceLayer") {
-                var slice = addSliceInToGroup(groupContent, "#9patch", true);
-            }
-        }
-
-        if (getLayerWithNameFromParent("patch", groupNinePatch)) {
-            slice.absoluteRect().setRect(
-                CGRectMake(
-                    groupNinePatch.absoluteRect().x() + 1,
-                    groupNinePatch.absoluteRect().y() + 1,
-                    groupNinePatch.absoluteRect().width() - 2,
-                    groupNinePatch.absoluteRect().height() - 2
-                )
-            );
-        } else {
-            // Add patch lines
-            var width = groupContent.frame().width();
-            var height = groupContent.frame().height();
-            var color = "#000000";
-            var patchLeft = addRectShape(groupNinePatch, null, -1, 0, 1, height, color, "left");
-            var patchBottom = addRectShape(groupNinePatch, null, 0, height, width, 1, color, "bottom");
-            var patchRight = addRectShape(groupNinePatch, null, width, 0, 1, height, color, "right");
-            var patchTop = addRectShape(groupNinePatch, null, 0, -1, width, 1, color, "top");
-            // Group patch line
-            var groupPatch = groupFromLayers([patchBottom, patchRight, patchTop, patchLeft]);
-            groupPatch.setName("patch");
-        }
-
-        // Select layerGroup
-        // Fix Sketch 45
-        if (sketch.build < 43475) {
-            groupNinePatch.select_byExpandingSelection(true, false);
-        } else {
-            groupNinePatch.select_byExtendingSelection(true, false);
-        }
-
-        groupNinePatch.resizeToFitChildrenWithOption(1);
-
+    } else {
+        var groupContent = groupFromSelection(context);
+        groupContent.setName("content");
+        // Group nine patch
+        var groupNinePatch = groupFromLayers([groupContent]);
+        groupNinePatch.setName(androidResName(name));
     }
 
-    ga(context, "New", "new_nine_patch");
+    if (!getLayerWithNameFromParent("#9patch", groupContent)) {
+        var slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
+    } else {
+        if (getLayerWithNameFromParent("#9patch", groupContent).class() != "MSSliceLayer") {
+            var slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
+        }
+    }
+
+    if (getLayerWithNameFromParent("patch", groupNinePatch)) {
+        slice.absoluteRect().setRect(
+            CGRectMake(
+                groupNinePatch.absoluteRect().x() + 1,
+                groupNinePatch.absoluteRect().y() + 1,
+                groupNinePatch.absoluteRect().width() - 2,
+                groupNinePatch.absoluteRect().height() - 2
+            )
+        );
+    } else {
+        // Add patch lines
+        var width = groupContent.frame().width();
+        var height = groupContent.frame().height();
+        var color = "#000000";
+        var patchLeft = addRectShape(groupNinePatch, null, -1, 0, 1, height, color, "left");
+        var patchBottom = addRectShape(groupNinePatch, null, 0, height, width, 1, color, "bottom");
+        var patchRight = addRectShape(groupNinePatch, null, width, 0, 1, height, color, "right");
+        var patchTop = addRectShape(groupNinePatch, null, 0, -1, width, 1, color, "top");
+        // Group patch line
+        var groupPatch = groupFromLayers([patchBottom, patchRight, patchTop, patchLeft]);
+        groupPatch.setName("patch");
+    }
+
+    // Select layerGroup
+    groupNinePatch.select_byExtendingSelection(true, false);
+
+    groupNinePatch.resizeToFitChildrenWithOption(1);
+
+    groupNinePatch.setLayerListExpandedType(2);
+
+
 
 }

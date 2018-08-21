@@ -116,7 +116,7 @@ function groupFromLayers(layers) {
     return group;
 }
 
-function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
+function addSliceInToGroup(layerGroup, name, format, useInfluenceRect) {
 
     removeSliceInGroup(layerGroup);
 
@@ -134,13 +134,14 @@ function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
         var exportOption = slice.exportOptions().addExportFormat();
     }
 
-    exportOption.setFileFormat("png");
-    exportOption.setName("@android_res_export");
+    exportOption.setFileFormat(format);
+    exportOption.setName("");
     exportOption.setScale(1);
 
     return slice;
 }
 
+// TODO: !
 function removeSliceInGroup(layerGroup) {
     var loop = layerGroup.children().objectEnumerator();
     var layer;
@@ -523,8 +524,8 @@ function ga(context, eventCategory, eventAction, eventLabel, eventValue) {
 ========================================================= */
 function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocationFunction) {
 
-    var windowWidth = 800,
-        windowHeight = 600;
+    var windowWidth = 720,
+        windowHeight = 480;
     var window = NSWindow.alloc().init();
     window.setTitle(title);
     window.setFrame_display(NSMakeRect(0, 0, windowWidth, windowHeight), false);

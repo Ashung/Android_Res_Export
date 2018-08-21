@@ -1,6 +1,6 @@
 {
     "name": "Android Res Export",
-    "description": "用于导出 Android 各种资源的 Sketch 插件，包括 PNG 资源、应用启动图标、点九（Nine-patch）图片、形状 XML 、色彩资源 XML 和矢量（Vector Drawable）文件。",
+    "description": "用于导出 Android 各种资源的 Sketch 插件，包括位图资源、应用启动图标、点九（Nine-patch）图片、形状 XML 、色彩资源 XML 和矢量（Vector Drawable）文件。",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
@@ -12,28 +12,33 @@
     "bundleVersion": "1",
     "commands": [
         {
+            "name": "新建位图资源",
+            "identifier": "new_bitmap_asset",
+            "handler": "newBitmapAsset",
+            "script": "new/new_asset.cocoascript"
+        },
+        {
+            "name": "新建矢量资源",
+            "identifier": "new_vector_asset",
+            "handler": "newVectorAsset",
+            "script": "new/new_asset.cocoascript"
+        },
+
+        {
             "handlers": {
                 "actions": {
                     "OpenDocument": "onOpenDocument"
                 }
             },
-            "script": "utilities/checking_language.cocoascript"
+            "script": "utilities/change_language.cocoascript"
         },
-        {
-            "name": "新建 PNG 资源",
-            "identifier": "new_png_asset",
-            "script": "new/new_png_asset.cocoascript"
-        },
+
         {
             "name": "新建点九资源",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
-        {
-            "name": "新建矢量资源",
-            "identifier": "new_vector_drawable_asset",
-            "script": "new/new_vector_drawable_asset.cocoascript"
-        },
+
         {
             "name": "新建应用图标 (旧版)",
             "identifier": "new_app_icon_legacy",
@@ -47,7 +52,7 @@
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "导出 PNG 资源",
+            "name": "导出位图资源",
             "identifier": "export_png_assets",
             "script": "export/export_png_assets.cocoascript"
         },
@@ -84,31 +89,10 @@
             "script": "preview/color_code_preview.cocoascript"
         },
         {
-            "name": "从文档色彩生成色彩资源代码",
-            "identifier": "color_resource_code_from_document_color",
-            "handler": "colorResourceCodeFromDocumentColor",
-            "script": "preview/color_code_preview.cocoascript"
-        },
-        {
             "name": "查看形状 XML 代码",
             "identifier": "view_shape_xml_code",
             "handler": "viewShapeXMLCode",
             "script": "export/export_shape_xml.cocoascript"
-        },
-        {
-            "name": "添加系统图标网格",
-            "identifier": "add_system_icon",
-            "script": "utilities/add_system_icon.cocoascript"
-        },
-        {
-            "name": "资源命名校验",
-            "identifier": "asset_name_validator",
-            "script": "utilities/asset_name_validator.cocoascript"
-        },
-        {
-            "name": "修复切片命名",
-            "identifier": "fixes_slice_name",
-            "script": "utilities/fixes_slice_name.cocoascript"
         },
         {
             "name": "参数设置",
@@ -133,28 +117,19 @@
             "script": "utilities/change_language.cocoascript"
         },
         {
-            "name": "检测更新",
-            "identifier": "update",
-            "script": "utilities/update.cocoascript"
-        },
-        {
             "name": "捐款",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
-        },
-        {
-            "identifier": "reload_plugins",
-            "script": "utilities/reload_plugins.cocoascript"
         }
     ],
     "menu": {
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
-            "new_png_asset",
+            "new_bitmap_asset",
             "new_nine_patch_asset",
-            "new_vector_drawable_asset",
+            "new_vector_asset",
             "new_app_icon",
             "new_app_icon_legacy",
             "-",
@@ -166,26 +141,14 @@
             "-",
             "nine_patch_preview",
             "color_resource_code_from_selected_layer",
-            "color_resource_code_from_document_color",
             "view_shape_xml_code",
             "-",
-            {
-                "title": "实用工具",
-                "items": [
-                    "add_system_icon",
-                    "asset_name_validator",
-                    "fixes_slice_name"
-                ]
-            },
-            "-",
             "preferences",
-            "-",
             {
                 "title": "帮助",
                 "items": [
                     "web_site",
                     "report_issues",
-                    "update",
                     "-",
                     "change_language",
                     "-",

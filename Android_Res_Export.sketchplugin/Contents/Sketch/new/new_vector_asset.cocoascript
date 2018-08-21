@@ -2,6 +2,8 @@
 
 var onRun = function(context) {
 
+    ga(context, "New", "new_vector_asset");
+
     var doc = context.document;
     var selection = context.selection;
     var selectionCount = selection.count();
@@ -11,91 +13,91 @@ var onRun = function(context) {
         return;
     }
 
-    // Checking if layers containt not supported effect
-    var supported = 1;
+    
 
-    var loopSelection = selection.objectEnumerator();
-    var layer;
-    while (layer = loopSelection.nextObject()) {
-        checkLayerType(context, layer, selectionCount, function(sup) {
-            supported = sup;
-        });
-        if (supported == 0) {
-            return;
-        }
-    }
-
-    // Asset name
-    var dialog = COSAlertWindow.alloc().init();
-    dialog.setMessageText(localizedString(context, "new_vector_drawable_asset"));
-    dialog.setInformativeText(localizedString(context, "asset_name_for_vector_drawable"));
-    dialog.addButtonWithTitle(localizedString(context, "ok"));
-    dialog.addButtonWithTitle(localizedString(context, "cancel"));
-
-    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
-    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
-    dialog.setIcon(iconNSImage);
-
-    dialog.addTextFieldWithValue(selection.lastObject().name());
-    var textField = dialog.viewAtIndex(0);
-    dialog.alert().window().setInitialFirstResponder(textField);
-
-    var removeInvisibleLayers = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 20));
-    removeInvisibleLayers.setButtonType(NSSwitchButton);
-    removeInvisibleLayers.setTitle(localizedString(context, "remove_invisible_layers"));
-    removeInvisibleLayers.setState(getPreferences(context, "remove_invisible_layers") == 1 ? NSOnState : NSOffState);
-    dialog.addAccessoryView(removeInvisibleLayers);
-
-    var responseCode = dialog.runModal();
-    if (responseCode == 1000) {
-
-        // Group vector
-        if (
-            selectionCount == 1 &&
-            (
-                selection.firstObject().class() == "MSLayerGroup" ||
-                selection.firstObject().class() == "MSArtboardGroup" ||
-                selection.firstObject().class() == "MSSymbolMaster"
-            )
-        ) {
-            var groupVector = selection.firstObject();
-        } else {
-            var groupVector = groupFromSelection(context);
-        }
-        var name = textField.stringValue();
-        groupVector.setName(androidResName(name));
-
-        // Add slice
-        var slice = addSliceInToGroup(groupVector, "#vector", true);
-        var exportOption = slice.exportOptions().exportFormats().firstObject();
-            exportOption.setFileFormat("svg");
-            exportOption.setName("@android_res_export");
-
-        // Move bitmap/text layer outside group
-        var loopChild = groupVector.children().objectEnumerator();
-        var child;
-        while (child = loopChild.nextObject()) {
-            if (child.class() == "MSBitmapLayer" || child.class() == "MSTextLayer") {
-                child.moveToLayer_beforeLayer(
-                    groupVector.parentGroup(),
-                    groupVector.parentGroup().layerAtIndex(groupVector.parentGroup().indexOfLayer(groupVector) + 1)
-                );
-            }
-            // remove invisible layers
-            if (child.class() == "MSShapeGroup" && layerIsInvisible(child) && removeInvisibleLayers.state() == 1) {
-                child.removeFromParent();
-            }
-        }
-
-        if (removeInvisibleLayers.state() == 1) {
-            setPreferences(context, "remove_invisible_layers", true);
-        } else {
-            setPreferences(context, "remove_invisible_layers", false);
-        }
-
-    }
-
-    ga(context, "New", "new_vector_drawable");
+    // // Checking if layers containt not supported effect
+    // var supported = 1;
+    //
+    // var loopSelection = selection.objectEnumerator();
+    // var layer;
+    // while (layer = loopSelection.nextObject()) {
+    //     checkLayerType(context, layer, selectionCount, function(sup) {
+    //         supported = sup;
+    //     });
+    //     if (supported == 0) {
+    //         return;
+    //     }
+    // }
+    //
+    // // Asset name
+    // var dialog = COSAlertWindow.alloc().init();
+    // dialog.setMessageText(localizedString(context, "new_vector_asset"));
+    // dialog.setInformativeText(localizedString(context, "asset_name_for_vector_drawable"));
+    // dialog.addButtonWithTitle(localizedString(context, "ok"));
+    // dialog.addButtonWithTitle(localizedString(context, "cancel"));
+    //
+    // var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
+    // var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
+    // dialog.setIcon(iconNSImage);
+    //
+    // dialog.addTextFieldWithValue(selection.lastObject().name());
+    // var textField = dialog.viewAtIndex(0);
+    // dialog.alert().window().setInitialFirstResponder(textField);
+    //
+    // var removeInvisibleLayers = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 20));
+    // removeInvisibleLayers.setButtonType(NSSwitchButton);
+    // removeInvisibleLayers.setTitle(localizedString(context, "remove_invisible_layers"));
+    // removeInvisibleLayers.setState(getPreferences(context, "remove_invisible_layers") == 1 ? NSOnState : NSOffState);
+    // dialog.addAccessoryView(removeInvisibleLayers);
+    //
+    // var responseCode = dialog.runModal();
+    // if (responseCode == 1000) {
+    //
+    //     // Group vector
+    //     if (
+    //         selectionCount == 1 &&
+    //         (
+    //             selection.firstObject().class() == "MSLayerGroup" ||
+    //             selection.firstObject().class() == "MSArtboardGroup" ||
+    //             selection.firstObject().class() == "MSSymbolMaster"
+    //         )
+    //     ) {
+    //         var groupVector = selection.firstObject();
+    //     } else {
+    //         var groupVector = groupFromSelection(context);
+    //     }
+    //     var name = textField.stringValue();
+    //     groupVector.setName(androidResName(name));
+    //
+    //     // Add slice
+    //     var slice = addSliceInToGroup(groupVector, "#vector", true);
+    //     var exportOption = slice.exportOptions().exportFormats().firstObject();
+    //         exportOption.setFileFormat("svg");
+    //         exportOption.setName("@android_res_export");
+    //
+    //     // Move bitmap/text layer outside group
+    //     var loopChild = groupVector.children().objectEnumerator();
+    //     var child;
+    //     while (child = loopChild.nextObject()) {
+    //         if (child.class() == "MSBitmapLayer" || child.class() == "MSTextLayer") {
+    //             child.moveToLayer_beforeLayer(
+    //                 groupVector.parentGroup(),
+    //                 groupVector.parentGroup().layerAtIndex(groupVector.parentGroup().indexOfLayer(groupVector) + 1)
+    //             );
+    //         }
+    //         // remove invisible layers
+    //         if (child.class() == "MSShapeGroup" && layerIsInvisible(child) && removeInvisibleLayers.state() == 1) {
+    //             child.removeFromParent();
+    //         }
+    //     }
+    //
+    //     if (removeInvisibleLayers.state() == 1) {
+    //         setPreferences(context, "remove_invisible_layers", true);
+    //     } else {
+    //         setPreferences(context, "remove_invisible_layers", false);
+    //     }
+    //
+    // }
 
 };
 

@@ -67,8 +67,41 @@ var onRun = function(context) {
                 localizedString(context, "language_file_not_found")
             );
 
+            ga(context, "Setting", "language", "Setting", "none");
+
         }
 
+    }
+
+};
+
+var onOpenDocument = function(context) {
+
+    // Reload Plugin
+    AppController.sharedInstance().pluginManager().reloadPlugins();
+
+    var manifestPath = context.plugin.url().path() + "/Contents/Sketch/manifest.json";
+    var manifest = getJSONFromPath(manifestPath);
+    var manifestLanguage = manifest.language;
+
+    var userLanguage = getPreferences(context, "language");
+
+    if (manifestLanguage != userLanguage) {
+        var languageFilePath = context.plugin.urlForResourceNamed("manifest_" + userLanguage + ".json").path();
+        var manifestFilePath = context.plugin.url().path() + "/Contents/Sketch/manifest.json";
+        if (fileExists(languageFilePath)) {
+            // Remove manifest.json
+            NSFileManager.defaultManager().removeItemAtPath_error_(
+                manifestFilePath, nil
+            );
+            // Replace manifest.json
+            NSFileManager.defaultManager().copyItemAtPath_toPath_error_(
+                languageFilePath, manifestFilePath, nil
+            );
+            AppController.sharedInstance().pluginManager().reloadPlugins();
+        } else {
+            log(context.plugin.name() + ": language file " + languageFilePath + " not found.");
+        }
     }
 
 };

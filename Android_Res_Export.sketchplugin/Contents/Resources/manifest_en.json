@@ -12,28 +12,33 @@
     "bundleVersion": "1",
     "commands": [
         {
+            "name": "New Bitmap Asset",
+            "identifier": "new_bitmap_asset",
+            "handler": "newBitmapAsset",
+            "script": "new/new_asset.cocoascript"
+        },
+        {
+            "name": "New Vector Asset",
+            "identifier": "new_vector_asset",
+            "handler": "newVectorAsset",
+            "script": "new/new_asset.cocoascript"
+        },
+
+        {
             "handlers": {
                 "actions": {
                     "OpenDocument": "onOpenDocument"
                 }
             },
-            "script": "utilities/checking_language.cocoascript"
+            "script": "utilities/change_language.cocoascript"
         },
-        {
-            "name": "New PNG Asset",
-            "identifier": "new_png_asset",
-            "script": "new/new_png_asset.cocoascript"
-        },
+
         {
             "name": "New Nine-Patch Asset",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
-        {
-            "name": "New Vector Drawable Asset",
-            "identifier": "new_vector_drawable_asset",
-            "script": "new/new_vector_drawable_asset.cocoascript"
-        },
+
         {
             "name": "New App Icon (Legacy)",
             "identifier": "new_app_icon_legacy",
@@ -47,7 +52,7 @@
             "script": "new/new_app_icon.cocoascript"
         },
         {
-            "name": "Export PNG Assets",
+            "name": "Export Bitmap Assets",
             "identifier": "export_png_assets",
             "script": "export/export_png_assets.cocoascript"
         },
@@ -84,31 +89,10 @@
             "script": "preview/color_code_preview.cocoascript"
         },
         {
-            "name": "Color Resource Code From Document Color",
-            "identifier": "color_resource_code_from_document_color",
-            "handler": "colorResourceCodeFromDocumentColor",
-            "script": "preview/color_code_preview.cocoascript"
-        },
-        {
             "name": "View Shape Drawable XML Code",
             "identifier": "view_shape_xml_code",
             "handler": "viewShapeXMLCode",
             "script": "export/export_shape_xml.cocoascript"
-        },
-        {
-            "name": "Add System Icon Grid Line",
-            "identifier": "add_system_icon",
-            "script": "utilities/add_system_icon.cocoascript"
-        },
-        {
-            "name": "Asset Name Validator",
-            "identifier": "asset_name_validator",
-            "script": "utilities/asset_name_validator.cocoascript"
-        },
-        {
-            "name": "Fixes Slice Names",
-            "identifier": "fixes_slice_name",
-            "script": "utilities/fixes_slice_name.cocoascript"
         },
         {
             "name": "Preferences",
@@ -133,28 +117,19 @@
             "script": "utilities/change_language.cocoascript"
         },
         {
-            "name": "Check for Update",
-            "identifier": "update",
-            "script": "utilities/update.cocoascript"
-        },
-        {
             "name": "Donate",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
-        },
-        {
-            "identifier": "reload_plugins",
-            "script": "utilities/reload_plugins.cocoascript"
         }
     ],
     "menu": {
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
-            "new_png_asset",
+            "new_bitmap_asset",
             "new_nine_patch_asset",
-            "new_vector_drawable_asset",
+            "new_vector_asset",
             "new_app_icon",
             "new_app_icon_legacy",
             "-",
@@ -166,26 +141,14 @@
             "-",
             "nine_patch_preview",
             "color_resource_code_from_selected_layer",
-            "color_resource_code_from_document_color",
             "view_shape_xml_code",
             "-",
-            {
-                "title": "Utilities",
-                "items": [
-                    "add_system_icon",
-                    "asset_name_validator",
-                    "fixes_slice_name"
-                ]
-            },
-            "-",
             "preferences",
-            "-",
             {
                 "title": "Help",
                 "items": [
                     "web_site",
                     "report_issues",
-                    "update",
                     "-",
                     "change_language",
                     "-",

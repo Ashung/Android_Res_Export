@@ -12,28 +12,33 @@
     "bundleVersion": "1",
     "commands": [
         {
+            "name": "{{new_bitmap_asset}}",
+            "identifier": "new_bitmap_asset",
+            "handler": "newBitmapAsset",
+            "script": "new/new_asset.cocoascript"
+        },
+        {
+            "name": "{{new_vector_asset}}",
+            "identifier": "new_vector_asset",
+            "handler": "newVectorAsset",
+            "script": "new/new_asset.cocoascript"
+        },
+
+        {
             "handlers": {
                 "actions": {
                     "OpenDocument": "onOpenDocument"
                 }
             },
-            "script": "utilities/checking_language.cocoascript"
+            "script": "utilities/change_language.cocoascript"
         },
-        {
-            "name": "{{new_png_asset}}",
-            "identifier": "new_png_asset",
-            "script": "new/new_png_asset.cocoascript"
-        },
+
         {
             "name": "{{new_nine_patch_asset}}",
             "identifier": "new_nine_patch_asset",
             "script": "new/new_nine_patch_asset.cocoascript"
         },
-        {
-            "name": "{{new_vector_drawable_asset}}",
-            "identifier": "new_vector_drawable_asset",
-            "script": "new/new_vector_drawable_asset.cocoascript"
-        },
+
         {
             "name": "{{new_app_icon_legacy}}",
             "identifier": "new_app_icon_legacy",
@@ -84,31 +89,10 @@
             "script": "preview/color_code_preview.cocoascript"
         },
         {
-            "name": "{{color_resource_code_from_document_color}}",
-            "identifier": "color_resource_code_from_document_color",
-            "handler": "colorResourceCodeFromDocumentColor",
-            "script": "preview/color_code_preview.cocoascript"
-        },
-        {
             "name": "{{view_shape_xml_code}}",
             "identifier": "view_shape_xml_code",
             "handler": "viewShapeXMLCode",
             "script": "export/export_shape_xml.cocoascript"
-        },
-        {
-            "name": "{{add_system_icon}}",
-            "identifier": "add_system_icon",
-            "script": "utilities/add_system_icon.cocoascript"
-        },
-        {
-            "name": "{{asset_name_validator}}",
-            "identifier": "asset_name_validator",
-            "script": "utilities/asset_name_validator.cocoascript"
-        },
-        {
-            "name": "{{fixes_slice_name}}",
-            "identifier": "fixes_slice_name",
-            "script": "utilities/fixes_slice_name.cocoascript"
         },
         {
             "name": "{{preferences}}",
@@ -133,28 +117,21 @@
             "script": "utilities/change_language.cocoascript"
         },
         {
-            "name": "{{update}}",
-            "identifier": "update",
-            "script": "utilities/update.cocoascript"
-        },
-        {
             "name": "{{donate}}",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
-        },
-        {
-            "identifier": "reload_plugins",
-            "script": "utilities/reload_plugins.cocoascript"
         }
     ],
     "menu": {
         "isRoot": false,
         "title": "Android Res Export",
         "items": [
-            "new_png_asset",
+            "new_bitmap_asset",
+            "new_vector_asset",
+
+
             "new_nine_patch_asset",
-            "new_vector_drawable_asset",
             "new_app_icon",
             "new_app_icon_legacy",
             "-",
@@ -166,26 +143,14 @@
             "-",
             "nine_patch_preview",
             "color_resource_code_from_selected_layer",
-            "color_resource_code_from_document_color",
             "view_shape_xml_code",
             "-",
-            {
-                "title": "{{utilities}}",
-                "items": [
-                    "add_system_icon",
-                    "asset_name_validator",
-                    "fixes_slice_name"
-                ]
-            },
-            "-",
             "preferences",
-            "-",
             {
                 "title": "{{help}}",
                 "items": [
                     "web_site",
                     "report_issues",
-                    "update",
                     "-",
                     "change_language",
                     "-",
