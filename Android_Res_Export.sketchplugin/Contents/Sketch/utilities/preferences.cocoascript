@@ -4,25 +4,50 @@ var onRun = function(context) {
 
     // Dialog
     var dialog = COSAlertWindow.alloc().init();
-    dialog.setMessageText(context.plugin.name());
-    dialog.setInformativeText(context.plugin.pluginDescription());
+    dialog.setMessageText(localizedString(context, "preferences"));
 
     // Icon
     var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
     var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
     dialog.setIcon(iconNSImage);
 
-    var checkboxFinder = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 20));
-    checkboxFinder.setButtonType(NSSwitchButton);
-    checkboxFinder.setTitle(localizedString(context, "show_in_finder_after_export"));
-    checkboxFinder.setState(getPreferences(context, "show_in_finder_after_export") == 1 ? NSOnState : NSOffState);
+    dialog.addAccessoryView(groupLabel("export_dpis"));
+    var exportDpisView = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 40));
+    exportDpisView.setFlipped(true);
+    var exportMDPI = checkBox(true, "MDPI", NSMakeRect(0, 0, 100, 16));
+    var exportHDPI = checkBox(true, "HDPI", NSMakeRect(100, 0, 100, 16));
+    var exportXHDPI = checkBox(true, "XHDPI", NSMakeRect(200, 0, 100, 16)));
+    var exportXXHDPI = checkBox(true, "XXHDPI", NSMakeRect(0, 24, 100, 16));
+    var exportXXXHDPI = checkBox(true, "XXXHDPI", NSMakeRect(100, 24, 100, 16)));
+    exportDpisView.addSubview(exportMDPI);
+    exportDpisView.addSubview(exportHDPI);
+    exportDpisView.addSubview(exportXHDPI);
+    exportDpisView.addSubview(exportXXHDPI);
+    exportDpisView.addSubview(exportXXXHDPI);
+    dialog.addAccessoryView(exportDpisView);
+
+    dialog.addAccessoryView(groupLabel("asset name"));
+    var assetNameType = popupButton(ASSET_NAME_TYPES);
+    dialog.addAccessoryView(assetNameType);
+
+    // getPreferences(context, "asset_name_type") || 0
+
+    dialog.addAccessoryView(groupLabel("vector drawable folder"));
+    var vectordrawableFolder = popupButton(VECTORDRAWABLE_FOLDERS);
+    dialog.addAccessoryView(vectordrawableFolder);
+
+    dialog.addAccessoryView(groupLabel("others"));
+    var checkboxFinder = checkBox(
+        getPreferences(context, "show_in_finder_after_export") == 1 ? true : false,
+        localizedString(context, "show_in_finder_after_export")
+    );
     dialog.addAccessoryView(checkboxFinder);
 
-    var checkboxImageOptim = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 20));
-    checkboxImageOptim.setButtonType(NSSwitchButton);
-    checkboxImageOptim.setTitle(localizedString(context, "use_imageoptim_after_export"));
-    checkboxImageOptim.setState(getPreferences(context, "use_imageoptim_after_export") == 1 ? NSOnState : NSOffState);
-    dialog.addAccessoryView(checkboxImageOptim);
+    // var checkboxImageOptim = checkBox(
+    //     getPreferences(context, "use_imageoptim_after_export") == 1 ? true : false,
+    //     localizedString(context, "use_imageoptim_after_export")
+    // );
+    // dialog.addAccessoryView(checkboxImageOptim);
 
     dialog.addButtonWithTitle("OK");
     dialog.addButtonWithTitle("Cancel");
@@ -49,3 +74,46 @@ var onRun = function(context) {
     }
 
 };
+
+
+
+function groupLabel(text) {
+    var view = NSTextField.alloc().initWithFrame(NSMakeRect(0, 0, 300, 16));
+    view.setStringValue(text.toUpperCase());
+    view.setFont(NSFont.systemFontOfSize(11));
+    view.setTextColor(NSColor.grayColor());
+    view.setBezeled(false);
+    view.setDrawsBackground(false);
+    view.setEditable(false);
+    view.setSelectable(false);
+    return view;
+}
+
+function checkBox(status, title, rect) {
+    rect = rect || NSMakeRect(0, 0, 300, 16)
+    var view = NSButton.alloc().initWithFrame(rect);
+    view.setButtonType(NSSwitchButton);
+    view.setTitle(title);
+    if (status == true) {
+        view.setState(NSOnState);
+    } else {
+        view.setState(NSOffState);
+    }
+    return view;
+}
+
+function popupButton(items) {
+    var view = NSPopUpButton.alloc().initWithFrame(NSMakeRect(0, 0, 300, 24));
+    items.forEach(function(item) {
+        view.addItemWithTitle("");
+        view.lastItem().setTitle(item);
+    });
+    return view;
+}
+
+function divider() {
+    var view = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 1));
+    view.setWantsLayer(true);
+    view.layer().setBackgroundColor(CGColorCreateGenericRGB(0, 0, 0, 0.1));
+    return view;
+}

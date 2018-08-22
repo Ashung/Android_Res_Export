@@ -33,8 +33,7 @@ function newAsset(context, format) {
         } else {
             var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
         }
-        // TODO: name setting
-        var name = androidResName(layer.name());
+        var name = assetName(layer.name(), getPreferences(context, "asset_name_type"));
         layerGroup.setName(name);
         addSliceInToGroup(layerGroup, name, format, true);
         layerGroup.setLayerListExpandedType(2);

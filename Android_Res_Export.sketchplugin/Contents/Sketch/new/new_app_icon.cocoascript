@@ -1,34 +1,15 @@
 @import "../lib/common.js";
 
-var newAppIconTemplate = function(context) {
+var onRun = function(context) {
 
     importFromResource_toPage_withMetadate(
         context,
         "app_icon_template.sketch",
         "App Icon",
-        {
-            "is_android_app_icon_template": true,
-            "is_legacy_android_app_icon": false
-        }
+        {"is_android_app_icon_template": true}
     );
 
     ga(context, "New", "new_app_icon");
-
-}
-
-var newAppIconTemplateLegacy = function(context) {
-
-    importFromResource_toPage_withMetadate(
-        context,
-        "app_icon_template_legacy.sketch",
-        "App Icon Legacy",
-        {
-            "is_android_app_icon_template": true,
-            "is_legacy_android_app_icon": true
-        }
-    );
-
-    ga(context, "New", "new_app_icon_legacy");
 
 }
 

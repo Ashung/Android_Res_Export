@@ -1,54 +1,7 @@
 @import "../lib/MochaJSDelegate.js";
 @import "../lib/common.js";
-@import "../lib/color.js";
 
-var colorResourceCodeFromDocumentColor = function(context) {
-
-    ga(context, "Preview", "color_resource_code_from_document_color");
-
-    var doc = context.document;
-    var documentData = doc.documentData()
-    var documentColors = documentData.assets().colors();
-
-    if (documentColors.count() == 0) {
-        toast(context, localizedString(context, "no_document_color"));
-        return;
-    }
-
-    var xml = '<resources>\n';
-
-    var colorNamesAndCount = NSMutableDictionary.alloc().init();
-    var loopDocumentColors = documentColors.objectEnumerator();
-    var color;
-    while (color = loopDocumentColors.nextObject()) {
-        var colorAlpha = color.alpha();
-        var colorHex = color.immutableModelObject().hexValue();
-        var colorName = getColorName(colorHex);
-        var colorAndroid = colorToAndroid(color);
-        if (colorAlpha != 1) {
-            colorName += "_transparent";
-        }
-
-        if (colorNamesAndCount.objectForKey(colorName)) {
-            var count = colorNamesAndCount.objectForKey(colorName) + 1;
-            colorNamesAndCount.setObject_forKey(count, colorName);
-        } else {
-            colorNamesAndCount.setObject_forKey(1, colorName);
-        }
-        if (colorNamesAndCount.objectForKey(colorName) > 1) {
-            colorName += "_" + colorNamesAndCount.objectForKey(colorName);
-        }
-
-        xml += '    <color name="' + colorName + '">' + colorAndroid + '</color>\n';
-    }
-
-    xml += "</resources>\n";
-
-    showCodeWindow(context, xml);
-
-};
-
-var colorResourceCodeFromLayers = function(context) {
+var viewColorCodeFromLayers = function(context) {
 
     ga(context, "Preview", "color_resource_code_from_selected_layer");
 
@@ -68,7 +21,7 @@ var colorResourceCodeFromLayers = function(context) {
     while (layer = loopSelection.nextObject()) {
 
         // Name
-        var layerName = layerNameToXMLValue(layer.name());
+        var layerName = assetName(layer.name(), getPreferences(context, "asset_name_type"));
         if (baseColorNamesAndCount.objectForKey(layerName)) {
             var count = baseColorNamesAndCount.objectForKey(layerName) + 1;
             baseColorNamesAndCount.setObject_forKey(count, layerName);
@@ -136,19 +89,6 @@ var colorResourceCodeFromLayers = function(context) {
 
 };
 
-function layerNameToXMLValue(name) {
-    var result = name.replace(/[^A-Za-z0-9\s\_]/g, "")
-        .replace(/^\d+/, "")
-        .trim()
-        .replace(/\s+/g, "_")
-        .toLowerCase();
-    if (result == "") {
-        return "untitled";
-    } else {
-        return result;
-    }
-}
-
 function showCodeWindow(context, xml) {
     window(
         context,
@@ -161,7 +101,8 @@ function showCodeWindow(context, xml) {
             if (currentLanguageSetting != "en") {
                 var languageJSON = {
                     "cancel": localizedString(context, "cancel"),
-                    "save": localizedString(context, "save")
+                    "save": localizedString(context, "save"),
+                    "copy": localizedString(context, "copy")
                 };
                 scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
             }

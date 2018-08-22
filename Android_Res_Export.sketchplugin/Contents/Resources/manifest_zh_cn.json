@@ -23,6 +23,22 @@
             "handler": "newVectorAsset",
             "script": "new/new_asset.cocoascript"
         },
+        {
+            "name": "新建点九资源",
+            "identifier": "new_nine_patch_asset",
+            "script": "new/new_nine_patch_asset.cocoascript"
+        },
+        {
+            "name": "新建应用图标",
+            "identifier": "new_app_icon",
+            "script": "new/new_app_icon.cocoascript"
+        },
+
+
+
+
+
+
 
         {
             "handlers": {
@@ -33,24 +49,26 @@
             "script": "utilities/change_language.cocoascript"
         },
 
-        {
-            "name": "新建点九资源",
-            "identifier": "new_nine_patch_asset",
-            "script": "new/new_nine_patch_asset.cocoascript"
-        },
 
         {
-            "name": "新建应用图标 (旧版)",
-            "identifier": "new_app_icon_legacy",
-            "handler": "newAppIconTemplateLegacy",
-            "script": "new/new_app_icon.cocoascript"
+            "name": "点九图片预览",
+            "identifier": "nine_patch_preview",
+            "script": "preview/nine_patch_preview.cocoascript"
         },
         {
-            "name": "新建应用图标",
-            "identifier": "new_app_icon",
-            "handler": "newAppIconTemplate",
-            "script": "new/new_app_icon.cocoascript"
+            "name": "从选中图层生成色彩资源代码",
+            "identifier": "color_resource_code_from_selected_layer",
+            "handler": "viewColorCodeFromLayers",
+            "script": "preview/code_preview.cocoascript"
         },
+        {
+            "name": "查看形状 XML 代码",
+            "identifier": "view_shape_xml_code",
+            "handler": "viewShapeXMLCode",
+            "script": "export/code_preview.cocoascript"
+        },
+
+
         {
             "name": "导出位图资源",
             "identifier": "export_png_assets",
@@ -71,29 +89,10 @@
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.cocoascript"
         },
-        {
-            "name": "导出形状 XML 代码",
-            "identifier": "export_shape_xml",
-            "handler": "exportShapeXML",
-            "script": "export/export_shape_xml.cocoascript"
-        },
-        {
-            "name": "点九图片预览",
-            "identifier": "nine_patch_preview",
-            "script": "preview/nine_patch_preview.cocoascript"
-        },
-        {
-            "name": "从选中图层生成色彩资源代码",
-            "identifier": "color_resource_code_from_selected_layer",
-            "handler": "colorResourceCodeFromLayers",
-            "script": "preview/color_code_preview.cocoascript"
-        },
-        {
-            "name": "查看形状 XML 代码",
-            "identifier": "view_shape_xml_code",
-            "handler": "viewShapeXMLCode",
-            "script": "export/export_shape_xml.cocoascript"
-        },
+
+
+
+
         {
             "name": "参数设置",
             "identifier": "preferences",
@@ -128,8 +127,10 @@
         "title": "Android Res Export",
         "items": [
             "new_bitmap_asset",
-            "new_nine_patch_asset",
             "new_vector_asset",
+
+
+            "new_nine_patch_asset",
             "new_app_icon",
             "new_app_icon_legacy",
             "-",
