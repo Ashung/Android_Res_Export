@@ -34,39 +34,34 @@
             "script": "new/new_app_icon.cocoascript"
         },
 
-
-
-
-
-
-
-        {
-            "handlers": {
-                "actions": {
-                    "OpenDocument": "onOpenDocument"
-                }
-            },
-            "script": "utilities/change_language.cocoascript"
-        },
-
-
         {
             "name": "{{nine_patch_preview}}",
             "identifier": "nine_patch_preview",
             "script": "preview/nine_patch_preview.cocoascript"
         },
         {
-            "name": "{{color_resource_code_from_selected_layer}}",
-            "identifier": "color_resource_code_from_selected_layer",
-            "handler": "viewColorCodeFromLayers",
-            "script": "preview/code_preview.cocoascript"
+            "name": "{{view_color_code_from_selected_layer}}",
+            "identifier": "view_color_code_from_selected_layer",
+            "script": "preview/view_color_code.cocoascript"
         },
         {
-            "name": "{{view_shape_xml_code}}",
-            "identifier": "view_shape_xml_code",
-            "handler": "viewShapeXMLCode",
-            "script": "export/code_preview.cocoascript"
+            "name": "{{view_shape_code}}",
+            "identifier": "view_shape_code",
+            "script": "preview/view_shape_code.cocoascript"
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         {
@@ -111,15 +106,18 @@
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "{{change_language}}",
-            "identifier": "change_language",
-            "script": "utilities/change_language.cocoascript"
-        },
-        {
             "name": "{{donate}}",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
+        },
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "onOpenDocument"
+                }
+            },
+            "script": "utilities/change_language.cocoascript"
         }
     ],
     "menu": {
@@ -128,21 +126,17 @@
         "items": [
             "new_bitmap_asset",
             "new_vector_asset",
-
-
             "new_nine_patch_asset",
             "new_app_icon",
-            "new_app_icon_legacy",
             "-",
             "export_png_assets",
             "export_nine_patch",
             "export_vector_drawable",
             "export_app_icon",
-            "export_shape_xml",
             "-",
             "nine_patch_preview",
-            "color_resource_code_from_selected_layer",
-            "view_shape_xml_code",
+            "view_shape_code",
+            "view_color_code_from_selected_layer",
             "-",
             "preferences",
             {
@@ -150,8 +144,6 @@
                 "items": [
                     "web_site",
                     "report_issues",
-                    "-",
-                    "change_language",
                     "-",
                     "donate"
                 ]

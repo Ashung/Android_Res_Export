@@ -2,19 +2,20 @@ description: 用于导出 Android 各种资源的 Sketch 插件，包括位图�
 new_bitmap_asset: 新建位图资源
 new_nine_patch_asset: 新建点九资源
 new_app_icon: 新建应用图标
-new_app_icon_legacy: 新建应用图标 (旧版)
 new_vector_asset: 新建矢量资源
 export_png_assets: 导出位图资源
 export_vector_drawable: 导出矢量资源
 export_nine_patch: 导出点九资源
 export_app_icon: 导出应用图标
+view_color_code_from_selected_layer: 从选中图层生成色彩资源代码
+nine_patch_preview: 点九图片预览
+view_shape_code: 查看形状资源代码
 preferences: 参数设置
-utilities: 实用工具
 help: 帮助
 web_site: 网站
 report_issues: 问题反馈
 donate: 捐款
-change_language: 更改语言
+
 no_selection: 请至少选中一个图层。
 
 language_file_not_found: 语言文件未找到。
@@ -23,6 +24,7 @@ ok: 确定
 cancel: 取消
 export: 导出
 save: 保存
+copy: 复制
 
 can_not_create_nine_patch_from_artboard_or_symbol_master: 不可从画板或组件模版创建点九资源。
 
@@ -58,10 +60,16 @@ install_svgo_and_s2v_message: |-
     在安装完 Node.js 之后, 在终端运行以下命令。
     $ npm install -g svgo svg2vectordrawable
 no_vector_drawable_asset: 无任何矢量资源。
+
+export_dpis: 导出分辨率
+asset_name_type: 资源命名方式
+vector_drawable_folder: 矢量资源文件夹
+change_language: 切换语音
+others: 其他
 show_in_finder_after_export: 导出资源后在 Finder 中显示。
-use_imageoptim_after_export: 导出资源后使用 ImageOptim 压缩图片。
-export_shape_xml: 导出形状 XML 代码
-view_shape_xml_code: 查看形状 XML 代码
+
+
+
 not_support_layer_style: Android 形状资源不支持投影、模糊等图层样式。
 too_many_color_stop: Android 形状资源不支持大于 3 种颜色的渐变。
 no_support_fill_type: Android 形状资源不支持图像等填充类型。
@@ -72,17 +80,15 @@ template_no_exists: 模版文件 "%1" 不存在。
 current_page_is_no_template: 当前页不是一个 Android 应用图标模版。
 app_icon_not_find: 在当前页中找不到 Android 应用图标。
 code_preview: 代码预览
-nine_patch_preview: 点九图片预览
+
 no_permission: 无写入权限
 cannot_export_to_folder: 无法导入文件到此文件夹。
 select_one_nine_patch_asset: 请选择一个点九资源。
 nine_patch_layer_structure_is_wrong: 点九资源的图层结构有误。
-color_resource_code_from_selected_layer: 从选中图层生成色彩资源代码
-color_resource_code_from_document_color: 从文档色彩生成色彩资源代码
-no_document_color: 当前文档中没有任何文档色彩。
+
+
 no_selected_shape_layer: 请选中至少一个带有单色或渐变填充的图层。
 no_color_in_selected_layers: 选中的图层中没有任何颜色。
-remove_invisible_layers: 删除不可见图层。
 
 html_tip_bg_light: 使用亮色透明背景
 html_tip_bg_dark: 使用暗色透明色背景

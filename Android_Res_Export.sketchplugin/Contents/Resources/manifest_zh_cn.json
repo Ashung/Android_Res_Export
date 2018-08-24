@@ -34,22 +34,6 @@
             "script": "new/new_app_icon.cocoascript"
         },
 
-
-
-
-
-
-
-        {
-            "handlers": {
-                "actions": {
-                    "OpenDocument": "onOpenDocument"
-                }
-            },
-            "script": "utilities/change_language.cocoascript"
-        },
-
-
         {
             "name": "点九图片预览",
             "identifier": "nine_patch_preview",
@@ -57,16 +41,27 @@
         },
         {
             "name": "从选中图层生成色彩资源代码",
-            "identifier": "color_resource_code_from_selected_layer",
-            "handler": "viewColorCodeFromLayers",
-            "script": "preview/code_preview.cocoascript"
+            "identifier": "view_color_code_from_selected_layer",
+            "script": "preview/view_color_code.cocoascript"
         },
         {
-            "name": "查看形状 XML 代码",
-            "identifier": "view_shape_xml_code",
-            "handler": "viewShapeXMLCode",
-            "script": "export/code_preview.cocoascript"
+            "name": "查看形状资源代码",
+            "identifier": "view_shape_code",
+            "script": "preview/view_shape_code.cocoascript"
         },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         {
@@ -111,15 +106,18 @@
             "script": "utilities/utilities.cocoascript"
         },
         {
-            "name": "更改语言",
-            "identifier": "change_language",
-            "script": "utilities/change_language.cocoascript"
-        },
-        {
             "name": "捐款",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.cocoascript"
+        },
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "onOpenDocument"
+                }
+            },
+            "script": "utilities/change_language.cocoascript"
         }
     ],
     "menu": {
@@ -128,21 +126,17 @@
         "items": [
             "new_bitmap_asset",
             "new_vector_asset",
-
-
             "new_nine_patch_asset",
             "new_app_icon",
-            "new_app_icon_legacy",
             "-",
             "export_png_assets",
             "export_nine_patch",
             "export_vector_drawable",
             "export_app_icon",
-            "export_shape_xml",
             "-",
             "nine_patch_preview",
-            "color_resource_code_from_selected_layer",
-            "view_shape_xml_code",
+            "view_shape_code",
+            "view_color_code_from_selected_layer",
             "-",
             "preferences",
             {
@@ -150,8 +144,6 @@
                 "items": [
                     "web_site",
                     "report_issues",
-                    "-",
-                    "change_language",
                     "-",
                     "donate"
                 ]

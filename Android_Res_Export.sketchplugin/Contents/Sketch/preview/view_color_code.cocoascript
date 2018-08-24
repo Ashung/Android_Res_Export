@@ -1,9 +1,9 @@
 @import "../lib/MochaJSDelegate.js";
 @import "../lib/common.js";
 
-var viewColorCodeFromLayers = function(context) {
+var onRun = function(context) {
 
-    ga(context, "Preview", "color_resource_code_from_selected_layer");
+    ga(context, "Preview", "view_color_code_from_selected_layer");
 
     var doc = context.document;
     var selection = context.selection;
@@ -85,63 +85,24 @@ var viewColorCodeFromLayers = function(context) {
 
     xml += "</resources>\n";
 
-    showCodeWindow(context, xml);
+    showCodeWindow(context, xml, function(xml) {
+        var exportFolder = chooseFolder();
+        if (exportFolder) {
 
-};
-
-function showCodeWindow(context, xml) {
-    window(
-        context,
-        localizedString(context, "code_preview"),
-        "code_preview.html",
-        function(scriptObject) {
-
-            // Translation HTML
-            var currentLanguageSetting = getPreferences(context, "language");
-            if (currentLanguageSetting != "en") {
-                var languageJSON = {
-                    "cancel": localizedString(context, "cancel"),
-                    "save": localizedString(context, "save"),
-                    "copy": localizedString(context, "copy")
-                };
-                scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+            if (!directoryIsWriteable(exportFolder)) {
+                toast(context, localizedString(context, "cannot_export_to_folder"));
+                return;
             }
 
-            xml = xml.replace(/\n/g, "\\n");
-            scriptObject.evaluateWebScript("previewCode('" + xml + "')");
-        },
-        function(nswindow, locationHash) {
+            mkdir(exportFolder + "/values/");
 
-            if (locationHash == "#save") {
-                NSApp.stopModal();
-                NSApp.endSheet(nswindow);
-                context.document.documentWindow().makeKeyAndOrderFront(nil);
+            writeContentToFile(exportFolder + "/values/colors.xml", xml);
 
-                var exportFolder = chooseFolder();
-                if (exportFolder) {
-
-                    if (!directoryIsWriteable(exportFolder)) {
-                        toast(context, localizedString(context, "cannot_export_to_folder"));
-                        return;
-                    }
-
-                    mkdir(exportFolder + "/values/");
-
-                    writeContentToFile(exportFolder + "/values/colors.xml", xml);
-
-                    if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                        showInFinder(exportFolder + "/values");
-                    }
-
-                }
-            }
-
-            if (locationHash == "#cancel") {
-                NSApp.stopModal();
-                NSApp.endSheet(nswindow);
-                context.document.documentWindow().makeKeyAndOrderFront(nil);
+            if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                showInFinder(exportFolder + "/values");
             }
 
         }
-    );
-}
+    });
+
+};

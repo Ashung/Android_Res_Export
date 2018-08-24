@@ -1,7 +1,9 @@
 @import "../lib/MochaJSDelegate.js";
 @import "../lib/common.js";
 
-var exportShapeXML = function (context) {
+var onRun = function(context) {
+
+    ga(context, "Preview", "view_shape_code");
 
     var selection = context.selection;
 
@@ -14,74 +16,33 @@ var exportShapeXML = function (context) {
     var xml = getXMLFromLayer(context, layer);
 
     if (xml) {
-        exportXML(context, xml, androidResName(layer.name()));
-    }
+        showCodeWindow(context, xml, function(xml) {
+            var name = assetName(layer.name(), getPreferences(context, "asset_name_type"));
+            var savePath = saveToFolder(name + ".xml");
+            if (savePath) {
 
-    ga(context, "Export", "export_shape_xml");
-
-};
-
-var viewShapeXMLCode = function(context) {
-
-    var selection = context.selection;
-
-    if (selection.count() != 1) {
-        toast(context, localizedString(context, "no_shape_layer"));
-        return;
-    }
-
-    var layer = selection.firstObject();
-    var xml = getXMLFromLayer(context, layer);
-
-    if (xml) {
-        window(
-            context,
-            localizedString(context, "view_shape_xml_code"),
-            "code_preview.html",
-            function(scriptObject) {
-
-                // Translation HTML
-                var currentLanguageSetting = getPreferences(context, "language");
-                if (currentLanguageSetting != "en") {
-                    var languageJSON = {
-                        "cancel": localizedString(context, "cancel"),
-                        "save": localizedString(context, "save")
-                    };
-                    scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+                // ExportFolder is writeable
+                if (!directoryIsWriteable(savePath.stringByDeletingLastPathComponent())) {
+                    toast(context, localizedString(context, "cannot_export_to_folder"));
+                    return;
                 }
 
-                var xmlForHtml = xml.replace(/\n/g, "\\n");
-                scriptObject.evaluateWebScript("previewCode('" + xmlForHtml + "')");
-            },
-            function(nswindow, locationHash) {
+                writeContentToFile(savePath, xml);
 
-                if (locationHash == "#save") {
-                    NSApp.stopModal();
-                    NSApp.endSheet(nswindow);
-                    context.document.documentWindow().makeKeyAndOrderFront(nil);
-                    exportXML(context, xml, androidResName(layer.name()));
+                if (getPreferences(context, "show_in_finder_after_export") == 1) {
+                    openInFinder(savePath);
                 }
-
-                if (locationHash == "#cancel") {
-                    NSApp.stopModal();
-                    NSApp.endSheet(nswindow);
-                    context.document.documentWindow().makeKeyAndOrderFront(nil);
-                }
-
             }
-        );
+        });
     }
-
-    ga(context, "Export", "view_shape_xml_code");
 };
 
 function getXMLFromLayer(context, layer) {
     var layerInfo = getLayerInfo(context, layer);
     if (layerInfo.support) {
-        // Android Shape Drawable References
-        // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
+// Android Shape Drawable References
+// https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
         var xml = '\
-<?xml version="1.0" encoding="utf-8"?>\n\
 <shape xmlns:android="http://schemas.android.com/apk/res/android"\n\
     android:shape="' + layerInfo.type + '"';
 
@@ -197,28 +158,6 @@ function getXMLFromLayer(context, layer) {
     } else {
         toast(context, localizedString(context, layerInfo.msg));
         return;
-    }
-}
-
-function exportXML(context, xml, fileName) {
-    // Export
-    var exportFolder = chooseFolder();
-    if (exportFolder) {
-
-        // ExportFolder is writeable
-        if (!directoryIsWriteable(exportFolder)) {
-            toast(context, localizedString(context, "cannot_export_to_folder"));
-            return;
-        }
-
-        var filePath = exportFolder + "/drawable/" + fileName + ".xml";
-
-        mkdir(exportFolder + "/drawable/");
-        writeContentToFile(filePath, xml);
-
-        if (getPreferences(context, "show_in_finder_after_export") == 1) {
-            showInFinder(exportFolder + "/drawable");
-        }
     }
 }
 

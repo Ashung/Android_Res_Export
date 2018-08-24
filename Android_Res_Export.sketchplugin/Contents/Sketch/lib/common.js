@@ -16,6 +16,11 @@ var VECTORDRAWABLE_FOLDERS = [
     "drawable-anydpi-v24"
 ];
 
+var LANGUAGES = {
+    "en": "English",
+    "zh_cn": "简体中文"
+};
+
 function dpiToScale(dpi) {
     var dpis = {
         "mdpi": 1,
@@ -564,4 +569,50 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
     window.center();
 
     return NSApp.runModalForWindow(window);
+}
+
+function showCodeWindow(context, code, saveAction) {
+    window(
+        context,
+        localizedString(context, "code_preview"),
+        "code_preview.html",
+        function(scriptObject) {
+
+            // Translation HTML
+            var currentLanguageSetting = getPreferences(context, "language");
+            if (currentLanguageSetting != "en") {
+                var languageJSON = {
+                    "cancel": localizedString(context, "cancel"),
+                    "save": localizedString(context, "save"),
+                    "copy": localizedString(context, "copy")
+                };
+                scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+            }
+
+            var codeForHTML = code.replace(/\n/g, "\\n");
+            scriptObject.evaluateWebScript("previewCode('" + codeForHTML + "')");
+        },
+        function(nswindow, locationHash) {
+
+            if (locationHash == "#save") {
+                NSApp.stopModal();
+                NSApp.endSheet(nswindow);
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
+
+                saveAction(code);
+            }
+
+            if (locationHash == "#cancel") {
+                NSApp.stopModal();
+                NSApp.endSheet(nswindow);
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
+            }
+
+            if (locationHash == "#copy") {
+                var pasteboard = NSPasteboard.generalPasteboard();
+                pasteboard.clearContents();
+                pasteboard.setString_forType(code, NSStringPboardType);
+            }
+        }
+    );
 }
