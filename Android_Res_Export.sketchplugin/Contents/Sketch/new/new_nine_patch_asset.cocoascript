@@ -19,6 +19,8 @@ var onRun = function(context) {
         return;
     }
 
+    var assetNameType = getPreferences(context, "asset_name_type");
+
     var groupNinePatchs = [];
     var loopSelection = selection.objectEnumerator();
     var layer;
@@ -27,7 +29,7 @@ var onRun = function(context) {
         var groupNinePatch;
         var groupContent;
         var groupPatch;
-        var name = assetName(layer.name(), getPreferences(context, "asset_name_type"));
+        var name = assetName(layer.name(), assetNameType);
 
         if (layer.class() == "MSLayerGroup") {
             // No cotent and patch group

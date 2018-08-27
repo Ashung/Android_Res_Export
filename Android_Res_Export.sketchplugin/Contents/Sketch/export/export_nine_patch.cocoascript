@@ -2,6 +2,8 @@
 
 var onRun = function(context) {
 
+    ga(context, "Export", "export_nine_patch");
+
     // ImageMagick
     var convert = which("convert");
     if (!convert) {
@@ -16,181 +18,177 @@ var onRun = function(context) {
     var doc = context.document;
     var selection = context.selection;
 
-    var exportNinePatches = NSMutableArray.alloc().init();
-
+    var exportNinePatches;
     if (selection.count() > 0) {
-        var loopSelection = selection.objectEnumerator();
-        var layer;
-        while (layer = loopSelection.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() == "#9patch") {
-                if (isNinePatchLayerGroup(layer)) {
-                    exportNinePatches.addObject({
-                        "patch": getLayerWithNameFromParent("patch", layer.parentGroup().parentGroup()),
-                        "content": layer,
-                        "name": androidResName(layer.parentGroup().parentGroup().name()),
-                        "width": layer.frame().width(),
-                        "height": layer.frame().height()
-                    });
-                }
-            }
-            if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") {
-                var loopChildren = layer.children().objectEnumerator();
-                var child;
-                while (child = loopChildren.nextObject()) {
-                    if (child.class() == "MSSliceLayer" && child.name() == "#9patch") {
-                        if (isNinePatchLayerGroup(child)) {
-                            exportNinePatches.addObject({
-                                "patch": getLayerWithNameFromParent("patch", child.parentGroup().parentGroup()),
-                                "content": child,
-                                "name": androidResName(child.parentGroup().parentGroup().name()),
-                                "width": child.frame().width(),
-                                "height": child.frame().height()
-                            });
-                        }
-                    }
-                }
-            }
-        }
+        exportNinePatches = getNinePatchAssetFromSelection(context);
     } else {
-        var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
-        var layer;
-        while (layer = loopAllExportableLayers.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() == "#9patch") {
-                if (isNinePatchLayerGroup(layer)) {
-                    exportNinePatches.addObject({
-                        "patch": getLayerWithNameFromParent("patch", layer.parentGroup().parentGroup()),
-                        "content": layer,
-                        "name": androidResName(layer.parentGroup().parentGroup().name()),
-                        "width": layer.frame().width(),
-                        "height": layer.frame().height()
-                    });
-                }
-            }
-        }
+        exportNinePatches = getNinePatchAssetFromDocument(context);
     }
 
-    // log(exportNinePatches);
+    if (exportNinePatches.count() == 0) {
+        toast(context, localizedString(context, "no_nine_patch_asset"));
+        return;
+    }
 
-    if (exportNinePatches.count() > 0) {
+    var exportFolder = chooseFolder();
+    if (exportFolder) {
 
-        var exportFolder = chooseFolder();
+        // ExportFolder is writeable
+        if (!directoryIsWriteable(exportFolder)) {
+            toast(context, localizedString(context, "cannot_export_to_folder"));
+            return;
+        }
 
-        if (exportFolder) {
+        // Get export dpis
+        var exportDpis = getPreferences(context, "export_dpis");
+        if (!exportDpis) {
+            exportDpis = Object.keys(DPIS);
+        }
 
-            // ExportFolder is writeable
-            if (!directoryIsWriteable(exportFolder)) {
-                toast(context, localizedString(context, "cannot_export_to_folder"));
-                return;
+        var assetNameType = getPreferences(context, "asset_name_type");
+
+        var loopExportNinePatches = exportNinePatches.objectEnumerator();
+        var ninePatch;
+        while (ninePatch = loopExportNinePatches.nextObject()) {
+
+            var ninePatchContent = ninePatch.content,
+                ninePatchContentID = ninePatch.content.objectID(),
+                ninePatchPatch = ninePatch.patch,
+                ninePatchPatchID = ninePatch.patch.objectID(),
+                ninePatchName = assetName(ninePatch.name, assetNameType),
+                ninePatchWidth = ninePatch.width,
+                ninePatchHeight = ninePatch.height;
+
+            // Patch lines round to pixel
+            var loopNinePatchLines = ninePatchPatch.children().objectEnumerator();
+            var line;
+            while (line = loopNinePatchLines.nextObject()) {
+                if (line.class() == "MSShapeGroup") {
+                    line.absoluteRect().setX(Math.round(line.absoluteRect().x()));
+                    line.absoluteRect().setY(Math.round(line.absoluteRect().y()));
+                    var width = Math.round(line.absoluteRect().width()) < 1 ? 1 : Math.round(line.absoluteRect().width());
+                    var height = Math.round(line.absoluteRect().height()) < 1 ? 1 : Math.round(line.absoluteRect().height());
+                    line.absoluteRect().setWidth(width);
+                    line.absoluteRect().setHeight(height);
+                }
             }
 
-            var loopExportNinePatches = exportNinePatches.objectEnumerator();
-            var ninePatch;
-            while (ninePatch = loopExportNinePatches.nextObject()) {
+            // Export nine-patch patch lines at mdpi
+            var exportRequestForPatch = MSExportRequest.exportRequestsFromLayerAncestry(ninePatchPatch.ancestry()).firstObject();
+            exportRequestForPatch.setFormat("png");
+            exportRequestForPatch.setScale(1);
+            doc.saveExportRequest_toFile(exportRequestForPatch, exportFolder + "/" + ninePatchPatchID + ".png");
 
-                var ninePatchContent = ninePatch.content,
-                    ninePatchContentID = ninePatch.content.objectID(),
-                    ninePatchPatch = ninePatch.patch,
-                    ninePatchPatchID = ninePatch.patch.objectID(),
-                    ninePatchName = ninePatch.name,
-                    ninePatchWidth = ninePatch.width,
-                    ninePatchHeight = ninePatch.height;
-
-                var exportConfig = getExportConfigFromPageName(ninePatchContent.parentPage().name());
-
-                // Patch lines round to pixel
-                var loopNinePatchLines = ninePatchPatch.children().objectEnumerator();
-                var line;
-                while (line = loopNinePatchLines.nextObject()) {
-                    if (line.class() == "MSShapeGroup") {
-                        line.absoluteRect().setX(Math.round(line.absoluteRect().x()));
-                        line.absoluteRect().setY(Math.round(line.absoluteRect().y()));
-                        var width = Math.round(line.absoluteRect().width()) < 1 ? 1 : Math.round(line.absoluteRect().width());
-                        var height = Math.round(line.absoluteRect().height()) < 1 ? 1 : Math.round(line.absoluteRect().height());
-                        line.absoluteRect().setWidth(width);
-                        line.absoluteRect().setHeight(height);
+            createMdpiPatchLines(
+                convert,
+                exportFolder,
+                ninePatchWidth,
+                ninePatchHeight,
+                ninePatchPatchID,
+                function(success, message) {
+                    if (success == true) {
+                        rm(exportFolder + "/" + ninePatchPatchID + ".png");
                     }
                 }
+            );
 
-                // Export nine-patch patch lines at mdpi
-                var exportOptionForPatch = ninePatchPatch.exportOptions().addExportFormat();
-                    exportOptionForPatch.setScale(1);
-                    exportOptionForPatch.setFileFormat("png");
-                var exportRequestForPatch = MSExportRequest.exportRequestsFromExportableLayer(ninePatchPatch).firstObject();
-                doc.saveArtboardOrSlice_toFile(exportRequestForPatch, exportFolder + "/" + ninePatchPatchID + ".png");
-                ninePatchPatch.exportOptions().removeAllExportFormats();
+            // Export nine-patch content
+            var exportRequest = MSExportRequest.exportRequestsFromLayerAncestry(ninePatchContent.ancestry()).firstObject();
+            exportRequest.setFormat("png");
 
-                createMdpiPatchLines(
+            exportDpis.forEach(function(dpi) {
+
+                var scale = dpiToScale(dpi);
+                exportRequest.setScale(scale);
+                doc.saveExportRequest_toFile(exportRequest, exportFolder + "/" + ninePatchContentID + ".png");
+
+                var outputFolder = exportFolder + "/drawable-" + dpi;
+                var outputImage = outputFolder + "/" + ninePatchName + ".9.png";
+
+                mkdir(outputFolder);
+
+                createNinePatch(
                     convert,
                     exportFolder,
+                    scale,
+                    outputImage,
                     ninePatchWidth,
                     ninePatchHeight,
+                    ninePatchContentID,
                     ninePatchPatchID,
                     function(success, message) {
+                        // log(message);
                         if (success == true) {
-                            rm(exportFolder + "/" + ninePatchPatchID + ".png");
+                            rm(exportFolder + "/" + ninePatchContentID + ".png");
+                            if (getPreferences(context, "use_imageoptim_after_export") == 1) {
+                                imageOptim(outputImage);
+                            }
                         }
                     }
                 );
 
-                // Export nine-patch content
-                for (var i = 0; i < exportConfig.length; i++) {
+            });
 
-                    var scale = exportConfig[i]["scale"];
-                    var qualifier = exportConfig[i]["qualifier"];
-                    var exportFormat = ninePatchContent.exportOptions().addExportFormat();
-                    exportFormat.setFileFormat("png");
-                    exportFormat.setScale(scale);
-                    var exportRequest = MSExportRequest.exportRequestsFromExportableLayer(ninePatchContent).lastObject();
-                    doc.saveArtboardOrSlice_toFile(exportRequest, exportFolder + "/" + ninePatchContentID + ".png");
-                    exportFormat.remove();
-
-                    var outputFolder = exportFolder + "/drawable-" + qualifier;
-                    var outputImage = outputFolder + "/" + ninePatchName + ".9.png";
-
-                    mkdir(outputFolder);
-
-                    createNinePatch(
-                        convert,
-                        exportFolder,
-                        scale,
-                        outputImage,
-                        ninePatchWidth,
-                        ninePatchHeight,
-                        ninePatchContentID,
-                        ninePatchPatchID,
-                        function(success, message) {
-                            // log(message);
-                            if (success == true) {
-                                rm(exportFolder + "/" + ninePatchContentID + ".png");
-                                if (getPreferences(context, "use_imageoptim_after_export") == 1) {
-                                    imageOptim(outputImage);
-                                }
-                            }
-                        }
-                    );
-
-                }
-
-                // Remove nine-patch patch lines
-                rm(exportFolder + "/" + ninePatchPatchID + "_top.png");
-                rm(exportFolder + "/" + ninePatchPatchID + "_right.png");
-                rm(exportFolder + "/" + ninePatchPatchID + "_bottom.png");
-                rm(exportFolder + "/" + ninePatchPatchID + "_left.png");
-
-            }
-
-            if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                showInFinder(exportFolder);
-            }
+            // Remove nine-patch patch lines
+            rm(exportFolder + "/" + ninePatchPatchID + "_top.png");
+            rm(exportFolder + "/" + ninePatchPatchID + "_right.png");
+            rm(exportFolder + "/" + ninePatchPatchID + "_bottom.png");
+            rm(exportFolder + "/" + ninePatchPatchID + "_left.png");
 
         }
 
-    } else {
-        toast(context, localizedString(context, "no_nine_patch_asset"));
+        if (getPreferences(context, "show_in_finder_after_export") == 1) {
+            showInFinder(exportFolder);
+        }
+
     }
+};
 
-    ga(context, "Export", "export_nine_patch");
+function getNinePatchAssetFromDocument(context) {
+    var assets = NSMutableArray.alloc().init();
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name == "#9patch" && exportOptions.firstFormat == "png"'
+    );
+    var ninePathSlices = context.document.allExportableLayers().filteredArrayUsingPredicate(predicate);
+    var loopSlices = ninePathSlices.objectEnumerator();
+    var slice;
+    while (slice = loopSlices.nextObject()) {
+        if (isNinePatchLayerGroup(slice)) {
+            assets.addObject({
+                "patch": getLayerWithNameFromParent("patch", slice.parentGroup().parentGroup()),
+                "content": slice,
+                "name": slice.parentGroup().parentGroup().name(),
+                "width": slice.frame().width(),
+                "height": slice.frame().height()
+            });
+        }
+    }
+    return assets;
+}
 
+function getNinePatchAssetFromSelection(context) {
+    var assets = NSMutableArray.alloc().init();
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name == "#9patch" && exportOptions.firstFormat == "png"',
+    );
+    var selection = context.selection;
+    selection.forEach(function(layer) {
+        var ninePathSlices = layer.children().filteredArrayUsingPredicate(predicate);
+        var loopSlices = ninePathSlices.objectEnumerator();
+        var slice;
+        while (slice = loopSlices.nextObject()) {
+            if (isNinePatchLayerGroup(slice)) {
+                assets.addObject({
+                    "patch": getLayerWithNameFromParent("patch", slice.parentGroup().parentGroup()),
+                    "content": slice,
+                    "name": slice.parentGroup().parentGroup().name(),
+                    "width": slice.frame().width(),
+                    "height": slice.frame().height()
+                });
+            }
+        }
+    });
+    return assets;
 }
 
 function isNinePatchLayerGroup(sliceLayer) {

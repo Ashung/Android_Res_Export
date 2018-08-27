@@ -2,21 +2,20 @@
 
 var onRun = function(context) {
 
-    // SVGO & SVG2VectorDrawable
-    var svgo = which("svgo");
+    // SVG2VectorDrawable
     var s2v = which("s2v");
-    if (!svgo || !s2v) {
+    if (!s2v) {
         alert(
             context,
-            localizedString(context, "install_svgo_and_s2v_title"),
-            localizedString(context, "install_svgo_and_s2v_message")
+            localizedString(context, "install_s2v_title"),
+            localizedString(context, "install_s2v_message")
         );
         return;
     }
 
     // Check SVG2VectorDrawable version
     var s2vVersion = checkVersion(s2v);
-    if (versionCompare(s2vVersion, "1.1.8") == -1) {
+    if (versionCompare(s2vVersion, "2.0.0") == -1) {
         alert(
             context,
             localizedString(context, "s2v_version_title"),

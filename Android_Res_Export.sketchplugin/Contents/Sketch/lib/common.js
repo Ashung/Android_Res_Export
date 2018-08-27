@@ -21,16 +21,17 @@ var LANGUAGES = {
     "zh_cn": "简体中文"
 };
 
+var DPIS = {
+    "mdpi": 1,
+    "hdpi": 1.5,
+    "xhdpi": 2,
+    "xxhdpi": 3,
+    "xxxhdpi": 4
+};
+
 function dpiToScale(dpi) {
-    var dpis = {
-        "mdpi": 1,
-        "hdpi": 1.5,
-        "xhdpi": 2,
-        "xxhdpi": 3,
-        "xxxhdpi": 4
-    };
-    if (dpis[dpi]) {
-        return dpis[dpi];
+    if (DPIS[dpi]) {
+        return DPIS[dpi];
     }
     return 1;
 }

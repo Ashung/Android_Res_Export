@@ -16,6 +16,7 @@ web_site: Web Site
 report_issues: Report Issues
 donate: Donate
 
+no_png_asset: No any PNG asset.
 no_selection: Please select at least one layer.
 
 language_file_not_found: Language file not found.
@@ -28,37 +29,22 @@ copy: Copy
 
 can_not_create_nine_patch_from_artboard_or_symbol_master: Can't create Nine-Patch from Artboard or Symbol Master.
 
-vector_drawable_no_support_text: Text layer can't covert to vector drawable, you can convert to outlines first.
-vector_drawable_no_support_bitmap: Bitmap layer can't covert to vector drawable.
-vector_drawable_no_support_symbol_instance: Symbol can't covert to vector drawable.
-vector_drawable_no_support_rotation: Rotation is not supported by vector drawable, please flatten first.
-vector_drawable_no_support_flipped: Flipped is not supported by vector drawable, please flatten first.
-vector_drawable_no_support_mask: Mask is not supported by vector drawable.
-vector_drawable_no_support_fill: Only solid fill is supported by vector drawable.
-vector_drawable_no_support_border: Only solid border is supported by vector drawable.
-vector_drawable_no_support_shadow: Shape layer with shadow is not supported by vector drawable.
-vector_drawable_no_support_inner_shadow: Shape layer with inner shadow is not supported by vector drawable.
-vector_drawable_no_support_blur: Shape layer with blur is not supported by vector drawable.
-can_not_group_artboard: Can't group with Artboard or Symbol Master.
-no_png_asset: No any PNG asset.
-report_layer_rename: 'Invaild layer name: %1 -> %2'
-report_layer_name_duplicate: 'Duplicate layer name: %1'
-no_duplicate_and_invaild_asset_name: No duplicate and invaild asset name.
 install_imagemagick_title: Please check that you have ImageMagick installed.
 install_imagemagick_message: |-
-    Export Android nine-patch image feature depend on ImageMagick library.
-    Install use HomeBrew:
+    Export Android nine-patch image feature depend on ImageMagick.
+    Install via HomeBrew:
     $ brew install ImageMagick
 no_nine_patch_asset: No any nine-patch asset.
+
 s2v_version_title: You need to update svg2vectordrawable.
 s2v_version_message: |-
-    Run follow command in the Terminal to update svg2vectordrawable.
-    $ npm update -g svg2vectordrawable
-install_svgo_and_s2v_title: Please check that you have SVGO and svg2vectordrawable installed.
-install_svgo_and_s2v_message: |-
-    Export Android vector drawable feature depend on Node.js, SVGO and svg2vectordrawable.
+    Run follow command in the Terminal.
+    $ sudo npm update -g svg2vectordrawable
+install_s2v_title: Please check that you have svg2vectordrawable installed.
+install_s2v_message: |-
+    Export Android vector drawable feature depend on Node.js and svg2vectordrawable.
     After you installed Node.js, run follow command in the Terminal.
-    $ npm install -g svgo svg2vectordrawable
+    $ sudo npm install -g svg2vectordrawable
 no_vector_drawable_asset: No any vector drawable asset.
 
 export_dpis: Export DPIs
@@ -67,8 +53,7 @@ vector_drawable_folder: Vector Drawable Folder
 change_language: Change Language
 others: Others
 show_in_finder_after_export: Show in Finder after export.
-
-
+least_export_dpis: At least keep one export dpi checked.
 
 not_support_layer_style: Layer style like shadow and blur is not support by Android shape drawable.
 too_many_color_stop: The gradient in Android shape drawable not support greater than 3 colors.
@@ -86,7 +71,6 @@ cannot_export_to_folder: You can't export assets to this folder.
 select_one_nine_patch_asset: Please select a nine-patch asset.
 nine_patch_layer_structure_is_wrong: The layer structure of nine-patch asset is wrong.
 
-
 no_selected_shape_layer: Please select at least one shape layer with solid or gradient fill.
 no_color_in_selected_layers: No any color in selected layer.
 
@@ -96,3 +80,18 @@ html_tip_bg_white: Use white background
 html_label_width: Width
 html_label_height: Height
 html_label_content: Content
+
+
+
+
+vector_drawable_no_support_text: Text layer can't covert to vector drawable, you can convert to outlines first.
+vector_drawable_no_support_bitmap: Bitmap layer can't covert to vector drawable.
+vector_drawable_no_support_symbol_instance: Symbol can't covert to vector drawable.
+vector_drawable_no_support_rotation: Rotation is not supported by vector drawable, please flatten first.
+vector_drawable_no_support_flipped: Flipped is not supported by vector drawable, please flatten first.
+vector_drawable_no_support_mask: Mask is not supported by vector drawable.
+vector_drawable_no_support_fill: Only solid fill is supported by vector drawable.
+vector_drawable_no_support_border: Only solid border is supported by vector drawable.
+vector_drawable_no_support_shadow: Shape layer with shadow is not supported by vector drawable.
+vector_drawable_no_support_inner_shadow: Shape layer with inner shadow is not supported by vector drawable.
+vector_drawable_no_support_blur: Shape layer with blur is not supported by vector drawable.

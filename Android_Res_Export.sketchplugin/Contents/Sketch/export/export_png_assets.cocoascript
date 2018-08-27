@@ -2,94 +2,77 @@
 
 var onRun = function(context) {
 
+    ga(context, "Export", "export_png_assets");
+
     var doc = context.document;
     var selection = context.selection;
 
-    var exportAssets = NSMutableArray.alloc().init();
-
+    var exportBitmapAssets;
     if (selection.count() > 0) {
-        var loopSelection = selection.objectEnumerator();
-        var layer;
-        while (layer = loopSelection.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch" && layer.name() != "#vector") {
-                exportAssets.addObject(layer);
-            }
-            if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") {
-                var loopChildren = layer.children().objectEnumerator();
-                var child;
-                while (child = loopChildren.nextObject()) {
-                    if (child.class() == "MSSliceLayer" && layer.name() != "#9patch" && layer.name() != "#vector") {
-                        exportAssets.addObject(child);
-                    }
-                }
-            }
-        }
+        exportBitmapAssets = getBitmapAssetFromSelection(context);
     } else {
-        var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
-        var layer;
-        while (layer = loopAllExportableLayers.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() != "#9patch" && layer.name() != "#vector") {
-                exportAssets.addObject(layer);
-            }
-        }
+        exportBitmapAssets = getBitmapAssetFromDocument(context);
     }
 
-    if (exportAssets.count() > 0) {
-
-        var exportFolder = chooseFolder();
-
-        if (exportFolder) {
-
-            // ExportFolder is writeable
-            if (!directoryIsWriteable(exportFolder)) {
-                toast(context, localizedString(context, "cannot_export_to_folder"));
-                return;
-            }
-
-            var loopExportAssets = exportAssets.objectEnumerator();
-            var slice;
-            while (slice = loopExportAssets.nextObject()) {
-
-                var exportConfig = getExportConfigFromPageName(slice.parentPage().name());
-
-                var tempSlice = slice.duplicate();
-                tempSlice.exportOptions().removeAllExportFormats();
-
-                for (var i = 0; i < exportConfig.length; i++) {
-                    var exportOption = tempSlice.exportOptions().addExportFormat();
-                    exportOption.setFileFormat("png");
-                    exportOption.setScale(exportConfig[i]["scale"]);
-                    exportOption.setNamingScheme(1);
-                    exportOption.setName("drawable-" + exportConfig[i]["qualifier"] + "/");
-                }
-
-                var exportRequests = MSExportRequest.exportRequestsFromExportableLayer(tempSlice);
-                var loopExportRequests = exportRequests.objectEnumerator();
-                var exportRequest;
-                while (exportRequest = loopExportRequests.nextObject()) {
-
-                    var output = exportFolder + "/" + exportRequest.name() + ".png";
-                    doc.saveArtboardOrSlice_toFile(exportRequest, output);
-
-                    if (getPreferences(context, "use_imageoptim_after_export") == 1) {
-                        imageOptim(output);
-                    }
-                }
-
-                tempSlice.removeFromParent();
-
-            }
-
-            if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                showInFinder(exportFolder);
-            }
-
-        }
-
-    } else {
+    if (exportBitmapAssets.count() == 0) {
         toast(context, localizedString(context, "no_png_asset"));
+        return;
     }
 
-    ga(context, "Export", "export_png_assets");
+    var exportFolder = chooseFolder();
+    if (exportFolder) {
 
+        // ExportFolder is writeable
+        if (!directoryIsWriteable(exportFolder)) {
+            toast(context, localizedString(context, "cannot_export_to_folder"));
+            return;
+        }
+
+        // Get export dpis
+        var exportDpis = getPreferences(context, "export_dpis");
+        if (!exportDpis) {
+            exportDpis = Object.keys(DPIS);
+        }
+
+        var assetNameType = getPreferences(context, "asset_name_type");
+
+        var loopExportAssets = exportBitmapAssets.objectEnumerator();
+        var slice;
+        while (slice = loopExportAssets.nextObject()) {
+
+            var ancestry = slice.ancestry();
+            var exportRequest = MSExportRequest.exportRequestsFromLayerAncestry(ancestry).firstObject();
+            exportRequest.setFormat("png");
+
+            exportDpis.forEach(function(dpi) {
+                exportRequest.setScale(dpiToScale(dpi));
+                var filePath = exportFolder + "/drawable-" + dpi + "/" + assetName(slice.name(), assetNameType) + ".png";
+                doc.saveExportRequest_toFile(exportRequest, filePath);
+            });
+        }
+
+        if (getPreferences(context, "show_in_finder_after_export") == 1) {
+            showInFinder(exportFolder);
+        }
+
+    }
+};
+
+function getBitmapAssetFromSelection(context) {
+    var assets = NSMutableArray.alloc().init();
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name != "#9patch" && exportOptions.firstFormat == "png"'
+    );
+    var selection = context.selection;
+    selection.forEach(function(layer) {
+        assets.addObjectsFromArray(layer.children().filteredArrayUsingPredicate(predicate));
+    });
+    return assets;
+}
+
+function getBitmapAssetFromDocument(context) {
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name != "#9patch" && exportOptions.firstFormat == "png"'
+    );
+    return context.document.allExportableLayers().filteredArrayUsingPredicate(predicate);
 }
