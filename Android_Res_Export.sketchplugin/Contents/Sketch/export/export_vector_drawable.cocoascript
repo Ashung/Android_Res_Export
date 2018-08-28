@@ -2,6 +2,8 @@
 
 var onRun = function(context) {
 
+    ga(context, "Export", "export_vector_drawable");
+
     // SVG2VectorDrawable
     var s2v = which("s2v");
     if (!s2v) {
@@ -27,85 +29,103 @@ var onRun = function(context) {
     var doc = context.document;
     var selection = context.selection;
 
-    var exportVectors = NSMutableArray.alloc().init();
-
+    var exportVectorAssets;
     if (selection.count() > 0) {
-        var loopSelection = selection.objectEnumerator();
-        var layer;
-        while (layer = loopSelection.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() == "#vector") {
-                exportVectors.addObject({
-                    "slice": layer,
-                    "name": androidResName(layer.parentGroup().name()),
-                });
-            }
-            if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") {
-                var loopChildren = layer.children().objectEnumerator();
-                var child;
-                while (child = loopChildren.nextObject()) {
-                    if (child.class() == "MSSliceLayer" && child.name() == "#vector") {
-                        exportVectors.addObject({
-                            "slice": child,
-                            "name": androidResName(child.parentGroup().name()),
-                        });
-                    }
-                }
-            }
-        }
+        exportVectorAssets = getVectorAssetFromSelection(context);
     } else {
-        var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
-        var layer;
-        while (layer = loopAllExportableLayers.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() == "#vector") {
-                exportVectors.addObject({
-                    "slice": layer,
-                    "name": androidResName(layer.parentGroup().name()),
-                });
-            }
-        }
+        exportVectorAssets = getVectorAssetFromDocument(context);
     }
 
-    // log(exportVectors);
-
-    if (exportVectors.count() > 0) {
-
-        var exportFolder = chooseFolder();
-
-        if (exportFolder) {
-
-            // ExportFolder is writeable
-            if (!directoryIsWriteable(exportFolder)) {
-                toast(context, localizedString(context, "cannot_export_to_folder"));
-                return;
-            }
-
-            var loopExportVectors = exportVectors.objectEnumerator();
-            var vector;
-            while (vector = loopExportVectors.nextObject()) {
-
-                var svgFile = exportFolder + "/" + vector.name + ".svg";
-                doc.saveArtboardOrSlice_toFile(vector.slice, svgFile);
-
-                optimizeSVG(svgo, svgFile);
-
-                svg2vector(s2v, svgFile, exportFolder + "/drawable-anydpi-v21/" + vector.name + ".xml");
-
-                rm(svgFile);
-
-            }
-
-            if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                showInFinder(exportFolder + "/drawable-anydpi-v21");
-            }
-
-        }
-
-    } else {
+    if (exportVectorAssets.count() == 0) {
         toast(context, localizedString(context, "no_vector_drawable_asset"));
+        return;
     }
 
-    ga(context, "Export", "export_vector_drawable");
+    var exportFolder = chooseFolder();
+    if (exportFolder) {
 
+        // ExportFolder is writeable
+        if (!directoryIsWriteable(exportFolder)) {
+            toast(context, localizedString(context, "cannot_export_to_folder"));
+            return;
+        }
+
+        var assetNameType = getPreferences(context, "asset_name_type");
+
+        var loopExportVectors = exportVectorAssets.objectEnumerator();
+        var slice;
+        while (slice = loopExportVectors.nextObject()) {
+
+            var vectorAssetGroup = slice.parentGroup();
+            var vectorAssetGroupCopy = vectorAssetGroup.duplicate();
+
+            var loopAssetChildren = vectorAssetGroupCopy.children().objectEnumerator();
+            var layer;
+            while (layer = loopAssetChildren.nextObject()) {
+                if (
+                    layer.class() == "MSBitmapLayer" ||
+                    layer.class() == "MSTextLayer" ||
+                    layer.class() == "MSSymbolInstance"
+                ) {
+                    layer.removeFromParent();
+                }
+
+                var style = layer.style();
+
+                style.removeAllStyleShadows();
+                style.removeAllStyleInnerShadows();
+                style.blur().setIsEnabled(false);
+                style.contextSettings().setBlendMode(0);
+
+                var lastSupportedFill;
+                style.fills().forEach(function(fill) {
+                    if (fill.isEnabled() == true && (fill.fillType() == 0 || fill.fillType() == 1)) {
+                        lastSupportedFill = fill;
+                    }
+                });
+                style.removeAllStyleFills();
+                style.addStyleFill(lastSupportedFill);
+
+                
+
+
+            }
+
+
+            // var svgFile = exportFolder + "/" + slice.objectID() + ".svg";
+            // doc.saveArtboardOrSlice_toFile(slice, svgFile);
+
+            // svg2vector(s2v, svgFile, exportFolder + "/drawable-anydpi-v21/" + vector.name + ".xml");
+            //
+            // rm(svgFile);
+
+        }
+
+        if (getPreferences(context, "show_in_finder_after_export") == 1) {
+            showInFinder(exportFolder + "/drawable-anydpi-v21");
+        }
+
+    }
+
+}
+
+function getVectorAssetFromSelection(context) {
+    var assets = NSMutableArray.alloc().init();
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name != "#9patch" && exportOptions.firstFormat == "svg"'
+    );
+    var selection = context.selection;
+    selection.forEach(function(layer) {
+        assets.addObjectsFromArray(layer.children().filteredArrayUsingPredicate(predicate));
+    });
+    return assets;
+}
+
+function getVectorAssetFromDocument(context) {
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name != "#9patch" && exportOptions.firstFormat == "svg"'
+    );
+    return context.document.allExportableLayers().filteredArrayUsingPredicate(predicate);
 }
 
 function optimizeSVG(svgo, svgIn) {
