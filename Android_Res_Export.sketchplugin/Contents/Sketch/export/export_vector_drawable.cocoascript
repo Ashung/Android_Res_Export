@@ -59,45 +59,125 @@ var onRun = function(context) {
             var vectorAssetGroup = slice.parentGroup();
             var vectorAssetGroupCopy = vectorAssetGroup.duplicate();
 
+            var sliceCopy;
+            var fillSweepGradients = [];
+            var strokeSweepGradients = [];
             var loopAssetChildren = vectorAssetGroupCopy.children().objectEnumerator();
             var layer;
             while (layer = loopAssetChildren.nextObject()) {
-                if (
-                    layer.class() == "MSBitmapLayer" ||
-                    layer.class() == "MSTextLayer" ||
-                    layer.class() == "MSSymbolInstance"
-                ) {
+                if (layer.class() == "MSBitmapLayer" || layer.class() == "MSTextLayer" || layer.class() == "MSSymbolInstance") {
                     layer.removeFromParent();
                 }
+                else if (layer.class() == "MSLayerGroup") {
+                    var style = layer.style();
+                    style.removeAllStyleShadows();
+                    style.contextSettings().setBlendMode(0);
+                }
+                else if (layer.class() == "MSShapeGroup") {
+                    layer.flatten();
 
-                var style = layer.style();
+                    var style = layer.style();
+                    style.removeAllStyleShadows();
+                    style.removeAllStyleInnerShadows();
+                    style.blur().setIsEnabled(false);
+                    style.contextSettings().setBlendMode(0);
 
-                style.removeAllStyleShadows();
-                style.removeAllStyleInnerShadows();
-                style.blur().setIsEnabled(false);
-                style.contextSettings().setBlendMode(0);
-
-                var lastSupportedFill;
-                style.fills().forEach(function(fill) {
-                    if (fill.isEnabled() == true && (fill.fillType() == 0 || fill.fillType() == 1)) {
-                        lastSupportedFill = fill;
+                    var lastSupportedFill;
+                    style.fills().forEach(function(fill) {
+                        if (fill.isEnabled() == true && (fill.fillType() == 0 || fill.fillType() == 1)) {
+                            lastSupportedFill = fill;
+                        } else {
+                            style.removeStyleFill(fill);
+                        }
+                    });
+                    if (lastSupportedFill) {
+                        style.removeAllStyleFills();
+                        style.addStyleFill(lastSupportedFill);
+                        if (lastSupportedFill.fillType() == 1) {
+                            if (lastSupportedFill.gradient().gradientType() == 2) {
+                                var sweepGradient = {
+                                    tagId: "sweep-" + lastSupportedFill.objectID(),
+                                    stops: []
+                                };
+                                lastSupportedFill.gradient().stops().forEach(function(stop) {
+                                    sweepGradient.stops.push({
+                                        color: colorToAndroid(stop.color()),
+                                        offset: stop.position()
+                                    });
+                                });
+                                fillSweepGradients.push(sweepGradient);
+                            }
+                        }
                     }
-                });
-                style.removeAllStyleFills();
-                style.addStyleFill(lastSupportedFill);
 
-                
-
-
+                    var lastSupportedBorder;
+                    style.borders().forEach(function(border) {
+                        if (border.isEnabled() == true) {
+                            lastSupportedBorder = border;
+                        } else {
+                            style.removeStyleBorder(border);
+                        }
+                    });
+                    if (lastSupportedBorder) {
+                        style.removeAllStyleBorders();
+                        style.addStyleBorder(lastSupportedBorder);
+                        if (lastSupportedBorder.fillType() == 1) {
+                            if (lastSupportedBorder.gradient().gradientType() == 2) {
+                                var sweepGradient = {
+                                    tagId: "sweep-" + lastSupportedBorder.objectID(),
+                                    stops: []
+                                };
+                                lastSupportedBorder.gradient().stops().forEach(function(stop) {
+                                    sweepGradient.stops.push({
+                                        color: colorToAndroid(stop.color()),
+                                        offset: stop.position()
+                                    });
+                                });
+                                strokeSweepGradients.push(sweepGradient);
+                            }
+                        }
+                    }
+                }
+                else if (layer.class() == "MSSliceLayer") {
+                    if (layer.exportOptions().firstFormat() == "svg") {
+                        sliceCopy = layer;
+                    }
+                }
             }
 
+            // SVG code
+            var exportRequest = MSExportRequest.exportRequestsFromExportableLayer(sliceCopy).firstObject();
+            var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, NSColorSpace.sRGBColorSpace());
+            var svgData = exporter.data();
+            var svgCode = NSString.alloc().initWithData_encoding(svgData, NSUTF8StringEncoding);
 
+            fillSweepGradients.forEach(function(gradient, index) {
+                var match = /fill=""/.exec(svgCode);
+                if (match) {
+                    svgCode = svgCode.replace(match[0], 'fill="url(#' + fillSweepGradients[fillSweepGradients.length - index - 1]["tagId"] + ')"');
+                }
+                svgCode = insertCodeToSVG(sweepGradientCode(gradient), svgCode);
+            });
+            strokeSweepGradients.forEach(function(gradient) {
+                var match = /stroke=""/.exec(svgCode);
+                if (match) {
+                    svgCode = svgCode.replace(match[0], 'stroke="url(#' + strokeSweepGradients[strokeSweepGradients.length - index - 1]["tagId"] + ')"');
+                }
+                svgCode = insertCodeToSVG(sweepGradientCode(gradient), svgCode);
+            });
+
+            log(svgCode)
+
+            writeContentToFile(exportFolder + "/" + slice.name() + ".svg", svgCode);
+            // log(/fill=""/g.exec(svgCode))
             // var svgFile = exportFolder + "/" + slice.objectID() + ".svg";
             // doc.saveArtboardOrSlice_toFile(slice, svgFile);
 
-            // svg2vector(s2v, svgFile, exportFolder + "/drawable-anydpi-v21/" + vector.name + ".xml");
+            // svg2vector(s2v, svgCode, exportFolder + "/drawable-anydpi-v21/" + slice.name() + ".xml");
             //
             // rm(svgFile);
+
+            vectorAssetGroupCopy.removeFromParent();
 
         }
 
@@ -106,7 +186,6 @@ var onRun = function(context) {
         }
 
     }
-
 }
 
 function getVectorAssetFromSelection(context) {
@@ -128,37 +207,27 @@ function getVectorAssetFromDocument(context) {
     return context.document.allExportableLayers().filteredArrayUsingPredicate(predicate);
 }
 
-function optimizeSVG(svgo, svgIn) {
-    var config = {
-        plugins: [
-            {
-                convertColors: {
-                    shorthex: false
-                }
-            },
-            {
-                cleanupListOfValues: {
-                    floatPrecision: 2
-                }
-            },
-            {
-                cleanupNumericValues: {
-                    floatPrecision: 2
-                }
-            },
-            {
-                convertPathData: {
-                    floatPrecision: 2,
-                    leadingZero: false
-                }
-            }
-        ]
-    };
-    runCommand("/bin/bash", ["-l", "-c", svgo + " --config='" + JSON.stringify(config) + "' '" + svgIn + "'"]);
+function insertCodeToSVG(code, svg) {
+    return svg.replace("</svg>", String(code) + "</svg>");;
 }
 
-function svg2vector(s2v, svgFile, vectorFile) {
-    runCommand("/bin/bash", ["-l", "-c", s2v + " '" + svgFile + "' '" + vectorFile + "'"]);
+function sweepGradientCode(gradient) {
+    var xml = '<sweepGradient id="' + gradient.tagId + '">';
+    gradient.stops.forEach(function(stop) {
+        xml += '<stop stop-color="' + stop.color + '" offset="' + stop.offset + '"></stop>';
+    });
+    xml += '</sweepGradient>';
+    return xml;
+}
+
+function svg2vector(s2v, svgCode, vectorFile) {
+    var vectorXML = "";
+    // runCommand("/bin/bash", ["-l", "-c", s2v + " -s '" + svgCode + "' -o '" + vectorFile + "'"]);
+    runCommand("/bin/bash", ["-l", "-c", s2v + " -s '" + svgCode + "'"], function(status, msg) {
+        if (status && msg != "") {
+            log(msg);
+        }
+    });
 }
 
 function checkVersion(command) {
