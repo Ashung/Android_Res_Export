@@ -4,7 +4,7 @@ new_nine_patch_asset: 新建点九资源
 new_app_icon: 新建应用图标
 new_vector_asset: 新建矢量资源
 export_png_assets: 导出位图资源
-export_vector_drawable: 导出矢量资源
+export_vector_assets: 导出矢量资源
 export_nine_patch: 导出点九资源
 export_app_icon: 导出应用图标
 view_color_code_from_selected_layer: 从选中图层生成色彩资源代码

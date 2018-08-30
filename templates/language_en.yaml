@@ -4,7 +4,7 @@ new_nine_patch_asset: New Nine-Patch Asset
 new_app_icon: New App Icon
 new_vector_asset: New Vector Asset
 export_png_assets: Export Bitmap Assets
-export_vector_drawable: Export Vector Drawables
+export_vector_assets: Export Vector Assets
 export_nine_patch: Export Nine-Patch Assets
 export_app_icon: Export App Icon
 view_color_code_from_selected_layer: View Color Code From Selected Layer
