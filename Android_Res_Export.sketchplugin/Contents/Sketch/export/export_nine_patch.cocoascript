@@ -141,30 +141,29 @@ var onRun = function(context) {
 
 function cropAndScale(nsimage, x, y, w, h, scale) {
     var originalImage = nsimage.copy();
-    var scaledSize = NSMakeSize(Math.round(w * scale), Math.round(h * scale));
-    var image = NSImage.alloc().initWithSize(scaledSize);
-
-    image.lockFocus();
-
-    originalImage.setScalesWhenResized(true);
-    originalImage.setSize(scaledSize);
-
-    NSGraphicsContext.currentContext().setImageInterpolation(NSImageInterpolationNone);
-    // NSGraphicsContext.currentContext().setShouldAntialias(false);
-    // CGContextSetInterpolationQuality(NSGraphicsContext.currentContext(), kCGInterpolationNone);
-
-
-    originalImage.drawInRect_fromRect_operation_fraction(
-        NSMakeRect(0, 0, scaledSize.width, scaledSize.height),
-        NSMakeRect(0, 0, scaledSize.width, scaledSize.height),
-        //NSMakeRect(x, scaledSize.size().height - h - y, scaledSize.width, scaledSize.height),
+    var imageCorp = NSImage.alloc().initWithSize(NSMakeSize(w, h));
+    imageCorp.lockFocus();
+    originalImage.drawAtPoint_fromRect_operation_fraction(
+        NSMakePoint(0, 0),
+        NSMakeRect(x, originalImage.size().height - h - y, w, h),
         NSCompositeCopy,
         1.0
     );
-
-
-    image.unlockFocus();
-    return image;
+    imageCorp.unlockFocus();
+    var scaledSize = NSMakeSize(Math.round(w * scale), Math.round(h * scale));
+    var imageScale = NSImage.alloc().initWithSize(scaledSize);
+    imageScale.lockFocus();
+    imageCorp.setScalesWhenResized(true);
+    imageCorp.setSize(scaledSize);
+    NSGraphicsContext.currentContext().setImageInterpolation(NSImageInterpolationNone);
+    imageCorp.drawAtPoint_fromRect_operation_fraction(
+        NSMakePoint(0, 0),
+        NSMakeRect(0, 0, scaledSize.width, scaledSize.height),
+        NSCompositeCopy,
+        1.0
+    );
+    imageScale.unlockFocus();
+    return imageScale;
 }
 
 function getNinePatchAssetFromDocument(context) {
