@@ -2,80 +2,127 @@
     Android
 ========================================================= */
 
-function getExportConfigFromPageName(pageName) {
-    var exportConfig = [
-        { scale : 1,   qualifier : "mdpi" },
-        { scale : 1.5, qualifier : "hdpi" },
-        { scale : 2,   qualifier : "xhdpi" },
-        { scale : 3,   qualifier : "xxhdpi" },
-        { scale : 4,   qualifier : "xxxhdpi" }
-    ];
+var ASSET_NAME_TYPES = [
+    "Base name. (a / b / c -> c)",
+    "Full name. (a / b / c -> a_b_c)"
+];
 
-    if (/^@/.test(pageName)) {
-        exportConfig = [];
-        var configs = pageName.replace(/^@/, "").replace(/\s/g, "").split(",");
-        for (var i = 0; i < configs.length; i ++) {
-            var dpi = "";
-            if (/(no|l|m|h|xh|xxh|xxxh|any|tv|\d+)dpi/i.test(configs[i])) {
-                dpi = configs[i].match(/[^-]+dpi/i)[0];
-            }
-            exportConfig.push({
-                scale : dpiToScale(dpi),
-                qualifier : configs[i]
-            });
-        }
-    }
+var VECTORDRAWABLE_FOLDERS = [
+    "drawable",
+    "drawable-anydpi",
+    "drawable-v21",
+    "drawable-v24",
+    "drawable-anydpi-v21",
+    "drawable-anydpi-v24"
+];
 
-    return exportConfig;
-}
+var LANGUAGES = {
+    "en": "English",
+    "zh_cn": "简体中文"
+};
 
-function androidResName(name) {
-    // .replace(/[\u0000-\u0031\/\\\|\?\"\*\:\<\>\.]/g, "_")
-    // .replace(/[^A-Za-z0-9\$\_]/g, "_")
-    return name.replace(/[\u0020-\u002F\u003A-\u0040\u005B-\u0060\u007B-\u007F]/g, "_")
-        .replace(/^\d+/, "")
-        .toLowerCase()
-        .substring(0, 255);
-}
+var DPIS = {
+    "mdpi": 1,
+    "hdpi": 1.5,
+    "xhdpi": 2,
+    "xxhdpi": 3,
+    "xxxhdpi": 4
+};
 
 function dpiToScale(dpi) {
-    if (/^\d+/.test(dpi)) {
-        var dpiValue = dpi.match(/\d+/)[0];
-        var size = dpiValue / 160;
-        return Number.isInteger(size) ? size : size.toFixed(2);
-    } else {
-        switch (dpi) {
-            case "ldpi" :
-                return 0.75;
-                break;
-            case "mdpi" :
-                return 1;
-                break;
-            case "hdpi" :
-                return 1.5;
-                break;
-            case "xhdpi" :
-                return 2;
-                break;
-            case "xxhdpi" :
-                return 3;
-                break;
-            case "xxxhdpi" :
-                return 4;
-                break;
-            case "tvdpi" :
-                return 1.33;
-                break;
-            case "anydpi" :
-                return 1;
-                break;
-            case "nodpi" :
-                return 1;
-                break;
-            default:
-                return 1;
-        }
+    if (DPIS[dpi]) {
+        return DPIS[dpi];
     }
+    return 1;
+}
+
+function assetName(name, type) {
+    var nameArray = String(name).split(/\s*\/\s*/);
+    // base name
+    if (type == 0 || type == null) {
+        return cleanName(nameArray.pop()).replace(/^\d+_*/, "");
+    }
+    // full name
+    else {
+        var nameParts = [];
+        nameArray.forEach(function(part) {
+            nameParts.push(cleanName(part));
+        });
+        return nameParts.join("_").replace(/^\d+_*/, "");
+    }
+}
+
+function cleanName(name) {
+    // Latin to ascii
+    var latinToAsciiMapping = {
+        "ae": "ä|æ|ǽ",
+        "oe": "ö|œ",
+        "ue": "ü",
+        "Ae": "Ä",
+        "Ue": "Ü",
+        "Oe": "Ö",
+        "A": "À|Á|Â|Ã|Ä|Å|Ǻ|Ā|Ă|Ą|Ǎ",
+        "a": "à|á|â|ã|å|ǻ|ā|ă|ą|ǎ|ª",
+        "C": "Ç|Ć|Ĉ|Ċ|Č",
+        "c": "ç|ć|ĉ|ċ|č",
+        "D": "Ð|Ď|Đ",
+        "d": "ð|ď|đ",
+        "E": "È|É|Ê|Ë|Ē|Ĕ|Ė|Ę|Ě",
+        "e": "è|é|ê|ë|ē|ĕ|ė|ę|ě",
+        "G": "Ĝ|Ğ|Ġ|Ģ",
+        "g": "ĝ|ğ|ġ|ģ",
+        "H": "Ĥ|Ħ",
+        "h": "ĥ|ħ",
+        "I": "Ì|Í|Î|Ï|Ĩ|Ī|Ĭ|Ǐ|Į|İ",
+        "i": "ì|í|î|ï|ĩ|ī|ĭ|ǐ|į|ı",
+        "J": "Ĵ",
+        "j": "ĵ",
+        "K": "Ķ",
+        "k": "ķ",
+        "L": "Ĺ|Ļ|Ľ|Ŀ|Ł",
+        "l": "ĺ|ļ|ľ|ŀ|ł",
+        "N": "Ñ|Ń|Ņ|Ň",
+        "n": "ñ|ń|ņ|ň|ŉ",
+        "O": "Ò|Ó|Ô|Õ|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ǿ",
+        "o": "ò|ó|ô|õ|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º",
+        "R": "Ŕ|Ŗ|Ř",
+        "r": "ŕ|ŗ|ř",
+        "S": "Ś|Ŝ|Ş|Š",
+        "s": "ś|ŝ|ş|š|ſ",
+        "T": "Ţ|Ť|Ŧ",
+        "t": "ţ|ť|ŧ",
+        "U": "Ù|Ú|Û|Ũ|Ū|Ŭ|Ů|Ű|Ų|Ư|Ǔ|Ǖ|Ǘ|Ǚ|Ǜ",
+        "u": "ù|ú|û|ũ|ū|ŭ|ů|ű|ų|ư|ǔ|ǖ|ǘ|ǚ|ǜ",
+        "Y": "Ý|Ÿ|Ŷ",
+        "y": "ý|ÿ|ŷ",
+        "W": "Ŵ",
+        "w": "ŵ",
+        "Z": "Ź|Ż|Ž",
+        "z": "ź|ż|ž",
+        "AE": "Æ|Ǽ",
+        "ss": "ß",
+        "IJ": "Ĳ",
+        "ij": "ĳ",
+        "OE": "Œ",
+        "f": "ƒ",
+    };
+    for (var i in latinToAsciiMapping) {
+        var regexp = new RegExp(latinToAsciiMapping[i], "g");
+        name = name.replace(regexp, i);
+    }
+    // Remove no ascii character
+    name = name.replace(/[^\u0020-\u007E]/g, "");
+    // Remove unsupport character
+    name = name.replace(/[\u0021-\u002B\u003A-\u0040\u005B-\u005E\u0060\u007B-\u007E]/g, "");
+    // Unix hidden file
+    name = name.replace(/^\./, "");
+    // , - . _ to space
+    name = name.replace(/[\u002C-\u002E\u005F]/g, "_");
+    // Replace space to _
+    name = name.trim();
+    name = name.replace(/\s+/g, "_");
+    name = name.toLowerCase();
+    return name;
 }
 
 function colorToAndroid(mscolor) {
@@ -116,7 +163,7 @@ function groupFromLayers(layers) {
     return group;
 }
 
-function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
+function addSliceInToGroup(layerGroup, name, format, useInfluenceRect) {
 
     removeSliceInGroup(layerGroup);
 
@@ -134,8 +181,8 @@ function addSliceInToGroup(layerGroup, name, useInfluenceRect) {
         var exportOption = slice.exportOptions().addExportFormat();
     }
 
-    exportOption.setFileFormat("png");
-    exportOption.setName("@android_res_export");
+    exportOption.setFileFormat(format);
+    exportOption.setName("");
     exportOption.setScale(1);
 
     return slice;
@@ -171,32 +218,12 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
     }
 
     if (beforeLayer) {
-        parent.insertLayers_beforeLayer([shapeGroup], beforeLayer);
+        parent.insertLayer_beforeLayer(shapeGroup, beforeLayer);
     } else {
-        parent.addLayers([shapeGroup]);
+        parent.addLayer(shapeGroup);
     }
 
     return shapeGroup;
-}
-
-function insertImageLayer_fromResource(context, layerParent, rect, resName) {
-    var imagePath = context.plugin.urlForResourceNamed(resName).path();
-    var image = NSImage.alloc().initWithContentsOfFile(imagePath);
-
-    if (MSApplicationMetadata.metadata().appVersion < 47) {
-        var imageData = MSImageData.alloc().initWithImage_convertColorSpace(image, false);
-    } else {
-        var imageData = MSImageData.alloc().initWithImage(image);
-    }
-
-    var imageLayer = MSBitmapLayer.alloc().initWithFrame_image(rect, imageData);
-    imageLayer.setName(resName.replace(/\.png$/i, ""));
-    if (layerParent.containsLayers()) {
-        layerParent.insertLayers_afterLayer([imageLayer], layerParent.firstLayer());
-    } else {
-        layerParent.insertLayers_afterLayer([imageLayer], nil);
-    }
-    return imageLayer;
 }
 
 function getLayerWithNameFromParent(name, parent) {
@@ -209,33 +236,8 @@ function getLayerWithNameFromParent(name, parent) {
     Utilities
 ========================================================= */
 
-function ask(context, title, tip, defaultValue) {
-    var dialog = COSAlertWindow.alloc().init();
-    dialog.setMessageText(title);
-    dialog.setInformativeText(tip);
-    var iconPath = context.plugin.urlForResourceNamed("icon.png").path();
-    var iconNSImage = NSImage.alloc().initWithContentsOfFile(iconPath);
-    dialog.setIcon(iconNSImage);
-    dialog.addTextFieldWithValue(defaultValue);
-    dialog.addButtonWithTitle(localizedString(context, "ok"));
-    dialog.addButtonWithTitle(localizedString(context, "cancel"));
-    var textField = dialog.viewAtIndex(0);
-    dialog.alert().window().setInitialFirstResponder(textField);
-    var responseCode = dialog.runModal();
-    if (responseCode == 1000) {
-        return textField.stringValue();
-    }
-    return nil;
-}
-
 function toast(context, message) {
-    if (message) {
-        context.document.showMessage(message + "");
-    }
-}
-
-function getPluginPath(context) {
-    return context.plugin.url().path();
+    context.document.showMessage(message);
 }
 
 function alert(context, title, content) {
@@ -277,14 +279,6 @@ function mkdir(path) {
     }
 }
 
-function rm(path) {
-    return NSFileManager.defaultManager().removeItemAtPath_error_(path, nil);
-}
-
-function mv(srcPath, dstPath) {
-    return NSFileManager.defaultManager().moveItemAtPath_toPath_error_(srcPath, dstPath, nil);
-}
-
 function directoryIsWriteable(path) {
     return NSFileManager.defaultManager().isWritableFileAtPath(path);
 }
@@ -292,22 +286,6 @@ function directoryIsWriteable(path) {
 function getJSONFromPath(path) {
     if (fileExists(path)) {
         var content = NSString.stringWithContentsOfFile_encoding_error_(path, NSUTF8StringEncoding, nil);
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            log(e);
-            return null;
-        }
-    } else {
-        return null;
-    }
-}
-
-function getRemoteJson(url) {
-    var request = NSURLRequest.requestWithURL(NSURL.URLWithString(url));
-    var response = NSURLConnection.sendSynchronousRequest_returningResponse_error_(request, nil, nil);
-    if (response) {
-        var content = NSString.alloc().initWithData_encoding_(response, NSUTF8StringEncoding);
         try {
             return JSON.parse(content);
         } catch (e) {
@@ -456,12 +434,6 @@ function runCommand(command, args, callback) {
     }
 }
 
-function imageOptim(image) {
-    if (fileExists("/Applications/ImageOptim.app")) {
-        return runCommand("/bin/bash", ["-l", "-c", " open -a ImageOptim '" + image + "'"]);
-    }
-}
-
 /* =========================================================
     Google Analytics
 ========================================================= */
@@ -523,8 +495,8 @@ function ga(context, eventCategory, eventAction, eventLabel, eventValue) {
 ========================================================= */
 function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocationFunction) {
 
-    var windowWidth = 800,
-        windowHeight = 600;
+    var windowWidth = 720,
+        windowHeight = 480;
     var window = NSWindow.alloc().init();
     window.setTitle(title);
     window.setFrame_display(NSMakeRect(0, 0, windowWidth, windowHeight), false);
@@ -567,4 +539,50 @@ function window(context, title, htmlPath, didFinishLoadFunction, didChangeLocati
     window.center();
 
     return NSApp.runModalForWindow(window);
+}
+
+function showCodeWindow(context, code, saveAction) {
+    window(
+        context,
+        localizedString(context, "code_preview"),
+        "code_preview.html",
+        function(scriptObject) {
+
+            // Translation HTML
+            var currentLanguageSetting = getPreferences(context, "language");
+            if (currentLanguageSetting != "en") {
+                var languageJSON = {
+                    "cancel": localizedString(context, "cancel"),
+                    "save": localizedString(context, "save"),
+                    "copy": localizedString(context, "copy")
+                };
+                scriptObject.evaluateWebScript('i18n(' + JSON.stringify(languageJSON) + ')');
+            }
+
+            var codeForHTML = code.replace(/\n/g, "\\n");
+            scriptObject.evaluateWebScript("previewCode('" + codeForHTML + "')");
+        },
+        function(nswindow, locationHash) {
+
+            if (locationHash == "#save") {
+                NSApp.stopModal();
+                NSApp.endSheet(nswindow);
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
+
+                saveAction(code);
+            }
+
+            if (locationHash == "#cancel") {
+                NSApp.stopModal();
+                NSApp.endSheet(nswindow);
+                context.document.documentWindow().makeKeyAndOrderFront(nil);
+            }
+
+            if (locationHash == "#copy") {
+                var pasteboard = NSPasteboard.generalPasteboard();
+                pasteboard.clearContents();
+                pasteboard.setString_forType(code, NSStringPboardType);
+            }
+        }
+    );
 }

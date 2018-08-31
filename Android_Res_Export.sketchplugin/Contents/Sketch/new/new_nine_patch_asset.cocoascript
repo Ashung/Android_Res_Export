@@ -2,7 +2,8 @@
 
 var onRun = function(context) {
 
-    var sketch = context.api();
+    ga(context, "New", "new_nine_patch");
+
     var doc = context.document;
     var selection = context.selection;
     var selectionCount = selection.count();
@@ -10,56 +11,55 @@ var onRun = function(context) {
     if (selectionCount == 0) {
         toast(context, localizedString(context, "no_selection"));
         return;
-    } else {
-        var loopSelection = selection.objectEnumerator();
-        var item;
-        while (item = loopSelection.nextObject()) {
-            if (item.class() == "MSArtboardGroup" || item.class() == "MSSymbolMaster") {
-                toast(context, localizedString(context, "can_not_create_nine_patch_from_artboard_or_symbol_master"));
-                return;
-            }
-        }
     }
 
-    // Asset name
-    var name = ask(
-        context,
-        localizedString(context, "new_nine_patch_asset"),
-        localizedString(context, "asset_name_for_nine_path"),
-        selection.firstObject().name()
-    );
+    var predicate = NSPredicate.predicateWithFormat('className == "MSArtboardGroup" || className == "MSSymbolMaster"');
+    if (selection.filteredArrayUsingPredicate(predicate).count() > 0) {
+        toast(context, localizedString(context, "can_not_create_nine_patch_from_artboard_or_symbol_master"));
+        return;
+    }
 
-    if (name) {
+    var assetNameType = getPreferences(context, "asset_name_type");
 
-        // Group content
-        if (selectionCount == 1 && selection.firstObject().class() == "MSLayerGroup") {
-            var group = selection.firstObject();
+    var groupNinePatchs = [];
+    var loopSelection = selection.objectEnumerator();
+    var layer;
+    while (layer = loopSelection.nextObject()) {
+
+        var groupNinePatch;
+        var groupContent;
+        var groupPatch;
+        var name = assetName(layer.name(), assetNameType);
+
+        if (layer.class() == "MSLayerGroup") {
             // No cotent and patch group
-            if (getLayerWithNameFromParent("content", group)) {
-                var groupNinePatch = group;
-                var groupContent = getLayerWithNameFromParent("content", group);
+            if (getLayerWithNameFromParent("content", layer)) {
+                groupNinePatch = layer;
+                groupContent = getLayerWithNameFromParent("content", layer);
             } else {
-                var groupContent = group;
+                groupContent = layer;
                 groupContent.setName("content");
                 // Group nine patch
-                var groupNinePatch = groupFromLayers([groupContent]);
-                groupNinePatch.setName(androidResName(name));
+                groupNinePatch = groupFromLayers([groupContent]);
+                groupNinePatch.setName(name);
             }
         } else {
-            var groupContent = groupFromSelection(context);
+            groupContent = groupFromLayers([layer]);
             groupContent.setName("content");
             // Group nine patch
-            var groupNinePatch = groupFromLayers([groupContent]);
-            groupNinePatch.setName(androidResName(name));
+            groupNinePatch = groupFromLayers([groupContent]);
+            groupNinePatch.setName(name);
         }
 
+        var slice;
         if (!getLayerWithNameFromParent("#9patch", groupContent)) {
-            var slice = addSliceInToGroup(groupContent, "#9patch", true);
+            slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
         } else {
             if (getLayerWithNameFromParent("#9patch", groupContent).class() != "MSSliceLayer") {
-                var slice = addSliceInToGroup(groupContent, "#9patch", true);
+                slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
             }
         }
+        slice.select_byExtendingSelection(false, true);
 
         if (getLayerWithNameFromParent("patch", groupNinePatch)) {
             slice.absoluteRect().setRect(
@@ -84,18 +84,12 @@ var onRun = function(context) {
             groupPatch.setName("patch");
         }
 
-        // Select layerGroup
-        // Fix Sketch 45
-        if (sketch.build < 43475) {
-            groupNinePatch.select_byExpandingSelection(true, false);
-        } else {
-            groupNinePatch.select_byExtendingSelection(true, false);
-        }
-
         groupNinePatch.resizeToFitChildrenWithOption(1);
+        groupNinePatch.setLayerListExpandedType(0);
+
+        groupNinePatchs.push(groupNinePatch);
 
     }
 
-    ga(context, "New", "new_nine_patch");
-
+    doc.currentPage().changeSelectionBySelectingLayers(groupNinePatchs);
 }

@@ -13,6 +13,7 @@
         <pre><code id="code" class="xml"></code></pre>
     </div>
     <div id="foot-actions">
+        <button id="copy" class="button">Copy</button>
         <span class="gap-flex"></span>
         <button id="cancel" class="button">Cancel</button>
         <span class="gap"></span>
@@ -23,7 +24,8 @@
 <script>
 
 var btnCancel = document.getElementById("cancel"),
-    btnSave = document.getElementById("save");
+    btnSave = document.getElementById("save"),
+    btnCopy = document.getElementById("copy");
 
 btnSave.onclick = function() {
     window.location.hash = "save";
@@ -31,6 +33,10 @@ btnSave.onclick = function() {
 
 btnCancel.onclick = function() {
     window.location.hash = "cancel";
+}
+
+btnCopy.onclick = function() {
+    window.location.hash = "copy";
 }
 
 window.onfocus = function() {
@@ -56,6 +62,7 @@ function previewCode(code) {
 function i18n(json) {
     btnCancel.innerHTML = json["cancel"];
     btnSave.innerHTML = json["save"];
+    btnCopy.innerHTML = json["copy"];
 }
 
 </script>

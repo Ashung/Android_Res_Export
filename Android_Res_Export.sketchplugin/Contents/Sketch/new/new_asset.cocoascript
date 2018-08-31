@@ -1,0 +1,43 @@
+@import "../lib/common.js";
+
+var newBitmapAsset = function(context) {
+    ga(context, "New", "new_bitmap_asset");
+    newAsset(context, "png");
+};
+
+var newVectorAsset = function(context) {
+    ga(context, "New", "new_vector_asset");
+    newAsset(context, "svg");
+};
+
+function newAsset(context, format) {
+
+    var doc = context.document;
+    var selection = context.selection;
+    var selectionCount = selection.count();
+
+    if (selectionCount == 0) {
+        toast(context, localizedString(context, "no_selection"));
+        return;
+    }
+
+    var assetNameType = getPreferences(context, "asset_name_type");
+
+    var loopSelection = selection.objectEnumerator();
+    var layer;
+    while (layer = loopSelection.nextObject()) {
+        if (
+            layer.class() == "MSLayerGroup" ||
+            layer.class() == "MSArtboardGroup" ||
+            layer.class() == "MSSymbolMaster"
+        ) {
+            var layerGroup = layer;
+        } else {
+            var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
+        }
+        var name = assetName(layer.name(), assetNameType);
+        layerGroup.setName(name);
+        addSliceInToGroup(layerGroup, name, format, true);
+        layerGroup.setLayerListExpandedType(2);
+    }
+};

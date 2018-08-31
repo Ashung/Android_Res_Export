@@ -3,6 +3,8 @@
 
 var onRun = function(context) {
 
+    ga(context, "Preview", "nine_patch_preview");
+
     var doc = context.document;
     var selection = context.selection;
 
@@ -129,7 +131,5 @@ var onRun = function(context) {
 
         }
     );
-
-    ga(context, "Preview", "nine_patch_preview");
 
 };

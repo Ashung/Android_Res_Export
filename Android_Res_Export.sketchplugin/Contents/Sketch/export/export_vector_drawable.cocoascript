@@ -2,21 +2,22 @@
 
 var onRun = function(context) {
 
-    // SVGO & SVG2VectorDrawable
-    var svgo = which("svgo");
+    ga(context, "Export", "export_vector_drawable");
+
+    // SVG2VectorDrawable
     var s2v = which("s2v");
-    if (!svgo || !s2v) {
+    if (!s2v) {
         alert(
             context,
-            localizedString(context, "install_svgo_and_s2v_title"),
-            localizedString(context, "install_svgo_and_s2v_message")
+            localizedString(context, "install_s2v_title"),
+            localizedString(context, "install_s2v_message")
         );
         return;
     }
 
     // Check SVG2VectorDrawable version
     var s2vVersion = checkVersion(s2v);
-    if (versionCompare(s2vVersion, "1.1.8") == -1) {
+    if (versionCompare(s2vVersion, "2.0.0") == -1) {
         alert(
             context,
             localizedString(context, "s2v_version_title"),
@@ -28,118 +29,204 @@ var onRun = function(context) {
     var doc = context.document;
     var selection = context.selection;
 
-    var exportVectors = NSMutableArray.alloc().init();
-
+    var exportVectorAssets;
     if (selection.count() > 0) {
-        var loopSelection = selection.objectEnumerator();
-        var layer;
-        while (layer = loopSelection.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() == "#vector") {
-                exportVectors.addObject({
-                    "slice": layer,
-                    "name": androidResName(layer.parentGroup().name()),
-                });
-            }
-            if (layer.class() == "MSLayerGroup" || layer.class() == "MSArtboardGroup" || layer.class() == "MSSymbolMaster") {
-                var loopChildren = layer.children().objectEnumerator();
-                var child;
-                while (child = loopChildren.nextObject()) {
-                    if (child.class() == "MSSliceLayer" && child.name() == "#vector") {
-                        exportVectors.addObject({
-                            "slice": child,
-                            "name": androidResName(child.parentGroup().name()),
-                        });
+        exportVectorAssets = getVectorAssetFromSelection(context);
+    } else {
+        exportVectorAssets = getVectorAssetFromDocument(context);
+    }
+
+    if (exportVectorAssets.count() == 0) {
+        toast(context, localizedString(context, "no_vector_drawable_asset"));
+        return;
+    }
+
+    var exportFolder = chooseFolder();
+    if (exportFolder) {
+
+        // ExportFolder is writeable
+        if (!directoryIsWriteable(exportFolder)) {
+            toast(context, localizedString(context, "cannot_export_to_folder"));
+            return;
+        }
+
+        // Vector assets folder
+        var assetNameType = getPreferences(context, "asset_name_type");
+        var vectorAssetFolderIndex = getPreferences(context, "vector_drawable_folder");
+        var vectorAssetFolder;
+        if (vectorAssetFolderIndex) {
+            vectorAssetFolder = VECTORDRAWABLE_FOLDERS[vectorAssetFolderIndex];
+        } else {
+            vectorAssetFolder = VECTORDRAWABLE_FOLDERS[0];
+        }
+
+        var loopExportVectors = exportVectorAssets.objectEnumerator();
+        var slice;
+        while (slice = loopExportVectors.nextObject()) {
+
+            var vectorAssetGroup = slice.parentGroup();
+            var vectorAssetGroupCopy = vectorAssetGroup.copy();
+
+            var sliceCopy;
+            var fillSweepGradients = [];
+            var strokeSweepGradients = [];
+            var loopAssetChildren = vectorAssetGroupCopy.children().objectEnumerator();
+            var layer;
+            while (layer = loopAssetChildren.nextObject()) {
+                if (layer.class() == "MSBitmapLayer" || layer.class() == "MSTextLayer" || layer.class() == "MSSymbolInstance") {
+                    layer.removeFromParent();
+                }
+                else if (layer.class() == "MSLayerGroup") {
+                    var style = layer.style();
+                    style.removeAllStyleShadows();
+                    style.contextSettings().setBlendMode(0);
+                }
+                else if (layer.class() == "MSShapeGroup") {
+                    layer.flatten();
+
+                    var style = layer.style();
+                    style.removeAllStyleShadows();
+                    style.removeAllStyleInnerShadows();
+                    style.blur().setIsEnabled(false);
+                    style.contextSettings().setBlendMode(0);
+
+                    var lastSupportedFill;
+                    style.fills().forEach(function(fill) {
+                        if (fill.isEnabled() == true && (fill.fillType() == 0 || fill.fillType() == 1)) {
+                            lastSupportedFill = fill;
+                        } else {
+                            style.removeStyleFill(fill);
+                        }
+                    });
+                    if (lastSupportedFill) {
+                        style.removeAllStyleFills();
+                        style.addStyleFill(lastSupportedFill);
+                        if (lastSupportedFill.fillType() == 1) {
+                            if (lastSupportedFill.gradient().gradientType() == 2) {
+                                var sweepGradient = {
+                                    tagId: "sweep-" + lastSupportedFill.objectID(),
+                                    stops: []
+                                };
+                                lastSupportedFill.gradient().stops().forEach(function(stop) {
+                                    sweepGradient.stops.push({
+                                        color: colorToAndroid(stop.color()),
+                                        offset: stop.position()
+                                    });
+                                });
+                                fillSweepGradients.push(sweepGradient);
+                            }
+                        }
+                    }
+
+                    var lastSupportedBorder;
+                    style.borders().forEach(function(border) {
+                        if (border.isEnabled() == true) {
+                            lastSupportedBorder = border;
+                        } else {
+                            style.removeStyleBorder(border);
+                        }
+                    });
+                    if (lastSupportedBorder) {
+                        style.removeAllStyleBorders();
+                        style.addStyleBorder(lastSupportedBorder);
+                        if (lastSupportedBorder.fillType() == 1) {
+                            if (lastSupportedBorder.gradient().gradientType() == 2) {
+                                var sweepGradient = {
+                                    tagId: "sweep-" + lastSupportedBorder.objectID(),
+                                    stops: []
+                                };
+                                lastSupportedBorder.gradient().stops().forEach(function(stop) {
+                                    sweepGradient.stops.push({
+                                        color: colorToAndroid(stop.color()),
+                                        offset: stop.position()
+                                    });
+                                });
+                                strokeSweepGradients.push(sweepGradient);
+                            }
+                        }
+                    }
+                }
+                else if (layer.class() == "MSSliceLayer") {
+                    if (layer.exportOptions().firstFormat() == "svg") {
+                        sliceCopy = layer;
                     }
                 }
             }
+
+            // SVG code
+            var exportRequest = MSExportRequest.exportRequestsFromExportableLayer(sliceCopy).firstObject();
+            var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, NSColorSpace.sRGBColorSpace());
+            var svgData = exporter.data();
+            var svgCode = NSString.alloc().initWithData_encoding(svgData, NSUTF8StringEncoding);
+
+            // Sweep gradient hacking, svg is not support angle gradient.
+            fillSweepGradients.forEach(function(gradient, index) {
+                var match = /fill=""/.exec(svgCode);
+                if (match) {
+                    svgCode = svgCode.replace(match[0], 'fill="url(#' + fillSweepGradients[fillSweepGradients.length - index - 1]["tagId"] + ')"');
+                }
+                svgCode = insertCodeToSVG(sweepGradientCode(gradient), svgCode);
+            });
+            strokeSweepGradients.forEach(function(gradient) {
+                var match = /stroke=""/.exec(svgCode);
+                if (match) {
+                    svgCode = svgCode.replace(match[0], 'stroke="url(#' + strokeSweepGradients[strokeSweepGradients.length - index - 1]["tagId"] + ')"');
+                }
+                svgCode = insertCodeToSVG(sweepGradientCode(gradient), svgCode);
+            });
+
+            // Export
+            var outputPath = exportFolder + "/" + vectorAssetFolder + "/" + assetName(slice.name(), assetNameType) + ".xml";
+            svg2vector(s2v, svgCode, outputPath);
+
         }
-    } else {
-        var loopAllExportableLayers = doc.allExportableLayers().objectEnumerator();
-        var layer;
-        while (layer = loopAllExportableLayers.nextObject()) {
-            if (layer.class() == "MSSliceLayer" && layer.name() == "#vector") {
-                exportVectors.addObject({
-                    "slice": layer,
-                    "name": androidResName(layer.parentGroup().name()),
-                });
-            }
+
+        if (getPreferences(context, "show_in_finder_after_export") == 1) {
+            showInFinder(exportFolder + "/" + vectorAssetFolder);
         }
+
     }
-
-    // log(exportVectors);
-
-    if (exportVectors.count() > 0) {
-
-        var exportFolder = chooseFolder();
-
-        if (exportFolder) {
-
-            // ExportFolder is writeable
-            if (!directoryIsWriteable(exportFolder)) {
-                toast(context, localizedString(context, "cannot_export_to_folder"));
-                return;
-            }
-
-            var loopExportVectors = exportVectors.objectEnumerator();
-            var vector;
-            while (vector = loopExportVectors.nextObject()) {
-
-                var svgFile = exportFolder + "/" + vector.name + ".svg";
-                doc.saveArtboardOrSlice_toFile(vector.slice, svgFile);
-
-                optimizeSVG(svgo, svgFile);
-
-                svg2vector(s2v, svgFile, exportFolder + "/drawable-anydpi-v21/" + vector.name + ".xml");
-
-                rm(svgFile);
-
-            }
-
-            if (getPreferences(context, "show_in_finder_after_export") == 1) {
-                showInFinder(exportFolder + "/drawable-anydpi-v21");
-            }
-
-        }
-
-    } else {
-        toast(context, localizedString(context, "no_vector_drawable_asset"));
-    }
-
-    ga(context, "Export", "export_vector_drawable");
-
 }
 
-function optimizeSVG(svgo, svgIn) {
-    var config = {
-        plugins: [
-            {
-                convertColors: {
-                    shorthex: false
-                }
-            },
-            {
-                cleanupListOfValues: {
-                    floatPrecision: 2
-                }
-            },
-            {
-                cleanupNumericValues: {
-                    floatPrecision: 2
-                }
-            },
-            {
-                convertPathData: {
-                    floatPrecision: 2,
-                    leadingZero: false
-                }
-            }
-        ]
-    };
-    runCommand("/bin/bash", ["-l", "-c", svgo + " --config='" + JSON.stringify(config) + "' '" + svgIn + "'"]);
+function getVectorAssetFromSelection(context) {
+    var assets = NSMutableArray.alloc().init();
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name != "#9patch" && exportOptions.firstFormat == "svg"'
+    );
+    var selection = context.selection;
+    selection.forEach(function(layer) {
+        assets.addObjectsFromArray(layer.children().filteredArrayUsingPredicate(predicate));
+    });
+    return assets;
 }
 
-function svg2vector(s2v, svgFile, vectorFile) {
-    runCommand("/bin/bash", ["-l", "-c", s2v + " '" + svgFile + "' '" + vectorFile + "'"]);
+function getVectorAssetFromDocument(context) {
+    var predicate = NSPredicate.predicateWithFormat(
+        'className == "MSSliceLayer" && name != "#9patch" && exportOptions.firstFormat == "svg"'
+    );
+    return context.document.allExportableLayers().filteredArrayUsingPredicate(predicate);
+}
+
+function insertCodeToSVG(code, svg) {
+    return svg.replace("</svg>", String(code) + "</svg>");;
+}
+
+function sweepGradientCode(gradient) {
+    var xml = '<sweepGradient id="' + gradient.tagId + '">';
+    gradient.stops.forEach(function(stop) {
+        xml += '<stop stop-color="' + stop.color + '" offset="' + stop.offset + '"></stop>';
+    });
+    xml += '</sweepGradient>';
+    return xml;
+}
+
+function svg2vector(s2v, svgCode, vectorFile, showErrorMessage) {
+    var vectorXML = "";
+    runCommand("/bin/bash", ["-l", "-c", s2v + " -s '" + svgCode + "' -o '" + vectorFile + "'"], function(status, msg) {
+        if (!status && msg != "") {
+            showErrorMessage(msg);
+        }
+    });
 }
 
 function checkVersion(command) {
