@@ -29,7 +29,7 @@ var onRun = function(context) {
         var groupNinePatch;
         var groupContent;
         var groupPatch;
-        var name = assetName(layer.name(), assetNameType);
+        var name = assetName(layer, assetNameType);
 
         if (layer.class() == "MSLayerGroup") {
             // No cotent and patch group
