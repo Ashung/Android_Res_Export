@@ -36,11 +36,12 @@ function dpiToScale(dpi) {
     return 1;
 }
 
-function assetName(name, type) {
-    var nameArray = String(name).split(/\s*\/\s*/);
+function assetName(layer, type) {
+    var nameArray = String(layer.name()).split(/\s*\/\s*/);
+    var name;
     // base name
     if (type == 0 || type == null) {
-        return cleanName(nameArray.pop()).replace(/^\d+_*/, "");
+        name = cleanName(nameArray.pop()).replace(/^\d+_*/, "");
     }
     // full name
     else {
@@ -48,7 +49,12 @@ function assetName(name, type) {
         nameArray.forEach(function(part) {
             nameParts.push(cleanName(part));
         });
-        return nameParts.join("_").replace(/^\d+_*/, "");
+        name = nameParts.join("_").replace(/^\d+_*/, "");
+    }
+    if (name == "") {
+        return "untitled_" + layer.objectID().substringToIndex(8).lowercaseString();
+    } else {
+        return name;
     }
 }
 

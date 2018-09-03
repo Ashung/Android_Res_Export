@@ -42,7 +42,7 @@ var onRun = function(context) {
 
             var ninePatchContent = ninePatch.content;
             var ninePatchPatch = ninePatch.patch;
-            var ninePatchName = assetName(ninePatchPatch.parentGroup().name(), assetNameType);
+            var ninePatchName = assetName(ninePatchPatch.parentGroup(), assetNameType);
 
             // Patch lines round to pixel
             var loopNinePatchLines = ninePatchPatch.children().objectEnumerator();

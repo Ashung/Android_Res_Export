@@ -17,7 +17,7 @@ var onRun = function(context) {
 
     if (xml) {
         showCodeWindow(context, xml, function(xml) {
-            var name = assetName(layer.name(), getPreferences(context, "asset_name_type"));
+            var name = assetName(layer, getPreferences(context, "asset_name_type"));
             var savePath = saveToFolder(name + ".xml");
             if (savePath) {
 

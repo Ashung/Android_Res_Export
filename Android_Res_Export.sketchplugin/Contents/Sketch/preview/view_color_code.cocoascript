@@ -21,7 +21,7 @@ var onRun = function(context) {
     while (layer = loopSelection.nextObject()) {
 
         // Name
-        var layerName = assetName(layer.name(), getPreferences(context, "asset_name_type"));
+        var layerName = assetName(layer, getPreferences(context, "asset_name_type"));
         if (baseColorNamesAndCount.objectForKey(layerName)) {
             var count = baseColorNamesAndCount.objectForKey(layerName) + 1;
             baseColorNamesAndCount.setObject_forKey(count, layerName);

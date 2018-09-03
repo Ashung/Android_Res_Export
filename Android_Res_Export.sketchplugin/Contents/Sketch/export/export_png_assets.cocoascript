@@ -46,7 +46,7 @@ var onRun = function(context) {
 
             exportDpis.forEach(function(dpi) {
                 exportRequest.setScale(dpiToScale(dpi));
-                var filePath = exportFolder + "/drawable-" + dpi + "/" + assetName(slice.name(), assetNameType) + ".png";
+                var filePath = exportFolder + "/drawable-" + dpi + "/" + assetName(slice, assetNameType) + ".png";
                 doc.saveExportRequest_toFile(exportRequest, filePath);
             });
         }

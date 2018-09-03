@@ -176,7 +176,7 @@ var onRun = function(context) {
             });
 
             // Export
-            var outputPath = exportFolder + "/" + vectorAssetFolder + "/" + assetName(slice.name(), assetNameType) + ".xml";
+            var outputPath = exportFolder + "/" + vectorAssetFolder + "/" + assetName(slice, assetNameType) + ".xml";
             svg2vector(s2v, svgCode, outputPath);
 
         }
