@@ -1,6 +1,6 @@
 @import "../lib/common.js";
 
-var onOpenDocument = function(context) {
+var changeLanguage = function(context) {
 
     // Reload Plugin
     AppController.sharedInstance().pluginManager().reloadPlugins();
@@ -9,7 +9,7 @@ var onOpenDocument = function(context) {
     var manifest = getJSONFromPath(manifestPath);
     var manifestLanguage = manifest.language;
 
-    var userLanguage = getPreferences(context, "language");
+    var userLanguage = getPreferences(context, "language") || "en";
 
     if (manifestLanguage != userLanguage) {
         var languageFilePath = context.plugin.urlForResourceNamed("manifest_" + userLanguage + ".json").path();
@@ -25,7 +25,8 @@ var onOpenDocument = function(context) {
             );
             AppController.sharedInstance().pluginManager().reloadPlugins();
         } else {
-            log(context.plugin.name() + ": language file " + languageFilePath + " not found.");
+            var message = localizedString(context, "language_file_not_found_desc", context.plugin.url().path() + "/" + languageFilePath);
+            toast(context, message);
         }
     }
 

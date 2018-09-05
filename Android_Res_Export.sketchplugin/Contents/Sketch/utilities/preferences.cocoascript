@@ -76,8 +76,15 @@ var onRun = function(context) {
     });
 
     // Asset name type
+    var assetNameTypes = [
+        localizedString(context, "asset_name_type_0"),
+        localizedString(context, "asset_name_type_1"),
+        localizedString(context, "asset_name_type_2"),
+        localizedString(context, "asset_name_type_3")
+    ];
+
     dialog.addAccessoryView(groupLabel(localizedString(context, "asset_name_type")));
-    var assetNameType = popupButton(ASSET_NAME_TYPES);
+    var assetNameType = popupButton(assetNameTypes);
     var currentAssetNameType = getPreferences(context, "asset_name_type");
     var currentAssetNameTypeIndex = currentAssetNameType != null ? currentAssetNameType : 0
     assetNameType.selectItemAtIndex(currentAssetNameTypeIndex);

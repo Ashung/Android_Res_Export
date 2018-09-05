@@ -28,7 +28,7 @@ You need to create new asset from selected layers, by run "Plugins" - "Android R
 
 For export bitmap and nine-patch assets, you can choose what dpi will exported in "Android Res Export" - "Preferences" dialog.
 
-For export vector drawable, you need to install [Node.js](https://nodejs.org/en/) and [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable) first, you can choose which folder to save vector assets in "Android Res Export" - "Preferences" dialog.
+For export vector drawable, you need to install [Node.js](https://nodejs.org/en/) (8.11.4 LTS or latest version) and [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable) (2.0.0+)first, you can choose which folder to save vector assets in "Android Res Export" - "Preferences" dialog.
 
 ## License
 

@@ -2,17 +2,12 @@
     Android
 ========================================================= */
 
-var ASSET_NAME_TYPES = [
-    "Base name. (a / b / c -> c)",
-    "Full name. (a / b / c -> a_b_c)"
-];
-
 var VECTORDRAWABLE_FOLDERS = [
     "drawable",
     "drawable-anydpi",
     "drawable-v21",
-    "drawable-v24",
     "drawable-anydpi-v21",
+    "drawable-v24",
     "drawable-anydpi-v24"
 ];
 
@@ -39,23 +34,38 @@ function dpiToScale(dpi) {
 function assetName(layer, type) {
     var nameArray = String(layer.name()).split(/\s*\/\s*/);
     var name;
-    // base name
+    // Valid last part of layer name.
     if (type == 0 || type == null) {
-        name = cleanName(nameArray.pop()).replace(/^\d+_*/, "");
+        name = cleanName(nameArray[nameArray.length - 1]).replace(/^\d+_*/, "");
     }
-    // full name
-    else {
+    // Valid full layer name
+    else if (type == 1) {
         var nameParts = [];
         nameArray.forEach(function(part) {
             nameParts.push(cleanName(part));
         });
         name = nameParts.join("_").replace(/^\d+_*/, "");
     }
-    if (name == "") {
-        return "untitled_" + layer.objectID().substringToIndex(8).lowercaseString();
-    } else {
-        return name;
+    // Last part of layer name.
+    else if (type == 2) {
+        name = nameArray[nameArray.length - 1];
+        name = name.replace(/[`~!@#$%^&*+=:;,<>?|(){}\[\]\\]/g, "");
+        name = name.trim();
     }
+    // Full layer name
+    else if (type == 3) {
+        name = String(layer.name()).replace(/\s*\/\s*/g, "_");
+        name = name.replace(/[`~!@#$%^&*+=:;,<>?|(){}\[\]\\]/g, "");
+        name = name.trim();
+    }
+
+    if (
+        name == "" ||
+        (name.match(/_/g) != null && name.match(/_/g).length == name.length)
+    ) {
+        return "untitled_" + layer.objectID().substringToIndex(8).lowercaseString();
+    }
+    return name;
 }
 
 function cleanName(name) {
