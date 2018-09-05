@@ -1,5 +1,5 @@
 {
-    "description": "Export Android resources in Sketch – PNG assets, app icon, nine-patch image, shape XML, color resource xml and vector drawable.",
+    "description": "Export Android resources in Sketch. Support bitmap, vector, nine-patch, app icon, shape XML and color.",
     "new_bitmap_asset": "New Bitmap Asset",
     "new_nine_patch_asset": "New Nine-Patch Asset",
     "new_app_icon": "New App Icon",
@@ -34,6 +34,10 @@
     "no_vector_drawable_asset": "No any vector drawable asset.",
     "export_dpis": "Export DPIs",
     "asset_name_type": "Asset Name Type",
+    "asset_name_type_0": "Valid last part of layer name. (a / b / c -> c)",
+    "asset_name_type_1": "Valid full layer name. (a / b / c -> a_b_c)",
+    "asset_name_type_2": "Last part of layer name. (a / b / c -> c)",
+    "asset_name_type_3": "Full layer name. (a / b / c -> a_b_c)",
     "vector_drawable_folder": "Vector Drawable Folder",
     "change_language": "Change Language",
     "others": "Others",

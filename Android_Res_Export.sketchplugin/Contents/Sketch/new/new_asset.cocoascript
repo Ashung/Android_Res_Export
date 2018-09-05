@@ -34,9 +34,9 @@ function newAsset(context, format) {
             var layerGroup = layer;
         } else {
             var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
+            layerGroup.setName(name);
         }
         var name = assetName(layer, assetNameType);
-        layerGroup.setName(name);
         addSliceInToGroup(layerGroup, name, format, true);
         layerGroup.setLayerListExpandedType(2);
     }

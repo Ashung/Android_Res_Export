@@ -16,12 +16,20 @@ var onRun = function(context) {
     var colorsDictionary = NSMutableDictionary.alloc().init();
     var baseColorNamesAndCount = NSMutableDictionary.alloc().init();
 
+    var assetNameType = getPreferences(context, "asset_name_type");
+    if (assetNameType == 2) {
+        assetNameType = 0;
+    } else if (assetNameType == 3) {
+        assetNameType = 1;
+    }
+
     var loopSelection = selection.objectEnumerator();
     var layer;
     while (layer = loopSelection.nextObject()) {
 
         // Name
-        var layerName = assetName(layer, getPreferences(context, "asset_name_type"));
+        var layerName = assetName(layer, assetNameType);
+
         if (baseColorNamesAndCount.objectForKey(layerName)) {
             var count = baseColorNamesAndCount.objectForKey(layerName) + 1;
             baseColorNamesAndCount.setObject_forKey(count, layerName);
