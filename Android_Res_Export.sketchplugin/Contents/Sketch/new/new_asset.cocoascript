@@ -26,6 +26,7 @@ function newAsset(context, format) {
     var loopSelection = selection.objectEnumerator();
     var layer;
     while (layer = loopSelection.nextObject()) {
+        var name = assetName(layer, assetNameType);
         if (
             layer.class() == "MSLayerGroup" ||
             layer.class() == "MSArtboardGroup" ||
@@ -36,7 +37,6 @@ function newAsset(context, format) {
             var layerGroup = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers([layer]));
             layerGroup.setName(name);
         }
-        var name = assetName(layer, assetNameType);
         addSliceInToGroup(layerGroup, name, format, true);
         layerGroup.setLayerListExpandedType(2);
     }
