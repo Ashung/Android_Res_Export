@@ -106,6 +106,26 @@ var onRun = function(context) {
     language.selectItemAtIndex(currentLanguageIndex);
     dialog.addAccessoryView(language);
 
+    // WebP Quality
+    var defaultWebpQuality = getSystemPreference("WebPQuality") || 1;
+    dialog.addAccessoryView(groupLabel(localizedString(context, "webp_quality")));
+    var sliderWrapper = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 30));
+    var slider = NSSlider.alloc().initWithFrame(NSMakeRect(0, 0, 230, 30));
+    slider.setMaxValue(1);
+    slider.setMinValue(0);
+    slider.setFloatValue(defaultWebpQuality);
+    slider.setNumberOfTickMarks(10);
+    slider.setAllowsTickMarkValuesOnly(false);
+    var sliderText = NSTextField.alloc().initWithFrame(NSMakeRect(250, 5, 50, 24));
+    sliderText.setStringValue(floatToPercent(slider.value()));
+    sliderWrapper.addSubview(slider);
+    sliderWrapper.addSubview(sliderText);
+    dialog.addAccessoryView(sliderWrapper);
+
+    slider.setCOSJSTargetFunction(function(sender) {
+        sliderText.setStringValue(floatToPercent(sender.value()));
+    });
+
     // Show in folder
     dialog.addAccessoryView(groupLabel(localizedString(context, "others")));
     var checkboxFinder = checkBox(
@@ -149,6 +169,16 @@ var onRun = function(context) {
                 localizedString(context, "language_file_not_found_desc", context.plugin.url().path() + "/Contents/Resources/manifest_" + Object.keys(LANGUAGES)[languageIndex] + ".json"),
                 localizedString(context, "language_file_not_found")
             );
+        }
+
+        var webpQuality = slider.value();
+        if (floatToPercent(slider.value()) != sliderText.stringValue()) {
+            webpQuality = percentToFloat(sliderText.stringValue());
+        }
+        if (webpQuality == 1) {
+            removeSystemPreference("WebPQuality");
+        } else {
+            setSystemPreference("WebPQuality", webpQuality);
         }
 
         setPreferences(context, "show_in_finder_after_export", checkboxFinder.state() == NSOnState ? true : false);
@@ -195,4 +225,12 @@ function divider() {
     view.setWantsLayer(true);
     view.layer().setBackgroundColor(CGColorCreateGenericRGB(0, 0, 0, 0.1));
     return view;
+}
+
+function floatToPercent(float) {
+    return Math.round(parseFloat(float) * 100) + "%";
+}
+
+function percentToFloat(percent) {
+    return Math.min(parseFloat(percent) / 100, 1);
 }
