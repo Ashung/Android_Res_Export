@@ -6,7 +6,7 @@ Export Android resources in Sketch.
 
 ## Features
 
-- Export PNG assets into multiple sizes.
+- Export PNG or WebP assets into multiple sizes.
 - Preview and export nine-patch assets into multiple sizes.
 - Export vector drawable asset, support gradient and mask.
 - Export app launcher icon for Android 8 and older version.

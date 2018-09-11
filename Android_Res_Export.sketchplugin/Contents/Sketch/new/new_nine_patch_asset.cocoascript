@@ -85,7 +85,7 @@ var onRun = function(context) {
         }
 
         groupNinePatch.resizeToFitChildrenWithOption(1);
-        groupNinePatch.setLayerListExpandedType(0);
+        groupNinePatch.setLayerListExpandedType(2);
 
         groupNinePatchs.push(groupNinePatch);
 

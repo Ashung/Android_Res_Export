@@ -6,7 +6,7 @@
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
     "icon": "plugin_icon.png",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "4",
     "bundleVersion": "1",
@@ -49,9 +49,14 @@
             "script": "preview/view_shape_code.cocoascript"
         },
         {
-            "name": "导出位图资源",
-            "identifier": "export_png_assets",
-            "script": "export/export_png_assets.cocoascript"
+            "name": "导出位图资源 (PNG)",
+            "identifier": "export_bitmap_assets_png",
+            "script": "export/export_bitmap_assets.cocoascript"
+        },
+        {
+            "name": "导出位图资源 (WebP)",
+            "identifier": "export_bitmap_assets_webp",
+            "script": "export/export_bitmap_assets.cocoascript"
         },
         {
             "name": "导出矢量资源",
@@ -110,7 +115,8 @@
             "new_nine_patch_asset",
             "new_app_icon",
             "-",
-            "export_png_assets",
+            "export_bitmap_assets_png",
+            "export_bitmap_assets_webp",
             "export_vector_assets",
             "export_nine_patch",
             "export_app_icon",

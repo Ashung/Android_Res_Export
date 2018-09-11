@@ -403,6 +403,23 @@ function setPreferences(context, key, value) {
     userDefaults.synchronize();
 }
 
+function getSystemPreference(key) {
+    var userDefaults = NSUserDefaults.standardUserDefaults();
+    return userDefaults.objectForKey(key);
+}
+
+function setSystemPreference(key, value) {
+    var userDefaults = NSUserDefaults.standardUserDefaults();
+    userDefaults.setObject_forKey(value, key);
+    userDefaults.synchronize();
+}
+
+function removeSystemPreference(key) {
+    var userDefaults = NSUserDefaults.standardUserDefaults();
+    userDefaults.removeObjectForKey(key);
+    userDefaults.synchronize();
+}
+
 /* =========================================================
     Command line tools
 ========================================================= */
