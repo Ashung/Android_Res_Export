@@ -32,15 +32,15 @@ can_not_create_nine_patch_from_artboard_or_symbol_master: 不可从画板或组�
 
 no_nine_patch_asset: 无任何点九资源。
 
-s2v_version_title: 您需要更新 svg2vectordrawable。
+s2v_version_title: 您需要更新 svg2vectordrawable 至 %1。
 s2v_version_message: |-
     在终端运行以下命令，以更新 svg2vectordrawable。
-    $ npm update -g svg2vectordrawable
+    sudo npm update -g svg2vectordrawable
 install_svgo_and_s2v_title: 请检查是否安装 SVGO 和 svg2vectordrawable。
 install_svgo_and_s2v_message: |-
     导出 Android 可绘制矢量文件功能需要安装 Node.js，SVGO 和 svg2vectordrawable。
     在安装完 Node.js 之后, 在终端运行以下命令。
-    $ npm install -g svgo svg2vectordrawable
+    sudo npm install -g svgo svg2vectordrawable
 no_vector_drawable_asset: 无任何矢量资源。
 
 export_dpis: 导出分辨率

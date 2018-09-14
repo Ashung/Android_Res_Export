@@ -17,10 +17,11 @@ var onRun = function(context) {
 
     // Check SVG2VectorDrawable version
     var s2vVersion = checkVersion(s2v);
-    if (versionCompare(s2vVersion, "2.0.0") == -1) {
+    var requireVersion = "2.1.0";
+    if (versionCompare(s2vVersion, requireVersion) == -1) {
         alert(
             context,
-            localizedString(context, "s2v_version_title"),
+            localizedString(context, "s2v_version_title", "v" + requireVersion),
             localizedString(context, "s2v_version_message")
         );
         return;
