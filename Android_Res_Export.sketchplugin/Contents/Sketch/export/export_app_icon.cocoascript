@@ -40,19 +40,19 @@ var onRun = function(context) {
             return;
         }
 
-        // Hide grid layers
-        var gridLayers = NSMutableArray.alloc().init();
+        // Hide grid symbol instances
         var gridStatus = {};
         var gridForAdaptiveIcon = getLayerWithNameFromParent("grid_android_o", page);
         var gridForLegacyIcon = getLayerWithNameFromParent("grid", page);
-        if (gridForAdaptiveIcon) {
-            gridLayers.addObjectsFromArray(gridForAdaptiveIcon.layers());
-        }
-        if (gridForLegacyIcon) {
-            gridLayers.addObjectsFromArray(gridForLegacyIcon.layers());
-        }
+        var predicate = NSPredicate.predicateWithFormat(
+            "className == 'MSSymbolInstance' and (symbolID == %@ or symbolID == %@)",
+            gridForAdaptiveIcon.symbolID(),
+            gridForLegacyIcon.symbolID()
+        );
+        var gridLayers = page.children().filteredArrayUsingPredicate(predicate);
         gridLayers.forEach(function(grid) {
-            gridStatus[grid.objectID() + ""] = grid.isVisible();
+            var objectID = String(grid.objectID());
+            gridStatus[objectID] = grid.isVisible();
             grid.setIsVisible(false);
         });
 
@@ -138,23 +138,13 @@ function exportIconAssets(context, exportConfig, outputConfig) {
     for (var i = 0; i < exportConfig.length; i++) {
         for (var j = 0; j < outputConfig.length; j++) {
 
-            var exportFormat = MSExportFormat.alloc().init();
-            exportFormat.setScale(exportConfig[i]["scale"]);
-
-            var exportRequest = MSExportRequest
-                .exportRequestFromExportFormat_layer_inRect_useIDForName(
-                exportFormat,
-                outputConfig[j]["layer"],
-                outputConfig[j]["layer"].frame().rect(),
-                false
-            );
+            var ancestry = outputConfig[j]["layer"].ancestry();
+            var exportRequest = MSExportRequest.exportRequestsFromLayerAncestry(ancestry).firstObject();
+            exportRequest.setFormat("png");
 
             var outputPath = outputConfig[j]["path"] + "/mipmap-" +
                 exportConfig[i]["suffix"] + "/" + outputConfig[j]["name"];
-
-            doc.saveExportRequest_toFile(
-                exportRequest, outputPath
-            );
+            doc.saveExportRequest_toFile(exportRequest, outputPath);
 
         }
     }

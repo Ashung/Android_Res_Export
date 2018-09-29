@@ -51,14 +51,7 @@ var onRun = function(context) {
             groupNinePatch.setName(name);
         }
 
-        var slice;
-        if (!getLayerWithNameFromParent("#9patch", groupContent)) {
-            slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
-        } else {
-            if (getLayerWithNameFromParent("#9patch", groupContent).class() != "MSSliceLayer") {
-                slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
-            }
-        }
+        var slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
         slice.select_byExtendingSelection(false, true);
 
         if (getLayerWithNameFromParent("patch", groupNinePatch)) {

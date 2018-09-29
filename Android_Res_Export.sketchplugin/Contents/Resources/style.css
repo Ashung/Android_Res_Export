@@ -128,11 +128,11 @@ input[type=range]:focus {
     background: #fff;
 }
 #foot-actions {
-    text-align: right;
     padding: 8px;
     align-items: center;
     display: flex;
     border-top: 1px solid #ddd;
+    flex-shrink: 0;
 }
 
 .gap {
