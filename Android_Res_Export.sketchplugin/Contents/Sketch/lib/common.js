@@ -170,12 +170,18 @@ function gradientStopsToColorArray(stops) {
 
 function groupFromSelection(context) {
     var selection = context.selection;
-    var group = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers(selection));
+    var group = groupFromLayers(selection);
     return group;
 }
 
 function groupFromLayers(layers) {
-    var group = MSLayerGroup.groupFromLayers(MSLayerArray.arrayWithLayers(layers));
+    var group;
+    var layerArray = MSLayerArray.arrayWithLayers(layers);
+    if (MSApplicationMetadata.metadata().appVersion >= 52) {
+        group = MSLayerGroup.groupWithLayers(layerArray);
+    } else {
+        group = MSLayerGroup.groupFromLayers(layerArray);
+    }
     return group;
 }
 
@@ -190,13 +196,9 @@ function addSliceInToGroup(layerGroup, name, format, useInfluenceRect) {
     slice.setName(name);
     slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);
-
-    if (slice.exportOptions().exportFormats().count() > 0) {
-        var exportOption = slice.exportOptions().exportFormats().firstObject();
-    } else {
-        var exportOption = slice.exportOptions().addExportFormat();
-    }
-
+    slice.exportOptions().removeAllExportFormats();
+    
+    var exportOption = slice.exportOptions().addExportFormat();
     exportOption.setFileFormat(format);
     exportOption.setName("");
     exportOption.setScale(1);
@@ -218,7 +220,12 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
 
     var rectangle = MSRectangleShape.alloc().init();
     rectangle.setRect(CGRectMake(posX, posY, width, height));
-    var shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
+    var shapeGroup;
+    if (MSApplicationMetadata.metadata().appVersion >= 52) {
+        shapeGroup = rectangle;
+    } else {
+        shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
+    }
     shapeGroup.setName(name);
 
     if (color) {

@@ -163,7 +163,11 @@ function getXMLFromLayer(context, layer) {
 
 function getLayerInfo(context, layer) {
     var result = {};
-    if (layer.class() == "MSShapeGroup") {
+    if (
+        layer.class() == "MSShapeGroup" ||
+        layer.class() == "MSRectangleShape" ||
+        layer.class() == "MSOvalShape"
+    ) {
 
         // Not support layer style
         if (
@@ -286,10 +290,13 @@ function getLayerInfo(context, layer) {
             }
         }
 
-        if (layer.children().count() == 2) {
+
+        if (layer.children().count() == 2 || layer.children().count() == 1) {
 
             var shapePath;
-            if (MSApplicationMetadata.metadata().appVersion >= 49) {
+            if (MSApplicationMetadata.metadata().appVersion >= 52) {
+                shapePath = layer;
+            } else if (MSApplicationMetadata.metadata().appVersion >= 49) {
                 shapePath = layer.children().lastObject();
             } else {
                 shapePath = layer.children().firstObject();

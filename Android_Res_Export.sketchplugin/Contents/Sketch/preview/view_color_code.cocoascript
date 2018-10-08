@@ -13,7 +13,7 @@ var onRun = function(context) {
         return;
     }
 
-    var colorsDictionary = NSMutableDictionary.alloc().init();
+    var colorsArray = NSMutableArray.alloc().init();
     var baseColorNamesAndCount = NSMutableDictionary.alloc().init();
 
     var assetNameType = getPreferences(context, "asset_name_type");
@@ -41,14 +41,24 @@ var onRun = function(context) {
         }
 
         // Color
-        if (layer.class() == "MSShapeGroup") {
+        if (
+            layer.class() == "MSShapeGroup" ||
+            layer.class() == "MSRectangleShape" ||
+            layer.class() == "MSOvalShape" ||
+            layer.class() == "MSShapePathLayer"
+        ) {
             if (layer.style().enabledFills().count() > 0) {
                 var fillType = layer.style().enabledFills().lastObject().fillType();
                 if (fillType == 0) {
                     var lastColor = layer.style().enabledFills().lastObject().color();
                     var color = colorToAndroid(lastColor);
                     var name = layerName;
-                    colorsDictionary.setObject_forKey(color, name);
+                    var colorsDictionary = NSMutableDictionary.alloc().init();
+                    colorsDictionary.setObject_forKey(name, "name");
+                    colorsDictionary.setObject_forKey(color, "color");
+                    if (!colorsArray.containsObject(colorsDictionary)) {
+                        colorsArray.addObject(colorsDictionary);
+                    }
                 }
                 if (fillType == 1) {
                     var stops = layer.style().enabledFills().lastObject().gradient().stops();
@@ -59,7 +69,12 @@ var onRun = function(context) {
                         var color = colorToAndroid(stop.color());
                         var name = layerName + "_gradient_stop_" + stopIndex;
                         stopIndex ++;
-                        colorsDictionary.setObject_forKey(color, name);
+                        var colorsDictionary = NSMutableDictionary.alloc().init();
+                        colorsDictionary.setObject_forKey(name, "name");
+                        colorsDictionary.setObject_forKey(color, "color");
+                        if (!colorsArray.containsObject(colorsDictionary)) {
+                            colorsArray.addObject(colorsDictionary);
+                        }
                     }
                 }
             }
@@ -67,29 +82,23 @@ var onRun = function(context) {
 
     }
 
-    if (colorsDictionary.allValues().count() == 0) {
+    if (colorsArray.count() == 0) {
         toast(context, localizedString(context, "no_color_in_selected_layers"));
         return;
     }
 
-    var allKeys = colorsDictionary.allKeys().mutableCopy();
-    allKeys.sort(function(a, b) {
-        if (a > b) {
-            return 1;
-        }
-        if (a < b) {
-            return -1;
-        }
-        return a - b;
-    });
+    var sortDescriptor = NSSortDescriptor.sortDescriptorWithKey_ascending_selector(
+        "name", true, "localizedStandardCompare:"
+    );
+    colorsArray = colorsArray.sortedArrayUsingDescriptors([sortDescriptor]);
 
     var xml = '<resources>\n';
 
-    for (var i = 0; i < allKeys.length; i ++) {
-        var key = allKeys[i];
-        var color = colorsDictionary.objectForKey(key);
+    colorsArray.forEach(function(color) {
+        var key = color.objectForKey("name");
+        var color = color.objectForKey("color");
         xml += '    <color name="' + key + '">' + color + '</color>\n';
-    }
+    });
 
     xml += "</resources>\n";
 
