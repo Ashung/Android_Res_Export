@@ -82,12 +82,7 @@ var onRun = function(context) {
                     style.removeAllStyleShadows();
                     style.contextSettings().setBlendMode(0);
                 }
-                else if (
-                    layer.class() == "MSShapeGroup" ||
-                    layer.class() == "MSRectangleShape" ||
-                    layer.class() == "MSOvalShape" ||
-                    layer.class() == "MSShapePathLayer"
-                ) {
+                else if (styleLayer(layer)) {
                     layer.flatten();
 
                     var style = layer.style();
@@ -261,4 +256,24 @@ function versionCompare(version1, version2) {
         }
     }
     return 0;
+}
+
+function styleLayer(layer) {
+    if (MSApplicationMetadata.metadata().appVersion >= 52) {
+        if (
+            layer.class() == "MSShapeGroup" ||
+            layer.class() == "MSRectangleShape" ||
+            layer.class() == "MSOvalShape" ||
+            layer.class() == "MSShapePathLayer" ||
+            layer.class() == "MSStarShape" ||
+            layer.class() == "MSPolygonShape"
+        ) {
+            return true;
+        }
+    } else {
+        if (layer.class() == "MSShapeGroup") {
+            return true;
+        }
+    }
+    return false;
 }
