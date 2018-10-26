@@ -57,6 +57,8 @@ var onRun = function(context) {
             });
         }
 
+        toast(context, localizedString(context, "export_done"));
+
         if (getPreferences(context, "show_in_finder_after_export") == 1) {
             showInFinder(exportFolder);
         }
