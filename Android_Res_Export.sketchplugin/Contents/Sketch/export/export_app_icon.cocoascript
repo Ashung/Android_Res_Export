@@ -119,6 +119,8 @@ var onRun = function(context) {
             page.layerWithID(layerID).setIsVisible(gridStatus[layerID]);
         }
 
+        toast(context, localizedString(context, "export_done"));
+
         // Open in Finder.
         if (getPreferences(context, "show_in_finder_after_export") == 1) {
             showInFinder(exportFolder);

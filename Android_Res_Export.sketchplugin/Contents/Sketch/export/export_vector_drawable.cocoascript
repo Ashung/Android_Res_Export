@@ -27,7 +27,6 @@ var onRun = function(context) {
         return;
     }
 
-    var doc = context.document;
     var selection = context.selection;
 
     var exportVectorAssets;
@@ -66,7 +65,7 @@ var onRun = function(context) {
         while (slice = loopExportVectors.nextObject()) {
 
             var vectorAssetGroup = slice.parentGroup();
-            var vectorAssetGroupCopy = vectorAssetGroup.copy();
+            var vectorAssetGroupCopy = vectorAssetGroup.duplicate();
 
             var sliceCopy;
             var fillSweepGradients = [];
@@ -83,7 +82,7 @@ var onRun = function(context) {
                     style.contextSettings().setBlendMode(0);
                 }
                 else if (styleLayer(layer)) {
-                    layer.flatten();
+                    // layer.flatten();
 
                     var style = layer.style();
                     style.removeAllStyleShadows();
@@ -180,7 +179,11 @@ var onRun = function(context) {
             var outputPath = exportFolder + "/" + vectorAssetFolder + "/" + assetName(slice, assetNameType) + ".xml";
             svg2vector(s2v, svgCode, outputPath);
 
+            vectorAssetGroupCopy.removeFromParent();
+
         }
+
+        toast(context, localizedString(context, "export_done"));
 
         if (getPreferences(context, "show_in_finder_after_export") == 1) {
             showInFinder(exportFolder + "/" + vectorAssetFolder);
