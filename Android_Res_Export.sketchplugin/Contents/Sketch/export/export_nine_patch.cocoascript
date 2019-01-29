@@ -40,15 +40,16 @@ var onRun = function(context) {
         var ninePatch;
         while (ninePatch = loopExportNinePatches.nextObject()) {
 
+            var ninePatchGroup = ninePatch.group;
             var ninePatchContent = ninePatch.content;
             var ninePatchPatch = ninePatch.patch;
-            var ninePatchName = assetName(ninePatchPatch.parentGroup(), assetNameType);
+            var ninePatchName = assetName(ninePatchGroup, assetNameType);
 
             // Patch lines round to pixel
             var loopNinePatchLines = ninePatchPatch.children().objectEnumerator();
             var line;
             while (line = loopNinePatchLines.nextObject()) {
-                if (line.class() == "MSShapeGroup") {
+                if (line.class() == "MSShapeGroup" || line.class() == "MSRectangleShape") {
                     line.absoluteRect().setX(Math.round(line.absoluteRect().x()));
                     line.absoluteRect().setY(Math.round(line.absoluteRect().y()));
                     var width = Math.round(line.absoluteRect().width()) < 1 ? 1 : Math.round(line.absoluteRect().width());
@@ -59,76 +60,79 @@ var onRun = function(context) {
             }
 
             // Save nine-patch patch NSImage at mdpi
-            var exportRequestForPatch = MSExportRequest.exportRequestsFromLayerAncestry(ninePatchPatch.ancestry()).firstObject();
-            exportRequestForPatch.setFormat("png");
-            exportRequestForPatch.setScale(1);
-            var exporterForPatch = MSExporter.exporterForRequest_colorSpace(exportRequestForPatch, doc.colorSpace());
-            var pathImage = exporterForPatch.image();
-
-            // Nine-patch content
-            var exportRequestForContent = MSExportRequest.exportRequestsFromLayerAncestry(ninePatchContent.ancestry()).firstObject();
-            exportRequestForContent.setFormat("png");
+            var nsImageOfPatchTop = imageOfLayer_rect_scale(
+                doc,
+                ninePatchPatch,
+                CGRectMake(ninePatchPatch.absoluteRect().x() + 1, ninePatchPatch.absoluteRect().y(), ninePatchPatch.absoluteRect().width() - 2, 1),
+                1
+            );
+            var nsImageOfPatchRight = imageOfLayer_rect_scale(
+                doc,
+                ninePatchPatch,
+                CGRectMake(ninePatchPatch.absoluteRect().x() + ninePatchPatch.absoluteRect().width() - 1, ninePatchPatch.absoluteRect().y() + 1, 1, ninePatchPatch.absoluteRect().height() - 2),
+                1
+            );
+            var nsImageOfPatchBottom = imageOfLayer_rect_scale(
+                doc,
+                ninePatchPatch,
+                CGRectMake(ninePatchPatch.absoluteRect().x() + 1, ninePatchPatch.absoluteRect().y() + ninePatchPatch.absoluteRect().height() - 1, ninePatchPatch.absoluteRect().width() - 2, 1),
+                1
+            );
+            var nsImageOfPatchLeft = imageOfLayer_rect_scale(
+                doc,
+                ninePatchPatch,
+                CGRectMake(ninePatchPatch.absoluteRect().x(), ninePatchPatch.absoluteRect().y() + 1, 1, ninePatchPatch.absoluteRect().height() - 2),
+                1
+            );
 
             exportDpis.forEach(function(dpi) {
 
                 var scale = dpiToScale(dpi);
-                exportRequestForContent.setScale(scale);
-                var exporterForContent = MSExporter.exporterForRequest_colorSpace(exportRequestForContent, doc.colorSpace());
-                var contentImage = exporterForContent.image();
-                var contentImageSize = contentImage.representations().firstObject().size();
-                contentImage.setSize(contentImageSize);
+                if (scale == 1) {
 
-                // Scale path lines
-                var pathImageTop = cropAndScale(pathImage, 1, 0, pathImage.size().width - 2, 1, scale);
-                var pathImageRight = cropAndScale(pathImage, pathImage.size().width - 1, 1, 1, pathImage.size().height - 2, scale);
-                var pathImageBottom = cropAndScale(pathImage, 1, pathImage.size().height - 1, pathImage.size().width - 2, 1, scale);
-                var pathImageLeft = cropAndScale(pathImage, 0, 1, 1, pathImage.size().height - 2, scale);
+                    // Mkdir
+                    var outputFolder = exportFolder + "/drawable-mdpi";
+                    var outputPath = outputFolder + "/" + ninePatchName + ".9.png";
+                    mkdir(outputFolder);
 
-                var resultImageSize = CGSizeMake(contentImageSize.width + 2, contentImageSize.height + 2);
-                var resultImage = NSImage.alloc().initWithSize(resultImageSize);
-                resultImage.lockFocus();
-                contentImage.drawAtPoint_fromRect_operation_fraction(
-                    NSMakePoint(1, 1),
-                    NSMakeRect(0, 0, contentImageSize.width, contentImageSize.height),
-                    NSCompositeCopy,
-                    1.0
-                );
-                pathImageTop.drawAtPoint_fromRect_operation_fraction(
-                    NSMakePoint(1, resultImageSize.height - 1),
-                    CGRectMake(0, 0, contentImageSize.width, 1),
-                    NSCompositeCopy,
-                    1.0
-                );
-                pathImageRight.drawAtPoint_fromRect_operation_fraction(
-                    NSMakePoint(resultImageSize.width - 1, 1),
-                    CGRectMake(0, 0, 1, contentImageSize.height),
-                    NSCompositeCopy,
-                    1.0
-                );
-                pathImageBottom.drawAtPoint_fromRect_operation_fraction(
-                    NSMakePoint(1, 0),
-                    CGRectMake(0, 0, contentImageSize.width, 1),
-                    NSCompositeCopy,
-                    1.0
-                );
-                pathImageLeft.drawAtPoint_fromRect_operation_fraction(
-                    NSMakePoint(0, 1),
-                    CGRectMake(0, 0, 1, contentImageSize.height),
-                    NSCompositeCopy,
-                    1.0
-                );
-                resultImage.unlockFocus();
+                    var exportRequestOfPatchGroup = exportRequestOfLayer_inRect_scale(ninePatchGroup, ninePatchGroup.absoluteRect().rect(), 1);
+                    doc.saveExportRequest_toFile(exportRequestOfPatchGroup, outputPath);
 
-                // Mkdir
-                var outputFolder = exportFolder + "/drawable-" + dpi;
-                var outputPath = outputFolder + "/" + ninePatchName + ".9.png";
-                mkdir(outputFolder);
+                }
+                else {
 
-                // Save image
-                var imageRepForResult = NSBitmapImageRep.imageRepWithData(resultImage.TIFFRepresentation());
-                imageRepForResult.setSize(resultImageSize);
-                var imageDataForResult = imageRepForResult.representationUsingType_properties(NSPNGFileType, nil);
-                imageDataForResult.writeToFile_atomically(outputPath, "NO");
+                    var nsImageOfPatchContent = imageOfLayer_rect_scale(doc, ninePatchContent, ninePatchContent.absoluteRect().rect(), scale);
+                    var bitmapRepOfPatchContent = bitmapRepFromNSImage_scale(nsImageOfPatchContent, 1);
+                    var bitmapRepOfPatchTop = bitmapRepFromNSImage_scale(nsImageOfPatchTop, scale);
+                    var bitmapRepOfPatchRight = bitmapRepFromNSImage_scale(nsImageOfPatchRight, scale);
+                    var bitmapRepOfPatchBottom= bitmapRepFromNSImage_scale(nsImageOfPatchBottom, scale);
+                    var bitmapRepOfPatchLeft = bitmapRepFromNSImage_scale(nsImageOfPatchLeft, scale);
+                    
+                    var contentImageSize = nsImageOfPatchContent.size();
+                    var scaleFactor = NSScreen.mainScreen().backingScaleFactor();
+                    var resultImageSize = NSMakeSize(Math.round((contentImageSize.width + 2)), Math.round((contentImageSize.height + 2)));
+                    var resultImage = NSImage.alloc().initWithSize(resultImageSize);
+                    resultImage.lockFocus();
+                    NSGraphicsContext.currentContext().setImageInterpolation(NSImageInterpolationNone);
+                    var transform = NSAffineTransform.transform();
+                    transform.scaleXBy_yBy(1 / scaleFactor, 1 / scaleFactor);
+                    transform.concat();
+                    nsImageOfPatchContent.drawRepresentation_inRect(bitmapRepOfPatchContent, NSMakeRect(1, 1, contentImageSize.width, contentImageSize.height));
+                    nsImageOfPatchTop.drawRepresentation_inRect(bitmapRepOfPatchTop, NSMakeRect(1, resultImageSize.height - 1, contentImageSize.width, 1));
+                    nsImageOfPatchRight.drawRepresentation_inRect(bitmapRepOfPatchRight, NSMakeRect(resultImageSize.width - 1, 1, 1, contentImageSize.height));
+                    nsImageOfPatchBottom.drawRepresentation_inRect(bitmapRepOfPatchBottom, NSMakeRect(1, 1 - bitmapRepOfPatchBottom.pixelsHigh(), contentImageSize.width, 1));
+                    nsImageOfPatchLeft.drawRepresentation_inRect(bitmapRepOfPatchLeft, NSMakeRect(1 - bitmapRepOfPatchLeft.pixelsWide(), 1, 1, contentImageSize.height));
+                    var resultImageBitmapRep = NSBitmapImageRep.alloc().initWithFocusedViewRect(NSMakeRect(0, 0, resultImageSize.width, resultImageSize.height));
+                    resultImage.unlockFocus();
+
+                    // Mkdir
+                    var outputFolder = exportFolder + "/drawable-" + dpi;
+                    var outputPath = outputFolder + "/" + ninePatchName + ".9.png";
+                    mkdir(outputFolder);
+
+                    saveBitmapRep(resultImageBitmapRep, outputPath);
+
+                }
 
             });
         }
@@ -141,31 +145,49 @@ var onRun = function(context) {
     }
 };
 
-function cropAndScale(nsimage, x, y, w, h, scale) {
-    var originalImage = nsimage.copy();
-    var imageCorp = NSImage.alloc().initWithSize(NSMakeSize(w, h));
-    imageCorp.lockFocus();
-    originalImage.drawAtPoint_fromRect_operation_fraction(
-        NSMakePoint(0, 0),
-        NSMakeRect(x, originalImage.size().height - h - y, w, h),
-        NSCompositeCopy,
-        1.0
+function exportRequestOfLayer_inRect_scale(layer, rect, scale) {
+    var exportRequest = MSExportRequest.exportRequestsFromLayerAncestry_inRect(layer.ancestry(), rect).firstObject();
+    exportRequest.setFormat("png");
+    exportRequest.setScale(scale);
+    return exportRequest;
+}
+
+function imageOfLayer_rect_scale(doc, layer, rect, scale) {
+    var exportRequest = exportRequestOfLayer_inRect_scale(layer, rect, scale);
+    var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, doc.colorSpace());
+    var image = exporter.image();
+    var imageSize = NSMakeSize(Math.round(rect.size.width * scale), Math.round(rect.size.height * scale));
+    image.setSize(imageSize);
+    return image;
+}
+
+function bitmapRepFromNSImage_scale(nsImage, scale) {
+    var scaledSize = NSMakeSize(Math.round(nsImage.size().width * scale), Math.round(nsImage.size().height * scale));
+    var imageData = nsImage.TIFFRepresentation();
+    var imageRep = NSBitmapImageRep.imageRepWithData(imageData);
+    imageRep.setSize(scaledSize);
+    imageRep.setPixelsWide(scaledSize.width);
+    imageRep.setPixelsHigh(scaledSize.height);
+
+    var scaleFactor = NSScreen.mainScreen().backingScaleFactor();
+    var imageScale = NSImage.alloc().initWithSize(
+        NSMakeSize(Math.round(nsImage.size().width * scale / scaleFactor), Math.round(nsImage.size().height * scale / scaleFactor))
     );
-    imageCorp.unlockFocus();
-    var scaledSize = NSMakeSize(Math.round(w * scale), Math.round(h * scale));
-    var imageScale = NSImage.alloc().initWithSize(scaledSize);
     imageScale.lockFocus();
-    imageCorp.setScalesWhenResized(true);
-    imageCorp.setSize(scaledSize);
     NSGraphicsContext.currentContext().setImageInterpolation(NSImageInterpolationNone);
-    imageCorp.drawAtPoint_fromRect_operation_fraction(
-        NSMakePoint(0, 0),
-        NSMakeRect(0, 0, scaledSize.width, scaledSize.height),
-        NSCompositeCopy,
-        1.0
-    );
+    var transform = NSAffineTransform.transform();
+    transform.scaleXBy_yBy(1 / scaleFactor, 1 / scaleFactor);
+    transform.concat();
+    nsImage.drawRepresentation_inRect(imageRep, NSMakeRect(0, 0, imageScale.size().width, imageScale.size().height));
+    var bitmapRep = NSBitmapImageRep.alloc().initWithFocusedViewRect(NSMakeRect(0, 0, scaledSize.width, scaledSize.height));
     imageScale.unlockFocus();
-    return imageScale;
+
+    return bitmapRep;
+}
+
+function saveBitmapRep(bitmapRep, path) {
+    var imageData = bitmapRep.representationUsingType_properties(NSPNGFileType, nil);
+    imageData.writeToFile_atomically(path, "NO");
 }
 
 function getNinePatchAssetFromDocument(context) {
@@ -179,8 +201,9 @@ function getNinePatchAssetFromDocument(context) {
     while (slice = loopSlices.nextObject()) {
         if (isNinePatchLayerGroup(slice)) {
             assets.addObject({
+                "group": slice.parentGroup().parentGroup(),
                 "patch": getLayerWithNameFromParent("patch", slice.parentGroup().parentGroup()),
-                "content": slice
+                "content": slice.parentGroup()
             });
         }
     }
@@ -200,8 +223,9 @@ function getNinePatchAssetFromSelection(context) {
         while (slice = loopSlices.nextObject()) {
             if (isNinePatchLayerGroup(slice)) {
                 assets.addObject({
+                    "group": layer,
                     "patch": getLayerWithNameFromParent("patch", slice.parentGroup().parentGroup()),
-                    "content": slice
+                    "content": slice.parentGroup()
                 });
             }
         }
