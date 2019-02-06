@@ -77,7 +77,11 @@ var onRun = function(context) {
             groupPatch.setName("patch");
         }
 
-        groupNinePatch.resizeToFitChildrenWithOption(1);
+        if (MSApplicationMetadata.metadata().appVersion >= 53) {
+            groupNinePatch.fixGeometryWithOptions(1);
+        } else {
+            groupNinePatch.resizeToFitChildrenWithOption(1);
+        }
         groupNinePatch.setLayerListExpandedType(2);
 
         groupNinePatchs.push(groupNinePatch);
