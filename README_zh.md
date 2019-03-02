@@ -1,6 +1,6 @@
 ![](android_res_export.png)
 
-Android Res Export 是目前 Sketch 平台上最强大的 Android 资源导出插件。
+Android Res Export 是目前 Sketch 上最强大的 Android 资源导出插件。
 
 ## 功能
 
@@ -15,7 +15,7 @@ Android Res Export 是目前 Sketch 平台上最强大的 Android 资源导出�
 ## 安装
 
 - 推荐在 [Sketch Runner](http://sketchrunner.com/) 搜索 “Android Res Export”。
-- 下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip)，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
+- 或下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip)，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
 
 ## 插件使用
 

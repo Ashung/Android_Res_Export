@@ -2,14 +2,14 @@
 
 var onRun = function(context) {
 
+    ga(context, "New", "new_app_icon");
+
     importFromResource_toPage_withMetadate(
         context,
         "app_icon_template.sketch",
         "App Icon",
         {"is_android_app_icon_template": true}
     );
-
-    ga(context, "New", "new_app_icon");
 
 }
 

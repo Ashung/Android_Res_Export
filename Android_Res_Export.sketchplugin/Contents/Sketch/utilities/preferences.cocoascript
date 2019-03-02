@@ -134,6 +134,14 @@ var onRun = function(context) {
     );
     dialog.addAccessoryView(checkboxFinder);
 
+    // Disable Google Analytics
+    var ga_uuid = getPreferences(context, "ga_uuid");
+    var checkboxDisableGA = checkBox(
+        (!ga_uuid || ga_uuid == "00000000-0000-0000-0000-000000000000") ? true : false,
+        localizedString(context, "ga_disable")
+    );
+    dialog.addAccessoryView(checkboxDisableGA);
+
     dialog.addButtonWithTitle(localizedString(context, "ok"));
     dialog.addButtonWithTitle(localizedString(context, "cancel"));
 
@@ -182,6 +190,8 @@ var onRun = function(context) {
         }
 
         setPreferences(context, "show_in_finder_after_export", checkboxFinder.state() == NSOnState ? true : false);
+
+        setPreferences(context, "ga_disable", checkboxDisableGA.state() == NSOnState ? true : false);
 
     }
 };

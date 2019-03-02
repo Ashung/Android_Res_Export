@@ -480,11 +480,27 @@ function runCommand(command, args, callback) {
 
 function ga(context, eventCategory, eventAction, eventLabel, eventValue) {
 
-    var uuidKey = 'google.analytics.uuid';
-    var uuid = NSUserDefaults.standardUserDefaults().objectForKey(uuidKey);
+    var uuid = getPreferences(context, "ga_uuid");
     if (!uuid) {
-        uuid = NSUUID.UUID().UUIDString();
-        NSUserDefaults.standardUserDefaults().setObject_forKey(uuid, uuidKey);
+        var dialog = NSAlert.alloc().init();
+        var icon = NSImage.alloc().initWithContentsOfURL(context.plugin.urlForResourceNamed("icon.png"));
+        dialog.setIcon(icon);
+        dialog.setMessageText("Android Res Export");
+        dialog.setInformativeText(localizedString(context, "ga_tip"));
+        dialog.addButtonWithTitle(localizedString(context, "agree"));
+        dialog.addButtonWithTitle(localizedString(context, "disagree"));
+        var responseCode = dialog.runModal();
+        if (responseCode == 1000) {
+            setPreferences(context, "ga_uuid", NSUUID.UUID().UUIDString());
+        }
+        if (responseCode == 1001) {
+            setPreferences(context, "ga_uuid", "00000000-0000-0000-0000-000000000000");
+        }
+    }
+
+    uuid = getPreferences(context, "ga_uuid");
+    if (uuid == "00000000-0000-0000-0000-000000000000") {
+        return;
     }
 
     var trackingID = "UA-99098773-1",
