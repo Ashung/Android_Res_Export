@@ -83,3 +83,8 @@ html_label_height: 高
 html_label_content: 内容区
 
 export_done: 导出完成！
+
+ga_disable: 禁用 “谷歌分析” 跟踪用户数据。
+ga_tip: 插件使用 “谷歌分析” 跟踪用户国家地区、语言及插件执行动作等信息用于改进插件体验，点击 “不同意” 禁用分析功能不会影响插件使用。
+agree: 同意
+disagree: 不同意

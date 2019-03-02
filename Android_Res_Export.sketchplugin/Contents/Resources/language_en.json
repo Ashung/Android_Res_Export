@@ -67,5 +67,9 @@
     "html_label_width": "Width",
     "html_label_height": "Height",
     "html_label_content": "Content",
-    "export_done": "Export done!"
+    "export_done": "Export done!",
+    "ga_disable": "Disable Google Analytics tacking.",
+    "ga_tip": "This plugin use Google Analytics for tacking user area, language and plugin action, that used to help improve plugin. You can \"Disagree\" to disable it.",
+    "agree": "Agree",
+    "disagree": "Disagree"
 }

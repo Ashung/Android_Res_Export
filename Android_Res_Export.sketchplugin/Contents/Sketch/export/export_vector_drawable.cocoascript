@@ -65,49 +65,23 @@ var onRun = function(context) {
         while (slice = loopExportVectors.nextObject()) {
 
             var vectorAssetGroup = slice.parentGroup();
-            var vectorAssetGroupCopy = vectorAssetGroup.duplicate();
-
-            var sliceCopy;
             var fillSweepGradients = [];
             var strokeSweepGradients = [];
-            var loopAssetChildren = vectorAssetGroupCopy.children().objectEnumerator();
+            var loopAssetChildren = vectorAssetGroup.children().objectEnumerator();
             var layer;
             while (layer = loopAssetChildren.nextObject()) {
-                if (layer.class() == "MSBitmapLayer" || layer.class() == "MSTextLayer" || layer.class() == "MSSymbolInstance") {
-                    layer.removeFromParent();
-                }
-                else if (layer.class() == "MSLayerGroup") {
+                if (styleLayer(layer)) {
+ 
                     var style = layer.style();
-                    style.removeAllStyleShadows();
-                    style.contextSettings().setBlendMode(0);
-                }
-                else if (styleLayer(layer)) {
-                    // layer.flatten();
 
-                    var style = layer.style();
-                    style.removeAllStyleShadows();
-                    style.removeAllStyleInnerShadows();
-                    style.blur().setIsEnabled(false);
-                    style.contextSettings().setBlendMode(0);
-
-                    var lastSupportedFill;
-                    style.fills().forEach(function(fill) {
-                        if (fill.isEnabled() == true && (fill.fillType() == 0 || fill.fillType() == 1)) {
-                            lastSupportedFill = fill;
-                        } else {
-                            style.removeStyleFill(fill);
-                        }
-                    });
-                    if (lastSupportedFill) {
-                        style.removeAllStyleFills();
-                        style.addStyleFill(lastSupportedFill);
-                        if (lastSupportedFill.fillType() == 1) {
-                            if (lastSupportedFill.gradient().gradientType() == 2) {
+                    style.enabledFills().forEach(function(fill) {
+                        if (fill.fillType() == 1) {
+                            if (fill.gradient().gradientType() == 2) {
                                 var sweepGradient = {
-                                    tagId: "sweep-" + lastSupportedFill.objectID(),
+                                    tagId: "sweep-" + fill.objectID(),
                                     stops: []
                                 };
-                                lastSupportedFill.gradient().stops().forEach(function(stop) {
+                                fill.gradient().stops().forEach(function(stop) {
                                     sweepGradient.stops.push({
                                         color: colorToAndroid(stop.color()),
                                         offset: stop.position()
@@ -116,26 +90,16 @@ var onRun = function(context) {
                                 fillSweepGradients.push(sweepGradient);
                             }
                         }
-                    }
-
-                    var lastSupportedBorder;
-                    style.borders().forEach(function(border) {
-                        if (border.isEnabled() == true) {
-                            lastSupportedBorder = border;
-                        } else {
-                            style.removeStyleBorder(border);
-                        }
                     });
-                    if (lastSupportedBorder) {
-                        style.removeAllStyleBorders();
-                        style.addStyleBorder(lastSupportedBorder);
-                        if (lastSupportedBorder.fillType() == 1) {
-                            if (lastSupportedBorder.gradient().gradientType() == 2) {
+
+                    style.enabledBorders().forEach(function(border) {
+                        if (border.fillType() == 1) {
+                            if (border.gradient().gradientType() == 2) {
                                 var sweepGradient = {
-                                    tagId: "sweep-" + lastSupportedBorder.objectID(),
+                                    tagId: "sweep-" + border.objectID(),
                                     stops: []
                                 };
-                                lastSupportedBorder.gradient().stops().forEach(function(stop) {
+                                border.gradient().stops().forEach(function(stop) {
                                     sweepGradient.stops.push({
                                         color: colorToAndroid(stop.color()),
                                         offset: stop.position()
@@ -144,17 +108,13 @@ var onRun = function(context) {
                                 strokeSweepGradients.push(sweepGradient);
                             }
                         }
-                    }
-                }
-                else if (layer.class() == "MSSliceLayer") {
-                    if (layer.exportOptions().firstFormat() == "svg") {
-                        sliceCopy = layer;
-                    }
+                    });
+
                 }
             }
 
             // SVG code
-            var exportRequest = MSExportRequest.exportRequestsFromExportableLayer(sliceCopy).firstObject();
+            var exportRequest = MSExportRequest.exportRequestsFromExportableLayer(slice).firstObject();
             var exporter = MSExporter.exporterForRequest_colorSpace(exportRequest, NSColorSpace.sRGBColorSpace());
             var svgData = exporter.data();
             var svgCode = NSString.alloc().initWithData_encoding(svgData, NSUTF8StringEncoding);
@@ -178,8 +138,6 @@ var onRun = function(context) {
             // Export
             var outputPath = exportFolder + "/" + vectorAssetFolder + "/" + assetName(slice, assetNameType) + ".xml";
             svg2vector(s2v, svgCode, outputPath);
-
-            vectorAssetGroupCopy.removeFromParent();
 
         }
 

@@ -3,7 +3,7 @@
 
 var onRun = function(context) {
 
-    ga(context, "Preview", "view_color_code_from_selected_layer");
+    ga(context, "Preview", "view_color_code");
 
     var doc = context.document;
     var selection = context.selection;
