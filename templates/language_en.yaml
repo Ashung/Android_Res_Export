@@ -88,3 +88,5 @@ ga_disable: Disable Google Analytics tacking.
 ga_tip: This plugin use Google Analytics for tacking user area, language and plugin action, that used to help improve plugin. You can "Disagree" to disable it.
 agree: Agree
 disagree: Disagree
+
+vector_drawable_precision: The precision of pathData in Vector Drawable

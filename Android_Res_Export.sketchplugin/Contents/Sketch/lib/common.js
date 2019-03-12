@@ -182,6 +182,7 @@ function groupFromLayers(layers) {
     } else {
         group = MSLayerGroup.groupFromLayers(layerArray);
     }
+    // group.absoluteInfluenceRect().setRect(group.absoluteInfluenceRect());
     return group;
 }
 
@@ -194,7 +195,7 @@ function addSliceInToGroup(layerGroup, name, format, useInfluenceRect) {
         slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
     }
     slice.setName(name);
-    slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
+    // slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);
     slice.exportOptions().removeAllExportFormats();
     
@@ -202,6 +203,12 @@ function addSliceInToGroup(layerGroup, name, format, useInfluenceRect) {
     exportOption.setFileFormat(format);
     exportOption.setName("");
     exportOption.setScale(1);
+
+    if (MSApplicationMetadata.metadata().appVersion >= 53) {
+        layerGroup.fixGeometryWithOptions(1);
+    } else {
+        layerGroup.resizeToFitChildrenWithOption(1);
+    }
 
     return slice;
 }

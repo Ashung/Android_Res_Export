@@ -114,7 +114,7 @@ var onRun = function(context) {
     slider.setMaxValue(1);
     slider.setMinValue(0);
     slider.setFloatValue(defaultWebpQuality);
-    slider.setNumberOfTickMarks(10);
+    slider.setNumberOfTickMarks(11);
     slider.setAllowsTickMarkValuesOnly(false);
     var sliderText = NSTextField.alloc().initWithFrame(NSMakeRect(250, 5, 50, 24));
     sliderText.setStringValue(floatToPercent(slider.value()));
@@ -124,6 +124,28 @@ var onRun = function(context) {
 
     slider.setCOSJSTargetFunction(function(sender) {
         sliderText.setStringValue(floatToPercent(sender.value()));
+    });
+
+    // Vector Drawable path data float precision
+    var defaultVectorDrawablePrecision = getPreferences(context, "vector_drawable_precision") || 2;
+    dialog.addAccessoryView(groupLabel(localizedString(context, "vector_drawable_precision")));
+    var sliderWrapper2 = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 30));
+    var slider2 = NSSlider.alloc().initWithFrame(NSMakeRect(0, 0, 230, 30));
+    slider2.setMaxValue(6);
+    slider2.setMinValue(0);
+    slider2.setFloatValue(defaultVectorDrawablePrecision);
+    slider2.setNumberOfTickMarks(7);
+    slider2.setAllowsTickMarkValuesOnly(true);
+
+    var sliderText2 = NSTextField.alloc().initWithFrame(NSMakeRect(250, 5, 50, 24));
+    sliderText2.setStringValue(slider2.value());
+    sliderText2.setEditable(false);
+    sliderWrapper2.addSubview(slider2);
+    sliderWrapper2.addSubview(sliderText2);
+    dialog.addAccessoryView(sliderWrapper2);
+
+    slider2.setCOSJSTargetFunction(function(sender) {
+        sliderText2.setStringValue(sender.value());
     });
 
     // Show in folder
@@ -188,6 +210,8 @@ var onRun = function(context) {
         } else {
             setSystemPreference("WebPQuality", webpQuality);
         }
+
+        setPreferences(context, "vector_drawable_precision", parseInt(sliderText2.stringValue()));
 
         setPreferences(context, "show_in_finder_after_export", checkboxFinder.state() == NSOnState ? true : false);
 
