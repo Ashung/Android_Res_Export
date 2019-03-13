@@ -51,7 +51,7 @@ var onRun = function(context) {
             groupNinePatch.setName(name);
         }
 
-        var slice = addSliceInToGroup(groupContent, "#9patch", "png", true);
+        var slice = addSliceInToGroup(groupContent, "#9patch", "png");
         slice.select_byExtendingSelection(false, true);
 
         if (getLayerWithNameFromParent("patch", groupNinePatch)) {

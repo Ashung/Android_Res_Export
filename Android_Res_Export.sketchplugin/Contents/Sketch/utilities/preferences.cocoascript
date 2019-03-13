@@ -132,9 +132,9 @@ var onRun = function(context) {
     var sliderWrapper2 = NSView.alloc().initWithFrame(NSMakeRect(0, 0, 300, 30));
     var slider2 = NSSlider.alloc().initWithFrame(NSMakeRect(0, 0, 230, 30));
     slider2.setMaxValue(6);
-    slider2.setMinValue(0);
+    slider2.setMinValue(1);
     slider2.setFloatValue(defaultVectorDrawablePrecision);
-    slider2.setNumberOfTickMarks(7);
+    slider2.setNumberOfTickMarks(6);
     slider2.setAllowsTickMarkValuesOnly(true);
 
     var sliderText2 = NSTextField.alloc().initWithFrame(NSMakeRect(250, 5, 50, 24));
