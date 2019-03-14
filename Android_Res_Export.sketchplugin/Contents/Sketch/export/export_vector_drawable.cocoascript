@@ -17,7 +17,7 @@ var onRun = function(context) {
 
     // Check SVG2VectorDrawable version
     var s2vVersion = checkVersion(s2v);
-    var requireVersion = "2.6.5";
+    var requireVersion = "2.6.10";
     if (versionCompare(s2vVersion, requireVersion) == -1) {
         alert(
             context,
@@ -59,6 +59,8 @@ var onRun = function(context) {
         } else {
             vectorAssetFolder = VECTORDRAWABLE_FOLDERS[0];
         }
+
+        var floatPrecision = getPreferences(context, "vector_drawable_precision") || 2;
 
         var loopExportVectors = exportVectorAssets.objectEnumerator();
         var slice;
@@ -137,7 +139,9 @@ var onRun = function(context) {
 
             // Export
             var outputPath = exportFolder + "/" + vectorAssetFolder + "/" + assetName(slice, assetNameType) + ".xml";
-            svg2vector(s2v, svgCode, outputPath);
+            svg2vector(s2v, svgCode, outputPath, floatPrecision, function(message) {
+                toast(context, message);
+            });
 
         }
 
@@ -182,9 +186,8 @@ function sweepGradientCode(gradient) {
     return xml;
 }
 
-function svg2vector(s2v, svgCode, vectorFile, showErrorMessage) {
-    var vectorXML = "";
-    runCommand("/bin/bash", ["-l", "-c", s2v + " -s '" + svgCode + "' -o '" + vectorFile + "'"], function(status, msg) {
+function svg2vector(s2v, svgCode, vectorFile, floatPrecision, showErrorMessage) {
+    runCommand("/bin/bash", ["-l", "-c", s2v + " -p " + floatPrecision + " -s '" + svgCode + "' -o '" + vectorFile + "'"], function(status, msg) {
         if (!status && msg != "") {
             showErrorMessage(msg);
         }

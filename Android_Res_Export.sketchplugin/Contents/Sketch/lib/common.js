@@ -185,23 +185,32 @@ function groupFromLayers(layers) {
     return group;
 }
 
-function addSliceInToGroup(layerGroup, name, format, useInfluenceRect) {
+function addSliceInToGroup(layerGroup, name, format) {
 
     removeSliceInGroup(layerGroup);
 
     var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
-    if (useInfluenceRect) {
-        slice.absoluteRect().setRect(layerGroup.absoluteInfluenceRect());
-    }
     slice.setName(name);
-    slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     slice.exportOptions().setLayerOptions(2);
     slice.exportOptions().removeAllExportFormats();
-    
     var exportOption = slice.exportOptions().addExportFormat();
     exportOption.setFileFormat(format);
     exportOption.setName("");
     exportOption.setScale(1);
+
+    if (
+        !Number.isInteger(layerGroup.absoluteRect().x()) ||
+        !Number.isInteger(layerGroup.absoluteRect().y()) ||
+        !Number.isInteger(layerGroup.absoluteRect().width()) ||
+        !Number.isInteger(layerGroup.absoluteRect().height())
+    ) {
+        var newGroup = groupFromLayers([layerGroup, slice]);
+        newGroup.setName(layerGroup.name());
+        slice.moveToLayer_beforeLayer(newGroup, newGroup.firstLayer());
+        layerGroup.ungroup();
+    } else {
+        slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
+    }
 
     return slice;
 }
@@ -427,6 +436,12 @@ function removeSystemPreference(key) {
     userDefaults.synchronize();
 }
 
+function pasteboardCopy(text) {
+    var pasteboard = NSPasteboard.generalPasteboard();
+    pasteboard.clearContents();
+    pasteboard.setString_forType(text, NSStringPboardType);
+}
+
 /* =========================================================
     Command line tools
 ========================================================= */
@@ -635,9 +650,7 @@ function showCodeWindow(context, code, saveAction) {
             }
 
             if (locationHash == "#copy") {
-                var pasteboard = NSPasteboard.generalPasteboard();
-                pasteboard.clearContents();
-                pasteboard.setString_forType(code, NSStringPboardType);
+                pasteboardCopy(code);
             }
         }
     );

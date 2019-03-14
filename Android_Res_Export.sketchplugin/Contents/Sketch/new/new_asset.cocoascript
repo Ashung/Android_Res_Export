@@ -37,7 +37,7 @@ function newAsset(context, format) {
             var layerGroup = groupFromLayers([layer]);
             layerGroup.setName(name);
         }
-        addSliceInToGroup(layerGroup, name, format, true);
+        addSliceInToGroup(layerGroup, name, format);
         layerGroup.setLayerListExpandedType(2);
     }
 };
