@@ -2,8 +2,6 @@
 
 var changeLanguage = function(context) {
 
-    ga(context, "Setting", "change_language");
-
     // Reload Plugin
     AppController.sharedInstance().pluginManager().reloadPlugins();
 

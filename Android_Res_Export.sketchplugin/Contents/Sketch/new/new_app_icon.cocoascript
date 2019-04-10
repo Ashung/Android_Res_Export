@@ -33,7 +33,9 @@ function importFromResource_toPage_withMetadate(context, resource, pageName, met
     pageForIcon.setName(pageName);
     documentData.insertPage_atIndex(pageForIcon, 0)
     documentData.setCurrentPage(pageForIcon);
-    doc.pageTreeLayoutDidChange();
+    if (MSApplicationMetadata.metadata().appVersion < 54) {
+        doc.pageTreeLayoutDidChange();
+    }
 
     // Read data from Sketch file.
     var templateDocument = MSDocument.alloc().init();
