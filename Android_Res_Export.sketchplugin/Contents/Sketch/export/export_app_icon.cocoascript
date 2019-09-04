@@ -64,13 +64,13 @@ var onRun = function(context) {
             '    <background android:drawable="@mipmap/ic_launcher_background"/>\n' +
             '    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>\n' +
             '</adaptive-icon>';
-
         writeContentToFile(xmlFilePath, xmlContent);
         writeContentToFile(xmlFilePathRound, xmlContent);
 
-        // Export pngs.
+        // Export png.
         exportIconAssets(
             context,
+            exportFolder,
             [
                 { scale: 1, suffix: "mdpi" },
                 { scale: 1.5, suffix: "hdpi" },
@@ -81,18 +81,17 @@ var onRun = function(context) {
             [
                 {
                     layer: background,
-                    path: exportFolder,
                     name: "ic_launcher_background.png"
                 },
                 {
                     layer: foreground,
-                    path: exportFolder,
                     name: "ic_launcher_foreground.png"
                 }
             ]
         );
         exportIconAssets(
             context,
+            exportFolder,
             [
                 { scale: 0.25, suffix: "mdpi" },
                 { scale: 0.375, suffix: "hdpi" },
@@ -103,16 +102,33 @@ var onRun = function(context) {
             [
                 {
                     layer: iconNormal,
-                    path: exportFolder,
                     name: "ic_launcher.png"
                 },
                 {
                     layer: iconRound,
-                    path: exportFolder,
                     name: "ic_launcher_round.png"
                 }
             ]
         );
+
+        // Export Google Play icon.
+        var googlePlayIcon = getLayerWithNameFromParent("google_play_icon", page);
+        if (googlePlayIcon) {
+            resizeArtboard(iconRound, 512);
+            exportIconAssets(
+                context,
+                exportFolder,
+                [
+                    { scale: 1, suffix: "" }
+                ],
+                [
+                    {
+                        layer: googlePlayIcon,
+                        name: "google_play_icon.png"
+                    }
+                ]
+            );
+        }
 
         // Restore grid layer status
         for (var layerID in gridStatus) {
@@ -133,7 +149,7 @@ function resizeArtboard(artboard, size) {
     artboard.frame().setHeight(size);
 }
 
-function exportIconAssets(context, exportConfig, outputConfig) {
+function exportIconAssets(context, exportFolder, exportConfig, outputConfig) {
 
     var doc = context.document;
 
@@ -143,9 +159,11 @@ function exportIconAssets(context, exportConfig, outputConfig) {
             var ancestry = outputConfig[j]["layer"].ancestry();
             var exportRequest = MSExportRequest.exportRequestsFromLayerAncestry(ancestry).firstObject();
             exportRequest.setFormat("png");
-
-            var outputPath = outputConfig[j]["path"] + "/mipmap-" +
-                exportConfig[i]["suffix"] + "/" + outputConfig[j]["name"];
+            exportRequest.setScale(exportConfig[i]["scale"]);
+            var outputPath = exportFolder + "/mipmap-" + exportConfig[i]["suffix"] + "/" + outputConfig[j]["name"];
+            if (outputConfig[j]["name"] == "google_play_icon.png") {
+                outputPath = exportFolder + "/google_play_icon.png";
+            }
             doc.saveExportRequest_toFile(exportRequest, outputPath);
 
         }

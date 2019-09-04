@@ -4,7 +4,7 @@ var onRun = function(context) {
 
     ga(context, "New", "new_app_icon");
 
-    importFromResource_toPage_withMetadate(
+    importFromResource_toPage_withMetadata(
         context,
         "app_icon_template.sketch",
         "App Icon",
@@ -13,7 +13,7 @@ var onRun = function(context) {
 
 }
 
-function importFromResource_toPage_withMetadate(context, resource, pageName, metadata) {
+function importFromResource_toPage_withMetadata(context, resource, pageName, metadata) {
 
     var doc = context.document;
     var documentData = doc.documentData();
@@ -78,7 +78,7 @@ function importFromResource_toPage_withMetadate(context, resource, pageName, met
         pageForIcon.storeMetadata_forKey(metadata[key], key);
     }
 
-    // Centere layers in canvas.
+    // Center layers in canvas.
     if (doc.contentDrawView) {
         doc.contentDrawView().centerLayersInCanvas();
     } else {
