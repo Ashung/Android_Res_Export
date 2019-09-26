@@ -61,9 +61,9 @@ function getXMLFromLayer(context, layer) {
 
         if (layerInfo.width && layerInfo.height) {
             xml += '\
-    <size\n\
-        android:width="' + layerInfo.width + '"\n\
-        android:height="' + layerInfo.height + '"/>\n';
+<!--    <size-->\n\
+<!--        android:width="' + layerInfo.width + '"-->\n\
+<!--        android:height="' + layerInfo.height + '"/>-->\n';
         }
 
         if (layerInfo.solid) {
@@ -263,7 +263,7 @@ function getLayerInfo(context, layer) {
             }
         } else {
             result.support = true;
-            result.solid = "#000000";
+        //     result.solid = "#000000";
         }
 
         // borders
