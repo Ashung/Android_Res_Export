@@ -27,17 +27,30 @@ function newAsset(context, format) {
     var layer;
     while (layer = loopSelection.nextObject()) {
         var name = assetName(layer, assetNameType);
+        var layerGroup;
         if (
             layer.class() == "MSLayerGroup" ||
             layer.class() == "MSArtboardGroup" ||
             layer.class() == "MSSymbolMaster"
         ) {
-            var layerGroup = layer;
+            layerGroup = layer;
+        } else if (layer.class() == "MSSliceLayer") {
+            if (
+                layer.parentGroup().class() == "MSLayerGroup" ||
+                layer.parentGroup().class() == "MSArtboardGroup" ||
+                layer.parentGroup().class() == "MSSymbolMaster"
+            ) {
+                layerGroup = layer.parentGroup();
+            }
+        } else if (layer.class() == "MSHotspotLayer") {
+            layerGroup = undefined;
         } else {
-            var layerGroup = groupFromLayers([layer]);
+            layerGroup = groupFromLayers([layer]);
             layerGroup.setName(name);
         }
-        addSliceInToGroup(layerGroup, name, format);
-        layerGroup.setLayerListExpandedType(2);
+        if (layerGroup) {
+            addSliceInToGroup(layerGroup, name, format);
+            layerGroup.setLayerListExpandedType(2);
+        }
     }
 };
