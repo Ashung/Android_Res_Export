@@ -190,6 +190,7 @@ function addSliceInToGroup(layerGroup, name, format) {
     removeSliceInGroup(layerGroup);
 
     var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
+    slice.setFrame(layerGroup.frame().copy());
     slice.setName(name);
     slice.exportOptions().setLayerOptions(2);
     slice.exportOptions().removeAllExportFormats();
