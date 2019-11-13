@@ -31,7 +31,7 @@ function importFromResource_toPage_withMetadata(context, resource, pageName, met
     // Create new page.
     var pageForIcon = MSPage.alloc().init();
     pageForIcon.setName(pageName);
-    documentData.insertPage_atIndex(pageForIcon, 0)
+    documentData.insertPage_atIndex(pageForIcon, 0);
     documentData.setCurrentPage(pageForIcon);
     if (MSApplicationMetadata.metadata().appVersion < 54) {
         doc.pageTreeLayoutDidChange();
@@ -74,7 +74,7 @@ function importFromResource_toPage_withMetadata(context, resource, pageName, met
     pageForIcon.addLayers(templatePage.layers());
 
     // Add metadata to page.
-    for (key in metadata) {
+    for (var key in metadata) {
         pageForIcon.storeMetadata_forKey(metadata[key], key);
     }
 

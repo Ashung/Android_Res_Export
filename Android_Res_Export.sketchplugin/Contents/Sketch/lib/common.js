@@ -190,6 +190,10 @@ function addSliceInToGroup(layerGroup, name, format) {
     removeSliceInGroup(layerGroup);
 
     var slice = MSSliceLayer.sliceLayerFromLayer(layerGroup);
+    slice.frame().setX(Math.floor(layerGroup.frame().x()));
+    slice.frame().setY(Math.floor(layerGroup.frame().y()));
+    slice.frame().setWidth(Math.ceil(layerGroup.frame().width()));
+    slice.frame().setHeight(Math.ceil(layerGroup.frame().height()));
     slice.setName(name);
     slice.exportOptions().setLayerOptions(2);
     slice.exportOptions().removeAllExportFormats();
@@ -208,6 +212,7 @@ function addSliceInToGroup(layerGroup, name, format) {
         newGroup.setName(layerGroup.name());
         slice.moveToLayer_beforeLayer(newGroup, newGroup.firstLayer());
         layerGroup.ungroup();
+        newGroup.fixGeometryWithOptions(1);
     } else {
         slice.moveToLayer_beforeLayer(layerGroup, layerGroup.firstLayer());
     }

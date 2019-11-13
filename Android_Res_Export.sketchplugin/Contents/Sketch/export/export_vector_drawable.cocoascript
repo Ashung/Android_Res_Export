@@ -17,7 +17,7 @@ var onRun = function(context) {
 
     // Check SVG2VectorDrawable version
     var s2vVersion = checkVersion(s2v);
-    var requireVersion = "2.6.19";
+    var requireVersion = "2.6.22";
     if (versionCompare(s2vVersion, requireVersion) == -1) {
         alert(
             context,
