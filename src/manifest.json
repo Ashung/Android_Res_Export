@@ -1,0 +1,24 @@
+{
+    "compatibleVersion": 3,
+    "bundleVersion": 1,
+    "commands": [
+        {
+            "name": "view-vector-drawable-code",
+            "identifier": "android-resources-export.view-vector-drawable-code",
+            "script": "view-vector-drawable-code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
+        }
+    ],
+    "menu": {
+        "title": "vector-drawable",
+        "items": [
+            "android-resources-export.view-vector-drawable-code"
+        ]
+    }
+}
