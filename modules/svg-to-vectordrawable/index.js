@@ -1,11 +1,11 @@
 // https://github.com/Ashung/svg2vectordrawable
 const EOL = require('os').EOL;
 // const svgoConfig = require('./svgo-config');
-const config = require('svgo/lib/svgo/config');
-const svgoUsePlugins = require('svgo/lib/svgo/plugins');
-const svg2js = require('svgo/lib/svgo/svg2js');
+const config = require('../svgo-browser/lib/svgo/config');
+const svgoUsePlugins = require('../svgo-browser/lib/svgo/plugins');
+const svg2js = require('../svgo-browser/lib/svgo/svg2js');
 // const js2svg = require('svgo/lib/svgo/js2svg');
-const JSAPI = require('svgo/lib/svgo/jsAPI');
+const JSAPI = require('../svgo-browser/lib/svgo/jsAPI');
 // https://www.npmjs.com/package/svg-path-bounds
 const pathBounds = require('svg-path-bounds');
 // https://github.com/fontello/svgpath
@@ -289,7 +289,9 @@ JS2XML.prototype.refactorData = function(data, floatPrecision, fillBlack) {
                     }
                     // Move fill-rule to child node
                     if (elem.hasAttr('fill-rule', 'evenodd')) {
-                        item.addAttr({ name: 'android:fillType', value: 'evenOdd', prefix: 'android', local: 'fillType' });
+                        if (!item.hasAttr('fill-rule', 'nonzero')) {
+                            item.addAttr({ name: 'android:fillType', value: 'evenOdd', prefix: 'android', local: 'fillType' });
+                        }
                     }
                 });
                 elem.removeAttr('fill');
