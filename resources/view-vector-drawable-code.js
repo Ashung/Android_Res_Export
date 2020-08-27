@@ -9,6 +9,7 @@ const tempSVGElement = document.getElementById('tempSVG');
 const tempXMLElement = document.getElementById('tempXML');
 const codeElement = document.getElementById("code");
 const copyButton = document.getElementById('copy');
+const saveButton = document.getElementById('save');
 
 // disable the context menu (eg. the right click menu) to have a more native feel
 document.addEventListener('contextmenu', (e) => {
@@ -17,8 +18,11 @@ document.addEventListener('contextmenu', (e) => {
 
 // call the plugin from the webview
 copyButton.addEventListener('click', () => {
-    let xml = tempXMLElement.value;
-    window.postMessage('copyCode', xml);
+    window.postMessage('copyCode', tempXMLElement.value);
+});
+
+saveButton.addEventListener('click', () => {
+    window.postMessage('saveCode', tempXMLElement.value);
 });
 
 // call the webview from the plugin

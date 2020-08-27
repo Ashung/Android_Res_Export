@@ -3,7 +3,7 @@ import { getWebview, sendToWebview } from 'sketch-module-web-view/remote';
 import sketch from 'sketch/dom';
 import UI from 'sketch/ui';
 // import { toArray } from 'util';
-import { pasteboardCopy } from '../modules/sketch/io';
+import { pasteboardCopy, saveToFolder, writeContentToFile } from '../modules/sketch/io';
 
 const webviewIdentifier = 'android-resources-export.view-vector-drawable-code.webview';
 const html = require('../resources/view-vector-drawable-code.html');
@@ -12,7 +12,7 @@ export default function () {
 
     const options = {
         identifier: webviewIdentifier,
-        width: 420,
+        width: 350,
         height: 400,
         show: false,
         title: 'View Vector Drawable Code',
@@ -55,6 +55,11 @@ export default function () {
     })
 
     // TODO: Save
+    webContents.on('saveCode', xml => {
+        let filePath = saveToFolder('');
+        writeContentToFile(filePath, xml);
+        UI.message('Done.');
+    })
 
     browserWindow.loadURL(html);
 };
