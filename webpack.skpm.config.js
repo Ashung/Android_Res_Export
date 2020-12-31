@@ -1,7 +1,9 @@
 module.exports = function (config, entry) {
+  config.devtool = 'none';
   config.node = entry.isPluginCommand ? false : {
     setImmediate: false
   };
+  config.mode = 'production';
   config.module.rules.push({
     test: /\.(html)$/,
     use: [{
@@ -18,7 +20,7 @@ module.exports = function (config, entry) {
         },
       },
     ]
-  })
+  });
   config.module.rules.push({
     test: /\.(css)$/,
     use: [{
@@ -28,5 +30,5 @@ module.exports = function (config, entry) {
         loader: "css-loader",
       },
     ]
-  })
+  });
 }
