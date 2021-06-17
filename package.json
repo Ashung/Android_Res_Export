@@ -1,38 +1,41 @@
 {
-  "name": "android_res_export_v4",
-  "version": "4.0.0",
-  "engines": {
-    "sketch": ">=3.0"
-  },
-  "skpm": {
     "name": "android_res_export_v4",
-    "manifest": "src/manifest.json",
-    "main": "./plugin/android_res_export.sketchplugin",
-    "assets": [
-      "assets/**/*"
-    ]
-  },
-  "scripts": {
-    "build": "skpm-build",
-    "watch": "skpm-build --watch",
-    "start": "skpm-build --watch",
-    "postinstall": "npm run build && skpm-link"
-  },
-  "devDependencies": {
-    "@skpm/builder": "^0.7.4",
-    "@skpm/extract-loader": "^2.0.2",
-    "css-loader": "^3.2.0",
-    "html-loader": "^0.5.5"
-  },
-  "resources": [
-    "resources/**/*.js"
-  ],
-  "dependencies": {
-    "highlight.js": "^10.1.2",
-    "sketch-module-web-view": "^3.1.4",
-    "svg-path-bounds": "^1.0.1",
-    "svgo": "file:modules/svgo-browser",
-    "svgpath": "^2.3.0"
-  },
-  "author": "Ashung Hung <ashung.hung@gmail.com>"
+    "version": "4.0.0",
+    "engines": {
+        "sketch": ">=3.0"
+    },
+    "skpm": {
+        "name": "android_res_export_v4",
+        "manifest": "src/manifest.json",
+        "main": "./plugin/android_res_export.sketchplugin",
+        "assets": [
+            "assets/**/*"
+        ]
+    },
+    "scripts": {
+        "build": "skpm-build",
+        "watch": "skpm-build --watch",
+        "start": "skpm-build --watch",
+        "postinstall": "npm run build && skpm-link",
+        "lang": "node templates/make.js"
+    },
+    "devDependencies": {
+        "@skpm/builder": "^0.5.9",
+        "@skpm/extract-loader": "^2.0.2",
+        "css-loader": "^3.2.0",
+        "html-loader": "^0.5.5",
+        "js-yaml": "^3.14.0",
+        "mustache": "^4.2.0"
+    },
+    "resources": [
+        "resources/**/*.js"
+    ],
+    "dependencies": {
+        "highlight.js": "^10.1.2",
+        "sketch-module-web-view": "^3.1.4",
+        "svg-path-bounds": "^1.0.1",
+        "svgo": "file:modules/svgo-browser",
+        "svgpath": "^2.3.0"
+    },
+    "author": "Ashung Hung <ashung.hung@gmail.com>"
 }

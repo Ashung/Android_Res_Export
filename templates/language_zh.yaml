@@ -1,0 +1,84 @@
+description: 用于导出 Android 各种资源的 Sketch 插件，支持位图、矢量、点九、应用图标、形状 XML 和色彩 XML。
+new_bitmap_asset: 新建位图资源
+new_nine_patch_asset: 新建点九资源
+new_app_icon: 新建应用图标
+new_vector_asset: 新建矢量资源
+export_bitmap_assets_png: 导出位图资源 (PNG)
+export_bitmap_assets_webp: 导出位图资源 (WebP)
+export_vector_assets: 导出矢量资源
+export_nine_patch: 导出点九资源
+export_app_icon: 导出应用图标
+view_color_code_from_selected_layer: 图层色彩代码
+nine_patch_preview: 点九图片预览
+view_shape_code: 查看形状代码
+preferences: 参数设置
+help: 帮助
+web_site: 网站
+report_issues: 问题反馈
+donate: 捐款
+
+no_png_asset: 无任何位图资源。
+no_selection: 请至少选中一个图层。
+
+language_file_not_found: 语言文件未找到。
+language_file_not_found_desc: 语言文件 "%1" 不存在。
+ok: 确定
+cancel: 取消
+export: 导出
+save: 保存
+copy: 复制
+copied: 已复制。
+
+can_not_create_nine_patch_from_artboard_or_symbol_master: 不可从画板或组件模版创建点九资源。
+
+no_nine_patch_asset: 无任何点九资源。
+
+no_vector_drawable_asset: 无任何矢量资源。
+
+export_dpis: 导出分辨率
+asset_name_type: 资源命名方式
+asset_name_type_0: 合法的最后段图层名. (a / b / c -> c)
+asset_name_type_1: 合法的完整图层名. (a / b / c -> a_b_c)
+asset_name_type_2: 最后段图层名. (a / b / c -> c)
+asset_name_type_3: 完整图层名. (a / b / c -> a_b_c)
+vector_drawable_folder: 矢量资源文件夹
+change_language: 切换语音
+others: 其他
+show_in_finder_after_export: 导出资源后在 Finder 中显示。
+least_export_dpis: 导出分辨率选项必须至少保留一项。
+webp_quality: WebP 图片质量
+
+not_support_layer_style: Android 形状资源不支持投影、模糊等图层样式。
+too_many_color_stop: Android 形状资源不支持大于 3 种颜色的渐变。
+no_support_fill_type: Android 形状资源不支持图像等填充类型。
+no_support_stroke_type: Android 形状资源不支持渐变、图像等描边类型。
+no_support_shape: Android 形状资源只支持矩形、圆等形状。
+no_shape_layer: 请选择一个矩形、圆等形状图层。
+template_no_exists: 模版文件 "%1" 不存在。
+current_page_is_no_template: 当前页不是一个 Android 应用图标模版。
+app_icon_not_find: 在当前页中找不到 Android 应用图标。
+code_preview: 代码预览
+
+no_permission: 无写入权限
+cannot_export_to_folder: 无法导入文件到此文件夹。
+select_one_nine_patch_asset: 请选择一个点九资源。
+nine_patch_layer_structure_is_wrong: 点九资源的图层结构有误。
+
+no_selected_shape_layer: 请选中至少一个带有单色或渐变填充的图层。
+no_color_in_selected_layers: 选中的图层中没有任何颜色。
+
+html_tip_bg_light: 使用亮色透明背景
+html_tip_bg_dark: 使用暗色透明色背景
+html_tip_bg_white: 使用白色背景
+html_label_width: 宽
+html_label_height: 高
+html_label_content: 内容区
+
+export_done: 导出完成！
+
+ga_disable: 禁用 “谷歌分析” 跟踪用户数据。
+ga_tip: 插件使用 “谷歌分析” 跟踪用户国家地区、语言及插件执行动作等信息用于改进插件体验，点击 “不同意” 禁用分析功能不会影响插件使用。
+agree: 同意
+disagree: 不同意
+
+vector_drawable_precision: 矢量资源路径数据小数精度

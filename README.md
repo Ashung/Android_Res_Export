@@ -1,110 +1,39 @@
-# vector-drawable
+![](android_res_export.png)
+
+**[中文说明](https://github.com/Ashung/Android_Res_Export/blob/master/README_zh.md)**
+
+Export Android resources in Sketch.
+
+## Features
+
+- Export PNG or WebP assets into multiple sizes.
+- Preview and export nine-patch assets into multiple sizes.
+- Export vector drawable asset, support gradient and mask.
+- Export app launcher icon for Android 8 and older version.
+- View and export shape drawable XML code from selected layer.
+- View and export color resource XML code from selected layers.
 
 ## Installation
 
-- [Download](../../releases/latest/download/vector-drawable.sketchplugin.zip) the latest release of the plugin
-- Un-zip
-- Double-click on vector-drawable.sketchplugin
+### Install plugin
 
-## Development Guide
+- Search "Android Res Export" from [Sketch Runner](http://sketchrunner.com/).
+- Download [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip) and unzip, then double-click "Android_Res_Export.sketchplugin" to install.
 
-_This plugin was created using `skpm`. For a detailed explanation on how things work, checkout the [skpm Readme](https://github.com/skpm/skpm/blob/master/README.md)._
+## How it Works
 
-### Usage
+Design at MDPI (1x) size, NOT support for other sizes.
 
-Install the dependencies
+You need to create new asset from selected layers, by run "Plugins" - "Android Res Export" - "New ...", then run "Export ..." to export them. while you have selected layers, the export feature will only export the layer which is selected, and deselected all to export all assets in current document.
 
-```bash
-npm install
-```
+For export bitmap and nine-patch assets, you can choose what dpi will exported in "Android Res Export" - "Preferences" dialog.
 
-Once the installation is done, you can run some commands inside the project folder:
+**For export vector drawable, you need to install [Node.js](https://nodejs.org/en/) (> 8.0) and [svg2vectordrawable](https://github.com/Ashung/svg2vectordrawable) (2.6.5+)**.
 
-```bash
-npm run build
-```
+## License
 
-To watch for changes:
+MIT
 
-```bash
-npm run watch
-```
+## Donate
 
-### Custom Configuration
-
-#### Babel
-
-To customize Babel, you have two options:
-
-- You may create a [`.babelrc`](https://babeljs.io/docs/usage/babelrc) file in your project's root directory. Any settings you define here will overwrite matching config-keys within skpm preset. For example, if you pass a "presets" object, it will replace & reset all Babel presets that skpm defaults to.
-
-- If you'd like to modify or add to the existing Babel config, you must use a `webpack.skpm.config.js` file. Visit the [Webpack](#webpack) section for more info.
-
-#### Webpack
-
-To customize webpack create `webpack.skpm.config.js` file which exports function that will change webpack's config.
-
-```js
-/**
- * Function that mutates original webpack config.
- * Supports asynchronous changes when promise is returned.
- *
- * @param {object} config - original webpack config.
- * @param {object} entry - entry property from webpack config
- * @param {boolean} entry.isPluginCommand - whether the config is for a plugin command or a resource
- **/
-module.exports = function(config, entry) {
-  /** you can change config here **/
-};
-```
-
-To use the polyfills or the mocks for certain Node.js globals and modules use the `node` property.
-
-Visit [the official documention](https://webpack.js.org/configuration/node/) for available options.
-
-```js
-if(entry.isPluginCommand ){
-  config.node = {
-    setImmediate: false
-  }
-} else {
-  config.node = false;
-}
-```
-
-### Debugging
-
-To view the output of your `console.log`, you have a few different options:
-
-- Use the [`sketch-dev-tools`](https://github.com/skpm/sketch-dev-tools)
-- Open `Console.app` and look for the sketch logs
-- Look at the `~/Library/Logs/com.bohemiancoding.sketch3/Plugin Output.log` file
-
-Skpm provides a convenient way to do the latter:
-
-```bash
-skpm log
-```
-
-The `-f` option causes `skpm log` to not stop when the end of logs is reached, but rather to wait for additional data to be appended to the input
-
-### Publishing your plugin
-
-```bash
-skpm publish <bump>
-```
-
-(where `bump` can be `patch`, `minor` or `major`)
-
-`skpm publish` will create a new release on your GitHub repository and create an appcast file in order for Sketch users to be notified of the update.
-
-You will need to specify a `repository` in the `package.json`:
-
-```diff
-...
-+ "repository" : {
-+   "type": "git",
-+   "url": "git+https://github.com/ORG/NAME.git"
-+  }
-...
-```
+[Buy me a coffee](https://www.buymeacoffee.com/ashung) or donate [$5.00](https://www.paypal.me/ashung/5) [$10.00](https://www.paypal.me/ashung/10) via PayPal.
