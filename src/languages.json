@@ -1,0 +1,290 @@
+{
+    "ui_language": {
+        "en": "English",
+        "zh": "简体中文"
+    },
+    "description": {
+        "en": "Export Android resources in Sketch. Support bitmap, vector, nine-patch, app icon, shape XML and color.",
+        "zh": "用于导出 Android 各种资源的 Sketch 插件，支持位图、矢量、点九、应用图标、形状 XML 和色彩 XML。"
+    },
+    "new_bitmap_asset": {
+        "en": "New Bitmap Asset",
+        "zh": "新建位图资源"
+    },
+    "new_nine_patch_asset": {
+        "en": "New Nine-Patch Asset",
+        "zh": "新建点九资源"
+    },
+    "new_app_icon": {
+        "en": "New App Icon",
+        "zh": "新建应用图标"
+    },
+    "new_vector_asset": {
+        "en": "New Vector Asset",
+        "zh": "新建矢量资源"
+    },
+    "export_bitmap_assets_png": {
+        "en": "Export Bitmap Assets (PNG)",
+        "zh": "导出位图资源 (PNG)"
+    },
+    "export_bitmap_assets_webp": {
+        "en": "Export Bitmap Assets (WebP)",
+        "zh": "导出位图资源 (WebP)"
+    },
+    "export_vector_assets": {
+        "en": "Export Vector Assets",
+        "zh": "导出矢量资源"
+    },
+    "export_nine_patch": {
+        "en": "Export Nine-Patch Assets",
+        "zh": "导出点九资源"
+    },
+    "export_app_icon": {
+        "en": "Export App Icon",
+        "zh": "导出应用图标"
+    },
+    "view_color_code_from_selected_layer": {
+        "en": "View Color Code From Selected Layer",
+        "zh": "图层色彩代码"
+    },
+    "nine_patch_preview": {
+        "en": "Nine-Patch Preview",
+        "zh": "点九图片预览"
+    },
+    "view_shape_code": {
+        "en": "View Shape Drawable Code",
+        "zh": "查看形状代码"
+    },
+    "preferences": {
+        "en": "Preferences",
+        "zh": "参数设置"
+    },
+    "help": {
+        "en": "Help",
+        "zh": "帮助"
+    },
+    "web_site": {
+        "en": "Web Site",
+        "zh": "网站"
+    },
+    "report_issues": {
+        "en": "Report Issues",
+        "zh": "问题反馈"
+    },
+    "donate": {
+        "en": "Donate",
+        "zh": "捐款"
+    },
+    "no_png_asset": {
+        "en": "No any bitmap asset.",
+        "zh": "无任何位图资源。"
+    },
+    "no_selection": {
+        "en": "Please select at least 1 layer.",
+        "zh": "请至少选中一个图层。"
+    },
+    "language_file_not_found": {
+        "en": "Language file not found.",
+        "zh": "语言文件未找到。"
+    },
+    "language_file_not_found_desc": {
+        "en": "Language file \"%1\" does not existed.",
+        "zh": "语言文件 \"%1\" 不存在。"
+    },
+    "ok": {
+        "en": "OK",
+        "zh": "确定"
+    },
+    "cancel": {
+        "en": "Cancel",
+        "zh": "取消"
+    },
+    "export": {
+        "en": "Export",
+        "zh": "导出"
+    },
+    "save": {
+        "en": "Save",
+        "zh": "保存"
+    },
+    "copy": {
+        "en": "Copy",
+        "zh": "复制"
+    },
+    "copied": {
+        "en": "Copied.",
+        "zh": "已复制。"
+    },
+    "can_not_create_nine_patch_from_artboard_or_symbol_master": {
+        "en": "Can't create Nine-Patch from Artboard or Symbol Master.",
+        "zh": "不可从画板或组件模版创建点九资源。"
+    },
+    "no_nine_patch_asset": {
+        "en": "No any nine-patch asset.",
+        "zh": "无任何点九资源。"
+    },
+    "no_vector_drawable_asset": {
+        "en": "No any vector drawable asset.",
+        "zh": "无任何矢量资源。"
+    },
+    "export_dpis": {
+        "en": "Export DPIs",
+        "zh": "导出分辨率"
+    },
+    "asset_name_type": {
+        "en": "Asset Name Type",
+        "zh": "资源命名方式"
+    },
+    "asset_name_type_0": {
+        "en": "Valid last part of layer name. (a / b / c -> c)",
+        "zh": "合法的最后段图层名. (a / b / c -> c)"
+    },
+    "asset_name_type_1": {
+        "en": "Valid full layer name. (a / b / c -> a_b_c)",
+        "zh": "合法的完整图层名. (a / b / c -> a_b_c)"
+    },
+    "asset_name_type_2": {
+        "en": "Last part of layer name. (a / b / c -> c)",
+        "zh": "最后段图层名. (a / b / c -> c)"
+    },
+    "asset_name_type_3": {
+        "en": "Full layer name. (a / b / c -> a_b_c)",
+        "zh": "完整图层名. (a / b / c -> a_b_c)"
+    },
+    "vector_drawable_folder": {
+        "en": "Vector Drawable Folder",
+        "zh": "矢量资源文件夹"
+    },
+    "change_language": {
+        "en": "Change Language",
+        "zh": "切换语音"
+    },
+    "others": {
+        "en": "Others",
+        "zh": "其他"
+    },
+    "show_in_finder_after_export": {
+        "en": "Show in Finder after export.",
+        "zh": "导出资源后在 Finder 中显示。"
+    },
+    "least_export_dpis": {
+        "en": "At least keep 1 export dpi is checked.",
+        "zh": "导出分辨率选项必须至少保留一项。"
+    },
+    "webp_quality": {
+        "en": "WebP Quality",
+        "zh": "WebP 图片质量"
+    },
+    "not_support_layer_style": {
+        "en": "Layer style like shadow and blur is not support by Android shape drawable.",
+        "zh": "Android 形状资源不支持投影、模糊等图层样式。"
+    },
+    "too_many_color_stop": {
+        "en": "The gradient in Android shape drawable not support greater than 3 colors.",
+        "zh": "Android 形状资源不支持大于 3 种颜色的渐变。"
+    },
+    "no_support_fill_type": {
+        "en": "The fill type is not support for Android shape drawable.",
+        "zh": "Android 形状资源不支持图像等填充类型。"
+    },
+    "no_support_stroke_type": {
+        "en": "The stroke type is not support for Android shape drawable.",
+        "zh": "Android 形状资源不支持渐变、图像等描边类型。"
+    },
+    "no_support_shape": {
+        "en": "Only support shape layer like rectangle or oval.",
+        "zh": "Android 形状资源只支持矩形、圆等形状。"
+    },
+    "no_shape_layer": {
+        "en": "Please choose 1 shape layer like rectangle or oval.",
+        "zh": "请选择一个矩形、圆等形状图层。"
+    },
+    "template_no_exists": {
+        "en": "Template file \"%1\" is no exists.",
+        "zh": "模版文件 \"%1\" 不存在。"
+    },
+    "current_page_is_no_template": {
+        "en": "Current page is no a Android app icon template.",
+        "zh": "当前页不是一个 Android 应用图标模版。"
+    },
+    "app_icon_not_find": {
+        "en": "Can't find Android app icon inside current page.",
+        "zh": "在当前页中找不到 Android 应用图标。"
+    },
+    "code_preview": {
+        "en": "Code Preview",
+        "zh": "代码预览"
+    },
+    "no_permission": {
+        "en": "No Permission",
+        "zh": "无写入权限"
+    },
+    "cannot_export_to_folder": {
+        "en": "You can't export assets to this folder.",
+        "zh": "无法导入文件到此文件夹。"
+    },
+    "select_one_nine_patch_asset": {
+        "en": "Please select a nine-patch asset.",
+        "zh": "请选择一个点九资源。"
+    },
+    "nine_patch_layer_structure_is_wrong": {
+        "en": "The layer structure of nine-patch asset is wrong.",
+        "zh": "点九资源的图层结构有误。"
+    },
+    "no_selected_shape_layer": {
+        "en": "Please select at least 1 shape layer with solid or gradient fill.",
+        "zh": "请选中至少一个带有单色或渐变填充的图层。"
+    },
+    "no_color_in_selected_layers": {
+        "en": "No any color in selected layer.",
+        "zh": "选中的图层中没有任何颜色。"
+    },
+    "html_tip_bg_light": {
+        "en": "Use light transparent background",
+        "zh": "使用亮色透明背景"
+    },
+    "html_tip_bg_dark": {
+        "en": "Use dark transparent background",
+        "zh": "使用暗色透明色背景"
+    },
+    "html_tip_bg_white": {
+        "en": "Use white background",
+        "zh": "使用白色背景"
+    },
+    "html_label_width": {
+        "en": "Width",
+        "zh": "宽"
+    },
+    "html_label_height": {
+        "en": "Height",
+        "zh": "高"
+    },
+    "html_label_content": {
+        "en": "Content",
+        "zh": "内容区"
+    },
+    "export_done": {
+        "en": "Export done!",
+        "zh": "导出完成！"
+    },
+    "ga_disable": {
+        "en": "Disable Google Analytics tacking.",
+        "zh": "禁用 “谷歌分析” 跟踪用户数据。"
+    },
+    "ga_tip": {
+        "en": "This plugin use Google Analytics for tacking user area, language and plugin action, that used to help improve plugin. You can \"Disagree\" to disable it.",
+        "zh": "插件使用 “谷歌分析” 跟踪用户国家地区、语言及插件执行动作等信息用于改进插件体验，点击 “不同意” 禁用分析功能不会影响插件使用。"
+    },
+    "agree": {
+        "en": "Agree",
+        "zh": "同意"
+    },
+    "disagree": {
+        "en": "Disagree",
+        "zh": "不同意"
+    },
+    "vector_drawable_precision": {
+        "en": "Precision of pathData in Vector Drawable",
+        "zh": "矢量资源路径数据小数精度"
+    }
+}

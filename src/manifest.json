@@ -3,9 +3,14 @@
     "bundleVersion": 1,
     "commands": [
         {
-            "name": "view-vector-drawable-code",
-            "identifier": "android-resources-export.view-vector-drawable-code",
-            "script": "view-vector-drawable-code.js",
+            "name": "New Bitmap Asset",
+            "identifier": "new_bitmap_asset",
+            "script": "new_asset.js"
+        },
+        {
+            "name": "view_vector_drawable_code",
+            "identifier": "android_resources_export.view_vector_drawable_code",
+            "script": "view_vector_drawable_code.js",
             "handlers": {
                 "run": "onRun",
                 "actions": {
@@ -16,9 +21,11 @@
         }
     ],
     "menu": {
-        "title": "vector-drawable",
+        "title": "vector_drawable",
         "items": [
-            "android-resources-export.view-vector-drawable-code"
+            "new_bitmap_asset",
+            "-",
+            "android_resources_export.view_vector_drawable_code"
         ]
     }
 }

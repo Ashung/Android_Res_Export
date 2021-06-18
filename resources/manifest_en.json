@@ -1,0 +1,139 @@
+{
+    "name": "Android Res Export",
+    "description": "Export Android resources in Sketch. Support bitmap, vector, nine-patch, app icon, shape XML and color.",
+    "author": "Ashung Hung",
+    "email": "Ashung.hung@gmail.com",
+    "homepage": "https://github.com/Ashung/Android_Res_Export",
+    "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
+    "icon": "plugin_icon.png",
+    "version": "4.0.0",
+    "identifier": "com.ashung.hung.android_res_export",
+    "compatibleVersion": "4",
+    "bundleVersion": "1",
+    "commands": [
+        {
+            "name": "New Bitmap Asset",
+            "identifier": "new_bitmap_asset",
+            "handler": "newBitmapAsset",
+            "script": "new/new_asset.js"
+        },
+        {
+            "name": "New Vector Asset",
+            "identifier": "new_vector_asset",
+            "handler": "newVectorAsset",
+            "script": "new/new_asset.js"
+        },
+        {
+            "name": "New Nine-Patch Asset",
+            "identifier": "new_nine_patch_asset",
+            "script": "new/new_nine_patch_asset.js"
+        },
+        {
+            "name": "New App Icon",
+            "identifier": "new_app_icon",
+            "script": "new/new_app_icon.js"
+        },
+        {
+            "name": "Nine-Patch Preview",
+            "identifier": "nine_patch_preview",
+            "script": "preview/nine_patch_preview.js"
+        },
+        {
+            "name": "View Color Code From Selected Layer",
+            "identifier": "view_color_code_from_selected_layer",
+            "script": "preview/view_color_code.js"
+        },
+        {
+            "name": "View Shape Drawable Code",
+            "identifier": "view_shape_code",
+            "script": "preview/view_shape_code.js"
+        },
+        {
+            "name": "Export Bitmap Assets (PNG)",
+            "identifier": "export_bitmap_assets_png",
+            "script": "export/export_bitmap_assets.js"
+        },
+        {
+            "name": "Export Bitmap Assets (WebP)",
+            "identifier": "export_bitmap_assets_webp",
+            "script": "export/export_bitmap_assets.js"
+        },
+        {
+            "name": "Export Vector Assets",
+            "identifier": "export_vector_assets",
+            "script": "export/export_vector_drawable.js"
+        },
+        {
+            "name": "Export Nine-Patch Assets",
+            "identifier": "export_nine_patch",
+            "script": "export/export_nine_patch.js"
+        },
+        {
+            "name": "Export App Icon",
+            "identifier": "export_app_icon",
+            "script": "export/export_app_icon.js"
+        },
+        {
+            "name": "Preferences",
+            "identifier": "preferences",
+            "script": "utilities/preferences.js"
+        },
+        {
+            "name": "Web Site",
+            "identifier": "web_site",
+            "handler": "website",
+            "script": "utilities/utilities.js"
+        },
+        {
+            "name": "Report Issues",
+            "identifier": "report_issues",
+            "handler": "reportIssues",
+            "script": "utilities/utilities.js"
+        },
+        {
+            "name": "Donate",
+            "identifier": "donate",
+            "handler": "donate",
+            "script": "utilities/utilities.js"
+        },
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "changeLanguage"
+                }
+            },
+            "script": "utilities/change_language.js"
+        }
+    ],
+    "menu": {
+        "isRoot": false,
+        "title": "Android Res Export",
+        "items": [
+            "new_bitmap_asset",
+            "new_vector_asset",
+            "new_nine_patch_asset",
+            "new_app_icon",
+            "-",
+            "export_bitmap_assets_png",
+            "export_bitmap_assets_webp",
+            "export_vector_assets",
+            "export_nine_patch",
+            "export_app_icon",
+            "-",
+            "nine_patch_preview",
+            "view_shape_code",
+            "view_color_code_from_selected_layer",
+            "-",
+            "preferences",
+            {
+                "title": "Help",
+                "items": [
+                    "web_site",
+                    "report_issues",
+                    "-",
+                    "donate"
+                ]
+            }
+        ]
+    }
+}
