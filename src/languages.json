@@ -1,4 +1,35 @@
 {
+    "no_selection": {
+        "en": "Please select at least 1 layer.",
+        "zh": "请至少选中一个图层。"
+    },
+    "can_not_create_asset_from_hot_spot": {
+        "en": "Can't create asset from hotspot.",
+        "zh": "不能从热区创建资源。"
+    },
+    "can_not_create_asset_from_artboard": {
+        "en": "Can't create asset from artboard.",
+        "zh": "不能从画板创建资源。"
+    },
+    "can_not_create_asset_from_symbol_master": {
+        "en": "Can't create asset from symbol master.",
+        "zh": "不能从组件创建资源。"
+    },
+    "can_not_create_asset_from_slice": {
+        "en": "Can't create asset from slice.",
+        "zh": "不能从切片创建资源。"
+    },
+    "slice_must_in_group": {
+        "en": "Slice layer must in side a group.",
+        "zh": "切片图层必须在组内。"
+    },
+    "color_xml_from_layers": {
+        "en": "Color XML from Selected Layers",
+        "zh": "选中图层的色彩资源 XML"
+    },
+
+
+    
     "ui_language": {
         "en": "English",
         "zh": "简体中文"
@@ -79,10 +110,7 @@
         "en": "No any bitmap asset.",
         "zh": "无任何位图资源。"
     },
-    "no_selection": {
-        "en": "Please select at least 1 layer.",
-        "zh": "请至少选中一个图层。"
-    },
+    
     "language_file_not_found": {
         "en": "Language file not found.",
         "zh": "语言文件未找到。"

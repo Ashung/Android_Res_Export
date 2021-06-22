@@ -1,14 +1,14 @@
 const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
 const settings = require('sketch/settings');
+const { Group } = require('sketch/dom');
 
 const i10n = require('./lib/i10n');
 const android = require('./lib/android');
 const sk = require('./lib/sk');
 
-export default function(context) {
-    
-    const Group = sketch.Group;
+export default function() {
+
     const document = sketch.getSelectedDocument();
     const selection = document.selectedLayers;
     const identifier = String(__command.identifier());
@@ -18,6 +18,7 @@ export default function(context) {
         return;
     }
 
+    let assetNameType = settings.settingForKey('asset_name_type') || 0;
     selection.layers.forEach(layer => {
         let format = 'png';
         if (identifier === 'new_bitmap_asset') {
@@ -26,39 +27,52 @@ export default function(context) {
         if (identifier === 'new_vector_asset') {
             format = 'svg';
         }
-        newAsset(layer, format);
+        let name = android.assetName(layer.name, assetNameType);
+        newAsset(layer, name, format);
     });
 
 }
 
-function newAsset(layer, format) {
-    let assetNameType = settings.settingForKey('asset_name_type') || 0;
-    let name = android.assetName(layer.name, assetNameType);
-
-
+function newAsset(layer, name, format) {
     
+    let exportFormats = [{
+        size: '1x',
+        fileFormat: format
+    }];
 
     // let layerGroup;
     if (sk.isGroup(layer)) {
         // Group round to pixel
-        
+        sk.roundToPixel(layer);
+        // Add slice into group
+        sk.removeSliceInGroup(layer);
+        sk.addSliceIntoGroup(layer, name, exportFormats);
     } else {
+        // HotSpot layer
+        if (sk.isHotspot(layer)) {
+            ui.message(i10n('can_not_create_asset_from_hot_spot'));
+        }
+        
+        // Slice layer
+        else if (sk.isSlice(layer)) {
+            if (sk.isGroup(layer.parent)) {
+                sk.roundToPixel(layer);
+                layer.name = name;
+                layer.exportFormats = exportFormats;
+                sk.exportGroupContentOnly(layer);
+            } else {
+                ui.message(i10n('can_not_create_asset_from_hot_spot'));
+            }
+        }
+
+        else {
+            let slice = sk.addSliceBeforeLayer(layer, name, exportFormats);
+            if (!sk.isGroup(layer.parent)) {
+                let group = sk.group([slice, layer]);
+                group.name = name;
+            }
+            sk.exportGroupContentOnly(slice);
+        }
 
     }
-    //     layerGroup = layer;
-    // } else if (sk.isSlice(layer)) {
-    //     if (sk.isGroup(layer.parent)) {
-    //         layerGroup = layer.parent;
-    //     }
-    // } else if (sk.isHotSpot(layer)) {
-    //     layerGroup = undefined;
-    // } else {
-    //     layerGroup = new Group({
-    //         name,
-    //         layers: [layer]
-    //     });
-    // }
-    // if (layerGroup) {
-    //     sk.addSliceIntoGroup(layerGroup, name, format);
-    // }
 }

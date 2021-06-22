@@ -1,97 +1,95 @@
 {
     "name": "Android Res Export",
-    "description": "Export Android resources in Sketch. Support bitmap, vector, nine-patch, app icon, shape XML and color.",
+    "description": "用于导出 Android 各种资源的 Sketch 插件，支持位图、矢量、点九、应用图标、形状 XML 和色彩 XML。",
     "author": "Ashung Hung",
     "email": "Ashung.hung@gmail.com",
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
-    "icon": "plugin_icon.png",
+    "icon": "icon.png",
     "version": "4.0.0",
     "identifier": "com.ashung.hung.android_res_export",
-    "compatibleVersion": "4",
-    "bundleVersion": "1",
+    "compatibleVersion": 3,
+    "bundleVersion": 1,
     "commands": [
         {
-            "name": "New Bitmap Asset",
+            "name": "新建位图资源",
             "identifier": "new_bitmap_asset",
-            "handler": "newBitmapAsset",
-            "script": "new/new_asset.js"
+            "script": "new_asset.js"
         },
         {
-            "name": "New Vector Asset",
+            "name": "新建矢量资源",
             "identifier": "new_vector_asset",
-            "handler": "newVectorAsset",
-            "script": "new/new_asset.js"
+            "script": "new_asset.js"
         },
         {
-            "name": "New Nine-Patch Asset",
+            "name": "新建点九资源",
             "identifier": "new_nine_patch_asset",
-            "script": "new/new_nine_patch_asset.js"
+            "script": "new_nine_patch_asset.js"
         },
         {
-            "name": "New App Icon",
+            "name": "新建应用图标",
             "identifier": "new_app_icon",
             "script": "new/new_app_icon.js"
         },
         {
-            "name": "Nine-Patch Preview",
+            "name": "点九图片预览",
             "identifier": "nine_patch_preview",
             "script": "preview/nine_patch_preview.js"
         },
         {
-            "name": "View Color Code From Selected Layer",
+            "name": "图层色彩代码",
             "identifier": "view_color_code_from_selected_layer",
             "script": "preview/view_color_code.js"
         },
         {
-            "name": "View Shape Drawable Code",
+            "name": "查看形状代码",
             "identifier": "view_shape_code",
             "script": "preview/view_shape_code.js"
         },
         {
-            "name": "Export Bitmap Assets (PNG)",
+            "name": "导出位图资源 (PNG)",
             "identifier": "export_bitmap_assets_png",
             "script": "export/export_bitmap_assets.js"
         },
         {
-            "name": "Export Bitmap Assets (WebP)",
+            "name": "导出位图资源 (WebP)",
             "identifier": "export_bitmap_assets_webp",
             "script": "export/export_bitmap_assets.js"
         },
         {
-            "name": "Export Vector Assets",
+            "name": "导出矢量资源",
             "identifier": "export_vector_assets",
             "script": "export/export_vector_drawable.js"
         },
         {
-            "name": "Export Nine-Patch Assets",
+            "name": "导出点九资源",
             "identifier": "export_nine_patch",
             "script": "export/export_nine_patch.js"
         },
         {
-            "name": "Export App Icon",
+            "name": "导出应用图标",
             "identifier": "export_app_icon",
             "script": "export/export_app_icon.js"
         },
         {
-            "name": "Preferences",
+            "name": "参数设置",
             "identifier": "preferences",
             "script": "utilities/preferences.js"
         },
         {
-            "name": "Web Site",
+            "name": "网站",
             "identifier": "web_site",
             "handler": "website",
             "script": "utilities/utilities.js"
         },
         {
-            "name": "Report Issues",
+            "name": "问题反馈",
             "identifier": "report_issues",
             "handler": "reportIssues",
             "script": "utilities/utilities.js"
         },
         {
-            "name": "Donate",
+            "name": "捐款",
             "identifier": "donate",
             "handler": "donate",
             "script": "utilities/utilities.js"
@@ -103,6 +101,18 @@
                 }
             },
             "script": "utilities/change_language.js"
+        },
+        {
+            "name": "view_vector_drawable_code",
+            "identifier": "android_resources_export.view_vector_drawable_code",
+            "script": "view_vector_drawable_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
         }
     ],
     "menu": {
@@ -126,7 +136,7 @@
             "-",
             "preferences",
             {
-                "title": "Help",
+                "title": "帮助",
                 "items": [
                     "web_site",
                     "report_issues",

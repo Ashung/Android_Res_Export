@@ -5,7 +5,7 @@ import ui from 'sketch/ui';
 // import { toArray } from 'util';
 import { pasteboardCopy, saveToFolder, writeContentToFile } from './lib/fs';
 
-const webviewIdentifier = 'android_resources_export.view_vector_drawable_code.webview';
+const webviewIdentifier = 'view_vector_drawable_code.webview';
 const html = require('../resources/view_vector_drawable_code.html');
 
 export default function () {
@@ -42,6 +42,8 @@ export default function () {
         } else {
             let layer = selection.layers[0];
             let svg = getSVG(layer);
+
+            // console.log(svg)
             webContents
                 .executeJavaScript(`svg2vector('${svg}')`)
                 .catch(console.error);
@@ -85,7 +87,6 @@ export function onSelectionChanged(context) {
         } else {
             let layer = sketch.fromNative(selection.firstObject());
             let svg = getSVG(layer);
-            console.log(svg);
             sendToWebview(webviewIdentifier, `svg2vector('${svg}')`);
         }
     }
