@@ -77,7 +77,7 @@ var onRun = function(context) {
             groupPatch.setName("patch");
         }
 
-        if (MSApplicationMetadata.metadata().appVersion >= 53) {
+        if (BCSketchInfo.shared().metadata().appVersion >= 53) {
             groupNinePatch.fixGeometryWithOptions(1);
         } else {
             groupNinePatch.resizeToFitChildrenWithOption(1);

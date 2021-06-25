@@ -177,7 +177,7 @@ function groupFromSelection(context) {
 function groupFromLayers(layers) {
     var group;
     var layerArray = MSLayerArray.arrayWithLayers(layers);
-    if (MSApplicationMetadata.metadata().appVersion >= 52) {
+    if (BCSketchInfo.shared().metadata().appVersion >= 52) {
         group = MSLayerGroup.groupWithLayers(layerArray);
     } else {
         group = MSLayerGroup.groupFromLayers(layerArray);
@@ -235,7 +235,7 @@ function addRectShape(parent, beforeLayer, posX, posY, width, height, color, nam
     var rectangle = MSRectangleShape.alloc().init();
     rectangle.setRect(CGRectMake(posX, posY, width, height));
     var shapeGroup;
-    if (MSApplicationMetadata.metadata().appVersion >= 52) {
+    if (BCSketchInfo.shared().metadata().appVersion >= 52) {
         shapeGroup = rectangle;
     } else {
         shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
@@ -532,7 +532,7 @@ function ga(context, eventCategory, eventAction, eventLabel, eventValue) {
     // Tracking ID
     url += "&tid=" + trackingID;
     // Source
-    url += "&ds=sketch" + MSApplicationMetadata.metadata().appVersion;
+    url += "&ds=sketch" + BCSketchInfo.shared().metadata().appVersion;
     // Client ID
     url += "&cid=" + uuid;
     // User GEO location

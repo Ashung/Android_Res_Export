@@ -294,9 +294,9 @@ function getLayerInfo(context, layer) {
         if (layer.children().count() == 2 || layer.children().count() == 1) {
 
             var shapePath;
-            if (MSApplicationMetadata.metadata().appVersion >= 52) {
+            if (BCSketchInfo.shared().metadata().appVersion >= 52) {
                 shapePath = layer;
-            } else if (MSApplicationMetadata.metadata().appVersion >= 49) {
+            } else if (BCSketchInfo.shared().metadata().appVersion >= 49) {
                 shapePath = layer.children().lastObject();
             } else {
                 shapePath = layer.children().firstObject();
@@ -310,7 +310,7 @@ function getLayerInfo(context, layer) {
 
                         // Radius
                         var points;
-                        if (MSApplicationMetadata.metadata().appVersion >= 49) {
+                        if (BCSketchInfo.shared().metadata().appVersion >= 49) {
                             points = shapePath.points();
                         } else {
                             points = shapePath.path().points();

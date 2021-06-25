@@ -223,7 +223,7 @@ function versionCompare(version1, version2) {
 }
 
 function styleLayer(layer) {
-    if (MSApplicationMetadata.metadata().appVersion >= 52) {
+    if (BCSketchInfo.shared().metadata().appVersion >= 52) {
         if (
             layer.class() == "MSShapeGroup" ||
             layer.class() == "MSRectangleShape" ||

@@ -33,7 +33,7 @@ function importFromResource_toPage_withMetadata(context, resource, pageName, met
     pageForIcon.setName(pageName);
     documentData.insertPage_atIndex(pageForIcon, 0);
     documentData.setCurrentPage(pageForIcon);
-    if (MSApplicationMetadata.metadata().appVersion < 54) {
+    if (BCSketchInfo.shared().metadata().appVersion < 54) {
         doc.pageTreeLayoutDidChange();
     }
 
