@@ -6,7 +6,7 @@
     "homepage": "https://github.com/Ashung/Android_Res_Export",
     "appcast": "https://ashung.github.io/Android_Res_Export/appcast.xml",
     "icon": "plugin_icon.png",
-    "version": "3.8.7",
+    "version": "3.8.8-SNAPSHOT",
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": "4",
     "bundleVersion": "1",
