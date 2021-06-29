@@ -63,6 +63,41 @@
         "en": "File saved.",
         "zh": "保存完成。"
     },
+    "view_shape_drawable_from_selected_layer": {
+        "en": "Shape Drawable from Selected Layer",
+        "zh": "选中图层的形状代码"
+    },
+    "not_support_layer_style": {
+        "en": "Layer style like shadow and blur is not support by Android shape drawable.",
+        "zh": "Android 形状资源不支持投影、模糊等图层样式。"
+    },
+    "too_many_color_stop": {
+        "en": "The gradient in Android shape drawable not support greater than 3 colors.",
+        "zh": "Android 形状资源不支持大于 3 种颜色的渐变。"
+    },
+    "no_support_fill_type": {
+        "en": "The fill type is not support for Android shape drawable.",
+        "zh": "Android 形状资源不支持图像等填充类型。"
+    },
+    "no_support_stroke_type": {
+        "en": "The stroke type is not support for Android shape drawable.",
+        "zh": "Android 形状资源不支持渐变、图像等描边类型。"
+    },
+    "no_support_shape": {
+        "en": "Only support shape layer like rectangle or oval.",
+        "zh": "Android 形状资源只支持矩形、圆等形状。"
+    },
+    "no_shape_layer": {
+        "en": "Please choose 1 shape layer like rectangle or oval.",
+        "zh": "请选择一个矩形、圆等形状图层。"
+    },
+
+
+
+
+
+
+
 
     
     "ui_language": {
@@ -109,18 +144,11 @@
         "en": "Export App Icon",
         "zh": "导出应用图标"
     },
-    "view_color_code_from_selected_layer": {
-        "en": "View Color Code From Selected Layer",
-        "zh": "图层色彩代码"
-    },
     "nine_patch_preview": {
         "en": "Nine-Patch Preview",
         "zh": "点九图片预览"
     },
-    "view_shape_code": {
-        "en": "View Shape Drawable Code",
-        "zh": "查看形状代码"
-    },
+    
     "preferences": {
         "en": "Preferences",
         "zh": "参数设置"
@@ -215,30 +243,8 @@
         "en": "WebP Quality",
         "zh": "WebP 图片质量"
     },
-    "not_support_layer_style": {
-        "en": "Layer style like shadow and blur is not support by Android shape drawable.",
-        "zh": "Android 形状资源不支持投影、模糊等图层样式。"
-    },
-    "too_many_color_stop": {
-        "en": "The gradient in Android shape drawable not support greater than 3 colors.",
-        "zh": "Android 形状资源不支持大于 3 种颜色的渐变。"
-    },
-    "no_support_fill_type": {
-        "en": "The fill type is not support for Android shape drawable.",
-        "zh": "Android 形状资源不支持图像等填充类型。"
-    },
-    "no_support_stroke_type": {
-        "en": "The stroke type is not support for Android shape drawable.",
-        "zh": "Android 形状资源不支持渐变、图像等描边类型。"
-    },
-    "no_support_shape": {
-        "en": "Only support shape layer like rectangle or oval.",
-        "zh": "Android 形状资源只支持矩形、圆等形状。"
-    },
-    "no_shape_layer": {
-        "en": "Please choose 1 shape layer like rectangle or oval.",
-        "zh": "请选择一个矩形、圆等形状图层。"
-    },
+
+    
     "template_no_exists": {
         "en": "Template file \"%1\" is no exists.",
         "zh": "模版文件 \"%1\" 不存在。"

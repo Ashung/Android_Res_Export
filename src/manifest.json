@@ -33,6 +33,11 @@
             "script": "view_color_code.js"
         },
         {
+            "name": "Shape Drawable From Selected Layer",
+            "identifier": "view_shape_drawable_from_selected_layer",
+            "script": "view_shape_code.js"
+        },
+        {
             "name": "view_vector_drawable_code",
             "identifier": "view_vector_drawable_code",
             "script": "view_vector_drawable_code.js",
@@ -55,6 +60,7 @@
             "-",
             "view_color_code_from_selected_layers",
             "view_color_code_from_color_variables",
+            "view_shape_drawable_from_selected_layer",
             "view_vector_drawable_code"
         ]
     }

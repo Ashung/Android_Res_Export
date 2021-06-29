@@ -5,11 +5,10 @@ const settings = require('sketch/settings');
 
 const i10n = require('./lib/i10n');
 const android = require('./lib/android');
-const sk = require('./lib/sk');
 const { pasteboardCopy, saveToFolder, writeContentToFile } = require('./lib/fs');
 
 const html = require('../resources/view_code.html');
-const webviewIdentifier = 'view_color_code_from_selected_layers.webview';
+const webviewIdentifier = 'view_color_code.webview';
 
 export default function() {
 
@@ -131,5 +130,3 @@ export default function() {
 
     browserWindow.loadURL(html);
 };
-
-
