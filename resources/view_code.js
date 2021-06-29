@@ -26,3 +26,8 @@ cancelButton.addEventListener('click', () => {
     window.postMessage('cancel');
 });
 
+window.main = (code) => {
+    codeElement.innerText = code;
+    tempXMLElement.value = code;
+    highlight.highlightBlock(codeElement);
+}

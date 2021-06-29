@@ -20,7 +20,7 @@ function dpiToScale(dpi) {
     return 1;
 }
 
-function assetName(layerName, type) {
+function assetName(layerName, type, defaultName) {
     let nameArray = layerName.split(/\s*\/\s*/);
     let name;
     // Valid last part of layer name.
@@ -51,7 +51,7 @@ function assetName(layerName, type) {
         name == '' ||
         (name.match(/_/g) != null && name.match(/_/g).length == name.length)
     ) {
-        return 'untitled_asset';
+        return defaultName || 'untitled_asset';
     }
     return name;
 }
@@ -129,29 +129,44 @@ function cleanName(name) {
     return name;
 }
 
-function colorToAndroid(mscolor) {
-    // TODO: mscolor
-    var alpha = mscolor.alpha();
-    var hex = mscolor.immutableModelObject().hexValue();
+function mscolorToAndroid(mscolor) {
+    let color = mscolor.immutableModelObject().hexValue();
+    let alpha = mscolor.alpha();
     if (alpha < 1) {
-        var alphaHex = Math.round(alpha * 255).toString(16);
-        if (alphaHex.length == 1) {
-            alphaHex = '0' + alphaHex;
-        }
-        return '#' + alphaHex.toUpperCase() + hex;
-    } else {
-        return '#' + hex;
+        color = Math.round(alpha * 255).toString(16).padStart(2, '0') + color;
     }
+    return ('#' + color).toUpperCase();
 }
 
-function gradientStopsToColorArray(stops) {
-    // TODO: ddd
-    var result = [];
-    var loop = stops.objectEnumerator();
-    while (stop = loop.nextObject()) {
-        result.push(colorToAndroid(stop.color()));
+function colorToAndroid(color) {
+    // RRGGBBAA to AARRGGBB
+    // 8 digit hex code
+    if (/^#[0-9a-f]{8}$/i.test(color)) {
+        if (color.substr(7, 2).toLowerCase() === 'ff') {
+            color = '#' + color.substr(1, 6);
+        } else {
+            color = '#' + color.substr(7, 2) + color.substr(1, 6);
+        }
     }
-    return result;
+    // RGBA to AARRGGBB
+    // 4 digit hex code
+    else if (/^#[0-9a-f]{4}$/i.test(color)) {
+        if (color[4].toLowerCase() === 'f') {
+            color = '#' + color[1].repeat(2) + color[2].repeat(2) + color[3].repeat(2);
+        } else {
+            color = '#' + color[4].repeat(2) + color[1].repeat(2) + color[2].repeat(2) + color[3].repeat(2);
+        }
+    }
+    else if (/^#[0-9a-f]{6}$/i.test(color)) {
+        color = '#' + color.substr(1, 6);
+    }
+    else if (/^#[0-9a-f]{3}$/i.test(color)) {
+        color = '#' + color[1].repeat(2) + color[2].repeat(2) + color[3].repeat(2);
+    }
+    else {
+        color = '#000000';
+    }
+    return color.toUpperCase();
 }
 
 module.exports.VECTORDRAWABLE_FOLDERS = VECTORDRAWABLE_FOLDERS;
@@ -159,5 +174,5 @@ module.exports.DPIS = DPIS;
 module.exports.dpiToScale = dpiToScale;
 module.exports.assetName = assetName;
 module.exports.cleanName = cleanName;
+module.exports.mscolorToAndroid = mscolorToAndroid;
 module.exports.colorToAndroid = colorToAndroid;
-module.exports.gradientStopsToColorArray = gradientStopsToColorArray;

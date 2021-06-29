@@ -1,7 +1,6 @@
 const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
 const settings = require('sketch/settings');
-const { Group } = require('sketch/dom');
 
 const i10n = require('./lib/i10n');
 const android = require('./lib/android');
@@ -40,7 +39,6 @@ function newAsset(layer, name, format) {
         fileFormat: format
     }];
 
-    // let layerGroup;
     if (sk.isGroup(layer)) {
         // Group round to pixel
         sk.roundToPixel(layer);

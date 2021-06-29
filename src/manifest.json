@@ -28,6 +28,11 @@
             "script": "view_color_code.js"
         },
         {
+            "name": "Color XML From Color Variables",
+            "identifier": "view_color_code_from_color_variables",
+            "script": "view_color_code.js"
+        },
+        {
             "name": "view_vector_drawable_code",
             "identifier": "view_vector_drawable_code",
             "script": "view_vector_drawable_code.js",
@@ -49,6 +54,7 @@
             "new_app_icon",
             "-",
             "view_color_code_from_selected_layers",
+            "view_color_code_from_color_variables",
             "view_vector_drawable_code"
         ]
     }

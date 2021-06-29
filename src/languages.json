@@ -25,9 +25,44 @@
     },
     "color_xml_from_layers": {
         "en": "Color XML from Selected Layers",
-        "zh": "选中图层的色彩资源 XML"
+        "zh": "选中图层的色彩 XML 资源"
     },
-
+    "color_xml_from_color_variables": {
+        "en": "Color XML from Color Variables",
+        "zh": "色彩变量的 XML 资源"
+    },
+    "no_color_variables": {
+        "en": "Document have not color variables.",
+        "zh": "文档中没有色彩变量。"
+    },
+    "ok": {
+        "en": "OK",
+        "zh": "确定"
+    },
+    "cancel": {
+        "en": "Cancel",
+        "zh": "取消"
+    },
+    "export": {
+        "en": "Export",
+        "zh": "导出"
+    },
+    "save": {
+        "en": "Save",
+        "zh": "保存"
+    },
+    "copy": {
+        "en": "Copy",
+        "zh": "复制"
+    },
+    "copied": {
+        "en": "Code copied.",
+        "zh": "代码已复制。"
+    },
+    "save_done": {
+        "en": "File saved.",
+        "zh": "保存完成。"
+    },
 
     
     "ui_language": {
@@ -119,30 +154,7 @@
         "en": "Language file \"%1\" does not existed.",
         "zh": "语言文件 \"%1\" 不存在。"
     },
-    "ok": {
-        "en": "OK",
-        "zh": "确定"
-    },
-    "cancel": {
-        "en": "Cancel",
-        "zh": "取消"
-    },
-    "export": {
-        "en": "Export",
-        "zh": "导出"
-    },
-    "save": {
-        "en": "Save",
-        "zh": "保存"
-    },
-    "copy": {
-        "en": "Copy",
-        "zh": "复制"
-    },
-    "copied": {
-        "en": "Copied.",
-        "zh": "已复制。"
-    },
+    
     "can_not_create_nine_patch_from_artboard_or_symbol_master": {
         "en": "Can't create Nine-Patch from Artboard or Symbol Master.",
         "zh": "不可从画板或组件模版创建点九资源。"
