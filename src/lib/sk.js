@@ -92,17 +92,21 @@ module.exports.sendToBack = function(layer) {
 }
 
 module.exports.getLayerByNameFromParent = function(name, parent) {
-    if (this.isGroup(parent)) {
-        for (let layer in parent) {
-            if (layer.name === name) {
-                return layer;
-            }
-            if (this.isGroup(layer)) {
-                this.getLayerByNameFromParent(name, layer);
-            }
-        }
-    }
-    // return parent.layers.find(layer => layer.name === name);
+    // if (this.isGroup(parent)) {
+    //     for (let layer in parent) {
+    //         if (layer.name === name) {
+    //             return layer;
+    //         }
+    //         if (this.isGroup(layer)) {
+    //             this.getLayerByNameFromParent(name, layer);
+    //         }
+    //     }
+    // }
+    return parent.layers.find(layer => layer.name === name);
+}
+
+module.exports.getChildByNameFromParent = function(name, parent) {
+
 }
 
 module.exports.addRectShape = function(parent, frame, color, name) {

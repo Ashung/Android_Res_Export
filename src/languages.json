@@ -91,7 +91,22 @@
         "en": "Please choose 1 shape layer like rectangle or oval.",
         "zh": "请选择一个矩形、圆等形状图层。"
     },
-
+    "no_colors_in_selection": {
+        "en": "Please select at least 1 shape layer with solid or gradient fill.",
+        "zh": "请选中至少一个带有单色或渐变填充的图层。"
+    },
+    "view_nine_patch": {
+        "en": "Nine-Patch Preview",
+        "zh": "点九图片预览"
+    },
+    "select_one_nine_patch_asset": {
+        "en": "Please select a nine-patch asset.",
+        "zh": "请选择一个点九资源。"
+    },
+    "nine_patch_layer_structure_is_wrong": {
+        "en": "The layer structure of nine-patch asset is wrong.",
+        "zh": "点九资源的图层结构有误。"
+    },
 
 
 
@@ -144,10 +159,7 @@
         "en": "Export App Icon",
         "zh": "导出应用图标"
     },
-    "nine_patch_preview": {
-        "en": "Nine-Patch Preview",
-        "zh": "点九图片预览"
-    },
+
     
     "preferences": {
         "en": "Preferences",
@@ -269,18 +281,9 @@
         "en": "You can't export assets to this folder.",
         "zh": "无法导入文件到此文件夹。"
     },
-    "select_one_nine_patch_asset": {
-        "en": "Please select a nine-patch asset.",
-        "zh": "请选择一个点九资源。"
-    },
-    "nine_patch_layer_structure_is_wrong": {
-        "en": "The layer structure of nine-patch asset is wrong.",
-        "zh": "点九资源的图层结构有误。"
-    },
-    "no_selected_shape_layer": {
-        "en": "Please select at least 1 shape layer with solid or gradient fill.",
-        "zh": "请选中至少一个带有单色或渐变填充的图层。"
-    },
+    
+    
+    
     "no_color_in_selected_layers": {
         "en": "No any color in selected layer.",
         "zh": "选中的图层中没有任何颜色。"

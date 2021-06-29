@@ -17,6 +17,7 @@ export default function () {
         show: false,
         title: 'View Vector Drawable Code',
         resizable: false,
+        minimizable: false,
         remembersWindowFrame: true,
         acceptsFirstMouse: true,
         alwaysOnTop: true

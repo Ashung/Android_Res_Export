@@ -38,6 +38,11 @@
             "script": "view_shape_code.js"
         },
         {
+            "name": "Nine-Patch Preview",
+            "identifier": "view_nine_patch",
+            "script": "view_nine_patch.js"
+        },
+        {
             "name": "view_vector_drawable_code",
             "identifier": "view_vector_drawable_code",
             "script": "view_vector_drawable_code.js",
@@ -61,6 +66,7 @@
             "view_color_code_from_selected_layers",
             "view_color_code_from_color_variables",
             "view_shape_drawable_from_selected_layer",
+            "view_nine_patch",
             "view_vector_drawable_code"
         ]
     }

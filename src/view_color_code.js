@@ -27,6 +27,62 @@ export default function() {
         return;
     }
 
+    let colors = {}
+    let namesAndCount = {};
+
+    if (identifier === 'view_color_code_from_selected_layers') {
+        selection.layers.forEach(layer => {
+            let name = android.assetName(layer.name, assetNameType);
+            if (Object.keys(namesAndCount).includes(name)) {
+                namesAndCount[name] += 1;
+            } else {
+                namesAndCount[name] = 1;
+            }
+            if (namesAndCount[name] > 1) {
+                name += '_' + namesAndCount[name];
+            }
+
+            // Last enabled fill
+            let fill = layer.style.fills.filter(fill => fill.enabled).pop();
+            if (fill) {
+                if (fill.fillType === 'Color') {
+                    colors[name] = android.colorToAndroid(fill.color);
+                }
+                if (fill.fillType === 'Gradient') {
+                    fill.gradient.stops.forEach((stop, idx) => {
+                        colors[name + '_gradient_stop_' + idx] = android.colorToAndroid(stop.color);
+                    });
+                }
+            }
+        });
+    }
+    
+    if (identifier === 'view_color_code_from_color_variables') {
+        document.swatches.forEach(swatch => {
+            let name = android.assetName(swatch.name, assetNameType, 'color');
+            if (Object.keys(namesAndCount).includes(name)) {
+                namesAndCount[name] += 1;
+            } else {
+                namesAndCount[name] = 1;
+            }
+            if (namesAndCount[name] > 1) {
+                name += '_' + namesAndCount[name];
+            }
+            colors[name] = android.colorToAndroid(swatch.color);
+        });
+    }
+
+    if (Object.keys(colors).length === 0) {
+        ui.message(i10n('no_colors_in_selection'));
+        return;
+    }
+
+    let xml = '<resources>\\n';
+    Object.keys(colors).forEach(key => {
+        xml += '    <color name="' + key + '">' + colors[key] + '</color>\\n';
+    });
+    xml += '</resources>';
+
     const options = {
         identifier: webviewIdentifier,
         width: 600,
@@ -34,6 +90,7 @@ export default function() {
         show: false,
         title: '',
         resizable: false,
+        minimizable: false,
         remembersWindowFrame: true,
         acceptsFirstMouse: true,
         alwaysOnTop: true
@@ -55,58 +112,6 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
-
-        let xml = '<resources>\\n';
-        let colors = {}
-        let namesAndCount = {};
-
-        if (identifier === 'view_color_code_from_selected_layers') {
-            selection.layers.forEach(layer => {
-                let name = android.assetName(layer.name, assetNameType);
-                if (Object.keys(namesAndCount).includes(name)) {
-                    namesAndCount[name] += 1;
-                } else {
-                    namesAndCount[name] = 1;
-                }
-                if (namesAndCount[name] > 1) {
-                    name += '_' + namesAndCount[name];
-                }
-
-                // Last enabled fill
-                let fill = layer.style.fills.filter(fill => fill.enabled).pop();
-                if (fill) {
-                    if (fill.fillType === 'Color') {
-                        colors[name] = android.colorToAndroid(fill.color);
-                    }
-                    if (fill.fillType === 'Gradient') {
-                        fill.gradient.stops.forEach((stop, idx) => {
-                            colors[name + '_gradient_stop_' + idx] = android.colorToAndroid(stop.color);
-                        });
-                    }
-                }
-            });
-        }
-        
-        if (identifier === 'view_color_code_from_color_variables') {
-            document.swatches.forEach(swatch => {
-                let name = android.assetName(swatch.name, assetNameType, 'color');
-                if (Object.keys(namesAndCount).includes(name)) {
-                    namesAndCount[name] += 1;
-                } else {
-                    namesAndCount[name] = 1;
-                }
-                if (namesAndCount[name] > 1) {
-                    name += '_' + namesAndCount[name];
-                }
-                colors[name] = android.colorToAndroid(swatch.color);
-            });
-        }
-
-        Object.keys(colors).forEach(key => {
-            xml += '    <color name="' + key + '">' + colors[key] + '</color>\\n';
-        });
-        xml += '</resources>';
-
         webContents.executeJavaScript(`main('${xml}')`);
     });
 

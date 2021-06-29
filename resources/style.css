@@ -180,8 +180,7 @@ input[type=range]:focus {
 #background_toggle a {
     display: block;
     width: 20px;
-    height: 0;
-    padding-top: 20px;
+    height: 20px;
     border-radius: 12px;
     border: 2px solid #FFF;
     overflow: hidden;

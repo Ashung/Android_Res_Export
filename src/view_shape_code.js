@@ -109,6 +109,7 @@ export default function() {
         show: false,
         title: i10n('view_shape_drawable_from_selected_layer'),
         resizable: false,
+        minimizable: false,
         remembersWindowFrame: true,
         acceptsFirstMouse: true,
         alwaysOnTop: true
