@@ -107,18 +107,69 @@
         "en": "The layer structure of nine-patch asset is wrong.",
         "zh": "点九资源的图层结构有误。"
     },
-
-
-
-
-
-
-
-    
-    "ui_language": {
-        "en": "English",
-        "zh": "简体中文"
+    "can_not_create_nine_patch_from_artboard_or_symbol_master": {
+        "en": "Can't create Nine-Patch from Artboard or Symbol Master.",
+        "zh": "不可从画板或组件模版创建点九资源。"
     },
+    "preferences": {
+        "en": "Preferences",
+        "zh": "参数设置"
+    },
+    "asset_name_type_0": {
+        "en": "Valid last part of layer name. (a / b / c -> c)",
+        "zh": "合法的最后段图层名. (a / b / c -> c)"
+    },
+    "asset_name_type_1": {
+        "en": "Valid full layer name. (a / b / c -> a_b_c)",
+        "zh": "合法的完整图层名. (a / b / c -> a_b_c)"
+    },
+    "asset_name_type_2": {
+        "en": "Last part of layer name. (a / b / c -> c)",
+        "zh": "最后段图层名. (a / b / c -> c)"
+    },
+    "asset_name_type_3": {
+        "en": "Full layer name. (a / b / c -> a_b_c)",
+        "zh": "完整图层名. (a / b / c -> a_b_c)"
+    },
+    "no_nine_patch_asset": {
+        "en": "No any nine-patch asset.",
+        "zh": "无任何点九资源。"
+    },
+    "no_vector_drawable_asset": {
+        "en": "No any vector drawable asset.",
+        "zh": "无任何矢量资源。"
+    },
+    "export_dpis": {
+        "en": "Export DPIs",
+        "zh": "导出分辨率"
+    },
+    "asset_name_type": {
+        "en": "Asset Name Type",
+        "zh": "资源命名方式"
+    },
+    "vector_drawable_folder": {
+        "en": "Vector Drawable Folder",
+        "zh": "矢量资源文件夹"
+    },
+    "others": {
+        "en": "Others",
+        "zh": "其他"
+    },
+    "reveal_in_finder_after_export": {
+        "en": "Reveal in Finder after export.",
+        "zh": "导出资源后在访达中显示。"
+    },
+    "webp_quality": {
+        "en": "WebP Quality",
+        "zh": "WebP 图片质量"
+    },
+
+
+
+
+
+
+
     "description": {
         "en": "Export Android resources in Sketch. Support bitmap, vector, nine-patch, app icon, shape XML and color.",
         "zh": "用于导出 Android 各种资源的 Sketch 插件，支持位图、矢量、点九、应用图标、形状 XML 和色彩 XML。"
@@ -161,10 +212,7 @@
     },
 
     
-    "preferences": {
-        "en": "Preferences",
-        "zh": "参数设置"
-    },
+    
     "help": {
         "en": "Help",
         "zh": "帮助"
@@ -195,66 +243,6 @@
         "zh": "语言文件 \"%1\" 不存在。"
     },
     
-    "can_not_create_nine_patch_from_artboard_or_symbol_master": {
-        "en": "Can't create Nine-Patch from Artboard or Symbol Master.",
-        "zh": "不可从画板或组件模版创建点九资源。"
-    },
-    "no_nine_patch_asset": {
-        "en": "No any nine-patch asset.",
-        "zh": "无任何点九资源。"
-    },
-    "no_vector_drawable_asset": {
-        "en": "No any vector drawable asset.",
-        "zh": "无任何矢量资源。"
-    },
-    "export_dpis": {
-        "en": "Export DPIs",
-        "zh": "导出分辨率"
-    },
-    "asset_name_type": {
-        "en": "Asset Name Type",
-        "zh": "资源命名方式"
-    },
-    "asset_name_type_0": {
-        "en": "Valid last part of layer name. (a / b / c -> c)",
-        "zh": "合法的最后段图层名. (a / b / c -> c)"
-    },
-    "asset_name_type_1": {
-        "en": "Valid full layer name. (a / b / c -> a_b_c)",
-        "zh": "合法的完整图层名. (a / b / c -> a_b_c)"
-    },
-    "asset_name_type_2": {
-        "en": "Last part of layer name. (a / b / c -> c)",
-        "zh": "最后段图层名. (a / b / c -> c)"
-    },
-    "asset_name_type_3": {
-        "en": "Full layer name. (a / b / c -> a_b_c)",
-        "zh": "完整图层名. (a / b / c -> a_b_c)"
-    },
-    "vector_drawable_folder": {
-        "en": "Vector Drawable Folder",
-        "zh": "矢量资源文件夹"
-    },
-    "change_language": {
-        "en": "Change Language",
-        "zh": "切换语音"
-    },
-    "others": {
-        "en": "Others",
-        "zh": "其他"
-    },
-    "show_in_finder_after_export": {
-        "en": "Show in Finder after export.",
-        "zh": "导出资源后在 Finder 中显示。"
-    },
-    "least_export_dpis": {
-        "en": "At least keep 1 export dpi is checked.",
-        "zh": "导出分辨率选项必须至少保留一项。"
-    },
-    "webp_quality": {
-        "en": "WebP Quality",
-        "zh": "WebP 图片质量"
-    },
 
     
     "template_no_exists": {
@@ -315,25 +303,5 @@
     "export_done": {
         "en": "Export done!",
         "zh": "导出完成！"
-    },
-    "ga_disable": {
-        "en": "Disable Google Analytics tacking.",
-        "zh": "禁用 “谷歌分析” 跟踪用户数据。"
-    },
-    "ga_tip": {
-        "en": "This plugin use Google Analytics for tacking user area, language and plugin action, that used to help improve plugin. You can \"Disagree\" to disable it.",
-        "zh": "插件使用 “谷歌分析” 跟踪用户国家地区、语言及插件执行动作等信息用于改进插件体验，点击 “不同意” 禁用分析功能不会影响插件使用。"
-    },
-    "agree": {
-        "en": "Agree",
-        "zh": "同意"
-    },
-    "disagree": {
-        "en": "Disagree",
-        "zh": "不同意"
-    },
-    "vector_drawable_precision": {
-        "en": "Precision of pathData in Vector Drawable",
-        "zh": "矢量资源路径数据小数精度"
     }
 }

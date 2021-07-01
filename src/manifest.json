@@ -53,7 +53,33 @@
                     "SelectionChanged.finish": "onSelectionChanged"
                 }
             }
+        },
+        {
+            "name": "Preferences",
+            "identifier": "preferences",
+            "script": "preferences.js"
+        },
+        {
+            "name": "Web Site",
+            "identifier": "web_site",
+            "script": "help.js"
+        },
+        {
+            "name": "Report Issues",
+            "identifier": "report_issues",
+            "script": "help.js"
+        },
+        {
+            "name": "Donate",
+            "identifier": "donate",
+            "script": "help.js"
+        },
+        {
+            "name": "Buy Me a Coffee",
+            "identifier": "buymeacoffee",
+            "script": "help.js"
         }
+
     ],
     "menu": {
         "title": "vector_drawable",
@@ -67,7 +93,19 @@
             "view_color_code_from_color_variables",
             "view_shape_drawable_from_selected_layer",
             "view_nine_patch",
-            "view_vector_drawable_code"
+            "view_vector_drawable_code",
+            "-",
+            "preferences",
+            {
+                "title": "Help",
+                "items": [
+                    "web_site",
+                    "report_issues",
+                    "-",
+                    "donate",
+                    "buymeacoffee"
+                ]
+            }
         ]
     }
 }

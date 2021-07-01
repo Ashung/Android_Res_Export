@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Android Res Export</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="main">
+    <div id="preferences">
+        <div class="logo">
+            <img src="icon.png" alt="" width="48" height="48">
+            <div>Version: <span id="version">0.0.0</span></div>
+        </div>
+        <div class="from">
+            <div class="from-row">
+                <label class="from-label" id="label-export-dpi">Export DPI</label>
+                <div class="from-input grid-list" id="export-dpis">
+                    <label><input type="checkbox" value="mdpi"/> MDPI (1x)</label>
+                    <label><input type="checkbox" value="hdpi"/> HDPI (1.5x)</label>
+                    <label><input type="checkbox" value="xhdpi"/> XHDPI (2x)</label>
+                    <label><input type="checkbox" value="xxhdpi"/> XXHDPI (3x)</label>
+                    <label><input type="checkbox" value="xxxhdpi"/> XXXHDPI (4x)</label>
+                </div>
+            </div>
+            <div class="from-row">
+                <label class="from-label" id="label-asset-name-type">Asset Name Type</label>
+                <div class="from-input">
+                    <select id="name-type"></select>
+                </div>
+            </div>
+            <div class="from-row">
+                <label class="from-label" id="label-vector-drawable-folder">Vector Drawable Folder</label>
+                <div class="from-input">
+                    <select id="folder"></select>
+                </div>
+            </div>
+            <div class="from-row">
+                <label class="from-label" id="label-webp-quality">WebP Quality</label>
+                <div class="from-input flex-from">
+                    <input id="webp-quality-range" type="range" min="0" max="100" step="1" value="100">
+                    <input id="webp-quality-value" type="text" disabled value="100" size="3">
+                </div>
+            </div>
+            <div class="from-row">
+                <label class="from-label" id="label-others">Others</label>
+                <div class="from-input">
+                    <label><input id="reveal-in-finder" type="checkbox"/> <span id="label-reveal-in-finder">Reveal in Finder after export.</span></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="foot-actions">
+        <span class="gap-flex"></span>
+        <button id="cancel" class="button">Cancel</button>
+        <span class="gap"></span>
+        <button id="ok" class="button-blue">OK</button>
+    </div>
+</div>
+<script src="../resources_preferences.js"></script>
+</body>
+</html>

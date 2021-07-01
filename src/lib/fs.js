@@ -101,6 +101,10 @@ function pasteboardCopy(text) {
     pasteboard.setString_forType(text, NSStringPboardType);
 }
 
+function openURL(url) {
+    NSWorkspace.sharedWorkspace().openURL(NSURL.URLWithString(url));
+}
+
 module.exports.fileExists = fileExists;
 module.exports.getContentFromFile = getContentFromFile;
 module.exports.writeContentToFile = writeContentToFile;
@@ -112,3 +116,4 @@ module.exports.saveToFolder = saveToFolder;
 module.exports.showInFinder = showInFinder;
 module.exports.openInFinder = openInFinder;
 module.exports.pasteboardCopy = pasteboardCopy;
+module.exports.openURL = openURL;

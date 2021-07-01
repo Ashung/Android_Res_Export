@@ -29,10 +29,10 @@ export default function() {
         let groupContent;
         let groupPatch;
         if (sk.isArtboard(layer)) {
-            ui.message(i10n('can_not_create_asset_from_artboard'));
+            ui.message(i10n('can_not_create_nine_patch_from_artboard_or_symbol_master'));
         }
         else if (sk.isSymbolMaster(layer)) {
-            ui.message(i10n('can_not_create_asset_from_artboard'));
+            ui.message(i10n('can_not_create_nine_patch_from_artboard_or_symbol_master'));
         }
         else if (sk.isHotspot(layer)) {
             ui.message(i10n('can_not_create_asset_from_hot_spot'));

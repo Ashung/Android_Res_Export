@@ -2,7 +2,6 @@ import BrowserWindow from 'sketch-module-web-view';
 import { getWebview, sendToWebview } from 'sketch-module-web-view/remote';
 import sketch from 'sketch/dom';
 import ui from 'sketch/ui';
-// import { toArray } from 'util';
 import { pasteboardCopy, saveToFolder, writeContentToFile } from './lib/fs';
 
 const webviewIdentifier = 'view_vector_drawable_code.webview';

@@ -4,9 +4,7 @@ const ui = require('sketch/ui');
 const util = require('util');
 
 const i10n = require('./lib/i10n');
-const android = require('./lib/android');
 const sk = require('./lib/sk');
-const { pasteboardCopy, saveToFolder, writeContentToFile } = require('./lib/fs');
 
 const html = require('../resources/view_nine_patch.html');
 const webviewIdentifier = 'view_nine_patch.webview';
@@ -75,9 +73,6 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
-        // webContents.evaluateWebScript("var base64 ='" + base64 + "'");
-        // webContents.evaluateWebScript("originalWidth=" + ninePatchWidth + "");
-        // webContents.evaluateWebScript("originalHeight=" + ninePatchHeight + "");
         webContents.executeJavaScript(`main('${base64}', ${ninePatchWidth}, ${ninePatchHeight})`);
     });
 

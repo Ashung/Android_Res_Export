@@ -1,26 +1,18 @@
 const sketch = require('sketch/dom');
-const ui = require('sketch/ui');
-const settings = require('sketch/settings');
 const {
     Artboard,
     Group,
     Image,
     Page,
     Rectangle,
-    Shape,
     ShapePath,
     Style,
     SymbolMaster,
 } = require('sketch/dom');
 
-const i10n = require('./lib/i10n');
-const android = require('./lib/android');
-const sk = require('./lib/sk');
-
 export default function() {
 
     const document = sketch.getSelectedDocument();
-    const selection = document.selectedLayers;
 
     const logoSVG = `<svg width="192px" height="192px" viewBox="0 0 192 192">
         <path fill="#FFFFFF" d="M60.36 65.11c1.47-1.48 3.74-1.48 5.2 0l10.93 11c5.87-2.97 12.47-4.68 19.51-4.68 6.97 0 13.57 1.7 19.36 4.68l10.85-11c1.47-1.48 3.74-1.48 5.21 0 1.47 1.49 1.47 3.8 0 5.28l-9.53 9.66c11 8.1 18.11 21.17 18.11 35.95H52c0-14.78 7.11-27.78 17.97-35.88l-9.61-9.73c-1.47-1.49-1.47-3.79 0-5.28zm53.52 28.6c-2.28 0-4.13 1.81-4.13 4.06 0 2.24 1.85 4.06 4.13 4.06 2.27 0 4.12-1.82 4.12-4.06 0-2.25-1.85-4.06-4.13-4.06zm-35.75 0c-2.28 0-4.13 1.81-4.13 4.06 0 2.24 1.85 4.06 4.13 4.06 2.27 0 4.12-1.82 4.12-4.06 0-2.25-1.85-4.06-4.13-4.06z"/>
@@ -349,7 +341,7 @@ export default function() {
         })()
     });
 
-    const page = new Page({
+    new Page({
         name: 'App Icon',
         parent: document,
         selected: true,
