@@ -49,7 +49,7 @@ html {
     -webkit-user-select: none;
     user-select: none;
 }
-input, textarea, pre code * {
+input, textarea, code, pre code * {
     -webkit-user-select: auto;
     user-select: auto;
 }
@@ -66,6 +66,10 @@ pre code {
     display: block;
     font: 12px/1.6 Monaco, Consolas, monospace;
     padding: 16px;
+}
+
+pre *::selection {
+    background-color: rgba(60, 80, 180, .2);
 }
 
 button {
@@ -345,35 +349,17 @@ select {
 .hljs-keyword,.hljs-selector-tag,.hljs-subst{color:#333;font-weight:700}
 .hljs-number,.hljs-literal,.hljs-variable,.hljs-template-variable,.hljs-tag .hljs-attr{color:#094}
 .hljs-string,.hljs-doctag{color:#d14}
-.hljs-title,.hljs-section,.hljs-selector-id{color:#900;font-weight:700}
-.hljs-subst{font-weight:400}
-.hljs-type,.hljs-class .hljs-title{color:#458;font-weight:700}
-.hljs-tag,.hljs-name,.hljs-attribute{color:#03F;font-weight:400}
+.hljs-title,.hljs-section,.hljs-selector-id{color:#900;font-weight:500}
+.hljs-type,.hljs-class .hljs-title{color:#458;font-weight:500}
+.hljs-tag,.hljs-name,.hljs-attribute{color:#03F;}
 .hljs-regexp,.hljs-link{color:#093}
 .hljs-symbol,.hljs-bullet{color:#907}
 .hljs-built_in,.hljs-builtin-name{color:#08A}
-.hljs-meta{color:#999;font-weight:700}
+.hljs-meta{color:#999;font-weight:500}
 .hljs-deletion{background:#fdd}
 .hljs-addition{background:#dfd}
 .hljs-emphasis{font-style:italic}
-.hljs-strong{font-weight:700}
-
-td.hljs-ln-numbers {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    text-align: right;
-    color: #ccc;
-    border-right: 1px solid #ccc;
-    padding: 0 10px !important;
-    background: #F8F8F8;
-}
-td.hljs-ln-code {
-    padding-left: 10px !important;
-}
+.hljs-strong{font-weight:500}
 
 @media (prefers-color-scheme: dark) {
     .hljs{color:#EEE}
@@ -390,5 +376,4 @@ td.hljs-ln-code {
     .hljs-meta{color:#666}
     .hljs-deletion{background:#766}
     .hljs-addition{background:#8B8}
-    td.hljs-ln-numbers{color:#333;border-color:#333;background:#222}
 }

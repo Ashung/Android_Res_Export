@@ -2,6 +2,7 @@ import highlight from 'highlight.js/lib/core';
 import xml from 'highlight.js/lib/languages/xml';
 highlight.registerLanguage('xml', xml);
 
+const main = document.getElementById('main');
 const tempXMLElement = document.getElementById('tempXML');
 const codeElement = document.getElementById("code");
 const copyButton = document.getElementById('copy');
@@ -26,8 +27,18 @@ cancelButton.addEventListener('click', () => {
     window.postMessage('cancel');
 });
 
-window.main = (code) => {
+main.style.opacity = '0';
+
+window.main = (code, json) => {
     codeElement.innerText = code;
     tempXMLElement.value = code;
     highlight.highlightBlock(codeElement);
+
+    // i10n
+    const langs = JSON.parse(json);
+    saveButton.textContent = langs.save;
+    cancelButton.textContent = langs.cancel;
+    copyButton.textContent = langs.copy;
+
+    main.style.opacity = '1';
 }

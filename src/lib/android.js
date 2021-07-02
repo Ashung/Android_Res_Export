@@ -53,7 +53,7 @@ function assetName(layerName, type, defaultName) {
     ) {
         return defaultName || 'untitled_asset';
     }
-    return name;
+    return name.toLowerCase();
 }
 
 function cleanName(name) {

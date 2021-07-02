@@ -112,7 +112,9 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
-        webContents.executeJavaScript(`main('${xml}')`);
+        const langs = {};
+        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i10n(key));
+        webContents.executeJavaScript(`main('${xml}', '${JSON.stringify(langs)}')`);
     });
 
     // Copy
@@ -125,7 +127,7 @@ export default function() {
     webContents.on('save', xml => {
         let filePath = saveToFolder('');
         writeContentToFile(filePath, xml);
-        ui.message('Done.');
+        browserWindow.close();
     });
 
     // Close

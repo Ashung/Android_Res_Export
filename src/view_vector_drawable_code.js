@@ -1,13 +1,35 @@
-import BrowserWindow from 'sketch-module-web-view';
-import { getWebview, sendToWebview } from 'sketch-module-web-view/remote';
-import sketch from 'sketch/dom';
-import ui from 'sketch/ui';
-import { pasteboardCopy, saveToFolder, writeContentToFile } from './lib/fs';
+const BrowserWindow = require('sketch-module-web-view');
+const { getWebview, sendToWebview } = require('sketch-module-web-view/remote');
+const sketch = require('sketch/dom');
+const ui = require('sketch/ui');
 
-const webviewIdentifier = 'view_vector_drawable_code.webview';
+const i10n = require('./lib/i10n');
+const sk = require('./lib/sk');
+const { pasteboardCopy, saveToFolder, writeContentToFile } = require('./lib/fs');
+
 const html = require('../resources/view_vector_drawable_code.html');
+const webviewIdentifier = 'view_vector_drawable_code.webview';
 
 export default function () {
+
+    const document = sketch.getSelectedDocument();
+    const selection = document.selectedLayers;
+    
+    if (selection.isEmpty) {
+        ui.message(i10n('no_selection'));
+        return;
+    }
+
+    const layer = selection.layers[0];
+    if (layer.width > 200 && layer.height > 200) {
+        ui.message(i10n('vector_drawable_limit'))
+        return;
+    }
+
+    const svg = sk.getSVGFromLayer(layer);
+
+
+
 
     const options = {
         identifier: webviewIdentifier,
@@ -33,35 +55,44 @@ export default function () {
 
     // page loads
     webContents.on('did-finish-load', () => {
-        let selection = sketch.getSelectedDocument().selectedLayers;
-        if (selection.isEmpty) {
-            // TODO: remove preview code
-            // ui.message('No layer selected');
-        } else if (selection.length > 1) {
-            // ui.message('Select 1 layer');
-        } else {
-            let layer = selection.layers[0];
-            let svg = getSVG(layer);
+        const langs = {};
+        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i10n(key));
+        webContents.executeJavaScript(`main('${svg}', '${JSON.stringify(langs)}')`);
 
-            // console.log(svg)
-            webContents
-                .executeJavaScript(`svg2vector('${svg}')`)
-                .catch(console.error);
-        }
+        // let selection = sketch.getSelectedDocument().selectedLayers;
+        // if (selection.isEmpty) {
+        //     // TODO: remove preview code
+        //     // ui.message('No layer selected');
+        // } else if (selection.length > 1) {
+        //     // ui.message('Select 1 layer');
+        // } else {
+        //     let layer = selection.layers[0];
+        //     let svg = getSVG(layer);
+
+        //     // console.log(svg)
+        //     webContents
+        //         .executeJavaScript(`svg2vector('${svg}')`)
+        //         .catch(console.error);
+        // }
     });
-
-    // Copy
-    webContents.on('copyCode', xml => {
-        pasteboardCopy(xml);
-        ui.message('Copied.');
-    })
 
     // TODO: Save
     webContents.on('saveCode', xml => {
         let filePath = saveToFolder('');
         writeContentToFile(filePath, xml);
-        ui.message('Done.');
-    })
+        browserWindow.close();
+    });
+
+    // Copy
+    webContents.on('copyCode', xml => {
+        pasteboardCopy(xml);
+        ui.message(i10n('copied'));
+    });
+
+    // Close
+    webContents.on('cancel', () => {
+        browserWindow.close();
+    });
 
     browserWindow.loadURL(html);
 };
@@ -91,9 +122,3 @@ export function onSelectionChanged(context) {
         }
     }
 };
-
-function getSVG(layer) {
-    const options = { formats: 'svg', output: false };
-    const buffer = sketch.export(layer, options);
-    return buffer.toString().replace(/\n/g, '').replace(/\s{2,}/g, '');
-}

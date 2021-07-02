@@ -125,7 +125,9 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
-        webContents.executeJavaScript(`main('${xml}')`);
+        const langs = {};
+        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i10n(key));
+        webContents.executeJavaScript(`main('${xml}', '${JSON.stringify(langs)}')`);
     });
 
     // Copy

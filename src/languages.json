@@ -163,7 +163,10 @@
         "en": "WebP Quality",
         "zh": "WebP 图片质量"
     },
-
+    "vector_drawable_limit": {
+        "en": "Recommend that limit a vector drawable to maximum fo 200 x 200dp.",
+        "zh": "建议矢量资源不超过 200 x 200dp。"
+    },
 
 
 

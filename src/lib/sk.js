@@ -1,3 +1,4 @@
+const sketch = require('sketch/dom');
 const { Document, Slice, Rectangle, Group, Shape } = require('sketch/dom');
 
 module.exports.isGroup = function(layer) {
@@ -149,4 +150,10 @@ module.exports.selectLayer = function(layer) {
 
 module.exports.moveLayerIntoGroup = function(layer, group) {
     layer.sketchObject.moveToLayer_beforeLayer(group.sketchObject, group.sketchObject.firstLayer());
+}
+
+module.exports.getSVGFromLayer = function(layer) {
+    const options = { formats: 'svg', output: false };
+    const buffer = sketch.export(layer, options);
+    return buffer.toString().replace(/\n/g, '\\n'); //.replace(/\s{2,}/g, '');
 }

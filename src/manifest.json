@@ -43,7 +43,7 @@
             "script": "view_nine_patch.js"
         },
         {
-            "name": "view_vector_drawable_code",
+            "name": "Vector Drawable From Selected Layer",
             "identifier": "view_vector_drawable_code",
             "script": "view_vector_drawable_code.js",
             "handlers": {
