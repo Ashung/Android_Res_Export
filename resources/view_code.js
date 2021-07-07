@@ -1,5 +1,5 @@
-import highlight from 'highlight.js/lib/core';
-import xml from 'highlight.js/lib/languages/xml';
+const highlight = require('highlight.js/lib/core');
+const xml = require('highlight.js/lib/languages/xml');
 highlight.registerLanguage('xml', xml);
 
 const main = document.getElementById('main');

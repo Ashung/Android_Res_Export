@@ -167,6 +167,56 @@
         "en": "Recommend that limit a vector drawable to maximum fo 200 x 200dp.",
         "zh": "建议矢量资源不超过 200 x 200dp。"
     },
+    "tip_bg_light": {
+        "en": "Use light transparent background",
+        "zh": "使用亮色透明背景"
+    },
+    "tip_bg_dark": {
+        "en": "Use dark transparent background",
+        "zh": "使用暗色透明色背景"
+    },
+    "tip_bg_white": {
+        "en": "Use white background",
+        "zh": "使用白色背景"
+    },
+    "width": {
+        "en": "Width",
+        "zh": "宽"
+    },
+    "height": {
+        "en": "Height",
+        "zh": "高"
+    },
+    "content": {
+        "en": "Content",
+        "zh": "内容区"
+    },
+    "export_done": {
+        "en": "Export done!",
+        "zh": "导出完成！"
+    },
+    "no_bitmap_asset": {
+        "en": "No any bitmap asset.",
+        "zh": "无任何位图资源。"
+    },
+    "cannot_export_to_folder": {
+        "en": "You can't export assets to this folder.",
+        "zh": "无法导入文件到此文件夹。"
+    },
+    "export_bitmap_assets_png": {
+        "en": "Export Bitmap Assets (PNG)",
+        "zh": "导出位图资源 (PNG)"
+    },
+    "export_bitmap_assets_webp": {
+        "en": "Export Bitmap Assets (WebP)",
+        "zh": "导出位图资源 (WebP)"
+    },
+    "select_all": {
+        "en": "Select / Deselect All",
+        "zh": "选择/取消选择全部"
+    },
+
+
 
 
 
@@ -193,14 +243,7 @@
         "en": "New Vector Asset",
         "zh": "新建矢量资源"
     },
-    "export_bitmap_assets_png": {
-        "en": "Export Bitmap Assets (PNG)",
-        "zh": "导出位图资源 (PNG)"
-    },
-    "export_bitmap_assets_webp": {
-        "en": "Export Bitmap Assets (WebP)",
-        "zh": "导出位图资源 (WebP)"
-    },
+    
     "export_vector_assets": {
         "en": "Export Vector Assets",
         "zh": "导出矢量资源"
@@ -232,10 +275,7 @@
         "en": "Donate",
         "zh": "捐款"
     },
-    "no_png_asset": {
-        "en": "No any bitmap asset.",
-        "zh": "无任何位图资源。"
-    },
+
     
     "language_file_not_found": {
         "en": "Language file not found.",
@@ -268,43 +308,13 @@
         "en": "No Permission",
         "zh": "无写入权限"
     },
-    "cannot_export_to_folder": {
-        "en": "You can't export assets to this folder.",
-        "zh": "无法导入文件到此文件夹。"
-    },
+
     
     
     
     "no_color_in_selected_layers": {
         "en": "No any color in selected layer.",
         "zh": "选中的图层中没有任何颜色。"
-    },
-    "html_tip_bg_light": {
-        "en": "Use light transparent background",
-        "zh": "使用亮色透明背景"
-    },
-    "html_tip_bg_dark": {
-        "en": "Use dark transparent background",
-        "zh": "使用暗色透明色背景"
-    },
-    "html_tip_bg_white": {
-        "en": "Use white background",
-        "zh": "使用白色背景"
-    },
-    "html_label_width": {
-        "en": "Width",
-        "zh": "宽"
-    },
-    "html_label_height": {
-        "en": "Height",
-        "zh": "高"
-    },
-    "html_label_content": {
-        "en": "Content",
-        "zh": "内容区"
-    },
-    "export_done": {
-        "en": "Export done!",
-        "zh": "导出完成！"
     }
+    
 }

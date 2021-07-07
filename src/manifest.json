@@ -23,6 +23,16 @@
             "script": "new_app_icon.js"
         },
         {
+            "name": "Export Bitmap Assets (PNG)",
+            "identifier": "export_bitmap_assets_png",
+            "script": "export_bitmap_assets.js"
+        },
+        {
+            "name": "Export Bitmap Assets (WebP)",
+            "identifier": "export_bitmap_assets_webp",
+            "script": "export_bitmap_assets.js"
+        },   
+        {
             "name": "Color XML From Selected Layers",
             "identifier": "view_color_code_from_selected_layers",
             "script": "view_color_code.js"
@@ -79,7 +89,6 @@
             "identifier": "buymeacoffee",
             "script": "help.js"
         }
-
     ],
     "menu": {
         "title": "vector_drawable",
@@ -88,6 +97,9 @@
             "new_vector_asset",
             "new_nine_patch_asset",
             "new_app_icon",
+            "-",
+            "export_bitmap_assets_png",
+            "export_bitmap_assets_webp",
             "-",
             "view_color_code_from_selected_layers",
             "view_color_code_from_color_variables",

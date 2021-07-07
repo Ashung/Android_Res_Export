@@ -62,7 +62,7 @@ function saveToFolder(fileName) {
     }
 }
 
-function showInFinder(path) {
+function revealInFinder(path) {
     return NSWorkspace.sharedWorkspace().openFile_withApplication(path, "Finder");
 }
 
@@ -113,7 +113,7 @@ module.exports.directoryIsWriteable = directoryIsWriteable;
 module.exports.getJSONFromPath = getJSONFromPath;
 module.exports.chooseFolder = chooseFolder;
 module.exports.saveToFolder = saveToFolder;
-module.exports.showInFinder = showInFinder;
+module.exports.revealInFinder = revealInFinder;
 module.exports.openInFinder = openInFinder;
 module.exports.pasteboardCopy = pasteboardCopy;
 module.exports.openURL = openURL;

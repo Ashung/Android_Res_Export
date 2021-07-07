@@ -157,3 +157,11 @@ module.exports.getSVGFromLayer = function(layer) {
     const buffer = sketch.export(layer, options);
     return buffer.toString().replace(/\n/g, '\\n'); //.replace(/\s{2,}/g, '');
 }
+
+module.exports.export = function(layer, option) {
+    const ancestry = layer.sketchObject.ancestry();
+    const exportRequest = MSExportRequest.exportRequestsFromLayerAncestry(ancestry).firstObject();
+    exportRequest.setFormat(option.format || 'png');
+    exportRequest.setScale(option.scale || 1);
+    Document.getSelectedDocument().sketchObject.saveExportRequest_toFile(exportRequest, option.output);
+}

@@ -73,7 +73,12 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
-        webContents.executeJavaScript(`main('${base64}', ${ninePatchWidth}, ${ninePatchHeight})`);
+        const langs = {};
+        [
+            'tip_bg_light', 'tip_bg_dark', 'tip_bg_white',
+            'width', 'height', 'content', 'export', 'cancel'
+        ].forEach(key => langs[key] = i10n(key));
+        webContents.executeJavaScript(`main('${base64}', ${ninePatchWidth}, ${ninePatchHeight}, '${JSON.stringify(langs)}')`);
     });
 
     // Save
@@ -81,7 +86,7 @@ export default function() {
         // TODO: Export
         // let filePath = saveToFolder('');
         // writeContentToFile(filePath, xml);
-        ui.message('Done.');
+        ui.message(i10n('export_done'));
     });
 
     // Close

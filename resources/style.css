@@ -142,6 +142,7 @@ input[type=checkbox] {
     border-radius: 4px;
     vertical-align: -2px;
     margin-right: 4px;
+    box-shadow: 0 0 1px #FFF;
 }
 input[type=checkbox]:checked {
     background-color: var(--accent);
@@ -341,6 +342,52 @@ select {
 .logo img {
     display: block;
     margin-bottom: 8px;
+}
+
+.asset-thumbs {
+    padding: 16px;
+    flex-wrap: wrap;
+    flex-direction: row !important;
+    align-items: flex-start;
+    gap: 8px;
+}
+.asset-thumbs .item {
+    position: relative;
+    width: 88px;
+}
+.asset-thumbs img {
+    display: block;
+    width: 88px;
+    height: 88px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    background: var(--background);
+    object-fit: scale-down;
+}
+.asset-thumbs .name {
+    font-size: 12px;
+}
+.asset-thumbs .name span {
+    display: inline-block;
+    padding: 2px 4px;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 4px;
+}
+.asset-thumbs input[type="checkbox"] {
+    position: absolute;
+    z-index: 1;
+    top: 4px;
+    left: 4px;
+}
+.asset-thumbs input:checked + img {
+    background: rgba(63, 81, 181, 0.1);
+}
+.asset-thumbs input:checked + img + .name span {
+    background: var(--accent);
+    color: #FFFFFF;
 }
 
 /* github.com style (c) Vasily Polovnyov <vast@whiteants.net> */

@@ -1,3 +1,4 @@
+const main = document.getElementById('main');
 const ninePatchPreview = document.getElementById('nine_patch_preview');
 const previewBackground = document.getElementById('preview');
 const stretchWidth = document.getElementById('stretch_width');
@@ -217,9 +218,9 @@ function getLength(patchData, maxLength) {
 }
 
 // disable the context menu (eg. the right click menu) to have a more native feel
-document.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-});
+// document.addEventListener('contextmenu', (e) => {
+//     e.preventDefault();
+// });
 
 // call the plugin from the webview
 exportButton.addEventListener('click', () => {
@@ -230,7 +231,9 @@ cancelButton.addEventListener('click', () => {
     window.postMessage('cancel');
 });
 
-window.main = (base64, ninePatchWidth, ninePatchHeight) => {
+main.style.opacity = '0';
+
+window.main = (base64, ninePatchWidth, ninePatchHeight, json) => {
 
     originalWidth = ninePatchWidth;
     originalHeight = ninePatchHeight;
@@ -248,4 +251,17 @@ window.main = (base64, ninePatchWidth, ninePatchHeight) => {
     }
 
     drawNinePatch(base64, ninePatchWidth, ninePatchHeight, false);
+
+    // i10n
+    const langs = JSON.parse(json);
+    bgToggleLight.setAttribute('title', langs.tip_bg_light);
+    bgToggleDark.setAttribute('title', langs.tip_bg_dark);
+    bgToggleWhite.setAttribute('title', langs.tip_bg_white);
+    labelStretchWidth.textContent = langs.width;
+    labelStretchHeight.textContent = langs.height;
+    labelStretchContext.textContent = langs.content;
+    exportButton.textContent = langs.export;
+    cancelButton.textContent = langs.cancel;
+
+    main.style.opacity = '1';
 }
