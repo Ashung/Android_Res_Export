@@ -7,9 +7,9 @@ let allCount;
 let selectedCount = 0;
 
 // disable the context menu (eg. the right click menu) to have a more native feel
-// document.addEventListener('contextmenu', (e) => {
-//     e.preventDefault();
-// });
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+});
 
 // call the plugin from the webview
 exportButton.addEventListener('click', () => {
@@ -72,7 +72,7 @@ window.main = (assetsJson, langsJson) => {
         })
     });
 
-    // i10n
+    // i18n
     const langs = JSON.parse(langsJson);
     selectButton.textContent = langs.select_all;
     exportButton.textContent = langs.export;

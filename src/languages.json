@@ -53,7 +53,7 @@
     },
     "copy": {
         "en": "Copy",
-        "zh": "复制"
+        "zh": "拷贝"
     },
     "copied": {
         "en": "Code copied.",
@@ -211,12 +211,22 @@
         "en": "Export Bitmap Assets (WebP)",
         "zh": "导出位图资源 (WebP)"
     },
+    "export_nine_patch_assets": {
+        "en": "Export Nine-Patch Assets",
+        "zh": "导出点九资源"
+    },
     "select_all": {
         "en": "Select / Deselect All",
         "zh": "选择/取消选择全部"
     },
-
-
+    "no_permission": {
+        "en": "No permission to save file.",
+        "zh": "无写入权限"
+    },
+    "select_asset_to_export": {
+        "en": "Please select 1 asset to export.",
+        "zh": "请选择一个需要导出的资源。"
+    },
 
 
 
@@ -248,17 +258,11 @@
         "en": "Export Vector Assets",
         "zh": "导出矢量资源"
     },
-    "export_nine_patch": {
-        "en": "Export Nine-Patch Assets",
-        "zh": "导出点九资源"
-    },
+
     "export_app_icon": {
         "en": "Export App Icon",
         "zh": "导出应用图标"
     },
-
-    
-    
     "help": {
         "en": "Help",
         "zh": "帮助"
@@ -285,9 +289,6 @@
         "en": "Language file \"%1\" does not existed.",
         "zh": "语言文件 \"%1\" 不存在。"
     },
-    
-
-    
     "template_no_exists": {
         "en": "Template file \"%1\" is no exists.",
         "zh": "模版文件 \"%1\" 不存在。"
@@ -303,18 +304,6 @@
     "code_preview": {
         "en": "Code Preview",
         "zh": "代码预览"
-    },
-    "no_permission": {
-        "en": "No Permission",
-        "zh": "无写入权限"
-    },
-
-    
-    
-    
-    "no_color_in_selected_layers": {
-        "en": "No any color in selected layer.",
-        "zh": "选中的图层中没有任何颜色。"
     }
     
 }

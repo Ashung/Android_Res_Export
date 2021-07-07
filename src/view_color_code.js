@@ -3,12 +3,9 @@ const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
 const settings = require('sketch/settings');
 
-const i10n = require('./lib/i10n');
+const i18n = require('./lib/i18n');
 const android = require('./lib/android');
-const { pasteboardCopy, saveToFolder, writeContentToFile } = require('./lib/fs');
-
-const html = require('../resources/view_code.html');
-const webviewIdentifier = 'view_color_code.webview';
+const { pasteboardCopy, saveToFolder, writeContentToFile, revealInFinder } = require('./lib/fs');
 
 export default function() {
 
@@ -18,12 +15,12 @@ export default function() {
     const assetNameType = settings.settingForKey('asset_name_type') || 0;
 
     if (selection.isEmpty && identifier === 'view_color_code_from_selected_layers') {
-        ui.message(i10n('no_selection'));
+        ui.message(i18n('no_selection'));
         return;
     }
 
     if (document.swatches.length === 0 && identifier === 'view_color_code_from_color_variables') {
-        ui.message(i10n('no_color_variables'));
+        ui.message(i18n('no_color_variables'));
         return;
     }
 
@@ -73,7 +70,7 @@ export default function() {
     }
 
     if (Object.keys(colors).length === 0) {
-        ui.message(i10n('no_colors_in_selection'));
+        ui.message(i18n('no_colors_in_selection'));
         return;
     }
 
@@ -84,7 +81,7 @@ export default function() {
     xml += '</resources>';
 
     const options = {
-        identifier: webviewIdentifier,
+        identifier: 'view_color_code.webview',
         width: 600,
         height: 400,
         show: false,
@@ -96,10 +93,10 @@ export default function() {
         alwaysOnTop: true
     };
     if (identifier === 'view_color_code_from_selected_layers') {
-        options.title = i10n('color_xml_from_layers');
+        options.title = i18n('color_xml_from_layers');
     }
     if (identifier === 'view_color_code_from_color_variables') {
-        options.title = i10n('color_xml_from_color_variables');
+        options.title = i18n('color_xml_from_color_variables');
     }
 
     const browserWindow = new BrowserWindow(options);
@@ -113,21 +110,31 @@ export default function() {
     // Main
     webContents.on('did-finish-load', () => {
         const langs = {};
-        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i10n(key));
+        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
         webContents.executeJavaScript(`main('${xml}', '${JSON.stringify(langs)}')`);
     });
 
     // Copy
     webContents.on('copy', xml => {
         pasteboardCopy(xml);
-        ui.message(i10n('copied'));
+        ui.message(i18n('copied'));
     });
 
     // Save
     webContents.on('save', xml => {
         let filePath = saveToFolder('');
-        writeContentToFile(filePath, xml);
-        browserWindow.close();
+        if (!/\.xml$/i.test(filePath)) {
+            filePath += '.xml';
+        }
+        const dir = writeContentToFile(filePath, xml);
+        if (dir) {
+            browserWindow.close();
+            if (settings.settingForKey('reveal_in_finder_after_export')) {
+                revealInFinder(dir);
+            }
+        } else {
+            ui.message(i18n('no_permission'));
+        }
     });
 
     // Close
@@ -135,5 +142,5 @@ export default function() {
         browserWindow.close();
     });
 
-    browserWindow.loadURL(html);
+    browserWindow.loadURL(require('../resources/view_code.html'));
 };

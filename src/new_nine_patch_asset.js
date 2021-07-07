@@ -3,7 +3,7 @@ const ui = require('sketch/ui');
 const settings = require('sketch/settings');
 const { Rectangle } = require('sketch/dom');
 
-const i10n = require('./lib/i10n');
+const i18n = require('./lib/i18n');
 const android = require('./lib/android');
 const sk = require('./lib/sk');
 
@@ -13,7 +13,7 @@ export default function() {
     const selection = document.selectedLayers;
 
     if (selection.isEmpty) {
-        ui.message(i10n('no_selection'));
+        ui.message(i18n('no_selection'));
         return;
     }
 
@@ -29,16 +29,16 @@ export default function() {
         let groupContent;
         let groupPatch;
         if (sk.isArtboard(layer)) {
-            ui.message(i10n('can_not_create_nine_patch_from_artboard_or_symbol_master'));
+            ui.message(i18n('can_not_create_nine_patch_from_artboard_or_symbol_master'));
         }
         else if (sk.isSymbolMaster(layer)) {
-            ui.message(i10n('can_not_create_nine_patch_from_artboard_or_symbol_master'));
+            ui.message(i18n('can_not_create_nine_patch_from_artboard_or_symbol_master'));
         }
         else if (sk.isHotspot(layer)) {
-            ui.message(i10n('can_not_create_asset_from_hot_spot'));
+            ui.message(i18n('can_not_create_asset_from_hot_spot'));
         }
         else if (sk.isSlice(layer)) {
-            ui.message(i10n('can_not_create_asset_from_slice'));
+            ui.message(i18n('can_not_create_asset_from_slice'));
         }
         else if (sk.isLayerGroup(layer)) {
             // No content and patch group
@@ -84,6 +84,7 @@ export default function() {
             sk.addSliceIntoGroup(groupContent, '#9patch', exportFormats);
         }
 
+        sk.fitGroup(groupNinePatch);
         sk.selectLayer(groupNinePatch);
     });
 }

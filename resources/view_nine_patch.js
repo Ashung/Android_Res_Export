@@ -252,7 +252,7 @@ window.main = (base64, ninePatchWidth, ninePatchHeight, json) => {
 
     drawNinePatch(base64, ninePatchWidth, ninePatchHeight, false);
 
-    // i10n
+    // i18n
     const langs = JSON.parse(json);
     bgToggleLight.setAttribute('title', langs.tip_bg_light);
     bgToggleDark.setAttribute('title', langs.tip_bg_dark);

@@ -34,7 +34,7 @@ window.main = (code, json) => {
     tempXMLElement.value = code;
     highlight.highlightBlock(codeElement);
 
-    // i10n
+    // i18n
     const langs = JSON.parse(json);
     saveButton.textContent = langs.save;
     cancelButton.textContent = langs.cancel;

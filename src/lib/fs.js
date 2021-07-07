@@ -9,12 +9,15 @@ function getContentFromFile(filePath) {
 }
 
 function writeContentToFile(filePath, content) {
-    var parentDir = NSString.stringWithString(filePath).stringByDeletingLastPathComponent();
-    mkdir(parentDir);
-    content = NSString.stringWithString(content);
-    return content.writeToFile_atomically_encoding_error_(
-        filePath, true, NSUTF8StringEncoding, null
-    );
+    const parentDir = NSString.stringWithString(filePath).stringByDeletingLastPathComponent();
+    if (NSFileManager.defaultManager().isWritableFileAtPath(parentDir)) {
+        mkdir(parentDir);
+        content = NSString.stringWithString(content);
+        content.writeToFile_atomically_encoding_error(
+            filePath, true, NSUTF8StringEncoding, null
+        );
+        return parentDir;
+    }
 }
 
 function mkdir(path) {

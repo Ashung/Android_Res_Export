@@ -3,7 +3,7 @@ const { getWebview, sendToWebview } = require('sketch-module-web-view/remote');
 const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
 
-const i10n = require('./lib/i10n');
+const i18n = require('./lib/i18n');
 const sk = require('./lib/sk');
 const { pasteboardCopy, saveToFolder, writeContentToFile } = require('./lib/fs');
 
@@ -16,13 +16,13 @@ export default function () {
     const selection = document.selectedLayers;
     
     if (selection.isEmpty) {
-        ui.message(i10n('no_selection'));
+        ui.message(i18n('no_selection'));
         return;
     }
 
     const layer = selection.layers[0];
     if (layer.width > 200 && layer.height > 200) {
-        ui.message(i10n('vector_drawable_limit'))
+        ui.message(i18n('vector_drawable_limit'))
         return;
     }
 
@@ -32,7 +32,7 @@ export default function () {
 
 
     const options = {
-        identifier: webviewIdentifier,
+        identifier: 'view_vector_drawable_code.webview',
         width: 600,
         height: 400,
         show: false,
@@ -56,7 +56,7 @@ export default function () {
     // page loads
     webContents.on('did-finish-load', () => {
         const langs = {};
-        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i10n(key));
+        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
         webContents.executeJavaScript(`main('${svg}', '${JSON.stringify(langs)}')`);
 
         // let selection = sketch.getSelectedDocument().selectedLayers;
@@ -76,17 +76,27 @@ export default function () {
         // }
     });
 
-    // TODO: Save
+    // Save
     webContents.on('saveCode', xml => {
         let filePath = saveToFolder('');
-        writeContentToFile(filePath, xml);
-        browserWindow.close();
+        if (!/\.xml$/i.test(filePath)) {
+            filePath += '.xml';
+        }
+        const dir = writeContentToFile(filePath, xml);
+        if (dir) {
+            browserWindow.close();
+            if (settings.settingForKey('reveal_in_finder_after_export')) {
+                revealInFinder(dir);
+            }
+        } else {
+            ui.message(i18n('no_permission'));
+        }
     });
 
     // Copy
     webContents.on('copyCode', xml => {
         pasteboardCopy(xml);
-        ui.message(i10n('copied'));
+        ui.message(i18n('copied'));
     });
 
     // Close

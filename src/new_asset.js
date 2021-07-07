@@ -2,7 +2,7 @@ const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
 const settings = require('sketch/settings');
 
-const i10n = require('./lib/i10n');
+const i18n = require('./lib/i18n');
 const android = require('./lib/android');
 const sk = require('./lib/sk');
 
@@ -13,7 +13,7 @@ export default function() {
     const identifier = String(__command.identifier());
 
     if (selection.isEmpty) {
-        ui.message(i10n('no_selection'));
+        ui.message(i18n('no_selection'));
         return;
     }
 
@@ -48,7 +48,7 @@ function newAsset(layer, name, format) {
     } else {
         // HotSpot layer
         if (sk.isHotspot(layer)) {
-            ui.message(i10n('can_not_create_asset_from_hot_spot'));
+            ui.message(i18n('can_not_create_asset_from_hot_spot'));
         }
         
         // Slice layer
@@ -59,7 +59,7 @@ function newAsset(layer, name, format) {
                 layer.exportFormats = exportFormats;
                 sk.exportGroupContentOnly(layer);
             } else {
-                ui.message(i10n('can_not_create_asset_from_hot_spot'));
+                ui.message(i18n('can_not_create_asset_from_hot_spot'));
             }
         }
 

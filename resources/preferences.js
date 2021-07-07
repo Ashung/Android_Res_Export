@@ -82,16 +82,16 @@ window.main = (json) => {
 
     revealInFinderNode.checked = preferences.reveal_in_finder_after_export;
 
-    // i10n
+    // i18n
     document.getElementById('version').textContent = preferences.version;
-    document.getElementById('label-export-dpi').textContent = preferences.i10n.export_dpis;
-    document.getElementById('label-asset-name-type').textContent = preferences.i10n.asset_name_type;
-    document.getElementById('label-vector-drawable-folder').textContent = preferences.i10n.vector_drawable_folder;
-    document.getElementById('label-webp-quality').textContent = preferences.i10n.webp_quality;
-    document.getElementById('label-others').textContent = preferences.i10n.others;
-    document.getElementById('label-reveal-in-finder').textContent = preferences.i10n.reveal_in_finder_after_export;
-    okButton.textContent = preferences.i10n.ok;
-    cancelButton.textContent = preferences.i10n.cancel;
+    document.getElementById('label-export-dpi').textContent = preferences.i18n.export_dpis;
+    document.getElementById('label-asset-name-type').textContent = preferences.i18n.asset_name_type;
+    document.getElementById('label-vector-drawable-folder').textContent = preferences.i18n.vector_drawable_folder;
+    document.getElementById('label-webp-quality').textContent = preferences.i18n.webp_quality;
+    document.getElementById('label-others').textContent = preferences.i18n.others;
+    document.getElementById('label-reveal-in-finder').textContent = preferences.i18n.reveal_in_finder_after_export;
+    okButton.textContent = preferences.i18n.ok;
+    cancelButton.textContent = preferences.i18n.cancel;
 
     main.style.opacity = '1';
 }

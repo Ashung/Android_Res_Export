@@ -38,7 +38,7 @@ window.main = async (svg, json) => {
     tempXMLElement.value = avd;
     highlight.highlightBlock(codeElement);
 
-    // i10n
+    // i18n
     const langs = JSON.parse(json);
     saveButton.textContent = langs.save;
     cancelButton.textContent = langs.cancel;

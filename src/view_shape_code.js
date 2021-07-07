@@ -3,12 +3,9 @@ const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
 const util = require('util');
 
-const i10n = require('./lib/i10n');
+const i18n = require('./lib/i18n');
 const android = require('./lib/android');
-const { pasteboardCopy, saveToFolder, writeContentToFile } = require('./lib/fs');
-
-const html = require('../resources/view_code.html');
-const webviewIdentifier = 'view_shape_code.webview';
+const { pasteboardCopy, saveToFolder, writeContentToFile, revealInFinder } = require('./lib/fs');
 
 export default function() {
 
@@ -17,7 +14,7 @@ export default function() {
     const layer = selection.layers[0];
     
     if (selection.isEmpty) {
-        ui.message(i10n('no_selection'));
+        ui.message(i18n('no_selection'));
         return;
     }
 
@@ -26,7 +23,7 @@ export default function() {
     // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
     let layerInfo = getLayerInfo(layer.sketchObject);
     if (layerInfo.support === false) {
-        ui.message(i10n(layerInfo.msg));
+        ui.message(i18n(layerInfo.msg));
         return;
     }
     
@@ -103,11 +100,11 @@ export default function() {
     xml += '</shape>\\n';
 
     const options = {
-        identifier: webviewIdentifier,
+        identifier: 'view_shape_code.webview',
         width: 600,
         height: 400,
         show: false,
-        title: i10n('view_shape_drawable_from_selected_layer'),
+        title: i18n('view_shape_drawable_from_selected_layer'),
         resizable: false,
         minimizable: false,
         remembersWindowFrame: true,
@@ -126,21 +123,31 @@ export default function() {
     // Main
     webContents.on('did-finish-load', () => {
         const langs = {};
-        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i10n(key));
+        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
         webContents.executeJavaScript(`main('${xml}', '${JSON.stringify(langs)}')`);
     });
 
     // Copy
     webContents.on('copy', xml => {
         pasteboardCopy(xml);
-        ui.message(i10n('copied'));
+        ui.message(i18n('copied'));
     });
 
     // Save
     webContents.on('save', xml => {
         let filePath = saveToFolder('');
-        writeContentToFile(filePath, xml);
-        ui.message('Done.');
+        if (!/\.xml$/i.test(filePath)) {
+            filePath += '.xml';
+        }
+        const dir = writeContentToFile(filePath, xml);
+        if (dir) {
+            browserWindow.close();
+            if (settings.settingForKey('reveal_in_finder_after_export')) {
+                revealInFinder(dir);
+            }
+        } else {
+            ui.message(i18n('no_permission'));
+        }
     });
 
     // Close
@@ -148,7 +155,7 @@ export default function() {
         browserWindow.close();
     });
 
-    browserWindow.loadURL(html);
+    browserWindow.loadURL(require('../resources/view_code.html'));
 };
 
 function getLayerInfo(layer) {

@@ -1,9 +1,18 @@
 const sketch = require('sketch/dom');
-const { Document, Slice, Rectangle, Group, Shape } = require('sketch/dom');
+const { Document, Slice, Rectangle, ShapePath } = require('sketch/dom');
 
 module.exports.isGroup = function(layer) {
     const types = ['Group', 'Artboard', 'SymbolMaster'];
     return types.includes(layer.type);
+}
+
+module.exports.isShape = function(layer) {
+    const types = ['Shape', 'ShapePath'];
+    return types.includes(layer.type);
+}
+
+module.exports.isRectangleShape = function(layer) {
+    return layer.sketchObject.className() == 'MSRectangleShape';
 }
 
 module.exports.isLayerGroup = function(layer) {
@@ -79,7 +88,7 @@ module.exports.removeSliceInGroup = function(group) {
 module.exports.group = function(layers) {
     var layerArray = MSLayerArray.arrayWithLayers(layers.map(layer => layer.sketchObject));
     var group = MSLayerGroup.groupWithLayers(layerArray);
-    return Group.fromNative(group);
+    return sketch.fromNative(group);
 }
 
 module.exports.exportGroupContentOnly = function(slice) {
@@ -96,12 +105,8 @@ module.exports.getLayerByNameFromParent = function(name, parent) {
     return parent.layers.find(layer => layer.name === name);
 }
 
-module.exports.getChildByNameFromParent = function(name, parent) {
-
-}
-
 module.exports.addRectShape = function(parent, frame, color, name) {
-    let shape = new Shape({
+    let shape = new ShapePath({
         name,
         parent,
         frame: new Rectangle(frame.x, frame.y, frame.width, frame.height),
@@ -110,35 +115,10 @@ module.exports.addRectShape = function(parent, frame, color, name) {
         }
     });
     return shape;
-    // var rectangle = MSRectangleShape.alloc().init();
-    // rectangle.setRect(CGRectMake(posX, posY, width, height));
-    // var shapeGroup;
-    // if (MSApplicationMetadata.metadata().appVersion >= 52) {
-    //     shapeGroup = rectangle;
-    // } else {
-    //     shapeGroup = MSShapeGroup.shapeWithPath(rectangle);
-    // }
-    // shapeGroup.setName(name);
+}
 
-    // if (color) {
-    //     // color #rrggbb
-    //     var colorObject = MSColor.colorWithRed_green_blue_alpha(
-    //         parseInt(color.substr(1, 2), 16) / 255,
-    //         parseInt(color.substr(3, 2), 16) / 255,
-    //         parseInt(color.substr(4, 2), 16) / 255,
-    //         1.0
-    //     );
-    //     shapeGroup.style().addStylePartOfType(0);
-    //     shapeGroup.style().fills().firstObject().setColor(colorObject);
-    // }
-
-    // if (beforeLayer) {
-    //     parent.insertLayer_beforeLayer(shapeGroup, beforeLayer);
-    // } else {
-    //     parent.addLayer(shapeGroup);
-    // }
-
-    // return shapeGroup;
+module.exports.fitGroup = function(group) {
+    group.sketchObject.fixGeometryWithOptions(1);
 }
 
 module.exports.selectLayer = function(layer) {

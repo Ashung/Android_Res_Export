@@ -1,7 +1,7 @@
 const BrowserWindow = require('sketch-module-web-view');
 const settings = require('sketch/settings');
 
-const i10n = require('./lib/i10n');
+const i18n = require('./lib/i18n');
 const android = require('./lib/android');
 
 const html = require('../resources/preferences.html');
@@ -16,21 +16,21 @@ export default function() {
         'reveal_in_finder_after_export': settings.settingForKey('reveal_in_finder_after_export') || false,
         'webp_quality': settings.globalSettingForKey('WebPQuality'),
         'available_asset_name_type': [
-            i10n('asset_name_type_0'),
-            i10n('asset_name_type_1'),
-            i10n('asset_name_type_2'),
-            i10n('asset_name_type_3'),
+            i18n('asset_name_type_0'),
+            i18n('asset_name_type_1'),
+            i18n('asset_name_type_2'),
+            i18n('asset_name_type_3'),
         ],
         'available_folders': android.VECTORDRAWABLE_FOLDERS,
         'version': String(__command.pluginBundle().version()),
-        'i10n': {}
+        'i18n': {}
     };
 
     [
         'export_dpis', 'asset_name_type', 'vector_drawable_folder', 'others',
         'reveal_in_finder_after_export', 'webp_quality', 'ok', 'cancel'
     ].forEach(key => {
-        preferences.i10n[key] = i10n(key);
+        preferences.i18n[key] = i18n(key);
     });
 
     const options = {
@@ -38,7 +38,7 @@ export default function() {
         width: 400,
         height: 600,
         show: false,
-        title: i10n('preferences'),
+        title: i18n('preferences'),
         resizable: false,
         minimizable: false,
         remembersWindowFrame: true,

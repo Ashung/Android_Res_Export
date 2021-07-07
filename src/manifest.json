@@ -31,7 +31,12 @@
             "name": "Export Bitmap Assets (WebP)",
             "identifier": "export_bitmap_assets_webp",
             "script": "export_bitmap_assets.js"
-        },   
+        },
+        {
+            "name": "Export Nine-Patch Assets",
+            "identifier": "export_nine_patch_assets",
+            "script": "export_nine_patch_assets.js"
+        },
         {
             "name": "Color XML From Selected Layers",
             "identifier": "view_color_code_from_selected_layers",
@@ -100,6 +105,7 @@
             "-",
             "export_bitmap_assets_png",
             "export_bitmap_assets_webp",
+            "export_nine_patch_assets",
             "-",
             "view_color_code_from_selected_layers",
             "view_color_code_from_color_variables",
