@@ -85,35 +85,32 @@ function drawNinePatch(base64, width, height, showContent) {
             }
         }
 
-        // console.log(JSON.stringify(patchTop));
-        // console.log(JSON.stringify(patchLeft));
-
         // Get padding
         var paddingTop = 0,
             paddingBottom = 0,
             paddingLeft = 0,
             paddingRight = 0;
-        var paddingTopBottonData = _ctx.getImageData(img.width-1, 1*scale, 1, img.height-2*scale).data;
+        var paddingTopBottomData = _ctx.getImageData(img.width-1, 1*scale, 1, img.height-2*scale).data;
         var paddingLeftRightData = _ctx.getImageData(1*scale, img.height-1, img.width-2*scale, 1).data;
-        for (var i = 0; i < paddingTopBottonData.length/4; i ++) {
+        for (var i = 0; i < paddingTopBottomData.length/4; i ++) {
             if (
-                paddingTopBottonData[i*4] == 0 &&
-                paddingTopBottonData[i*4+1] == 0 &&
-                paddingTopBottonData[i*4+2] == 0 &&
-                paddingTopBottonData[i*4+3] == 255
+                paddingTopBottomData[i*4] == 0 &&
+                paddingTopBottomData[i*4+1] == 0 &&
+                paddingTopBottomData[i*4+2] == 0 &&
+                paddingTopBottomData[i*4+3] == 255
             ) {
                 paddingTop = i;
                 break;
             }
         }
-        for (var i = paddingTopBottonData.length/4; i > -1; i --) {
+        for (var i = paddingTopBottomData.length/4; i > -1; i --) {
             if (
-                paddingTopBottonData[i*4] == 0 &&
-                paddingTopBottonData[i*4+1] == 0 &&
-                paddingTopBottonData[i*4+2] == 0 &&
-                paddingTopBottonData[i*4+3] == 255
+                paddingTopBottomData[i*4] == 0 &&
+                paddingTopBottomData[i*4+1] == 0 &&
+                paddingTopBottomData[i*4+2] == 0 &&
+                paddingTopBottomData[i*4+3] == 255
             ) {
-                paddingBottom = paddingTopBottonData.length/4-i-1;
+                paddingBottom = paddingTopBottomData.length/4-i-1;
                 break;
             }
         }
@@ -139,8 +136,6 @@ function drawNinePatch(base64, width, height, showContent) {
                 break;
             }
         }
-
-        // console.log(paddingTop+","+paddingRight+","+paddingBottom+","+paddingLeft);
 
         var canvas = document.createElement("canvas");
         var ctx = canvas.getContext("2d");
@@ -175,7 +170,6 @@ function drawNinePatch(base64, width, height, showContent) {
                     dw = getLength(patchTop, width);
                 }
                 ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
-                // console.log(sx+','+sy+','+sw+','+sh+','+dx+','+dy+','+dw+','+dh);
             }
             dx = 0;
             dw = 0;

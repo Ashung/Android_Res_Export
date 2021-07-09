@@ -1,3 +1,4 @@
+const util = require('util');
 const sketch = require('sketch/dom');
 const { Document, Slice, Rectangle, ShapePath } = require('sketch/dom');
 
@@ -37,6 +38,10 @@ module.exports.isHotspot = function(layer) {
 
 module.exports.isPage = function(layer) {
     return layer.type === 'Page';
+}
+
+module.exports.isImage = function(layer) {
+    return layer.type === 'Image' || layer.style.fills.some(fill => fill.fillType === 'Pattern' && fill.enabled);
 }
 
 module.exports.roundToPixel = function(layer) {
@@ -144,4 +149,49 @@ module.exports.export = function(layer, option) {
     exportRequest.setFormat(option.format || 'png');
     exportRequest.setScale(option.scale || 1);
     Document.getSelectedDocument().sketchObject.saveExportRequest_toFile(exportRequest, option.output);
+}
+
+module.exports.collapse = function(layer) {
+    layer.sketchObject.setLayerListExpandedType(1);
+}
+
+module.exports.resizeLayer = function(layer, size) {
+    let { width, height } = size
+    layer.frame.width = width || size;
+    layer.frame.height = height || size;
+}
+
+module.exports.layerWidthID = function(id) {
+    let layer = Document.getSelectedDocument().sketchObject.documentData().layerWithID(id);
+    return sketch.fromNative(layer);
+}
+
+module.exports.childOfLayer = function(layer) {
+    return util.toArray(layer.sketchObject.children()).map(sketch.fromNative);
+}
+
+module.exports.recursivelyChildOfLayer = function(layer) {
+    function traversing(layer) {
+        return util.toArray(layer.sketchObject.children()).map(_child => {
+            let child = sketch.fromNative(_child);
+            if (child.type === "SymbolInstance") {
+                return traversing(child.master);
+            } else {
+                return child;
+            }
+        });
+    }
+    return traversing(layer).flat(Infinity);
+}
+
+module.exports.hasShadow = function(layer) {
+    return layer.style.shadows.some(shadow => shadow.enabled);
+}
+
+module.exports.hasInnerShadow = function(layer) {
+    return layer.style.innerShadows.some(shadow => shadow.enabled);
+}
+
+module.exports.hasBlur = function(layer) {
+    return layer.style.blur.enabled;
 }

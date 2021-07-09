@@ -2,6 +2,7 @@ const BrowserWindow = require('sketch-module-web-view');
 const { getWebview, sendToWebview } = require('sketch-module-web-view/remote');
 const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
+const settings = require('sketch/settings');
 
 const i18n = require('./lib/i18n');
 const sk = require('./lib/sk');
@@ -10,33 +11,25 @@ const { pasteboardCopy, saveToFolder, writeContentToFile } = require('./lib/fs')
 const html = require('../resources/view_vector_drawable_code.html');
 const webviewIdentifier = 'view_vector_drawable_code.webview';
 
-export default function () {
+const document = sketch.getSelectedDocument();
+const selection = document.selectedLayers;
 
-    const document = sketch.getSelectedDocument();
-    const selection = document.selectedLayers;
+export default function () {
     
-    if (selection.isEmpty) {
-        ui.message(i18n('no_selection'));
+    if (selection.length !== 1) {
+        ui.message(i18n('select_one_layer'));
         return;
     }
 
     const layer = selection.layers[0];
-    if (layer.width > 200 && layer.height > 200) {
-        ui.message(i18n('vector_drawable_limit'))
-        return;
-    }
-
-    const svg = sk.getSVGFromLayer(layer);
-
-
-
+    if (!isSupported(layer)) return;
 
     const options = {
         identifier: 'view_vector_drawable_code.webview',
         width: 600,
         height: 400,
         show: false,
-        title: 'View Vector Drawable Code',
+        title: i18n('view_vector_drawable_from_selected_layer'),
         resizable: false,
         minimizable: false,
         remembersWindowFrame: true,
@@ -55,25 +48,13 @@ export default function () {
 
     // page loads
     webContents.on('did-finish-load', () => {
+        const svg = sk.getSVGFromLayer(layer);
         const langs = {};
-        ['save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
-        webContents.executeJavaScript(`main('${svg}', '${JSON.stringify(langs)}')`);
-
-        // let selection = sketch.getSelectedDocument().selectedLayers;
-        // if (selection.isEmpty) {
-        //     // TODO: remove preview code
-        //     // ui.message('No layer selected');
-        // } else if (selection.length > 1) {
-        //     // ui.message('Select 1 layer');
-        // } else {
-        //     let layer = selection.layers[0];
-        //     let svg = getSVG(layer);
-
-        //     // console.log(svg)
-        //     webContents
-        //         .executeJavaScript(`svg2vector('${svg}')`)
-        //         .catch(console.error);
-        // }
+        ['add_xml_declaration', 'tint_color', 'save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
+        const addXml = settings.settingForKey('add_xml_declaration') || false;
+        const defaultTint = settings.settingForKey('tint_color') || '000000';
+        const defaultAlpha = settings.settingForKey('tint_color_alpha') || 100;
+        webContents.executeJavaScript(`main('${svg}', '${JSON.stringify(langs)}', ${addXml}, '${defaultTint}', ${defaultAlpha})`);
     });
 
     // Save
@@ -104,6 +85,18 @@ export default function () {
         browserWindow.close();
     });
 
+    webContents.on('add_xml_declaration', checked => {
+        settings.setSettingForKey('add_xml_declaration', checked);
+    });
+
+    webContents.on('tint_color', value => {
+        settings.setSettingForKey('tint_color', value);
+    });
+
+    webContents.on('tint_color_alpha', value => {
+        settings.setSettingForKey('tint_color_alpha', parseInt(value));
+    });
+
     browserWindow.loadURL(html);
 };
 
@@ -116,19 +109,41 @@ export function onShutdown() {
     }
 };
 
-export function onSelectionChanged(context) {
+export function onSelectionChanged() {
     const existingWebview = getWebview(webviewIdentifier);
-    if (existingWebview) {
-        let selection = context.actionContext.newSelection;
-        if (selection.count() == 0) {
-            // TODO: remove preview code
-            // ui.message('!!! No layer selected');
-        } else if (selection.count() > 1) {
-            // ui.message('!!! Select 1 layer');
-        } else {
-            let layer = sketch.fromNative(selection.firstObject());
-            let svg = getSVG(layer);
-            sendToWebview(webviewIdentifier, `svg2vector('${svg}')`);
-        }
+    if (existingWebview && selection.length === 1) {
+        const layer = selection.layers[0];
+        if (!isSupported(layer)) return;
+        const svg = sk.getSVGFromLayer(layer);
+        sendToWebview(webviewIdentifier, `main('${svg}')`);
     }
 };
+
+function isSupported(layer) {
+    if (layer.hidden) {
+        ui.message(i18n('hidden_layer'));
+        return false;
+    }
+
+    if (layer.frame.width > 200 && layer.frame.height > 200) {
+        ui.message(i18n('vector_drawable_limit'));
+        return false;
+    }
+
+    for (let child of sk.recursivelyChildOfLayer(layer)) {
+        if (sk.isImage(child) && !layer.hidden) {
+            ui.message(i18n('vector_drawable_not_support_bitmap_layer'));
+            return false;
+        }
+        if ((sk.hasShadow(child) || sk.hasInnerShadow(child))  && !layer.hidden) {
+            ui.message(i18n('vector_drawable_not_support_shadow'));
+            return false;
+        }
+        if (sk.hasBlur(child) && !layer.hidden) {
+            ui.message(i18n('vector_drawable_not_support_blur'));
+            return false;
+        }
+    }
+
+    return true;
+}

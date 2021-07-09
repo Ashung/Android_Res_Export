@@ -1,4 +1,5 @@
 const BrowserWindow = require('sketch-module-web-view');
+const { getWebview, sendToWebview } = require('sketch-module-web-view/remote');
 const sketch = require('sketch/dom');
 const ui = require('sketch/ui');
 const util = require('util');
@@ -7,100 +8,28 @@ const i18n = require('./lib/i18n');
 const android = require('./lib/android');
 const { pasteboardCopy, saveToFolder, writeContentToFile, revealInFinder } = require('./lib/fs');
 
+const html = require('../resources/view_code.html');
+const webviewIdentifier = 'view_shape_code.webview';
+
+const document = sketch.getSelectedDocument();
+const selection = document.selectedLayers;
+
 export default function() {
 
-    const document = sketch.getSelectedDocument();
-    const selection = document.selectedLayers;
-    const layer = selection.layers[0];
-    
-    if (selection.isEmpty) {
-        ui.message(i18n('no_selection'));
+    if (selection.length !== 1) {
+        ui.message(i18n('select_one_layer'));
         return;
     }
 
-    // XML from layer
-    // Android Shape Drawable References
-    // https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
-    let layerInfo = getLayerInfo(layer.sketchObject);
+    const layer = selection.layers[0];
+    const layerInfo = getLayerInfo(layer.sketchObject);
     if (layerInfo.support === false) {
         ui.message(i18n(layerInfo.msg));
         return;
     }
     
-    let xml = `<shape xmlns:android="http://schemas.android.com/apk/res/android"\\n    android:shape="${layerInfo.type}"`;
-
-    if (layerInfo.type == "ring" && layerInfo.thickness && layerInfo.innerRadius) {
-        xml += `\\n    android:thickness="${layerInfo.thickness}"\\n    android:innerRadius="${layerInfo.innerRadius}"`;
-    }
-
-    xml += '\\n    android:useLevel="false">\\n';
-
-    if (layerInfo.width && layerInfo.height) {
-        xml += `<!--    <size-->\\n<!--        android:width="${layerInfo.width}"-->\\n<!--        android:height="${layerInfo.height}"/>-->\\n`;
-    }
-
-    if (layerInfo.solid) {
-        xml += `    <solid\\n       android:color="${layerInfo.solid}"/>\\n`;
-    }
-
-    if (layerInfo.gradientType) {
-        xml += `    <gradient\\n        android:type="${layerInfo.gradientType}"\\n`;
-        if (layerInfo.gradientAngle) {
-            xml += `        android:angle="${layerInfo.gradientAngle}"\\n`;
-        }
-        if (layerInfo.gradientStops) {
-            if (layerInfo.gradientStops.length === 2) {
-                xml += `        android:startColor="${layerInfo.gradientStops[0]}"\\n        android:endColor="${layerInfo.gradientStops[1]}"`;
-            }
-            if (layerInfo.gradientStops.length === 3) {
-                xml += `        android:startColor="${layerInfo.gradientStops[0]}"\\n        android:centerColor="${layerInfo.gradientStops[1]}"\\n        android:endColor="${layerInfo.gradientStops[2]}"`;
-            }
-        }
-        if (layerInfo.gradientRadius) {
-            xml += `\\n        android:gradientRadius="${layerInfo.gradientRadius}"`;
-        }
-        xml += '/>\\n';
-    }
-
-    if (layerInfo.cornersRadius) {
-        xml += `    <corners\\n        android:radius="${layerInfo.cornersRadius}"/>\\n`;
-    }
-
-    if (layerInfo.cornersRadiusTopLeft || layerInfo.cornersRadiusTopRight || layerInfo.cornersRadiusBottomRight || layerInfo.cornersRadiusBottomLeft) {
-        xml += '    <corners';
-        if (layerInfo.cornersRadiusTopLeft) {
-            xml += `\\n        android:topLeftRadius="${layerInfo.cornersRadiusTopLeft}"`;
-        }
-        if (layerInfo.cornersRadiusTopRight) {
-            xml += `\\n        android:topRightRadius="${layerInfo.cornersRadiusTopRight}"`;
-        }
-        if (layerInfo.cornersRadiusBottomRight) {
-            xml += `\\n        android:bottomRightRadius="${layerInfo.cornersRadiusBottomRight}"`;
-        }
-        if (layerInfo.cornersRadiusBottomLeft) {
-            xml += `\\n        android:bottomLeftRadius="${layerInfo.cornersRadiusBottomLeft}"`;
-        }
-        xml += '/>\\n';
-    }
-
-    if (layerInfo.strokeWidth) {
-        xml += `    <stroke\\n        android:width="${layerInfo.strokeWidth}"`;
-        if (layerInfo.strokeColor) {
-            xml += `\\n        android:color="${layerInfo.strokeColor}"`;
-        }
-        if (layerInfo.strokeDashWidth) {
-            xml += `\\n        android:dashWidth="${layerInfo.strokeDashWidth}"`;
-        }
-        if (layerInfo.strokeDashGap) {
-            xml += `\\n        android:dashGap="${layerInfo.strokeDashGap}"`;
-        }
-        xml += '/>\\n';
-    }
-
-    xml += '</shape>\\n';
-
     const options = {
-        identifier: 'view_shape_code.webview',
+        identifier: webviewIdentifier,
         width: 600,
         height: 400,
         show: false,
@@ -122,6 +51,7 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
+        const xml = xmlFromLayerInfo(layerInfo);
         const langs = {};
         ['save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
         webContents.executeJavaScript(`main('${xml}', '${JSON.stringify(langs)}')`);
@@ -155,9 +85,29 @@ export default function() {
         browserWindow.close();
     });
 
-    browserWindow.loadURL(require('../resources/view_code.html'));
+    browserWindow.loadURL(html);
 };
 
+export function onShutdown() {
+    const existingWebview = getWebview(webviewIdentifier);
+    if (existingWebview) {
+        existingWebview.close();
+    }
+};
+
+export function onSelectionChanged() {
+    const existingWebview = getWebview(webviewIdentifier);
+    if (existingWebview && selection.length === 1) {
+        const layer = selection.layers[0];
+        const layerInfo = getLayerInfo(layer.sketchObject);
+        const xml = xmlFromLayerInfo(layerInfo);
+        sendToWebview(webviewIdentifier, `main('${xml}')`);
+    }
+};
+
+// XML from layer
+// Android Shape Drawable References
+// https://developer.android.com/guide/topics/resources/drawable-resource.html#Shape
 function getLayerInfo(layer) {
     var result = {};
     if (
@@ -257,7 +207,7 @@ function getLayerInfo(layer) {
 
             } else {
                 result.support = false;
-                result.msg = "no_support_fill_type";
+                result.msg = "not_support_fill_type";
                 return result;
             }
         } else {
@@ -283,7 +233,7 @@ function getLayerInfo(layer) {
 
             } else {
                 result.support = false;
-                result.msg = "no_support_stroke_type";
+                result.msg = "not_support_stroke_type";
                 return result;
             }
         }
@@ -341,7 +291,7 @@ function getLayerInfo(layer) {
 
             } else {
                 result.support = false;
-                result.msg = "no_support_shape";
+                result.msg = "not_support_shape";
                 return result;
             }
         } else if (layer.children().count() == 3) {
@@ -361,13 +311,13 @@ function getLayerInfo(layer) {
 
             } else {
                 result.support = false;
-                result.msg = "no_support_shape";
+                result.msg = "not_support_shape";
                 return result;
             }
 
         } else {
             result.support = false;
-            result.msg = "no_support_shape";
+            result.msg = "not_support_shape";
             return result;
         }
     } else {
@@ -382,4 +332,80 @@ function getLayerInfo(layer) {
 
     return result;
 
+}
+
+function xmlFromLayerInfo(layerInfo) {
+    let xml = `<shape xmlns:android="http://schemas.android.com/apk/res/android"\\n    android:shape="${layerInfo.type}"`;
+
+    if (layerInfo.type == "ring" && layerInfo.thickness && layerInfo.innerRadius) {
+        xml += `\\n    android:thickness="${layerInfo.thickness}"\\n    android:innerRadius="${layerInfo.innerRadius}"`;
+    }
+
+    xml += '\\n    android:useLevel="false">\\n';
+
+    if (layerInfo.width && layerInfo.height) {
+        xml += `<!--    <size-->\\n<!--        android:width="${layerInfo.width}"-->\\n<!--        android:height="${layerInfo.height}"/>-->\\n`;
+    }
+
+    if (layerInfo.solid) {
+        xml += `    <solid\\n       android:color="${layerInfo.solid}"/>\\n`;
+    }
+
+    if (layerInfo.gradientType) {
+        xml += `    <gradient\\n        android:type="${layerInfo.gradientType}"\\n`;
+        if (layerInfo.gradientAngle) {
+            xml += `        android:angle="${layerInfo.gradientAngle}"\\n`;
+        }
+        if (layerInfo.gradientStops) {
+            if (layerInfo.gradientStops.length === 2) {
+                xml += `        android:startColor="${layerInfo.gradientStops[0]}"\\n        android:endColor="${layerInfo.gradientStops[1]}"`;
+            }
+            if (layerInfo.gradientStops.length === 3) {
+                xml += `        android:startColor="${layerInfo.gradientStops[0]}"\\n        android:centerColor="${layerInfo.gradientStops[1]}"\\n        android:endColor="${layerInfo.gradientStops[2]}"`;
+            }
+        }
+        if (layerInfo.gradientRadius) {
+            xml += `\\n        android:gradientRadius="${layerInfo.gradientRadius}"`;
+        }
+        xml += '/>\\n';
+    }
+
+    if (layerInfo.cornersRadius) {
+        xml += `    <corners\\n        android:radius="${layerInfo.cornersRadius}"/>\\n`;
+    }
+
+    if (layerInfo.cornersRadiusTopLeft || layerInfo.cornersRadiusTopRight || layerInfo.cornersRadiusBottomRight || layerInfo.cornersRadiusBottomLeft) {
+        xml += '    <corners';
+        if (layerInfo.cornersRadiusTopLeft) {
+            xml += `\\n        android:topLeftRadius="${layerInfo.cornersRadiusTopLeft}"`;
+        }
+        if (layerInfo.cornersRadiusTopRight) {
+            xml += `\\n        android:topRightRadius="${layerInfo.cornersRadiusTopRight}"`;
+        }
+        if (layerInfo.cornersRadiusBottomRight) {
+            xml += `\\n        android:bottomRightRadius="${layerInfo.cornersRadiusBottomRight}"`;
+        }
+        if (layerInfo.cornersRadiusBottomLeft) {
+            xml += `\\n        android:bottomLeftRadius="${layerInfo.cornersRadiusBottomLeft}"`;
+        }
+        xml += '/>\\n';
+    }
+
+    if (layerInfo.strokeWidth) {
+        xml += `    <stroke\\n        android:width="${layerInfo.strokeWidth}"`;
+        if (layerInfo.strokeColor) {
+            xml += `\\n        android:color="${layerInfo.strokeColor}"`;
+        }
+        if (layerInfo.strokeDashWidth) {
+            xml += `\\n        android:dashWidth="${layerInfo.strokeDashWidth}"`;
+        }
+        if (layerInfo.strokeDashGap) {
+            xml += `\\n        android:dashGap="${layerInfo.strokeDashGap}"`;
+        }
+        xml += '/>\\n';
+    }
+
+    xml += '</shape>\\n';
+
+    return xml;
 }

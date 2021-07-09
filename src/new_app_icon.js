@@ -1,4 +1,5 @@
 const sketch = require('sketch/dom');
+const settings = require('sketch/settings');
 const {
     Artboard,
     Group,
@@ -9,6 +10,8 @@ const {
     Style,
     SymbolMaster,
 } = require('sketch/dom');
+
+const { collapse } = require('./lib/sk');
 
 export default function() {
 
@@ -174,7 +177,9 @@ export default function() {
         frame: new Rectangle(158, 400, 108, 108),
         background: {
             color: '#999999',
-            enabled: true
+            enabled: true,
+            includedInExport: false,
+            includedInInstance: false
         },
         layers: (() => {
             let shadow = ShapePath.fromSVGPath('M32 64 70.52 57.5 70.52 49.19 108 87.31 108 108 75.97 108z');
@@ -227,7 +232,6 @@ export default function() {
 
             let background = iconBackground.createNewInstance();
             background.frame = new Rectangle(-128, -128, 768, 768);
-            console.log(background.overrides)
 
             let foreground = iconForeground.createNewInstance();
             foreground.frame = new Rectangle(-128, -128, 768, 768);
@@ -341,12 +345,13 @@ export default function() {
         })()
     });
 
-    new Page({
+    const page = new Page({
         name: 'App Icon',
         parent: document,
         selected: true,
         layers: [iconGrid, iconGridAndroidO, launcherIconLegacy, launcherRoundIconLegacy, iconBackground, iconForeground, googlePlayIcon, preview]
     });
+    settings.setLayerSettingForKey(page, 'is_android_app_icon_template', true);
 
     // Set override to none
     googlePlayIcon.layers[1].overrides[0].value = '';
@@ -363,4 +368,12 @@ export default function() {
     preview.layers[5].layers[2].overrides[0].value = '';
     preview.layers[6].layers[1].overrides[0].value = '';
     preview.layers[6].layers[2].overrides[0].value = '';
+
+    [
+        iconGrid, iconGridAndroidO, launcherIconLegacy, launcherRoundIconLegacy,
+        iconBackground, iconForeground, googlePlayIcon, preview
+    ].forEach(layer => {
+        collapse(layer);
+    });
+
 }

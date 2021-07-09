@@ -5,6 +5,12 @@ const xml = require('highlight.js/lib/languages/xml');
 highlight.registerLanguage('xml', xml);
 
 const main = document.getElementById('main');
+const labelTint = document.getElementById('label_tint');
+const labelXml = document.getElementById('label_xml_declaration');
+const checkboxAddXml = document.getElementById('xml_declaration');
+const tintColor = document.getElementById('tint_color');
+const tintColorAlpha = document.getElementById('tint_color_alpha');
+const tintColorSwitch = document.getElementById('tint_color_switch');
 const tempSVGElement = document.getElementById('tempSVG');
 const tempXMLElement = document.getElementById('tempXML');
 const codeElement = document.getElementById("code");
@@ -30,50 +36,54 @@ cancelButton.addEventListener('click', () => {
     window.postMessage('cancel');
 });
 
+checkboxAddXml.addEventListener('click', event => {
+    // TODO: svg
+    window.postMessage('add_xml_declaration', event.target.checked);
+});
+
+tintColor.addEventListener('change', event => {
+    // TODO: svg
+    if (tintColorSwitch.checked) {
+
+    }
+    window.postMessage('tint_color', event.target.value.trim());
+});
+
+tintColorAlpha.addEventListener('change', event => {
+    // TODO: svg
+    if (tintColorSwitch.checked) {
+        
+    }
+    window.postMessage('tint_color_alpha', event.target.value);
+});
+
+tintColorSwitch.addEventListener('click', event => {
+    // TODO: svg
+});
+
 main.style.opacity = '0';
 
-window.main = async (svg, json) => {
+window.main = async (svg, json, addXml, tint, alpha) => {
     const avd = await svg2vectordrawable(svg);
     codeElement.innerText = avd;
     tempXMLElement.value = avd;
     highlight.highlightBlock(codeElement);
 
     // i18n
-    const langs = JSON.parse(json);
-    saveButton.textContent = langs.save;
-    cancelButton.textContent = langs.cancel;
-    copyButton.textContent = langs.copy;
+    if (json) {
+        const langs = JSON.parse(json);
+        labelXml.textContent = langs.add_xml_declaration;
+        labelTint.textContent = langs.tint_color;
+        saveButton.textContent = langs.save;
+        cancelButton.textContent = langs.cancel;
+        copyButton.textContent = langs.copy;
+    }
+
+    checkboxAddXml.checked = addXml || false;
+    tintColor.value = tint || '000000';
+    tintColorAlpha.value = alpha || 100;
+    tintColor.blur();
+    tintColorAlpha.blur();
 
     main.style.opacity = '1';
 }
-
-// call the webview from the plugin
-// window.svg2vector = (svg) => {
-//     tempSVGElement.value = svg;
-//     svg2vectordrawable(svg).then(xml => {
-//         codeElement.innerText = xml;
-//         tempXMLElement.value = xml;
-//         highlight.highlightBlock(codeElement);
-//     });
-    
-    
-//     // TODO: disable copy
-
-
-
-//     // if (pluginMessage.error) {
-//     //     codeBlock.innerText = pluginMessage.data;
-//     //     codeBlock.setAttribute('data-file-name', '');
-//     //     copyButton.setAttribute('disabled', 'disabled');
-//     //     exportButton.setAttribute('disabled', 'disabled');
-//     // } else {
-//     //     const textDecoder = new TextDecoder();
-//     //     const svgCode = textDecoder.decode(pluginMessage.data);
-//     //     const xmlCode = await svg2vectordrawable(svgCode);
-//     //     codeBlock.innerText = xmlCode;
-//     //     codeBlock.setAttribute('data-file-name', pluginMessage.name);
-//     //     copyButton.removeAttribute('disabled');
-//     //     exportButton.removeAttribute('disabled');
-//     // }
-//     // hljs.highlightBlock(codeBlock);
-// };

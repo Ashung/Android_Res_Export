@@ -1,16 +1,16 @@
 ![](android_res_export.png)
 
-Android Res Export 是目前 Sketch 上最强大的 Android 资源导出插件。
+Android Res Export 是 Sketch 上的 Android 资源导出插件。
 
 ## 功能
 
 - 导出多分辨率 PNG 或 WebP 格式位图资源。
 - 预览和导出多分辨率点九资源。
-- 导出矢量资源（Vector Drawable），支持 Android 7.0+ 的线性、径向和角度渐变，支持蒙板。
+- 查看和导出矢量资源（Vector Drawable），支持 Android 7.0+ 的线性、径向和角度渐变，支持蒙板。
+- App 图标模版。
 - 导出 App 图标，支持 Android 8.0 自适应图标、圆形图标及旧版图标。
-- 查看和导出形状图层的 XML 代码。
-- 查看和导出图层的色彩资源代码。
-- 界面支持中文和英文。
+- 查看和导出选中形状图层的 XML 代码。
+- 查看和导出图层的选中图层或色彩变量的色彩资源代码。
 
 ## 安装
 
@@ -18,6 +18,10 @@ Android Res Export 是目前 Sketch 上最强大的 Android 资源导出插件�
 - 或下载 [master.zip](https://github.com/Ashung/Android_Res_Export/archive/master.zip)，解压后，双击 "Android_Res_Export.sketchplugin" 文件，安装插件。
 
 ## 插件使用
+
+
+
+
 
 ### 旧版用户须知
 

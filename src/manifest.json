@@ -38,9 +38,21 @@
             "script": "export_nine_patch_assets.js"
         },
         {
+            "name": "Export App Icon",
+            "identifier": "export_app_icon",
+            "script": "export_app_icon.js"
+        },
+        {
             "name": "Color XML From Selected Layers",
             "identifier": "view_color_code_from_selected_layers",
-            "script": "view_color_code.js"
+            "script": "view_color_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
         },
         {
             "name": "Color XML From Color Variables",
@@ -50,7 +62,14 @@
         {
             "name": "Shape Drawable From Selected Layer",
             "identifier": "view_shape_drawable_from_selected_layer",
-            "script": "view_shape_code.js"
+            "script": "view_shape_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
         },
         {
             "name": "Nine-Patch Preview",
@@ -106,11 +125,12 @@
             "export_bitmap_assets_png",
             "export_bitmap_assets_webp",
             "export_nine_patch_assets",
+            "export_app_icon",
             "-",
-            "view_color_code_from_selected_layers",
-            "view_color_code_from_color_variables",
-            "view_shape_drawable_from_selected_layer",
             "view_nine_patch",
+            "view_color_code_from_color_variables",
+            "view_color_code_from_selected_layers",
+            "view_shape_drawable_from_selected_layer",
             "view_vector_drawable_code",
             "-",
             "preferences",

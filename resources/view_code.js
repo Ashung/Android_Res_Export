@@ -35,10 +35,12 @@ window.main = (code, json) => {
     highlight.highlightBlock(codeElement);
 
     // i18n
-    const langs = JSON.parse(json);
-    saveButton.textContent = langs.save;
-    cancelButton.textContent = langs.cancel;
-    copyButton.textContent = langs.copy;
+    if (json) {
+        const langs = JSON.parse(json);
+        saveButton.textContent = langs.save;
+        cancelButton.textContent = langs.cancel;
+        copyButton.textContent = langs.copy;
+    }
 
     main.style.opacity = '1';
 }

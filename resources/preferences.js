@@ -39,7 +39,6 @@ main.style.opacity = '0';
 exportDpiNodes.forEach(input => {
     input.addEventListener('click', event => {
         let count = Array.from(exportDpiNodes).filter(node => node.checked).length;
-        console.log(count);
         if (count === 0) {
             event.target.checked = true;
         }

@@ -10,9 +10,22 @@
     <div id="preview">
         <pre><code id="code" class="xml"></code></pre>
     </div>
-    <div id="">
-        fillBlack
-        XML Declaration
+    <div id="controller">
+        <label id="label_xml_declaration" for="xml_declaration">Add XML Declaration</label>
+        <label class="switch">
+            <input id="xml_declaration" type="checkbox">
+            <span class="slider"></span>
+        </label>
+        <span class="gap-flex"></span>
+        <label id="label_tint" for="tint_color">Tint Color</label>
+        <span class="text-input text-input-prefix"><input id="tint_color" type="text" size="6" minlength="6" maxlength="6" pattern="[a-f0-9]{6}" placeholder="hex" autofocus="false" value="000000"></span>
+        <span class="gap"></span>
+        <span class="text-input text-input-suffix"><input id="tint_color_alpha" type="number" max="100" min="0" size="3" placeholder="alpha" autofocus="false" value="100"></span>
+        <span class="gap"></span>
+        <label class="switch">
+            <input id="tint_color_switch" type="checkbox">
+            <span class="slider"></span>
+        </label>
     </div>
     <div id="foot-actions">
         <button id="copy" class="button">Copy</button>

@@ -3,6 +3,10 @@
         "en": "Please select at least 1 layer.",
         "zh": "请至少选中一个图层。"
     },
+    "select_one_layer": {
+        "en": "Please select 1 layer.",
+        "zh": "请选中一个图层。"
+    },
     "can_not_create_asset_from_hot_spot": {
         "en": "Can't create asset from hotspot.",
         "zh": "不能从热区创建资源。"
@@ -75,15 +79,15 @@
         "en": "The gradient in Android shape drawable not support greater than 3 colors.",
         "zh": "Android 形状资源不支持大于 3 种颜色的渐变。"
     },
-    "no_support_fill_type": {
+    "not_support_fill_type": {
         "en": "The fill type is not support for Android shape drawable.",
         "zh": "Android 形状资源不支持图像等填充类型。"
     },
-    "no_support_stroke_type": {
+    "not_support_stroke_type": {
         "en": "The stroke type is not support for Android shape drawable.",
         "zh": "Android 形状资源不支持渐变、图像等描边类型。"
     },
-    "no_support_shape": {
+    "not_support_shape": {
         "en": "Only support shape layer like rectangle or oval.",
         "zh": "Android 形状资源只支持矩形、圆等形状。"
     },
@@ -227,6 +231,43 @@
         "en": "Please select 1 asset to export.",
         "zh": "请选择一个需要导出的资源。"
     },
+    "current_page_is_no_template": {
+        "en": "Current page is no a Android app icon template.",
+        "zh": "当前页不是一个 Android 应用图标模版。"
+    },
+    "app_icon_not_find": {
+        "en": "Can't find Android app icon inside current page.",
+        "zh": "在当前页中找不到 Android 应用图标。"
+    },
+    "view_vector_drawable_from_selected_layer": {
+        "en": "Vector Drawable from Selected Layer",
+        "zh": "选中图层的矢量资源代码"
+    },
+    "add_xml_declaration": {
+        "en": "Add XML Declaration",
+        "zh": "添加 XML 声明"
+    },
+    "tint_color": {
+        "en": "Tint Color",
+        "zh": "着色"
+    },
+    "vector_drawable_not_support_bitmap_layer": {
+        "en": "Vector drawable not support image layer.",
+        "zh": "矢量资源不支持位图图层。"
+    },
+    "vector_drawable_not_support_shadow": {
+        "en": "Vector drawable not support shadow and inner shadow style.",
+        "zh": "矢量资源不支持投影和内投影样式。"
+    },
+    "vector_drawable_not_support_blur": {
+        "en": "Vector drawable not support blur style.",
+        "zh": "矢量资源不支持模糊样式。"
+    },
+    "hidden_layer": {
+        "en": "Don't select a hidden layer.",
+        "zh": "请勿选择隐藏图层。"
+    },
+
 
 
 
@@ -292,14 +333,6 @@
     "template_no_exists": {
         "en": "Template file \"%1\" is no exists.",
         "zh": "模版文件 \"%1\" 不存在。"
-    },
-    "current_page_is_no_template": {
-        "en": "Current page is no a Android app icon template.",
-        "zh": "当前页不是一个 Android 应用图标模版。"
-    },
-    "app_icon_not_find": {
-        "en": "Can't find Android app icon inside current page.",
-        "zh": "在当前页中找不到 Android 应用图标。"
     },
     "code_preview": {
         "en": "Code Preview",

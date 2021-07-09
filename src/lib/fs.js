@@ -10,14 +10,12 @@ function getContentFromFile(filePath) {
 
 function writeContentToFile(filePath, content) {
     const parentDir = NSString.stringWithString(filePath).stringByDeletingLastPathComponent();
-    if (NSFileManager.defaultManager().isWritableFileAtPath(parentDir)) {
-        mkdir(parentDir);
-        content = NSString.stringWithString(content);
-        content.writeToFile_atomically_encoding_error(
-            filePath, true, NSUTF8StringEncoding, null
-        );
-        return parentDir;
-    }
+    mkdir(parentDir);
+    const data = NSString.stringWithString(content);
+    data.writeToFile_atomically_encoding_error(
+        filePath, true, NSUTF8StringEncoding, null
+    );
+    return parentDir;
 }
 
 function mkdir(path) {

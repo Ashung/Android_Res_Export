@@ -28,7 +28,6 @@ cancelButton.addEventListener('click', () => {
 });
 
 selectButton.addEventListener('click', () => {
-    console.log(selectedCount)
     const checkboxs = document.querySelectorAll('input[type="checkbox"]');
     if (selectedCount !== allCount) {
         checkboxs.forEach(checkbox => checkbox.checked = true);
