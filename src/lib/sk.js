@@ -41,7 +41,13 @@ module.exports.isPage = function(layer) {
 }
 
 module.exports.isImage = function(layer) {
-    return layer.type === 'Image' || layer.style.fills.some(fill => fill.fillType === 'Pattern' && fill.enabled);
+    if (layer.type === 'Image') {
+        return true;
+    }
+    if (layer.style && layer.style.fills.some(fill => fill.fillType === 'Pattern' && fill.enabled)) {
+        return true;
+    }
+    return false;
 }
 
 module.exports.roundToPixel = function(layer) {
@@ -140,7 +146,22 @@ module.exports.moveLayerIntoGroup = function(layer, group) {
 module.exports.getSVGFromLayer = function(layer) {
     const options = { formats: 'svg', output: false };
     const buffer = sketch.export(layer, options);
-    return buffer.toString().replace(/\n/g, '\\n'); //.replace(/\s{2,}/g, '');
+    return buffer.toString().replace(/\n/g, '\\n');
+}
+
+module.exports.getOriginalSVGFromLayer = function(layer) {
+    const options = { formats: 'svg', output: false };
+    const buffer = sketch.export(layer, options);
+    return buffer.toString();
+}
+
+module.exports.getBase64FromLayer = function(layer) {
+    const buffer = sketch.export(layer, {
+        output: false,
+        scales: '2',
+        formats: 'png'
+    });
+    return buffer.toString('base64');
 }
 
 module.exports.export = function(layer, option) {
@@ -185,13 +206,13 @@ module.exports.recursivelyChildOfLayer = function(layer) {
 }
 
 module.exports.hasShadow = function(layer) {
-    return layer.style.shadows.some(shadow => shadow.enabled);
+    return layer.style && layer.style.shadows.some(shadow => shadow.enabled);
 }
 
 module.exports.hasInnerShadow = function(layer) {
-    return layer.style.innerShadows.some(shadow => shadow.enabled);
+    return layer.style && layer.style.innerShadows.some(shadow => shadow.enabled);
 }
 
 module.exports.hasBlur = function(layer) {
-    return layer.style.blur.enabled;
+    return layer.style && layer.style.blur.enabled;
 }

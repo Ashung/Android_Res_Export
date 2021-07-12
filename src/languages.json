@@ -267,6 +267,10 @@
         "en": "Don't select a hidden layer.",
         "zh": "请勿选择隐藏图层。"
     },
+    "export_vector_assets": {
+        "en": "Export Vector Assets",
+        "zh": "导出矢量资源"
+    },
 
 
 
@@ -295,10 +299,7 @@
         "zh": "新建矢量资源"
     },
     
-    "export_vector_assets": {
-        "en": "Export Vector Assets",
-        "zh": "导出矢量资源"
-    },
+    
 
     "export_app_icon": {
         "en": "Export App Icon",

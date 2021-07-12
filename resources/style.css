@@ -329,7 +329,6 @@ select {
     box-sizing: border-box;
 }
 #controller {
-    /* height: 56px; */
     font-size: 14px;
     box-sizing: border-box;
     padding: 8px 16px;
@@ -430,6 +429,30 @@ select {
 .asset-thumbs input:checked + img + .name span {
     background: var(--accent);
     color: #FFFFFF;
+}
+
+.code-tab {
+    position: absolute;
+    z-index: 1;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+    display: flex;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--background);
+}
+.code-tab label {
+    padding: 4px 8px;
+}
+.code-tab label + label {
+    border-left: 1px solid var(--border);
+}
+.code-tab input {
+    display: none;
+}
+.code-tab input:checked + span {
+    color: var(--accent);
 }
 
 /* github.com style (c) Vasily Polovnyov <vast@whiteants.net> */

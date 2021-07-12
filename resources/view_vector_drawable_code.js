@@ -7,8 +7,10 @@ highlight.registerLanguage('xml', xml);
 const main = document.getElementById('main');
 const labelTint = document.getElementById('label_tint');
 const labelXml = document.getElementById('label_xml_declaration');
+const codeViewAvd = document.getElementById('code-view-avd');
+const codeViewSvg = document.getElementById('code-view-svg');
 const checkboxAddXml = document.getElementById('xml_declaration');
-const tintColor = document.getElementById('tint_color');
+const tintColorHex = document.getElementById('tint_color');
 const tintColorAlpha = document.getElementById('tint_color_alpha');
 const tintColorSwitch = document.getElementById('tint_color_switch');
 const tempSVGElement = document.getElementById('tempSVG');
@@ -36,38 +38,44 @@ cancelButton.addEventListener('click', () => {
     window.postMessage('cancel');
 });
 
-checkboxAddXml.addEventListener('click', event => {
-    // TODO: svg
+checkboxAddXml.addEventListener('click', async (event) => {
     window.postMessage('add_xml_declaration', event.target.checked);
+    await convert(tempSVGElement.value);
 });
 
-tintColor.addEventListener('change', event => {
-    // TODO: svg
-    if (tintColorSwitch.checked) {
-
-    }
+tintColorHex.addEventListener('change', async (event) => {
     window.postMessage('tint_color', event.target.value.trim());
-});
-
-tintColorAlpha.addEventListener('change', event => {
-    // TODO: svg
     if (tintColorSwitch.checked) {
-        
+        await convert(tempSVGElement.value);
     }
-    window.postMessage('tint_color_alpha', event.target.value);
 });
 
-tintColorSwitch.addEventListener('click', event => {
-    // TODO: svg
+tintColorAlpha.addEventListener('change', async (event) => {
+    window.postMessage('tint_color_alpha', event.target.value);
+    if (tintColorSwitch.checked) {
+        await convert(tempSVGElement.value);
+    }
+});
+
+tintColorSwitch.addEventListener('click', async (event) => {
+    window.postMessage('tint', event.target.checked);
+    await convert(tempSVGElement.value);
+});
+
+document.querySelectorAll('input[name="view"]').forEach(node => {
+    node.onclick = (event) => {
+        if (event.target.value === 'avd') {
+            codeElement.innerText = tempXMLElement.value;
+        } else {
+            codeElement.innerText = tempSVGElement.value;
+        }
+        highlight.highlightBlock(codeElement);
+    };
 });
 
 main.style.opacity = '0';
 
-window.main = async (svg, json, addXml, tint, alpha) => {
-    const avd = await svg2vectordrawable(svg);
-    codeElement.innerText = avd;
-    tempXMLElement.value = avd;
-    highlight.highlightBlock(codeElement);
+window.main = async (svg, json, addXml, tint, tintColor, tintAlpha) => {
 
     // i18n
     if (json) {
@@ -79,11 +87,41 @@ window.main = async (svg, json, addXml, tint, alpha) => {
         copyButton.textContent = langs.copy;
     }
 
+    tempSVGElement.value = svg;
     checkboxAddXml.checked = addXml || false;
-    tintColor.value = tint || '000000';
-    tintColorAlpha.value = alpha || 100;
-    tintColor.blur();
+    tintColorHex.value = tintColor || '000000';
+    tintColorAlpha.value = tintAlpha || 100;
+    tintColorSwitch.checked = tint || false;
+    tintColorHex.blur();
     tintColorAlpha.blur();
+    
+    await convert(svg);
 
     main.style.opacity = '1';
+}
+
+async function convert(svg) {
+    const option = {}
+    if (checkboxAddXml.checked) option.xmlTag = true;
+    if (tintColorSwitch.checked) option.tint = toAndroidColor(tintColorHex.value, tintColorAlpha.value);
+    const avd = await svg2vectordrawable(svg, option);
+    tempXMLElement.value = avd;
+    if (codeViewAvd.checked) {
+        codeElement.innerText = avd;
+    }
+    if (codeViewSvg.checked) {
+        codeElement.innerText = svg;
+    }
+    highlight.highlightBlock(codeElement);
+}
+
+function toAndroidColor(hex, alpha) {
+    if (!/^[a-f0-9]{6}$/i.test(hex)) {
+        hex = '000000';
+    }
+    if (parseInt(alpha) === 100) {
+        return '#' + hex;
+    } else {
+        return '#' + Math.round(parseInt(alpha) * 255 / 100).toString(16).padStart(2, '0') + hex;
+    }
 }

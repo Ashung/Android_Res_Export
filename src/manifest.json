@@ -38,6 +38,11 @@
             "script": "export_nine_patch_assets.js"
         },
         {
+            "name": "Export Vector Assets",
+            "identifier": "export_vector_assets",
+            "script": "export_vector_assets.js"
+        },
+        {
             "name": "Export App Icon",
             "identifier": "export_app_icon",
             "script": "export_app_icon.js"
@@ -124,6 +129,7 @@
             "-",
             "export_bitmap_assets_png",
             "export_bitmap_assets_webp",
+            "export_vector_assets",
             "export_nine_patch_assets",
             "export_app_icon",
             "-",

@@ -14,6 +14,13 @@ const webviewIdentifier = 'view_vector_drawable_code.webview';
 const document = sketch.getSelectedDocument();
 const selection = document.selectedLayers;
 
+const langs = {};
+['add_xml_declaration', 'tint_color', 'save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
+const addXml = settings.settingForKey('add_xml_declaration') || false;
+const tint = settings.settingForKey('tint') || false;
+const defaultTint = settings.settingForKey('tint_color') || '000000';
+const defaultAlpha = settings.settingForKey('tint_color_alpha') || 100;
+
 export default function () {
     
     if (selection.length !== 1) {
@@ -49,12 +56,7 @@ export default function () {
     // page loads
     webContents.on('did-finish-load', () => {
         const svg = sk.getSVGFromLayer(layer);
-        const langs = {};
-        ['add_xml_declaration', 'tint_color', 'save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
-        const addXml = settings.settingForKey('add_xml_declaration') || false;
-        const defaultTint = settings.settingForKey('tint_color') || '000000';
-        const defaultAlpha = settings.settingForKey('tint_color_alpha') || 100;
-        webContents.executeJavaScript(`main('${svg}', '${JSON.stringify(langs)}', ${addXml}, '${defaultTint}', ${defaultAlpha})`);
+        webContents.executeJavaScript(`main('${svg}', '${JSON.stringify(langs)}', ${addXml}, ${tint}, '${defaultTint}', ${defaultAlpha})`);
     });
 
     // Save
@@ -97,6 +99,10 @@ export default function () {
         settings.setSettingForKey('tint_color_alpha', parseInt(value));
     });
 
+    webContents.on('tint', value => {
+        settings.setSettingForKey('tint', value);
+    });
+
     browserWindow.loadURL(html);
 };
 
@@ -115,7 +121,7 @@ export function onSelectionChanged() {
         const layer = selection.layers[0];
         if (!isSupported(layer)) return;
         const svg = sk.getSVGFromLayer(layer);
-        sendToWebview(webviewIdentifier, `main('${svg}')`);
+        sendToWebview(webviewIdentifier, `main('${svg}', '${JSON.stringify(langs)}', ${addXml}, ${tint}, '${defaultTint}', ${defaultAlpha})`);
     }
 };
 

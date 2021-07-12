@@ -73,20 +73,15 @@ export default function() {
         // Main
         webContents.on('did-finish-load', () => {
             const assets = exportAssets.map(layer => {
-                const buffer = sketch.export(layer, {
-                    output: false,
-                    scales: '2',
-                    formats: 'png'
-                });
                 return {
                     name: android.assetName(layer.name, assetNameType),
                     id: layer.id,
-                    data: buffer.toString('base64')
+                    data: sk.getBase64FromLayer(layer)
                 }
             });
             const langs = {};
             ['select_all', 'export', 'cancel'].forEach(key => langs[key] = i18n(key));
-            webContents.executeJavaScript(`main(assets'${JSON.stringify()}', '${JSON.stringify(langs)}')`);
+            webContents.executeJavaScript(`main('${JSON.stringify(assets)}', '${JSON.stringify(langs)}')`);
         });
     
         // Export
