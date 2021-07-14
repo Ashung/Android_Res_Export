@@ -1,0 +1,303 @@
+{
+    "no_selection": {
+        "en": "Please select at least 1 layer.",
+        "zh": "请至少选中一个图层。"
+    },
+    "select_one_layer": {
+        "en": "Please select 1 layer.",
+        "zh": "请选中一个图层。"
+    },
+    "can_not_create_asset_from_hot_spot": {
+        "en": "Can't create asset from hotspot.",
+        "zh": "不能从热区创建资源。"
+    },
+    "can_not_create_asset_from_artboard": {
+        "en": "Can't create asset from artboard.",
+        "zh": "不能从画板创建资源。"
+    },
+    "can_not_create_asset_from_symbol_master": {
+        "en": "Can't create asset from symbol master.",
+        "zh": "不能从组件创建资源。"
+    },
+    "can_not_create_asset_from_slice": {
+        "en": "Can't create asset from slice.",
+        "zh": "不能从切片创建资源。"
+    },
+    "slice_must_in_group": {
+        "en": "Slice layer must in side a group.",
+        "zh": "切片图层必须在组内。"
+    },
+    "color_xml_from_layers": {
+        "en": "Color XML from Selected Layers",
+        "zh": "选中图层的色彩 XML 资源"
+    },
+    "color_xml_from_color_variables": {
+        "en": "Color XML from Color Variables",
+        "zh": "色彩变量的 XML 资源"
+    },
+    "no_color_variables": {
+        "en": "Document have not color variables.",
+        "zh": "文档中没有色彩变量。"
+    },
+    "ok": {
+        "en": "OK",
+        "zh": "确定"
+    },
+    "cancel": {
+        "en": "Cancel",
+        "zh": "取消"
+    },
+    "export": {
+        "en": "Export",
+        "zh": "导出"
+    },
+    "save": {
+        "en": "Save",
+        "zh": "保存"
+    },
+    "copy": {
+        "en": "Copy",
+        "zh": "拷贝"
+    },
+    "copied": {
+        "en": "Code copied.",
+        "zh": "代码已复制。"
+    },
+    "save_done": {
+        "en": "File saved.",
+        "zh": "保存完成。"
+    },
+    "view_shape_drawable_from_selected_layer": {
+        "en": "Shape Drawable from Selected Layer",
+        "zh": "选中图层的形状代码"
+    },
+    "not_support_layer_style": {
+        "en": "Layer style like shadow and blur is not support by Android shape drawable.",
+        "zh": "Android 形状资源不支持投影、模糊等图层样式。"
+    },
+    "too_many_color_stop": {
+        "en": "The gradient in Android shape drawable not support greater than 3 colors.",
+        "zh": "Android 形状资源不支持大于 3 种颜色的渐变。"
+    },
+    "not_support_fill_type": {
+        "en": "The fill type is not support for Android shape drawable.",
+        "zh": "Android 形状资源不支持图像等填充类型。"
+    },
+    "not_support_stroke_type": {
+        "en": "The stroke type is not support for Android shape drawable.",
+        "zh": "Android 形状资源不支持渐变、图像等描边类型。"
+    },
+    "not_support_shape": {
+        "en": "Only support shape layer like rectangle or oval.",
+        "zh": "Android 形状资源只支持矩形、圆等形状。"
+    },
+    "no_shape_layer": {
+        "en": "Please choose 1 shape layer like rectangle or oval.",
+        "zh": "请选择一个矩形、圆等形状图层。"
+    },
+    "no_colors_in_selection": {
+        "en": "Please select at least 1 shape layer with solid or gradient fill.",
+        "zh": "请选中至少一个带有单色或渐变填充的图层。"
+    },
+    "view_nine_patch": {
+        "en": "Nine-Patch Preview",
+        "zh": "点九图片预览"
+    },
+    "select_one_nine_patch_asset": {
+        "en": "Please select a nine-patch asset.",
+        "zh": "请选择一个点九资源。"
+    },
+    "nine_patch_layer_structure_is_wrong": {
+        "en": "The layer structure of nine-patch asset is wrong.",
+        "zh": "点九资源的图层结构有误。"
+    },
+    "can_not_create_nine_patch_from_artboard_or_symbol_master": {
+        "en": "Can't create Nine-Patch from Artboard or Symbol Master.",
+        "zh": "不可从画板或组件模版创建点九资源。"
+    },
+    "preferences": {
+        "en": "Preferences",
+        "zh": "参数设置"
+    },
+    "asset_name_type_0": {
+        "en": "Valid last part of layer name. (a / b / c -> c)",
+        "zh": "合法的最后段图层名. (a / b / c -> c)"
+    },
+    "asset_name_type_1": {
+        "en": "Valid full layer name. (a / b / c -> a_b_c)",
+        "zh": "合法的完整图层名. (a / b / c -> a_b_c)"
+    },
+    "asset_name_type_2": {
+        "en": "Last part of layer name. (a / b / c -> c)",
+        "zh": "最后段图层名. (a / b / c -> c)"
+    },
+    "asset_name_type_3": {
+        "en": "Full layer name. (a / b / c -> a_b_c)",
+        "zh": "完整图层名. (a / b / c -> a_b_c)"
+    },
+    "no_nine_patch_asset": {
+        "en": "No any nine-patch asset.",
+        "zh": "无任何点九资源。"
+    },
+    "no_vector_drawable_asset": {
+        "en": "No any vector drawable asset.",
+        "zh": "无任何矢量资源。"
+    },
+    "export_dpis": {
+        "en": "Export DPIs",
+        "zh": "导出分辨率"
+    },
+    "asset_name_type": {
+        "en": "Asset Name Type",
+        "zh": "资源命名方式"
+    },
+    "vector_drawable_folder": {
+        "en": "Vector Drawable Folder",
+        "zh": "矢量资源文件夹"
+    },
+    "others": {
+        "en": "Others",
+        "zh": "其他"
+    },
+    "reveal_in_finder_after_export": {
+        "en": "Reveal in Finder after export.",
+        "zh": "导出资源后在访达中显示。"
+    },
+    "webp_quality": {
+        "en": "WebP Quality",
+        "zh": "WebP 图片质量"
+    },
+    "vector_drawable_limit": {
+        "en": "Recommend that limit a vector drawable to maximum fo 200 x 200dp.",
+        "zh": "建议矢量资源不超过 200 x 200dp。"
+    },
+    "tip_bg_light": {
+        "en": "Use light transparent background",
+        "zh": "使用亮色透明背景"
+    },
+    "tip_bg_dark": {
+        "en": "Use dark transparent background",
+        "zh": "使用暗色透明色背景"
+    },
+    "tip_bg_white": {
+        "en": "Use white background",
+        "zh": "使用白色背景"
+    },
+    "width": {
+        "en": "Width",
+        "zh": "宽"
+    },
+    "height": {
+        "en": "Height",
+        "zh": "高"
+    },
+    "content": {
+        "en": "Content",
+        "zh": "内容区"
+    },
+    "export_done": {
+        "en": "Export done!",
+        "zh": "导出完成！"
+    },
+    "no_bitmap_asset": {
+        "en": "No any bitmap asset.",
+        "zh": "无任何位图资源。"
+    },
+    "cannot_export_to_folder": {
+        "en": "You can't export assets to this folder.",
+        "zh": "无法导入文件到此文件夹。"
+    },
+    "export_bitmap_assets_png": {
+        "en": "Export Bitmap Assets (PNG)",
+        "zh": "导出位图资源 (PNG)"
+    },
+    "export_bitmap_assets_webp": {
+        "en": "Export Bitmap Assets (WebP)",
+        "zh": "导出位图资源 (WebP)"
+    },
+    "export_nine_patch_assets": {
+        "en": "Export Nine-Patch Assets",
+        "zh": "导出点九资源"
+    },
+    "select_all": {
+        "en": "Select / Deselect All",
+        "zh": "选择/取消选择全部"
+    },
+    "no_permission": {
+        "en": "No permission to save file.",
+        "zh": "无写入权限"
+    },
+    "select_asset_to_export": {
+        "en": "Please select 1 asset to export.",
+        "zh": "请选择一个需要导出的资源。"
+    },
+    "current_page_is_no_template": {
+        "en": "Current page is no a Android app icon template.",
+        "zh": "当前页不是一个 Android 应用图标模版。"
+    },
+    "app_icon_not_find": {
+        "en": "Can't find Android app icon inside current page.",
+        "zh": "在当前页中找不到 Android 应用图标。"
+    },
+    "view_vector_drawable_from_selected_layer": {
+        "en": "Vector Drawable from Selected Layer",
+        "zh": "选中图层的矢量资源代码"
+    },
+    "add_xml_declaration": {
+        "en": "Add XML Declaration",
+        "zh": "添加 XML 声明"
+    },
+    "tint_color": {
+        "en": "Tint Color",
+        "zh": "着色"
+    },
+    "vector_drawable_not_support_bitmap_layer": {
+        "en": "Vector drawable not support image layer.",
+        "zh": "矢量资源不支持位图图层。"
+    },
+    "vector_drawable_not_support_shadow": {
+        "en": "Vector drawable not support shadow and inner shadow style.",
+        "zh": "矢量资源不支持投影和内投影样式。"
+    },
+    "vector_drawable_not_support_blur": {
+        "en": "Vector drawable not support blur style.",
+        "zh": "矢量资源不支持模糊样式。"
+    },
+    "hidden_layer": {
+        "en": "Don't select a hidden layer.",
+        "zh": "请勿选择隐藏图层。"
+    },
+    "export_vector_assets": {
+        "en": "Export Vector Assets",
+        "zh": "导出矢量资源"
+    },
+    "vector_drawable_too_many_layer": {
+        "en": "Not support too many layer.",
+        "zh": "不支持过多图层。"
+    },
+    "ignore_not_support_layer": {
+        "en": "Ignore some layer that not support by vector drawable.",
+        "zh": "已忽略部分矢量资源不支持的图层。"
+    },
+
+
+
+
+
+
+
+
+
+    "new_nine_patch_asset": {
+        "en": "New Nine-Patch Asset",
+        "zh": "新建点九资源"
+    },
+    "new_app_icon": {
+        "en": "New App Icon",
+        "zh": "新建应用图标"
+    },
+    "new_vector_asset": {
+        "en": "New Vector Asset",
+        "zh": "新建矢量资源"
+    }
+}

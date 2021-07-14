@@ -1,0 +1,168 @@
+{
+    "commands": [
+        {
+            "name": "New Bitmap Asset",
+            "identifier": "new_bitmap_asset",
+            "script": "new_asset.js"
+        },
+        {
+            "name": "New Vector Asset",
+            "identifier": "new_vector_asset",
+            "script": "new_asset.js"
+        },
+        {
+            "name": "New Nine-Patch Asset",
+            "identifier": "new_nine_patch_asset",
+            "script": "new_nine_patch_asset.js"
+        },
+        {
+            "name": "New App Icon",
+            "identifier": "new_app_icon",
+            "script": "new_app_icon.js"
+        },
+        {
+            "name": "Export Bitmap Assets (PNG)",
+            "identifier": "export_bitmap_assets_png",
+            "script": "export_bitmap_assets.js"
+        },
+        {
+            "name": "Export Bitmap Assets (WebP)",
+            "identifier": "export_bitmap_assets_webp",
+            "script": "export_bitmap_assets.js"
+        },
+        {
+            "name": "Export Nine-Patch Assets",
+            "identifier": "export_nine_patch_assets",
+            "script": "export_nine_patch_assets.js"
+        },
+        {
+            "name": "Export Vector Assets",
+            "identifier": "export_vector_assets",
+            "script": "export_vector_assets.js"
+        },
+        {
+            "name": "Export App Icon",
+            "identifier": "export_app_icon",
+            "script": "export_app_icon.js"
+        },
+        {
+            "name": "Color XML From Selected Layers",
+            "identifier": "view_color_code_from_selected_layers",
+            "script": "view_color_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
+        },
+        {
+            "name": "Color XML From Color Variables",
+            "identifier": "view_color_code_from_color_variables",
+            "script": "view_color_code.js"
+        },
+        {
+            "name": "Shape Drawable From Selected Layer",
+            "identifier": "view_shape_drawable_from_selected_layer",
+            "script": "view_shape_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
+        },
+        {
+            "name": "Nine-Patch Preview",
+            "identifier": "view_nine_patch",
+            "script": "view_nine_patch.js"
+        },
+        {
+            "name": "Vector Drawable From Selected Layer",
+            "identifier": "view_vector_drawable_code",
+            "script": "view_vector_drawable_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
+        },
+        {
+            "name": "Preferences",
+            "identifier": "preferences",
+            "script": "preferences.js"
+        },
+        {
+            "name": "Web Site",
+            "identifier": "web_site",
+            "script": "help.js"
+        },
+        {
+            "name": "Report Issues",
+            "identifier": "report_issues",
+            "script": "help.js"
+        },
+        {
+            "name": "Donate",
+            "identifier": "donate",
+            "script": "help.js"
+        },
+        {
+            "name": "Buy Me a Coffee",
+            "identifier": "buymeacoffee",
+            "script": "help.js"
+        },
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "onOpenDocument"
+                }
+            },
+            "script": "language.js"
+        }
+    ],
+    "menu": {
+        "title": "Android Res Export",
+        "items": [
+            "new_bitmap_asset",
+            "new_vector_asset",
+            "new_nine_patch_asset",
+            "new_app_icon",
+            "-",
+            "export_bitmap_assets_png",
+            "export_bitmap_assets_webp",
+            "export_vector_assets",
+            "export_nine_patch_assets",
+            "export_app_icon",
+            "-",
+            "view_nine_patch",
+            "view_color_code_from_color_variables",
+            "view_color_code_from_selected_layers",
+            "view_shape_drawable_from_selected_layer",
+            "view_vector_drawable_code",
+            "-",
+            "preferences",
+            {
+                "title": "Help",
+                "items": [
+                    "web_site",
+                    "report_issues",
+                    "-",
+                    "donate",
+                    "buymeacoffee"
+                ]
+            }
+        ]
+    },
+    "name": "Android Res Export",
+    "description": "Export Android resources in Sketch.",
+    "homepage": "https://github.com/Ashung/Android_Res_Export",
+    "icon": "icon.png",
+    "identifier": "com.ashung.hung.android_res_export",
+    "compatibleVersion": 3,
+    "bundleVersion": 1
+}

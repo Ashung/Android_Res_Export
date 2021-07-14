@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Android Res Export</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="main">
+    <ul id="background_toggle">
+        <li><a href="#" id="bg_toggle_light" title="Use light transparent background"></a></li>
+        <li><a href="#" id="bg_toggle_dark" title="Use dark transparent background"></a></li>
+        <li><a href="#" id="bg_toggle_white" title="Use White background"></a></li>
+    </ul>
+    <div id="preview">
+        <div id="nine_patch_preview"></div>
+    </div>
+    <div id="controller">
+        <label id="label_stretch_width" for="stretch_width">Width</label>
+        <input id="stretch_width" type="range" step="20" value="0">
+        <label id="label_stretch_height" for="stretch_height">Height</label>
+        <input id="stretch_height" type="range" step="20" value="0">
+        <span class="gap-flex"></span>
+        <label id="label_stretch_content" for="show_content">Content</label>
+        <label class="switch">
+            <input id="show_content" type="checkbox">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <div id="foot-actions">
+        <span class="gap-flex"></span>
+        <button id="cancel" class="button">Cancel</button>
+        <span class="gap"></span>
+        <button id="export" class="button-blue">Export</button>
+    </div>
+</div>
+<script src="../resources_view_nine_patch.js"></script>
+</body>
+</html>

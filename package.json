@@ -1,0 +1,41 @@
+{
+    "name": "android_res_export",
+    "productName": "Android Res Export",
+    "version": "4.0.0",
+    "engines": {
+        "sketch": ">=3.0"
+    },
+    "skpm": {
+        "name": "android_res_export",
+        "manifest": "src/manifest.json",
+        "main": "./plugin/android_res_export.sketchplugin",
+        "assets": [
+            "assets/**/*"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Ashung/Android_Res_Export.git"
+    },
+    "scripts": {
+        "build": "skpm-build",
+        "watch": "skpm-build --watch",
+        "start": "skpm-build --watch",
+        "postinstall": "npm run build && skpm-link"
+    },
+    "devDependencies": {
+        "@skpm/builder": "^0.7.11",
+        "@skpm/extract-loader": "^2.0.2",
+        "css-loader": "^3.2.0",
+        "html-loader": "^0.5.5"
+    },
+    "resources": [
+        "resources/**/*.js"
+    ],
+    "dependencies": {
+        "highlight.js": "^11.0.1",
+        "sketch-module-web-view": "^3.5.1",
+        "svg2vectordrawable": "^2.7.1"
+    },
+    "author": "Ashung Hung <ashung.hung@foxmail.com>"
+}

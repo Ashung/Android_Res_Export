@@ -1,0 +1,171 @@
+{
+    "commands": [
+        {
+            "name": "新建位图资源",
+            "identifier": "new_bitmap_asset",
+            "script": "new_asset.js"
+        },
+        {
+            "name": "新建矢量资源",
+            "identifier": "new_vector_asset",
+            "script": "new_asset.js"
+        },
+        {
+            "name": "新建点九资源",
+            "identifier": "new_nine_patch_asset",
+            "script": "new_nine_patch_asset.js"
+        },
+        {
+            "name": "新建应用图标",
+            "identifier": "new_app_icon",
+            "script": "new_app_icon.js"
+        },
+        {
+            "name": "导出位图资源 (PNG)",
+            "identifier": "export_bitmap_assets_png",
+            "script": "export_bitmap_assets.js"
+        },
+        {
+            "name": "导出位图资源 (WebP)",
+            "identifier": "export_bitmap_assets_webp",
+            "script": "export_bitmap_assets.js"
+        },
+        {
+            "name": "导出点九资源",
+            "identifier": "export_nine_patch_assets",
+            "script": "export_nine_patch_assets.js"
+        },
+        {
+            "name": "导出点九资源",
+            "identifier": "export_vector_assets",
+            "script": "export_vector_assets.js"
+        },
+        {
+            "name": "导出应用图标",
+            "identifier": "export_app_icon",
+            "script": "export_app_icon.js"
+        },
+        {
+            "name": "选中图层的色彩资源",
+            "identifier": "view_color_code_from_selected_layers",
+            "script": "view_color_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
+        },
+        {
+            "name": "文档的色彩资源",
+            "identifier": "view_color_code_from_color_variables",
+            "script": "view_color_code.js"
+        },
+        {
+            "name": "选中图层的形状资源",
+            "identifier": "view_shape_drawable_from_selected_layer",
+            "script": "view_shape_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
+        },
+        {
+            "name": "点九资源预览",
+            "identifier": "view_nine_patch",
+            "script": "view_nine_patch.js"
+        },
+        {
+            "name": "选中图层的矢量资源",
+            "identifier": "view_vector_drawable_code",
+            "script": "view_vector_drawable_code.js",
+            "handlers": {
+                "run": "onRun",
+                "actions": {
+                    "Shutdown": "onShutdown",
+                    "SelectionChanged.finish": "onSelectionChanged"
+                }
+            }
+        },
+        {
+            "name": "参数设置",
+            "identifier": "preferences",
+            "script": "preferences.js"
+        },
+        {
+            "name": "网站",
+            "identifier": "web_site",
+            "script": "help.js"
+        },
+        {
+            "name": "问题反馈",
+            "identifier": "report_issues",
+            "script": "help.js"
+        },
+        {
+            "name": "捐赠",
+            "identifier": "donate",
+            "script": "help.js"
+        },
+        {
+            "name": "微信打赏",
+            "identifier": "donate_wechat",
+            "script": "help.js"
+        },
+        {
+            "name": "支付宝打赏",
+            "identifier": "donate_alipay",
+            "script": "help.js"
+        }
+    ],
+    "menu": {
+        "title": "Android 资源导出",
+        "items": [
+            "new_bitmap_asset",
+            "new_vector_asset",
+            "new_nine_patch_asset",
+            "new_app_icon",
+            "-",
+            "export_bitmap_assets_png",
+            "export_bitmap_assets_webp",
+            "export_vector_assets",
+            "export_nine_patch_assets",
+            "export_app_icon",
+            "-",
+            "view_nine_patch",
+            "view_color_code_from_color_variables",
+            "view_color_code_from_selected_layers",
+            "view_shape_drawable_from_selected_layer",
+            "view_vector_drawable_code",
+            "-",
+            "preferences",
+            {
+                "title": "帮助",
+                "items": [
+                    "web_site",
+                    "report_issues",
+                    "-",
+                    "donate",
+                    "donate_wechat",
+                    "donate_alipay"
+                ]
+            }
+        ]
+    },
+    "name": "Android Res Export",
+    "description": "用于导出 Android 各种资源的 Sketch 插件",
+    "homepage": "https://github.com/Ashung/Android_Res_Export",
+    "icon": "icon.png",
+    "identifier": "com.ashung.hung.android_res_export",
+    "compatibleVersion": 3,
+    "bundleVersion": 1,
+    "version": "4.0.0",
+    "disableCocoaScriptPreprocessor": true,
+    "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
+    "author": "Ashung Hung",
+    "authorEmail": "ashung.hung@foxmail.com"
+}
