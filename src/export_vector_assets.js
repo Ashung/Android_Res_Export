@@ -51,8 +51,14 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
+        let supportedExportAssets = exportAssets.filter(layer => {
+            return isSupported(layer);
+        });
+        if (supportedExportAssets.length !== exportAssets.length) {
+            ui.message(i18n('ignore_not_support_layer'));
+        }
         if (showUI) {
-            const assets = exportAssets.map(layer => {
+            const assets = supportedExportAssets.map(layer => {
                 return {
                     name: android.assetName(layer.name, assetNameType),
                     data: sk.getBase64FromLayer(layer),
@@ -61,7 +67,7 @@ export default function() {
             });
             webContents.executeJavaScript(`main('${JSON.stringify(assets)}', '${JSON.stringify(langs)}')`);
         } else {
-            const assets = exportAssets.map(layer => {
+            const assets = supportedExportAssets.map(layer => {
                 return {
                     name: android.assetName(layer.name, assetNameType),
                     svg: encodeURIComponent(sk.getOriginalSVGFromLayer(layer))
@@ -121,4 +127,28 @@ function getVectorDrawableAsset() {
     } else {
         return util.toArray(document.sketchObject.allExportableLayers().filteredArrayUsingPredicate(predicate)).map(sketch.fromNative);
     }
+}
+
+function isSupported(layer) {
+    if (layer.hidden) {
+        return false;
+    }
+    if (layer.frame.width > 200 && layer.frame.height > 200) {
+        return false;
+    }
+    if (sk.countChildOfLayer(layer) > 20) {
+        return false;
+    }
+    for (let child of sk.recursivelyChildOfLayer(layer)) {
+        if (sk.isImage(child) && !layer.hidden) {
+            return false;
+        }
+        if ((sk.hasShadow(child) || sk.hasInnerShadow(child))  && !layer.hidden) {
+            return false;
+        }
+        if (sk.hasBlur(child) && !layer.hidden) {
+            return false;
+        }
+    }
+    return true;
 }

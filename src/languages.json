@@ -271,21 +271,23 @@
         "en": "Export Vector Assets",
         "zh": "导出矢量资源"
     },
-
-
-
-
-
-
-
-    "description": {
-        "en": "Export Android resources in Sketch. Support bitmap, vector, nine-patch, app icon, shape XML and color.",
-        "zh": "用于导出 Android 各种资源的 Sketch 插件，支持位图、矢量、点九、应用图标、形状 XML 和色彩 XML。"
+    "vector_drawable_too_many_layer": {
+        "en": "Not support too many layer.",
+        "zh": "不支持过多图层。"
     },
-    "new_bitmap_asset": {
-        "en": "New Bitmap Asset",
-        "zh": "新建位图资源"
+    "ignore_not_support_layer": {
+        "en": "Ignore some layer that not support by vector drawable.",
+        "zh": "已忽略部分矢量资源不支持的图层。"
     },
+
+
+
+
+
+
+
+
+
     "new_nine_patch_asset": {
         "en": "New Nine-Patch Asset",
         "zh": "新建点九资源"
@@ -297,47 +299,5 @@
     "new_vector_asset": {
         "en": "New Vector Asset",
         "zh": "新建矢量资源"
-    },
-    
-    
-
-    "export_app_icon": {
-        "en": "Export App Icon",
-        "zh": "导出应用图标"
-    },
-    "help": {
-        "en": "Help",
-        "zh": "帮助"
-    },
-    "web_site": {
-        "en": "Web Site",
-        "zh": "网站"
-    },
-    "report_issues": {
-        "en": "Report Issues",
-        "zh": "问题反馈"
-    },
-    "donate": {
-        "en": "Donate",
-        "zh": "捐款"
-    },
-
-    
-    "language_file_not_found": {
-        "en": "Language file not found.",
-        "zh": "语言文件未找到。"
-    },
-    "language_file_not_found_desc": {
-        "en": "Language file \"%1\" does not existed.",
-        "zh": "语言文件 \"%1\" 不存在。"
-    },
-    "template_no_exists": {
-        "en": "Template file \"%1\" is no exists.",
-        "zh": "模版文件 \"%1\" 不存在。"
-    },
-    "code_preview": {
-        "en": "Code Preview",
-        "zh": "代码预览"
     }
-    
 }

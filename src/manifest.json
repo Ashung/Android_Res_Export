@@ -1,6 +1,4 @@
 {
-    "compatibleVersion": 3,
-    "bundleVersion": 1,
     "commands": [
         {
             "name": "New Bitmap Asset",
@@ -117,10 +115,18 @@
             "name": "Buy Me a Coffee",
             "identifier": "buymeacoffee",
             "script": "help.js"
+        },
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "onOpenDocument"
+                }
+            },
+            "script": "language.js"
         }
     ],
     "menu": {
-        "title": "vector_drawable",
+        "title": "Android Res Export",
         "items": [
             "new_bitmap_asset",
             "new_vector_asset",
@@ -151,5 +157,12 @@
                 ]
             }
         ]
-    }
+    },
+    "name": "Android Res Export",
+    "description": "Export Android resources in Sketch.",
+    "homepage": "https://github.com/Ashung/Android_Res_Export",
+    "icon": "icon.png",
+    "identifier": "com.ashung.hung.android_res_export",
+    "compatibleVersion": 3,
+    "bundleVersion": 1
 }

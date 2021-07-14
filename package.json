@@ -1,16 +1,21 @@
 {
-    "name": "android_res_export_v4",
+    "name": "android_res_export",
+    "productName": "Android Res Export",
     "version": "4.0.0",
     "engines": {
         "sketch": ">=3.0"
     },
     "skpm": {
-        "name": "android_res_export_v4",
+        "name": "android_res_export",
         "manifest": "src/manifest.json",
         "main": "./plugin/android_res_export.sketchplugin",
         "assets": [
             "assets/**/*"
         ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Ashung/Android_Res_Export.git"
     },
     "scripts": {
         "build": "skpm-build",

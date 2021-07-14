@@ -205,6 +205,23 @@ module.exports.recursivelyChildOfLayer = function(layer) {
     return traversing(layer).flat(Infinity);
 }
 
+module.exports.countChildOfLayer = function(layer) {
+    let count = 0;
+    function traversing(layer) {
+        if (layer.layers && layer.type !== 'Shape') {
+            layer.layers.forEach(child => {
+                traversing(child);
+            });
+        } else if (layer.type === "SymbolInstance") {
+            traversing(layer.master);
+        } else if (!['Slice', 'HotSpot', 'Group', 'SymbolMaster', 'Artboard'].includes(layer.type)) {
+            count ++;
+        }
+    }
+    traversing(layer);
+    return count;
+}
+
 module.exports.hasShadow = function(layer) {
     return layer.style && layer.style.shadows.some(shadow => shadow.enabled);
 }

@@ -2,12 +2,6 @@ function fileExists(path) {
     return NSFileManager.defaultManager().fileExistsAtPath_(path);
 }
 
-function getContentFromFile(filePath) {
-    return NSString.stringWithContentsOfFile_encoding_error_(
-        filePath, NSUTF8StringEncoding, nil
-    );
-}
-
 function writeContentToFile(filePath, content) {
     const parentDir = NSString.stringWithString(filePath).stringByDeletingLastPathComponent();
     mkdir(parentDir);
@@ -28,20 +22,6 @@ function mkdir(path) {
 
 function directoryIsWriteable(path) {
     return NSFileManager.defaultManager().isWritableFileAtPath(path);
-}
-
-function getJSONFromPath(path) {
-    if (fileExists(path)) {
-        var content = NSString.stringWithContentsOfFile_encoding_error_(path, NSUTF8StringEncoding, nil);
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            log(e);
-            return null;
-        }
-    } else {
-        return null;
-    }
 }
 
 function chooseFolder() {
@@ -107,11 +87,9 @@ function openURL(url) {
 }
 
 module.exports.fileExists = fileExists;
-module.exports.getContentFromFile = getContentFromFile;
 module.exports.writeContentToFile = writeContentToFile;
 module.exports.mkdir = mkdir;
 module.exports.directoryIsWriteable = directoryIsWriteable;
-module.exports.getJSONFromPath = getJSONFromPath;
 module.exports.chooseFolder = chooseFolder;
 module.exports.saveToFolder = saveToFolder;
 module.exports.revealInFinder = revealInFinder;

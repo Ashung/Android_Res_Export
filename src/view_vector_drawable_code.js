@@ -136,6 +136,11 @@ function isSupported(layer) {
         return false;
     }
 
+    if (sk.countChildOfLayer(layer) > 20) {
+        ui.message(i18n('vector_drawable_too_many_layer'));
+        return false;
+    }
+
     for (let child of sk.recursivelyChildOfLayer(layer)) {
         if (sk.isImage(child) && !layer.hidden) {
             ui.message(i18n('vector_drawable_not_support_bitmap_layer'));

@@ -12,11 +12,18 @@ export default function() {
     }
 
     if (identifier === 'donate') {
-        openURL('https://www.paypal.me/ashung/5')
+        openURL('http://ashung.github.io/donate.html')
     }
 
     if (identifier === 'buymeacoffee') {
         openURL('https://www.buymeacoffee.com/ashung')
     }
 
+    if (identifier === 'donate_wechat') {
+        openURL('https://github.com/Ashung/ashung.github.io/blob/master/assets/img/donate_wechat_rmb_10.png')
+    }
+
+    if (identifier === 'donate_alipay') {
+        openURL('https://github.com/Ashung/ashung.github.io/blob/master/assets/img/donate_alipay_rmb_10.png')
+    }
 }
