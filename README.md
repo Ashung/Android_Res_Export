@@ -19,7 +19,7 @@ Export Android resources in Sketch app.
 ## Installation
 
 - Search "Android Res Export" from [Sketch Runner](http://sketchrunner.com/).
-- [Download](https://github.com/Ashung/iAndroid_Res_Export/releases/latest/download/android_res_export.sketchplugin.zip) zip file, unzip and double click on the ".sketchplugin" file.
+- [Download](https://github.com/Ashung/Android_Res_Export/releases/latest/download/android_res_export.sketchplugin.zip) zip file, unzip and double click on the ".sketchplugin" file.
 
 ## How it Works
 
