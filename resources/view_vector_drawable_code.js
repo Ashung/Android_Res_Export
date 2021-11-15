@@ -21,9 +21,9 @@ const saveButton = document.getElementById('save');
 const cancelButton = document.getElementById('cancel');
 
 // disable the context menu (eg. the right click menu) to have a more native feel
-// document.addEventListener('contextmenu', (e) => {
-//     e.preventDefault();
-// });
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+});
 
 // call the plugin from the webview
 copyButton.addEventListener('click', () => {
@@ -69,7 +69,7 @@ document.querySelectorAll('input[name="view"]').forEach(node => {
         } else {
             codeElement.innerText = tempSVGElement.value;
         }
-        highlight.highlightBlock(codeElement);
+        highlight.highlightElement(codeElement);
     };
 });
 

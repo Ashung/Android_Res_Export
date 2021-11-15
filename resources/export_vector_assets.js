@@ -9,9 +9,9 @@ let allCount;
 let selectedCount = 0;
 
 // disable the context menu (eg. the right click menu) to have a more native feel
-// document.addEventListener('contextmenu', (e) => {
-//     e.preventDefault();
-// });
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+});
 
 // call the plugin from the webview
 exportButton.addEventListener('click', async () => {
