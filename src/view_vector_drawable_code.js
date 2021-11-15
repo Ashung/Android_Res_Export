@@ -131,7 +131,7 @@ function isSupported(layer) {
         return false;
     }
 
-    if (layer.frame.width > 200 && layer.frame.height > 200) {
+    if (layer.frame.width > 200 || layer.frame.height > 200) {
         ui.message(i18n('vector_drawable_limit'));
         return false;
     }
