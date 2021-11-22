@@ -2,6 +2,9 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
     <item>
+      <enclosure url="https://github.com/Ashung/Android_Res_Export/releases/download/v4.0.2/android_res_export.sketchplugin.zip" sparkle:version="4.0.2"/>
+    </item>
+    <item>
       <enclosure url="https://github.com/Ashung/Android_Res_Export/releases/download/v4.0.1/android_res_export.sketchplugin.zip" sparkle:version="4.0.1"/>
     </item>
     <item>
