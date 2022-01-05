@@ -30,9 +30,8 @@ cancelButton.addEventListener('click', () => {
 main.style.opacity = '0';
 
 window.main = (code, json) => {
-    codeElement.innerText = code;
+    codeElement.innerHTML = highlight.highlight(code, {language: 'xml'}).value;
     tempXMLElement.value = code;
-    highlight.highlightBlock(codeElement);
 
     // i18n
     if (json) {

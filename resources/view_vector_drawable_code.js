@@ -64,12 +64,13 @@ tintColorSwitch.addEventListener('click', async (event) => {
 
 document.querySelectorAll('input[name="view"]').forEach(node => {
     node.onclick = (event) => {
+        let code = '';
         if (event.target.value === 'avd') {
-            codeElement.innerText = tempXMLElement.value;
+            code = tempXMLElement.value
         } else {
-            codeElement.innerText = tempSVGElement.value;
+            code = tempSVGElement.value;
         }
-        highlight.highlightElement(codeElement);
+        codeElement.innerHTML = highlight.highlight(code, {language: 'xml'}).value;
     };
 });
 
@@ -105,14 +106,15 @@ async function convert(svg) {
     if (checkboxAddXml.checked) option.xmlTag = true;
     if (tintColorSwitch.checked) option.tint = toAndroidColor(tintColorHex.value, tintColorAlpha.value);
     const avd = await svg2vectordrawable(svg, option);
-    tempXMLElement.value = avd;
+    
     if (codeViewAvd.checked) {
-        codeElement.innerText = avd;
+        tempXMLElement.value = avd;
+        codeElement.innerHTML = highlight.highlight(avd, {language: 'xml'}).value;
     }
     if (codeViewSvg.checked) {
-        codeElement.innerText = svg;
+        tempXMLElement.value = svg;
+        codeElement.innerHTML = highlight.highlight(svg, {language: 'xml'}).value;
     }
-    highlight.highlightBlock(codeElement);
 }
 
 function toAndroidColor(hex, alpha) {
