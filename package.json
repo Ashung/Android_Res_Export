@@ -1,7 +1,7 @@
 {
     "name": "android_res_export",
     "productName": "Android Res Export",
-    "version": "4.0.3",
+    "version": "4.0.4",
     "engines": {
         "sketch": ">=3.0"
     },
