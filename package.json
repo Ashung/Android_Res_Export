@@ -33,9 +33,9 @@
         "resources/**/*.js"
     ],
     "dependencies": {
-        "highlight.js": "^11.3.1",
+        "highlight.js": "^11.4.0",
         "sketch-module-web-view": "^3.5.1",
-        "svg2vectordrawable": "^2.8.2"
+        "svg2vectordrawable": "^2.8.3"
     },
     "author": "Ashung Hung <ashung.hung@foxmail.com>"
 }
