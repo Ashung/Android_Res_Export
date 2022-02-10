@@ -248,6 +248,7 @@ export default function() {
             let legacyIconSymbol = launcherIconLegacy.createNewInstance();
             legacyIconSymbol.name = 'ic_launcher';
             legacyIconSymbol.frame = new Rectangle(0, 0, 108, 108);
+            legacyIconSymbol.sketchObject.setScale(108/192);
             let legacyIcon = new Group({
                 name: 'Legacy App Icon',
                 frame: new Rectangle(18, 40, 108, 108),
@@ -257,6 +258,7 @@ export default function() {
             let legacyIconRoundSymbol = launcherRoundIconLegacy.createNewInstance();
             legacyIconRoundSymbol.name = 'ic_launcher_round';
             legacyIconRoundSymbol.frame = new Rectangle(0, 0, 108, 108);
+            legacyIconRoundSymbol.sketchObject.setScale(108/192);
             let legacyIconRound = new Group({
                 name: 'Legacy App Icon Round',
                 frame: new Rectangle(146, 40, 108, 108),
