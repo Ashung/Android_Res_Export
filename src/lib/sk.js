@@ -1,6 +1,7 @@
 const util = require('util');
 const sketch = require('sketch/dom');
 const { Document, Slice, Rectangle, ShapePath } = require('sketch/dom');
+const appVersion = sketch.version.sketch;
 
 module.exports.isGroup = function(layer) {
     const types = ['Group', 'Artboard', 'SymbolMaster'];
@@ -97,8 +98,13 @@ module.exports.removeSliceInGroup = function(group) {
 }
 
 module.exports.group = function(layers) {
-    var layerArray = MSLayerArray.arrayWithLayers(layers.map(layer => layer.sketchObject));
-    var group = MSLayerGroup.groupWithLayers(layerArray);
+    let layerArray = MSLayerArray.arrayWithLayers(layers.map(layer => layer.sketchObject));
+    let group;
+    if (appVersion >= 83) {
+        group = MSLayerGroup.groupWithLayers(layerArray.layers());
+    } else {
+        group = MSLayerGroup.groupWithLayers(layerArray);
+    }
     return sketch.fromNative(group);
 }
 

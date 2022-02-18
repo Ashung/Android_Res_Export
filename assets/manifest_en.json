@@ -115,6 +115,14 @@
             "name": "Buy Me a Coffee",
             "identifier": "buymeacoffee",
             "script": "help.js"
+        },
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "onOpenDocument"
+                }
+            },
+            "script": "languages.js"
         }
     ],
     "menu": {

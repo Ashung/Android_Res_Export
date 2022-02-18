@@ -120,6 +120,14 @@
             "name": "支付宝打赏",
             "identifier": "donate_alipay",
             "script": "help.js"
+        },
+        {
+            "handlers": {
+                "actions": {
+                    "OpenDocument": "onOpenDocument"
+                }
+            },
+            "script": "languages.js"
         }
     ],
     "menu": {
