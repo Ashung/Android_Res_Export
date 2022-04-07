@@ -48,7 +48,7 @@
         {
             "name": "Color XML From Selected Layers",
             "identifier": "view_color_code_from_selected_layers",
-            "script": "view_color_code.js",
+            "script": "view_color_code_from_selected_layers.js",
             "handlers": {
                 "run": "onRun",
                 "actions": {
@@ -60,7 +60,7 @@
         {
             "name": "Color XML From Color Variables",
             "identifier": "view_color_code_from_color_variables",
-            "script": "view_color_code.js"
+            "script": "view_color_code_from_color_variables.js"
         },
         {
             "name": "Shape Drawable From Selected Layer",
@@ -165,7 +165,7 @@
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
-    "version": "4.0.0",
+    "version": "4.0.8",
     "disableCocoaScriptPreprocessor": true,
     "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
     "author": "Ashung Hung",

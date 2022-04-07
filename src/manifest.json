@@ -48,7 +48,7 @@
         {
             "name": "Color XML From Selected Layers",
             "identifier": "view_color_code_from_selected_layers",
-            "script": "view_color_code.js",
+            "script": "view_color_code_from_selected_layers.js",
             "handlers": {
                 "run": "onRun",
                 "actions": {
@@ -60,7 +60,7 @@
         {
             "name": "Color XML From Color Variables",
             "identifier": "view_color_code_from_color_variables",
-            "script": "view_color_code.js"
+            "script": "view_color_code_from_color_variables.js"
         },
         {
             "name": "Shape Drawable From Selected Layer",

@@ -15,19 +15,7 @@ const document = sketch.getSelectedDocument();
 const selection = document.selectedLayers;
 
 export default function() {
-
-    if (selection.length !== 1) {
-        ui.message(i18n('select_one_layer'));
-        return;
-    }
-
-    const layer = selection.layers[0];
-    const layerInfo = getLayerInfo(layer.sketchObject);
-    if (layerInfo.support === false) {
-        ui.message(i18n(layerInfo.msg));
-        return;
-    }
-    
+ 
     const options = {
         identifier: webviewIdentifier,
         width: 600,
@@ -51,7 +39,17 @@ export default function() {
 
     // Main
     webContents.on('did-finish-load', () => {
-        const xml = xmlFromLayerInfo(layerInfo);
+
+        const layer = selection.layers[0];
+        let xml = '';
+        if (layer) {
+            const layerInfo = getLayerInfo(layer.sketchObject);
+            if (layerInfo.support === false) {
+                ui.message(i18n(layerInfo.msg));
+            } else {
+                xml = xmlFromLayerInfo(layerInfo);
+            }
+        }
         const langs = {};
         ['save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
         webContents.executeJavaScript(`main('${xml}', '${JSON.stringify(langs)}')`);
@@ -97,12 +95,20 @@ export function onShutdown() {
 
 export function onSelectionChanged() {
     const existingWebview = getWebview(webviewIdentifier);
-    if (existingWebview && selection.length === 1) {
-        const layer = selection.layers[0];
-        const layerInfo = getLayerInfo(layer.sketchObject);
-        const xml = xmlFromLayerInfo(layerInfo);
+    if (existingWebview) {
+        let xml = '';
+        if (selection.length === 1) {
+            const layer = selection.layers[0];
+            const layerInfo = getLayerInfo(layer.sketchObject);
+            if (layerInfo.support === false) {
+                ui.message(i18n(layerInfo.msg));
+            } else {
+                xml = xmlFromLayerInfo(layerInfo);
+            }
+        }
         sendToWebview(webviewIdentifier, `main('${xml}')`);
     }
+    
 };
 
 // XML from layer
@@ -115,7 +121,6 @@ function getLayerInfo(layer) {
         layer.class() == "MSRectangleShape" ||
         layer.class() == "MSOvalShape"
     ) {
-
         // Not support layer style
         if (
             layer.style().hasEnabledShadow() ||
@@ -238,7 +243,6 @@ function getLayerInfo(layer) {
             }
         }
 
-
         if (layer.children().count() == 2 || layer.children().count() == 1) {
 
             var shapePath;
@@ -331,7 +335,6 @@ function getLayerInfo(layer) {
     result.height = Math.round(layer.frame().height()) + "dp";
 
     return result;
-
 }
 
 function xmlFromLayerInfo(layerInfo) {

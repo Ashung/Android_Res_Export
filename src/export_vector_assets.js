@@ -13,6 +13,7 @@ const document = sketch.getSelectedDocument();
 const assetNameType = settings.settingForKey('asset_name_type') || 0;
 const vectorFolder = android.VECTORDRAWABLE_FOLDERS[settings.settingForKey('vector_drawable_folder') || 2];
 const showUI = document.selectedLayers.length === 0 ? true : false;
+const appVersion = sketch.version.sketch;
 
 const langs = {};
 ['select_all', 'export', 'cancel'].forEach(key => langs[key] = i18n(key));
@@ -117,7 +118,13 @@ function getVectorDrawableAsset() {
     let predicate = NSPredicate.predicateWithFormat(
         'className == "MSSliceLayer" && exportOptions.firstFormat == "svg"'
     );
-    let selectedLayers = util.toArray(document.sketchObject.documentData().selectedLayers().layers());
+    let nativeSelectedLayers;
+    if (appVersion >= 84) {
+        nativeSelectedLayers = document.sketchObject.documentData().selectedLayers();
+    } else {
+        nativeSelectedLayers = document.sketchObject.documentData().selectedLayers().layers();
+    }
+    let selectedLayers = util.toArray(nativeSelectedLayers);
     if (selectedLayers.length > 0) {
         selectedLayers.forEach(layer => {
             let slices = util.toArray(layer.children().filteredArrayUsingPredicate(predicate)).map(sketch.fromNative);

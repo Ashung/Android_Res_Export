@@ -98,12 +98,18 @@ module.exports.removeSliceInGroup = function(group) {
 }
 
 module.exports.group = function(layers) {
-    let layerArray = MSLayerArray.arrayWithLayers(layers.map(layer => layer.sketchObject));
     let group;
-    if (appVersion >= 83) {
-        group = MSLayerGroup.groupWithLayers(layerArray.layers());
+    if (appVersion >= 84) {
+        group = MSLayerGroup.groupWithLayers(layers.map(layer => layer.sketchObject));
     } else {
-        group = MSLayerGroup.groupWithLayers(layerArray);
+        let layerArray = MSLayerArray.arrayWithLayers(layers.map(layer => layer.sketchObject));
+        if (appVersion >= 83) {
+            group = MSLayerGroup.groupWithLayers(layerArray.layers());
+        } else if (appVersion >= 52) {
+            group = MSLayerGroup.groupWithLayers(layerArray);
+        } else {
+            group = MSLayerGroup.groupFromLayers(layerArray);
+        }
     }
     return sketch.fromNative(group);
 }

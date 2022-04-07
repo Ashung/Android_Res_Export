@@ -22,14 +22,6 @@ const defaultTint = settings.settingForKey('tint_color') || '000000';
 const defaultAlpha = settings.settingForKey('tint_color_alpha') || 100;
 
 export default function () {
-    
-    if (selection.length !== 1) {
-        ui.message(i18n('select_one_layer'));
-        return;
-    }
-
-    const layer = selection.layers[0];
-    if (!isSupported(layer)) return;
 
     const options = {
         identifier: 'view_vector_drawable_code.webview',
@@ -55,7 +47,13 @@ export default function () {
 
     // page loads
     webContents.on('did-finish-load', () => {
-        const svg = sk.getSVGFromLayer(layer);
+        let svg = '';
+        if (selection.length === 1) {
+            const layer = selection.layers[0];
+            if (isSupported(layer)) {
+                svg = sk.getSVGFromLayer(layer);
+            };
+        }
         webContents.executeJavaScript(`main('${svg}', '${JSON.stringify(langs)}', ${addXml}, ${tint}, '${defaultTint}', ${defaultAlpha})`);
     });
 
@@ -117,10 +115,14 @@ export function onShutdown() {
 
 export function onSelectionChanged() {
     const existingWebview = getWebview(webviewIdentifier);
-    if (existingWebview && selection.length === 1) {
-        const layer = selection.layers[0];
-        if (!isSupported(layer)) return;
-        const svg = sk.getSVGFromLayer(layer);
+    if (existingWebview) {
+        let svg = '';
+        if (selection.length === 1) {
+            const layer = selection.layers[0];
+            if (isSupported(layer)) {
+                svg = sk.getSVGFromLayer(layer);
+            };
+        }
         sendToWebview(webviewIdentifier, `main('${svg}', '${JSON.stringify(langs)}', ${addXml}, ${tint}, '${defaultTint}', ${defaultAlpha})`);
     }
 };

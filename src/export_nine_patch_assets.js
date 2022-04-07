@@ -11,6 +11,7 @@ const { chooseFolder, directoryIsWriteable, revealInFinder, mkdir } = require('.
 const document = sketch.getSelectedDocument();
 const assetNameType = settings.settingForKey('asset_name_type') || 0;
 const exportDpis = settings.settingForKey('export_dpi') || Object.keys(android.DPIS);
+const appVersion = sketch.version.sketch;
 
 export default function() {
 
@@ -237,7 +238,13 @@ function getNinePatchAsset() {
     let predicate = NSPredicate.predicateWithFormat(
         'className == "MSSliceLayer" && name == "#9patch" && exportOptions.firstFormat == "png"'
     );
-    let selectedLayers = util.toArray(document.sketchObject.documentData().selectedLayers().layers());
+    let nativeSelectedLayers;
+    if (appVersion >= 84) {
+        nativeSelectedLayers = document.sketchObject.documentData().selectedLayers();
+    } else {
+        nativeSelectedLayers = document.sketchObject.documentData().selectedLayers().layers();
+    }
+    let selectedLayers = util.toArray(nativeSelectedLayers);
     if (selectedLayers.length > 0) {
         selectedLayers.forEach(layer => {
             let slices = util.toArray(layer.children().filteredArrayUsingPredicate(predicate));

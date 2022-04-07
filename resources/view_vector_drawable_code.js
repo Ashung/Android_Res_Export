@@ -27,7 +27,12 @@ document.addEventListener('contextmenu', (e) => {
 
 // call the plugin from the webview
 copyButton.addEventListener('click', () => {
-    window.postMessage('copyCode', tempXMLElement.value);
+    if (codeViewAvd.checked) {
+        window.postMessage('copyCode', tempXMLElement.value);
+    }
+    if (codeViewSvg.checked) {
+        window.postMessage('copyCode', tempSVGElement.value);
+    }
 });
 
 saveButton.addEventListener('click', () => {
@@ -112,7 +117,7 @@ async function convert(svg) {
         codeElement.innerHTML = highlight.highlight(avd, {language: 'xml'}).value;
     }
     if (codeViewSvg.checked) {
-        tempXMLElement.value = svg;
+        tempSVGElement.value = svg;
         codeElement.innerHTML = highlight.highlight(svg, {language: 'xml'}).value;
     }
 }

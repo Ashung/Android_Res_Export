@@ -9,56 +9,28 @@ const android = require('./lib/android');
 const { pasteboardCopy, saveToFolder, writeContentToFile, revealInFinder } = require('./lib/fs');
 
 const html = require('../resources/view_code.html');
-const webviewIdentifier = 'view_color_code.webview';
+const webviewIdentifier = 'view_color_code_from_selected_layers.webview';
 
 const document = sketch.getSelectedDocument();
 const selection = document.selectedLayers;
-const identifier = String(__command.identifier());
 const assetNameType = settings.settingForKey('asset_name_type') || 0;
 
 export default function() {
 
-    if (selection.isEmpty && identifier === 'view_color_code_from_selected_layers') {
-        ui.message(i18n('no_selection'));
-        return;
-    }
-
-    if (document.swatches.length === 0 && identifier === 'view_color_code_from_color_variables') {
-        ui.message(i18n('no_color_variables'));
-        return;
-    }
-
-    let colors;
-    if (identifier === 'view_color_code_from_selected_layers') {
-        colors = colorsFromSelectedLayers();
-    }
-    if (identifier === 'view_color_code_from_color_variables') {
-        colors = colorsFromDocument();
-    }
-
-    if (Object.keys(colors).length === 0) {
-        ui.message(i18n('no_colors_in_selection'));
-        return;
-    }
+    let colors = selection.isEmpty ? [] : colorsFromSelectedLayers();
 
     const options = {
         identifier: webviewIdentifier,
         width: 600,
         height: 400,
         show: false,
-        title: '',
+        title: i18n('color_xml_from_layers'),
         resizable: false,
         minimizable: false,
         remembersWindowFrame: true,
         acceptsFirstMouse: true,
         alwaysOnTop: true
     };
-    if (identifier === 'view_color_code_from_selected_layers') {
-        options.title = i18n('color_xml_from_layers');
-    }
-    if (identifier === 'view_color_code_from_color_variables') {
-        options.title = i18n('color_xml_from_color_variables');
-    }
 
     const browserWindow = new BrowserWindow(options);
 
@@ -116,7 +88,7 @@ export function onShutdown() {
 
 export function onSelectionChanged() {
     const existingWebview = getWebview(webviewIdentifier);
-    if (existingWebview && selection.length !== 0) {
+    if (existingWebview) {
         const colors = colorsFromSelectedLayers();
         const xml = colorsToXml(colors);
         sendToWebview(webviewIdentifier, `main('${xml}')`);
@@ -156,24 +128,6 @@ function colorsFromSelectedLayers() {
     return colors;
 }
 
-function colorsFromDocument() {
-    let colors = {}
-    let namesAndCount = {};
-    document.swatches.forEach(swatch => {
-        let name = android.assetName(swatch.name, assetNameType, 'color');
-        if (Object.keys(namesAndCount).includes(name)) {
-            namesAndCount[name] += 1;
-        } else {
-            namesAndCount[name] = 1;
-        }
-        if (namesAndCount[name] > 1) {
-            name += '_' + namesAndCount[name];
-        }
-        colors[name] = android.colorToAndroid(swatch.color);
-    });
-    return colors;
-}
-
 function colorsToXml(colors) {
     let xml = '<resources>\\n';
     Object.keys(colors).forEach(key => {
@@ -182,4 +136,3 @@ function colorsToXml(colors) {
     xml += '</resources>';
     return xml;
 }
-

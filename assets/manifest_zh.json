@@ -48,7 +48,7 @@
         {
             "name": "选中图层的色彩资源",
             "identifier": "view_color_code_from_selected_layers",
-            "script": "view_color_code.js",
+            "script": "view_color_code_from_selected_layers.js",
             "handlers": {
                 "run": "onRun",
                 "actions": {
@@ -60,7 +60,7 @@
         {
             "name": "文档的色彩资源",
             "identifier": "view_color_code_from_color_variables",
-            "script": "view_color_code.js"
+            "script": "view_color_code_from_color_variables.js"
         },
         {
             "name": "选中图层的形状资源",
@@ -171,7 +171,7 @@
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
-    "version": "4.0.0",
+    "version": "4.0.8",
     "disableCocoaScriptPreprocessor": true,
     "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
     "author": "Ashung Hung",
