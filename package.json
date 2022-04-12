@@ -1,7 +1,7 @@
 {
     "name": "android_res_export",
     "productName": "Android Res Export",
-    "version": "4.0.8",
+    "version": "4.0.9",
     "engines": {
         "sketch": ">=3.0"
     },
@@ -33,9 +33,9 @@
         "resources/**/*.js"
     ],
     "dependencies": {
-        "highlight.js": "^11.5.0",
+        "highlight.js": "^11.5.1",
         "sketch-module-web-view": "^3.5.1",
-        "svg2vectordrawable": "^2.8.4"
+        "svg2vectordrawable": "^2.8.5"
     },
     "author": "Ashung Hung <ashung.hung@foxmail.com>"
 }
