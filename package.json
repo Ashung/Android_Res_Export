@@ -35,7 +35,7 @@
     "dependencies": {
         "highlight.js": "^11.5.1",
         "sketch-module-web-view": "^3.5.1",
-        "svg2vectordrawable": "^2.8.5"
+        "svg2vectordrawable": "^2.8.6"
     },
     "author": "Ashung Hung <ashung.hung@foxmail.com>"
 }
