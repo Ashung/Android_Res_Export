@@ -1,4 +1,4 @@
-const svg2vectordrawable = require('svg2vectordrawable');
+const svg2vectordrawable = require('svg2vectordrawable/src/main.browser');
 
 const main = document.getElementById('main');
 const preview = document.getElementById('preview');

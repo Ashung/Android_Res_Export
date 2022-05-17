@@ -165,7 +165,7 @@
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
-    "version": "4.0.8",
+    "version": "4.0.12",
     "disableCocoaScriptPreprocessor": true,
     "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
     "author": "Ashung Hung",

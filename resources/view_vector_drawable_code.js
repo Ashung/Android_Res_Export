@@ -1,4 +1,4 @@
-const svg2vectordrawable = require('svg2vectordrawable');
+const svg2vectordrawable = require('svg2vectordrawable/src/main.browser');
 
 const highlight = require('highlight.js/lib/core');
 const xml = require('highlight.js/lib/languages/xml');
