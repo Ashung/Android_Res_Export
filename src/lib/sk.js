@@ -1,6 +1,6 @@
 const util = require('util');
 const sketch = require('sketch/dom');
-const { Document, Slice, Rectangle, ShapePath } = require('sketch/dom');
+const { Document, Slice, Rectangle, ShapePath, Artboard } = require('sketch/dom');
 const appVersion = sketch.version.sketch;
 
 module.exports.isGroup = function(layer) {
@@ -156,15 +156,49 @@ module.exports.moveLayerIntoGroup = function(layer, group) {
 }
 
 module.exports.getSVGFromLayer = function(layer) {
-    const options = { formats: 'svg', output: false };
-    const buffer = sketch.export(layer, options);
-    return buffer.toString().replace(/\n/g, '\\n');
+    let svg = this.getOriginalSVGFromLayer(layer);
+    return svg.replace(/\n/g, '\\n');
 }
 
 module.exports.getOriginalSVGFromLayer = function(layer) {
+    const nativeLayer = layer.sketchObject;
+    const document = Document.getSelectedDocument();
+    const page = MSPage.alloc().init();
+    document._getMSDocumentData().addPage(page);
+    const artboard = MSArtboardGroup.alloc().init();
+    artboard.setFrame(MSRect.rectWithRect(CGRectMake(0, 0, nativeLayer.frame().width(), nativeLayer.frame().height())));
+    page.addLayer(artboard);
+    if (nativeLayer.className() == 'MSArtboardGroup' || nativeLayer.className() == 'MSSymbolMaster' || nativeLayer.className() == 'MSLayerGroup') {
+        const children = [];
+        nativeLayer.layers().forEach(function(layer) {
+            children.push(layer.copy());
+        });
+        artboard.setLayers(children);
+    } else {
+        const clonedLayer = nativeLayer.copy();
+        clonedLayer.frame().setX(0);
+        clonedLayer.frame().setY(0);
+        artboard.addLayer(clonedLayer);
+    }
+    const symbolInstances = [];
+    for (let i = 1; i < artboard.children().count(); i++) {
+        const child = artboard.children().objectAtIndex(i);
+        if (child.className() == 'MSSymbolInstance') {
+            symbolInstances.push(child);
+        }
+    }
+    for (let i = 0; i < symbolInstances.length; i++) {
+        const detach = symbolInstances[i].detachStylesAndReplaceWithGroupRecursively();
+        if (detach.isKindOfClass(NSMapTable)) {
+            const group = detach.objectForKey(symbolInstances[i].immutableModelObject());
+            group.ungroup();
+        }
+    }
     const options = { formats: 'svg', output: false };
-    const buffer = sketch.export(layer, options);
-    return buffer.toString();
+    const buffer = sketch.export(Artboard.fromNative(artboard), options);
+    const svg = buffer.toString();
+    document._getMSDocumentData().removePage(page);
+    return svg;
 }
 
 module.exports.getBase64FromLayer = function(layer) {
@@ -245,3 +279,4 @@ module.exports.hasInnerShadow = function(layer) {
 module.exports.hasBlur = function(layer) {
     return layer.style && layer.style.blur.enabled;
 }
+

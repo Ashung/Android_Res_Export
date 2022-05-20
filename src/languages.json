@@ -299,5 +299,9 @@
     "new_vector_asset": {
         "en": "New Vector Asset",
         "zh": "新建矢量资源"
+    },
+    "library_symbol_can_not_change_fill_type": {
+        "en": "Library symbol can't change fill type to Non-Zero.",
+        "zh": "库组件无法改变填充规则为非零"
     }
 }

@@ -92,6 +92,11 @@
             }
         },
         {
+            "name": "Change Fill Type to Non-Zero",
+            "identifier": "fill_type_to_non_zero",
+            "script": "fill_type_to_non_zero.js"
+        },
+        {
             "name": "Preferences",
             "identifier": "preferences",
             "script": "preferences.js"
@@ -145,6 +150,8 @@
             "view_shape_drawable_from_selected_layer",
             "view_vector_drawable_code",
             "-",
+            "fill_type_to_non_zero",
+            "-",
             "preferences",
             {
                 "title": "Help",
@@ -165,7 +172,7 @@
     "identifier": "com.ashung.hung.android_res_export",
     "compatibleVersion": 3,
     "bundleVersion": 1,
-    "version": "4.0.12",
+    "version": "4.1.0",
     "disableCocoaScriptPreprocessor": true,
     "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
     "author": "Ashung Hung",

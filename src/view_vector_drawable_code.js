@@ -21,7 +21,7 @@ const tint = settings.settingForKey('tint') || false;
 const defaultTint = settings.settingForKey('tint_color') || '000000';
 const defaultAlpha = settings.settingForKey('tint_color_alpha') || 100;
 
-export default function () {
+export default function() {
 
     const options = {
         identifier: 'view_vector_drawable_code.webview',
@@ -122,6 +122,10 @@ export function onSelectionChanged() {
             if (isSupported(layer)) {
                 svg = sk.getSVGFromLayer(layer);
             };
+        } else {
+            if (selection.length > 1) {
+                ui.message(i18n('select_one_layer'));
+            }
         }
         sendToWebview(webviewIdentifier, `main('${svg}', '${JSON.stringify(langs)}', ${addXml}, ${tint}, '${defaultTint}', ${defaultAlpha})`);
     }

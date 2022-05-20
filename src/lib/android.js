@@ -30,7 +30,7 @@ function assetName(layerName, type, defaultName) {
     // Valid full layer name
     else if (type == 1) {
         let nameParts = [];
-        nameArray.forEach(function(part) {
+        nameArray.forEach(part => {
             nameParts.push(cleanName(part));
         });
         name = nameParts.join('_').replace(/^\d+_*/, '');
