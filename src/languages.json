@@ -303,5 +303,9 @@
     "library_symbol_can_not_change_fill_type": {
         "en": "Library symbol can't change fill type to Non-Zero.",
         "zh": "库组件无法改变填充规则为非零"
+    },
+    "very_long_vector_path": {
+        "en": "Very long vector path (% characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector.",
+        "zh": "非常长的矢量路径 (%个字符)，这对性能不利。考虑降低精度、删除次要细节或光栅化矢量。"
     }
 }

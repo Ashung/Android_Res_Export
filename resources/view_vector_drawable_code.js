@@ -20,6 +20,8 @@ const copyButton = document.getElementById('copy');
 const saveButton = document.getElementById('save');
 const cancelButton = document.getElementById('cancel');
 
+let warning = '';
+
 // disable the context menu (eg. the right click menu) to have a more native feel
 document.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -71,11 +73,13 @@ document.querySelectorAll('input[name="view"]').forEach(node => {
     node.onclick = (event) => {
         let code = '';
         if (event.target.value === 'avd') {
-            code = tempXMLElement.value
+            code = tempXMLElement.value;
+            codeElement.innerHTML = highlight.highlight(code, {language: 'xml'}).value;
+            tooLongPathWarning(code, warning);
         } else {
             code = tempSVGElement.value;
+            codeElement.innerHTML = highlight.highlight(code, {language: 'xml'}).value;
         }
-        codeElement.innerHTML = highlight.highlight(code, {language: 'xml'}).value;
     };
 });
 
@@ -91,6 +95,7 @@ window.main = async (svg, json, addXml, tint, tintColor, tintAlpha) => {
         saveButton.textContent = langs.save;
         cancelButton.textContent = langs.cancel;
         copyButton.textContent = langs.copy;
+        warning = langs.very_long_vector_path;
     }
 
     tempSVGElement.value = svg;
@@ -101,20 +106,20 @@ window.main = async (svg, json, addXml, tint, tintColor, tintAlpha) => {
     tintColorHex.blur();
     tintColorAlpha.blur();
     
-    await convert(svg);
+    await convert(svg, warning);
 
     main.style.opacity = '1';
 }
 
-async function convert(svg) {
+async function convert(svg, warning) {
     const option = {}
     if (checkboxAddXml.checked) option.xmlTag = true;
     if (tintColorSwitch.checked) option.tint = toAndroidColor(tintColorHex.value, tintColorAlpha.value);
     const avd = await svg2vectordrawable(svg, option);
-    
     if (codeViewAvd.checked) {
         tempXMLElement.value = avd;
         codeElement.innerHTML = highlight.highlight(avd, {language: 'xml'}).value;
+        tooLongPathWarning(avd, warning);
     }
     if (codeViewSvg.checked) {
         tempSVGElement.value = svg;
@@ -130,5 +135,22 @@ function toAndroidColor(hex, alpha) {
         return '#' + hex;
     } else {
         return '#' + Math.round(parseInt(alpha) * 255 / 100).toString(16).padStart(2, '0') + hex;
+    }
+}
+
+function tooLongPathWarning(avd, warning) {
+    const searchResult = avd.match(/android:pathData="(.*)"/g);
+    if (searchResult) {
+        const paths = searchResult.map(path => {
+            return path.substring(18, path.length - 1);
+        });
+        const nodes = document.querySelectorAll('.hljs-string');
+        nodes.forEach(node => {
+            const text = node.textContent.replace(/"/g, '');
+            if (paths.includes(text) && text.length >= 800) {
+                node.style.backgroundColor = 'rgba(255, 255, 102, 0.6)';
+                node.setAttribute('title', warning.replace(/\%/, text.length));
+            }
+        });
     }
 }

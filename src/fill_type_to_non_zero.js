@@ -15,6 +15,7 @@ export default function() {
     selection.layers.forEach(layer => {
         traverse(layer.sketchObject);
     });
+
 }
 
 function traverse(layer) {

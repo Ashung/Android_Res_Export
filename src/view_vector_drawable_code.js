@@ -15,7 +15,7 @@ const document = sketch.getSelectedDocument();
 const selection = document.selectedLayers;
 
 const langs = {};
-['add_xml_declaration', 'tint_color', 'save', 'cancel', 'copy'].forEach(key => langs[key] = i18n(key));
+['add_xml_declaration', 'tint_color', 'save', 'cancel', 'copy', 'very_long_vector_path'].forEach(key => langs[key] = i18n(key));
 const addXml = settings.settingForKey('add_xml_declaration') || false;
 const tint = settings.settingForKey('tint') || false;
 const defaultTint = settings.settingForKey('tint_color') || '000000';
